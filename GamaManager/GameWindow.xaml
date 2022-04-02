@@ -1,0 +1,30 @@
+﻿<Window x:Class="GamaManager.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager"
+        mc:Ignorable="d"
+        Title="Office Ware Game Manager Integration"
+        Height="450"
+        Width="800"
+        WindowState="Maximized"
+        Loaded="Window_Loaded"
+        KeyUp="GlobalHotKeyHandler"
+    >
+    <DockPanel
+        x:Name="game"
+        LayoutUpdated="game_LayoutUpdated"
+    >
+        <StackPanel
+            x:Name="gameManagerAside"
+            Visibility="Collapsed"
+            Width="250"
+            Background="Beige"
+            DockPanel.Dock="Left"
+        >
+
+        </StackPanel>
+
+    </DockPanel>
+</Window>

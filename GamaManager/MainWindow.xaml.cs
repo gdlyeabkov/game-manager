@@ -32,30 +32,87 @@ namespace GamaManager
     public partial class MainWindow : Window
     {
 
-        public string filename = @"C:\Gleb\game-manager\game.exe";
+        public string currentUserId = "";
+        private User currentUser = null;
+        public Visibility visible;
+        public Visibility invisible;
 
-        public MainWindow()
+        public MainWindow(string id)
         {
             InitializeComponent();
 
-            Initialize();
+            Initialize(id);
 
         }
 
-        public void Initialize()
+        public void Initialize(string id)
         {
-
-            InitCache();
+            
+            GetUser(id);
+            InitConstants();
             ShowOffers();
             GetGamesList();
 
+        }
+
+        public void GetUser (string userId)
+        {
+            currentUserId = userId;
+            System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    var objText = reader.ReadToEnd();
+
+                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                    string status = myobj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        currentUser = myobj.user;
+                        bool isUserExists = currentUser != null;
+                        if (isUserExists)
+                        {
+                            string userLogin = currentUser.login;
+                            userLoginLabel.Text = userLogin;
+                            InitCache(userId);
+                        }
+                        else
+                        {
+                            CloseManager();
+                        }
+                    }
+                    else
+                    {
+                        CloseManager();
+                    }
+
+                }
+            }
+        }
+
+        public void CloseManager ()
+        {
+            MessageBox.Show("Не удалось подключиться", "Ошибка");
+            this.Close();
+        }
+
+        public void InitConstants ()
+        {
+            visible = Visibility.Visible;
+            invisible = Visibility.Collapsed;
         }
 
         public void GetGamesList ()
         {
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -66,19 +123,22 @@ namespace GamaManager
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
                         GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
-                        System.Diagnostics.Debugger.Log(0, "debug", "status: " + myobj.status + Environment.NewLine);
-                        if (myobj.status == "OK")
+                        string responseStatus = myobj.status;
+                        bool isOKStatus = responseStatus == "OK";
+                        if (isOKStatus)
                         {
-                            if (myobj.games.Count >= 1)
+                            List<GameResponseInfo> loadedGames = myobj.games;
+                            int countLoadedGames = loadedGames.Count;
+                            bool isGamesExists = countLoadedGames >= 1;
+                            if (isGamesExists)
                             {
                                 games.Children.Clear();
-                                foreach (GameResponseInfo gamesListItem in myobj.games)
+                                foreach (GameResponseInfo gamesListItem in loadedGames)
                                 {
                                     StackPanel newGame = new StackPanel();
                                     newGame.MouseLeftButtonUp += SelectGameHandler;
                                     newGame.Orientation = Orientation.Horizontal;
                                     newGame.Height = 35;
-                                    // string newGameData = gamesListItem.name + "|" + gamesListItem.url + "|" + gamesListItem.image;
                                     string gamesListItemName = gamesListItem.name;
                                     string gamesListItemUrl = gamesListItem.url;
                                     string gamesListItemImage = gamesListItem.image;
@@ -92,7 +152,8 @@ namespace GamaManager
                                     newGamePhoto.Width = 25;
                                     newGamePhoto.Height = 25;
                                     newGamePhoto.BeginInit();
-                                    newGamePhoto.Source = new BitmapImage(new Uri(gamesListItem.image));
+                                    Uri newGamePhotoUri = new Uri(gamesListItemImage);
+                                    newGamePhoto.Source = new BitmapImage(newGamePhotoUri);
                                     newGamePhoto.EndInit();
                                     newGame.Children.Add(newGamePhoto);
                                     TextBlock newGameLabel = new TextBlock();
@@ -101,7 +162,7 @@ namespace GamaManager
                                     newGame.Children.Add(newGameLabel);
                                     games.Children.Add(newGame);
                                 }
-                                GameResponseInfo firstGame = myobj.games[0];
+                                GameResponseInfo firstGame = loadedGames[0];
                                 Dictionary<String, Object> firstGameData = new Dictionary<String, Object>();
                                 string firstGameName = firstGame.name;
                                 string firstGameUrl = firstGame.url;
@@ -121,12 +182,19 @@ namespace GamaManager
             }
         }
 
-        public void InitCache ()
+        public void InitCache (string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\save-data.txt";
-            string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager";
+            string userFolder = "";
+            int idLength = id.Length;
+            bool isIdExists = idLength >= 1;
+            if (isIdExists)
+            {
+                userFolder = id + @"\";
+            }
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + userFolder + "save-data.txt";
+            string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id;
             bool isCacheFolderExists = Directory.Exists(cachePath);
             bool isCacheFolderNotExists = !isCacheFolderExists;
             if (isCacheFolderNotExists)
@@ -156,7 +224,7 @@ namespace GamaManager
 
         public void RunGame()
         {
-            GameWindow window = new GameWindow();
+            GameWindow window = new GameWindow(currentUserId);
             window.DataContext = gameActionLabel.DataContext;
             window.Show();
         }
@@ -168,6 +236,11 @@ namespace GamaManager
 
         public void InstallGame()
         {
+
+            /*Dialogs.DownloadGameDialog dialog = new Dialogs.DownloadGameDialog();
+            dialog.Closed += GameDownloadedHandler;
+            dialog.Show();*/
+
             object rawGameActionLabelData = gameActionLabel.DataContext;
             Dictionary<String, Object> dataParts = ((Dictionary<String, Object>)(rawGameActionLabelData));
             string gameName = ((string)(dataParts["name"]));
@@ -177,14 +250,15 @@ namespace GamaManager
             WebClient wc = new WebClient();
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\";
+            string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             string cachePath = appFolder + gameName;
             Directory.CreateDirectory(cachePath);
-            filename = cachePath + @"\game.exe";
+            string filename = cachePath + @"\game.exe";
             wc.DownloadFileAsync(uri, filename);
             gameNameLabel.DataContext = ((string)(filename));
             wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
+            gameActionLabel.IsEnabled = false;
         }
 
         private void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -198,47 +272,55 @@ namespace GamaManager
                 gameInstalledProgress.Value = 0;
             }
         }
+
         private void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             Exception downloadError = e.Error;
             bool isErrorsNotFound = downloadError == null;
             if (isErrorsNotFound)
             {
-                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\save-data.txt";
-                string gameName = gameNameLabel.Text;
-                string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\";
-                string cachePath = appPath + gameName;
-                Directory.CreateDirectory(cachePath);
-                filename = cachePath + @"\game.exe";
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-                List<Game> updatedGames = loadedContent.games;
-                object gameNameLabelData = gameNameLabel.DataContext;
-                string gameUloadedPath = ((string)(gameNameLabelData));
-                updatedGames.Add(new Game()
-                {
-                    name = gameName,
-                    path = gameUloadedPath
-                });
-                string savedContent = js.Serialize(new SavedContent
-                {
-                    games = updatedGames
-                });
-                File.WriteAllText(saveDataFilePath, savedContent);
-                gameActionLabel.Content = "Играть";
-                string gamePath = ((string)(gameNameLabel.DataContext));
-                gameActionLabel.DataContext = filename;
-                gameInstalledProgress.Visibility = Visibility.Hidden;
-
-                MessageBox.Show("Игра загружена", "Готово");
+                GameSuccessDownloaded();
             }
             else
             {
                 MessageBox.Show("Не удалось загрузить игру", "Ошибка");
             }
+        }
+
+        public void GameSuccessDownloaded()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            string gameName = gameNameLabel.Text;
+            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            string cachePath = appPath + gameName;
+            Directory.CreateDirectory(cachePath);
+            string filename = cachePath + @"\game.exe";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            object gameNameLabelData = gameNameLabel.DataContext;
+            string gameUloadedPath = ((string)(gameNameLabelData));
+            updatedGames.Add(new Game()
+            {
+                name = gameName,
+                path = gameUloadedPath
+            });
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = updatedGames
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            gameActionLabel.Content = "Играть";
+            gameActionLabel.IsEnabled = true;
+            removeGameBtn.Visibility = visible;
+            string gamePath = ((string)(gameNameLabel.DataContext));
+            gameActionLabel.DataContext = filename;
+            gameInstalledProgress.Visibility = Visibility.Hidden;
+
+            MessageBox.Show("Игра загружена", "Готово");
         }
 
         private void SelectGameHandler (object sender, MouseButtonEventArgs e)
@@ -253,7 +335,7 @@ namespace GamaManager
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\save-data.txt";
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
             JavaScriptSerializer js = new JavaScriptSerializer();
             SavedContent loadedContent = js.Deserialize<SavedContent>(File.ReadAllText(saveDataFilePath));
             List<Game> loadedGames = loadedContent.games;
@@ -278,15 +360,15 @@ namespace GamaManager
                 Game loadedGame = loadedGames[gameIndex];
                 string gamePath = loadedGame.path;
                 gameActionLabel.DataContext = gamePath;
-                Visibility invisible = Visibility.Hidden;
                 gameInstalledProgress.Visibility = invisible;
+                removeGameBtn.Visibility = visible;
             }
             else
             {
                 gameActionLabel.Content = "Установить";
                 gameActionLabel.DataContext = gameData;
-                Visibility visible = Visibility.Visible;
                 gameInstalledProgress.Visibility = visible;
+                removeGameBtn.Visibility = invisible;
             }
             gameNameLabel.Text = gameName;
         }
@@ -309,6 +391,69 @@ namespace GamaManager
             else if (isInstallAction)
             {
                 InstallGame();
+            }
+        }
+
+        private void RemoveGameHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveGame();
+        }
+
+        public void RemoveGame ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            updatedGames = updatedGames.Where((Game someGame) =>
+            {
+                string gameName = gameNameLabel.Text;
+                string someGameName = someGame.name;
+                bool isCurrentGame = someGameName == gameName;
+                bool isOtherGame = !isCurrentGame;
+                string someGamePath = someGame.path;
+                if (isCurrentGame)
+                {
+                    FileInfo fileInfo = new FileInfo(someGamePath);
+                    string gameFolder = fileInfo.DirectoryName;
+                    try
+                    {
+                        Directory.Delete(gameFolder, true);
+                    }
+                    catch (Exception)
+                    {
+                        isOtherGame = true;
+                        MessageBox.Show("Игра запущена. Закройте ее и попробуйте удалить заново", "Ошибка");
+                    }
+                }
+                return isOtherGame;
+            }).ToList();
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = updatedGames
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            GetGamesList();
+        }
+
+        public void GameDownloadedHandler (object sender, EventArgs e)
+        {
+            Dialogs.DownloadGameDialog dialog = ((Dialogs.DownloadGameDialog)(sender));
+            object dialogData = dialog.DataContext;
+            string status = ((string)(dialogData));
+            GameDownloaded(status);
+        }
+
+        public void GameDownloaded (string status)
+        {
+            bool isOkStatus = status == "OK";
+            if (isOkStatus)
+            {
+                GameSuccessDownloaded();
             }
         }
 
@@ -338,6 +483,16 @@ namespace GamaManager
         public string image;
     }
 
+    class UserResponseInfo
+    {
+        public string status;
+        public User user;
+    }
 
+    class User
+    {
+        public string login;
+        public string password;
+    }
 
 }

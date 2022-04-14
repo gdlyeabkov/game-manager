@@ -25,3 +25,10 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Cake.Powershell.xml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\GamaManager.csproj.CopyComplete
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\OffersDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\OffersDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignColors.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignColors.pdb
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignThemes.Wpf.xml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.baml

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +25,65 @@ namespace GamaManager.Dialogs
         public OffersDialog()
         {
             InitializeComponent();
+
+            Initialize();
+        
+        }
+
+        public void Initialize()
+        {
+            GetOffers();
+        }
+
+        public void GetOffers ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string responseStatus = myobj.status;
+                        bool isOKStatus = responseStatus == "OK";
+                        if (isOKStatus)
+                        {
+                            List<GameResponseInfo> loadedGames = myobj.games;
+                            int countLoadedGames = loadedGames.Count;
+                            bool isGamesExists = countLoadedGames >= 1;
+                            if (isGamesExists)
+                            {
+                                foreach (GameResponseInfo gamesListItem in myobj.games)
+                                {
+                                    TabItem newGame = new TabItem();
+                                    string gamesListItemName = gamesListItem.name;
+                                    string gamesListItemUrl = gamesListItem.url;
+                                    string gamesListItemImage = gamesListItem.image;
+                                    Image newGamePhoto = new Image();
+                                    newGamePhoto.Margin = new Thickness(5);
+                                    newGamePhoto.Width = 500;
+                                    newGamePhoto.Height = 500;
+                                    newGamePhoto.BeginInit();
+                                    Uri newGamePhotoUri = new Uri(gamesListItemImage);
+                                    newGamePhoto.Source = new BitmapImage(newGamePhotoUri);
+                                    newGamePhoto.EndInit();
+                                    newGame.Content = newGamePhoto;
+                                    offersControl.Items.Add(newGame);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         private void BackBtnHandler(object sender, RoutedEventArgs e)

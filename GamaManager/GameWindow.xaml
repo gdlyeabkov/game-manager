@@ -23,7 +23,16 @@
             Background="Beige"
             DockPanel.Dock="Left"
         >
-
+            <TextBlock
+                x:Name="userLoginLabel"
+                Margin="10"
+                Text="Имя пользователя"
+            />
+            <TextBlock
+                x:Name="gameNameLabel"
+                Margin="10"
+                Text="Текущая игра"
+            />
         </StackPanel>
 
     </DockPanel>

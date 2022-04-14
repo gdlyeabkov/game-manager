@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GamaManager"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Office Ware Game Manager"
         Height="450"
@@ -18,7 +19,12 @@
             Height="35"
             Background="Red"
         >
-            
+            <TextBlock
+                x:Name="userLoginLabel"
+                Text="Имя пользователя"
+                Margin="10"
+                HorizontalAlignment="Right"
+            />
         </StackPanel>
 
         <StackPanel
@@ -150,6 +156,25 @@
                         Margin="0 5"
                     />
                 </StackPanel>
+                <materialDesign:PackIcon
+                    x:Name="removeGameBtn"
+                    Width="24"
+                    Height="24"
+                    Kind="Close"    
+                    MouseLeftButtonUp="RemoveGameHandler"
+                    Visibility="Collapsed"
+                />
+                <!--
+                    <Button
+                        x:Name="removeGameBtn"
+                        Width="24"
+                        Height="24"
+                        Content="X"    
+                        Click="RemoveGameHandler"
+                        Visibility="Collapsed"
+                    />
+                -->
+                
             </StackPanel>
         </StackPanel>
     </DockPanel>

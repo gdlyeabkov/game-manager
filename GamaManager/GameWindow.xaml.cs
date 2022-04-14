@@ -107,7 +107,8 @@ namespace GamaManager
                 DockPanel.SetDock(control, Dock.Top);
                 FileInfo gameFileInfo = new FileInfo(gamePath);
                 string gameFolder = gameFileInfo.DirectoryName;
-                string gameName = System.IO.Path.GetDirectoryName(gameFolder);
+                DirectoryInfo dirInfo = new DirectoryInfo(gameFolder);
+                string gameName = dirInfo.Name;
                 control.DataContext = gameName;
                 control.Loaded += GameLoadedHandler;
                 control.Unloaded += GameUnloadedHandler;
@@ -160,7 +161,7 @@ namespace GamaManager
         {
             if (isAppInit)
             {
-                // this.Close();
+                
             }
         }
 

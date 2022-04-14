@@ -80,7 +80,9 @@ namespace GamaManager
                         if (isUserExists)
                         {
                             string userLogin = currentUser.login;
-                            userLoginLabel.Text = userLogin;
+                            ItemCollection userMenuItems = userMenu.Items;
+                            ComboBoxItem userLoginLabel = ((ComboBoxItem)(userMenuItems[0]));
+                            userLoginLabel.Content = userLogin;
                             InitCache(userId);
                         }
                         else
@@ -237,40 +239,27 @@ namespace GamaManager
         public void InstallGame()
         {
 
-            /*Dialogs.DownloadGameDialog dialog = new Dialogs.DownloadGameDialog();
-            dialog.Closed += GameDownloadedHandler;
-            dialog.Show();*/
+            /*
+             * 
+            */
 
             object rawGameActionLabelData = gameActionLabel.DataContext;
             Dictionary<String, Object> dataParts = ((Dictionary<String, Object>)(rawGameActionLabelData));
             string gameName = ((string)(dataParts["name"]));
             string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));
-            Uri uri = new Uri(gameUrl);
-            WebClient wc = new WebClient();
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+
+            Dialogs.DownloadGameDialog dialog = new Dialogs.DownloadGameDialog(currentUserId);
+            dialog.DataContext = dataParts;
+            dialog.Closed += GameDownloadedHandler;
+            dialog.Show();
+Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             string cachePath = appFolder + gameName;
-            Directory.CreateDirectory(cachePath);
             string filename = cachePath + @"\game.exe";
-            wc.DownloadFileAsync(uri, filename);
             gameNameLabel.DataContext = ((string)(filename));
-            wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
-            wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
             gameActionLabel.IsEnabled = false;
-        }
-
-        private void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            gameInstalledProgress.Value = e.ProgressPercentage;
-            double progress = gameInstalledProgress.Value;
-            double maxProgress = gameInstalledProgress.Maximum;
-            bool isDownloaded = progress == maxProgress;
-            if (isDownloaded)
-            {
-                gameInstalledProgress.Value = 0;
-            }
         }
 
         private void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
@@ -287,7 +276,7 @@ namespace GamaManager
             }
         }
 
-        public void GameSuccessDownloaded()
+        public void GameSuccessDownloaded ()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -302,11 +291,11 @@ namespace GamaManager
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> updatedGames = loadedContent.games;
             object gameNameLabelData = gameNameLabel.DataContext;
-            string gameUloadedPath = ((string)(gameNameLabelData));
+            string gameUploadedPath = ((string)(gameNameLabelData));
             updatedGames.Add(new Game()
             {
                 name = gameName,
-                path = gameUloadedPath
+                path = gameUploadedPath
             });
             string savedContent = js.Serialize(new SavedContent
             {
@@ -318,8 +307,6 @@ namespace GamaManager
             removeGameBtn.Visibility = visible;
             string gamePath = ((string)(gameNameLabel.DataContext));
             gameActionLabel.DataContext = filename;
-            gameInstalledProgress.Visibility = Visibility.Hidden;
-
             MessageBox.Show("Игра загружена", "Готово");
         }
 
@@ -360,14 +347,12 @@ namespace GamaManager
                 Game loadedGame = loadedGames[gameIndex];
                 string gamePath = loadedGame.path;
                 gameActionLabel.DataContext = gamePath;
-                gameInstalledProgress.Visibility = invisible;
                 removeGameBtn.Visibility = visible;
             }
             else
             {
                 gameActionLabel.Content = "Установить";
                 gameActionLabel.DataContext = gameData;
-                gameInstalledProgress.Visibility = visible;
                 removeGameBtn.Visibility = invisible;
             }
             gameNameLabel.Text = gameName;
@@ -455,6 +440,35 @@ namespace GamaManager
             {
                 GameSuccessDownloaded();
             }
+        }
+
+        private void UserMenuItemSelectedHandler(object sender, RoutedEventArgs e)
+        {
+            ComboBox userMenu =  ((ComboBox)(sender));
+            int userMenuItemIndex = userMenu.SelectedIndex;
+            UserMenuItemSelected(userMenuItemIndex);
+        }
+
+        public void UserMenuItemSelected(int index)
+        {
+            bool isExit = index == 1;
+            if (isExit)
+            {
+                Dialogs.LoginDialog dialog = new Dialogs.LoginDialog();
+                dialog.Show();
+                this.Close();
+            }
+        }
+
+        private void OpenAddFriendHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAddFriend();
+        }
+
+        public void OpenAddFriend()
+        {
+            Dialogs.LoginDialog dialog = new Dialogs.LoginDialog();
+            dialog.Show();
         }
 
     }

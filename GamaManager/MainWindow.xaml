@@ -14,17 +14,45 @@
     <DockPanel
         x:Name="game"    
     >
+        <Menu>
+            <MenuItem
+                Header="Друзья"    
+            >
+                <MenuItem
+                    Header="Добавить друга"
+                    Click="OpenAddFriendHandler"
+                />
+            </MenuItem>
+        </Menu>
         <StackPanel
             DockPanel.Dock="Top"
             Height="35"
             Background="Red"
         >
-            <TextBlock
-                x:Name="userLoginLabel"
-                Text="Имя пользователя"
+            <ComboBox
+                x:Name="userMenu"
                 Margin="10"
+                Width="175"
                 HorizontalAlignment="Right"
-            />
+                SelectedIndex="0"
+                SelectionChanged="UserMenuItemSelectedHandler"
+            >
+                <ComboBoxItem
+                    Visibility="Collapsed"
+                    Content="Имя пользователя"    
+                />
+                <ComboBoxItem
+                    Content="Выйти из аккаунта"    
+                />
+            </ComboBox>
+            <!--
+                <TextBlock
+                    x:Name="userLoginLabel"
+                    Text="Имя пользователя"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                />
+            -->
         </StackPanel>
 
         <StackPanel
@@ -149,12 +177,14 @@
                         Content="Установить"
                         Click="GameActionHandler"    
                     />
-                    <ProgressBar
-                        x:Name="gameInstalledProgress"
-                        Height="25"
-                        Width="350"
-                        Margin="0 5"
-                    />
+                    <!--
+                        <ProgressBar
+                            x:Name="gameInstalledProgress"
+                            Height="25"
+                            Width="350"
+                            Margin="0 5"
+                        />
+                    -->
                 </StackPanel>
                 <materialDesign:PackIcon
                     x:Name="removeGameBtn"

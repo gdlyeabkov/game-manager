@@ -32,3 +32,5 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\DownloadGameDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\DownloadGameDialog.baml

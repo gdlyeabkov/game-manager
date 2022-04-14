@@ -23,15 +23,17 @@ namespace GamaManager.Dialogs
     public partial class DownloadGameDialog : Window
     {
 
+        public string currentUserId = "";
+
         public DownloadGameDialog(string currentUserId)
         {
             InitializeComponent();
 
-            Initialize(currentUserId);
+            this.currentUserId = currentUserId;
 
         }
 
-        public void Initialize (string currentUserId)
+        public void Initialize ()
         {
             object rawDialogData = this.DataContext;
             Dictionary<String, Object> dialogData = ((Dictionary<String, Object>)(rawDialogData));
@@ -79,6 +81,11 @@ namespace GamaManager.Dialogs
                 this.DataContext = "Error";
                 this.Close();
             }
+        }
+
+        private void InitializeHandler (object sender, RoutedEventArgs e)
+        {
+            Initialize();
         }
 
     }

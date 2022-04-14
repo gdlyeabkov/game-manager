@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\wpf_projects\GamaManager\GamaManager\App.xaml
-5608608452
+62019733327
 
-10909058647
+111918689684
 19208120157
-Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
+Dialogs\DownloadGameDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
 
 False
 

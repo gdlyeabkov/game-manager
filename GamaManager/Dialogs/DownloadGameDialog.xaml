@@ -8,6 +8,8 @@
         Title="Загрузка игры"
         Height="250"
         Width="800"
+        Topmost="True"
+        Loaded="InitializeHandler"
     >
     <DockPanel>
         <ProgressBar

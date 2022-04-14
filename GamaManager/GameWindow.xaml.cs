@@ -39,11 +39,19 @@ namespace GamaManager
             invisible = Visibility.Collapsed;
             object gameData = this.DataContext;
             string gamePath = ((string)(gameData));
-            GameIntegrationManager control = new GameIntegrationManager(this, gamePath);
-            game.Children.Add(control);
-            DockPanel.SetDock(control, Dock.Top);
-            control.Loaded += GameLoadedHandler;
-            control.Unloaded += GameUnloadedHandler;
+            try
+            {
+                GameIntegrationManager control = new GameIntegrationManager(this, gamePath);
+                game.Children.Add(control);
+                DockPanel.SetDock(control, Dock.Top);
+                control.Loaded += GameLoadedHandler;
+                control.Unloaded += GameUnloadedHandler;
+            }
+            catch (Exception)
+            {
+                // при неудачном открытии игры
+                this.Close();
+            }
         }
 
         public void GameUnloadedHandler (object sender, EventArgs e)
@@ -59,7 +67,6 @@ namespace GamaManager
 
         private void GlobalHotKeyHandler(object sender, KeyEventArgs e)
         {
-            // debugger.Speak("Открываю вспомогательное меню");
             var shiftModifier = Keyboard.Modifiers & ModifierKeys.Shift;
             bool isShiftModifierEnabled = shiftModifier > 0;
             Key currentKey = e.Key;
@@ -86,14 +93,12 @@ namespace GamaManager
             if (isAppInit)
             {
                 this.Close();
-                debugger.Speak("Закрылась");
             }
         }
 
         public void CloseGame()
         {
             this.Close();
-            debugger.Speak("Закрылась");
         }
 
     }

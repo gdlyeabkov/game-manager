@@ -96,7 +96,7 @@ namespace GamaManager
 
         protected override void Dispose(bool disposing)
         {
-            window.Close();
+            
         }
 
     }

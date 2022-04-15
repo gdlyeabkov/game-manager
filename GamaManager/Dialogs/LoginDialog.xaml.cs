@@ -36,32 +36,40 @@ namespace GamaManager.Dialogs
         {
             string authLoginFieldContent = authLoginField.Text;
             string authPasswordFieldContent = authPasswordField.Password;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/check/?login=" + authLoginFieldContent + "&password=" + authPasswordFieldContent);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/check/?login=" + authLoginFieldContent + "&password=" + authPasswordFieldContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    LoginResponseInfo myobj = (LoginResponseInfo)js.Deserialize(objText, typeof(LoginResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        // OpenManager(authLoginFieldContent, authPasswordFieldContent);
-                        string id = myobj.id;
-                        OpenManager(id);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось войти в аккаунт", "Ошибка");
-                    }
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
 
+                        LoginResponseInfo myobj = (LoginResponseInfo)js.Deserialize(objText, typeof(LoginResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            // OpenManager(authLoginFieldContent, authPasswordFieldContent);
+                            string id = myobj.id;
+                            OpenManager(id);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось войти в аккаунт", "Ошибка");
+                        }
+
+                    }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -75,32 +83,40 @@ namespace GamaManager.Dialogs
             string registerLoginFieldContent = registerLoginField.Text;
             string registerPasswordFieldContent = registerPasswordField.Password;
             string registerConfirmPasswordFieldContent = registerConfirmPasswordField.Password;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
                     
-                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+                        RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
 
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
-                    {
-                        // OpenManager(registerLoginFieldContent, registerPasswordFieldContent);
-                        string id = myobj.id;
-                        OpenManager(id);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось создать аккаунт", "Ошибка");
-                    }
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            // OpenManager(registerLoginFieldContent, registerPasswordFieldContent);
+                            string id = myobj.id;
+                            OpenManager(id);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось создать аккаунт", "Ошибка");
+                        }
 
+                    }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 

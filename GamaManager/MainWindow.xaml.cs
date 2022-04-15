@@ -25,6 +25,7 @@ using System.Web.Script.Serialization;
 using System.IO;
 using System.Windows.Controls.Primitives;
 using MaterialDesignThemes.Wpf;
+using System.Windows.Threading;
 
 namespace GamaManager
 {
@@ -39,6 +40,9 @@ namespace GamaManager
         public Visibility visible;
         public Visibility invisible;
         public Brush friendRequestBackground;
+        public bool isAppInit = false;
+        public DispatcherTimer timer;
+        public int timerHours = 0;
 
         public MainWindow(string id)
         {
@@ -54,129 +58,235 @@ namespace GamaManager
             GetUser(id);
             InitConstants();
             ShowOffers();
-            GetGamesList();
+            GetGamesList("");
             GetFriendRequests();
+            GetGamesInfo();
+            GetUserInfo();
+        
+        }
 
+        public void GetGamesInfo ()
+        {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> myGames = loadedContent.games;
+            foreach (Game myGame in myGames)
+            {
+                string myGameName = myGame.name;
+                string myGameHours = myGame.hours;
+                string myGameLastLaunchDate = myGame.date;
+                DockPanel gameStats = new DockPanel();
+                gameStats.Height = 150;
+                gameStats.Background = System.Windows.Media.Brushes.DarkGray;
+                Image gameStatsImg = new Image();
+                gameStatsImg.Width = 125;
+                gameStatsImg.Height = 125;
+                gameStatsImg.Margin = new Thickness(10);
+                gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                gameStats.Children.Add(gameStatsImg);
+                TextBlock gameStatsNameLabel = new TextBlock();
+                gameStatsNameLabel.Margin = new Thickness(10);
+                gameStatsNameLabel.FontSize = 18;
+                gameStatsNameLabel.Text = myGameName;
+                gameStats.Children.Add(gameStatsNameLabel);
+                StackPanel gameStatsInfo = new StackPanel();
+                gameStatsInfo.Margin = new Thickness(10);
+                gameStatsInfo.VerticalAlignment = VerticalAlignment.Bottom;
+                gameStatsInfo.HorizontalAlignment = HorizontalAlignment.Right;
+                TextBlock gameStatsInfoHoursLabel = new TextBlock();
+                gameStatsInfoHoursLabel.Margin = new Thickness(0, 5, 0, 5);
+                string gameStatsInfoHoursLabelContent = myGameHours + " часов всего";
+                gameStatsInfoHoursLabel.Text = gameStatsInfoHoursLabelContent;
+                gameStatsInfo.Children.Add(gameStatsInfoHoursLabel);
+                TextBlock gameStatsInfoLastLaunchLabel = new TextBlock();
+                gameStatsInfoLastLaunchLabel.Margin = new Thickness(0, 5, 0, 5);
+                string gameStatsInfoLastLaunchLabelContent = "Последний запуск " + myGameLastLaunchDate;
+                gameStatsInfoLastLaunchLabel.Text = gameStatsInfoLastLaunchLabelContent;
+                gameStatsInfo.Children.Add(gameStatsInfoLastLaunchLabel);
+                gameStats.Children.Add(gameStatsInfo);
+                gamesInfo.Children.Add(gameStats);
+            }
+        }
+
+        public void GetUserInfo ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> myGames = loadedContent.games;
+            int countGames = myGames.Count;
+            string rawCountGames = countGames.ToString();
+            countGamesLabel.Text = rawCountGames;
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User currentUser = myobj.user;
+                            List<FriendResponseInfo> friendsIds = currentUser.friends;
+                            int countFriends = friendsIds.Count;
+                            string rawCountFriends = countFriends.ToString();
+                            countFriendsLabel.Text = rawCountFriends;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetFriendRequests ()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/get/?id=" + currentUserId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+            try {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        List<FriendRequest> myRequests = new List<FriendRequest>();
-                        List<FriendRequest> requests = myobj.requests;
-                        foreach (FriendRequest request in requests)
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            string recepientId = request.friend;
-                            bool isRequestForMe = currentUserId == recepientId;
-                            if (isRequestForMe)
+                            List<FriendRequest> myRequests = new List<FriendRequest>();
+                            List<FriendRequest> requests = myobj.requests;
+                            foreach (FriendRequest request in requests)
                             {
-                                myRequests.Add(request);
-                            }
-                        }
-                        foreach (FriendRequest myRequest in myRequests)
-                        {
-                            string senderId = myRequest.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + senderId);
-                            webRequest.Method = "GET";
-                            webRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
-                            {
-                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                string recepientId = request.friend;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
                                 {
-                                    js = new JavaScriptSerializer();
-                                    objText = innerReader.ReadToEnd();
-
-                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                    status = myInnerObj.status;
-                                    isOkStatus = status == "OK";
-                                    if (isOkStatus)
+                                    myRequests.Add(request);
+                                }
+                            }
+                            foreach (FriendRequest myRequest in myRequests)
+                            {
+                                string senderId = myRequest.user;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + senderId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                     {
-                                        User user = myInnerObj.user;
-                                        string senderLogin = user.login;
-                                        Popup friendRequest = new Popup();
-                                        friendRequest.Placement = PlacementMode.Absolute;
-                                        friendRequest.PlacementTarget = this;
-                                        friendRequest.Width = 225;
-                                        friendRequest.Height = 275;
-                                        StackPanel friendRequestBody = new StackPanel();
-                                        friendRequestBody.Background = friendRequestBackground;
-                                        PackIcon closeRequestBtn = new PackIcon();
-                                        closeRequestBtn.Kind = PackIconKind.Close;
-                                        closeRequestBtn.DataContext = friendRequest;
-                                        closeRequestBtn.MouseLeftButtonUp += CloseFriendRequestHandler;
-                                        friendRequestBody.Children.Add(closeRequestBtn);
-                                        Image friendRequestBodySenderAvatar = new Image();
-                                        friendRequestBodySenderAvatar.Width = 100;
-                                        friendRequestBodySenderAvatar.Height = 100;
-                                        friendRequestBodySenderAvatar.BeginInit();
-                                        Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                        BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
-                                        friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
-                                        friendRequestBodySenderAvatar.EndInit();
-                                        friendRequestBody.Children.Add(friendRequestBodySenderAvatar);
-                                        TextBlock friendRequestBodySenderLoginLabel = new TextBlock();
-                                        friendRequestBodySenderLoginLabel.Margin = new Thickness(10);
-                                        friendRequestBodySenderLoginLabel.Text = senderLogin;
-                                        friendRequestBody.Children.Add(friendRequestBodySenderLoginLabel);
-                                        StackPanel friendRequestBodyActions = new StackPanel();
-                                        friendRequestBodyActions.Orientation = Orientation.Horizontal;
-                                        Button acceptActionBtn = new Button();
-                                        acceptActionBtn.Margin = new Thickness(10, 5, 10, 5);
-                                        acceptActionBtn.Height = 25;
-                                        acceptActionBtn.Width = 65;
-                                        acceptActionBtn.Content = "Принять";
-                                        string myNewFriendId = myRequest.user;
-                                        string myRequestId = myRequest._id;
-                                        Dictionary<String, Object>  acceptActionBtnData = new Dictionary<String, Object>();
-                                        acceptActionBtnData.Add("friendId", ((string)(myNewFriendId)));
-                                        acceptActionBtnData.Add("requestId", ((string)(myRequestId)));
-                                        acceptActionBtnData.Add("request", ((Popup)(friendRequest)));
-                                        acceptActionBtn.DataContext = acceptActionBtnData;
-                                        acceptActionBtn.Click += AcceptFriendRequestHandler;
-                                        friendRequestBodyActions.Children.Add(acceptActionBtn);
-                                        Button rejectActionBtn = new Button();
-                                        rejectActionBtn.Margin = new Thickness(10, 5, 10, 5);
-                                        rejectActionBtn.Height = 25;
-                                        rejectActionBtn.Width = 65;
-                                        rejectActionBtn.Content = "Отклонить";
-                                        Dictionary<String, Object> rejectActionBtnData = new Dictionary<String, Object>();
-                                        rejectActionBtnData.Add("friendId", ((string)(myNewFriendId)));
-                                        rejectActionBtnData.Add("requestId", ((string)(myRequestId)));
-                                        rejectActionBtnData.Add("request", ((Popup)(friendRequest)));
-                                        rejectActionBtn.DataContext = rejectActionBtnData;
-                                        rejectActionBtn.Click += RejectFriendRequestHandler;
-                                        friendRequestBodyActions.Children.Add(rejectActionBtn);
-                                        friendRequestBody.Children.Add(friendRequestBodyActions);
-                                        friendRequest.Child = friendRequestBody;
-                                        friendRequests.Children.Add(friendRequest);
-                                        friendRequest.IsOpen = true;
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string senderLogin = user.login;
+                                            Popup friendRequest = new Popup();
+                                            friendRequest.Placement = PlacementMode.Custom;
+                                            friendRequest.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                            friendRequest.PlacementTarget = this;
+                                            friendRequest.Width = 225;
+                                            friendRequest.Height = 275;
+                                            StackPanel friendRequestBody = new StackPanel();
+                                            friendRequestBody.Background = friendRequestBackground;
+                                            PackIcon closeRequestBtn = new PackIcon();
+                                            closeRequestBtn.Margin = new Thickness(10);
+                                            closeRequestBtn.Kind = PackIconKind.Close;
+                                            closeRequestBtn.DataContext = friendRequest;
+                                            closeRequestBtn.MouseLeftButtonUp += CloseFriendRequestHandler;
+                                            friendRequestBody.Children.Add(closeRequestBtn);
+                                            Image friendRequestBodySenderAvatar = new Image();
+                                            friendRequestBodySenderAvatar.Width = 100;
+                                            friendRequestBodySenderAvatar.Height = 100;
+                                            friendRequestBodySenderAvatar.BeginInit();
+                                            Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                            BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
+                                            friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
+                                            friendRequestBodySenderAvatar.EndInit();
+                                            friendRequestBody.Children.Add(friendRequestBodySenderAvatar);
+                                            TextBlock friendRequestBodySenderLoginLabel = new TextBlock();
+                                            friendRequestBodySenderLoginLabel.Margin = new Thickness(10);
+                                            friendRequestBodySenderLoginLabel.Text = senderLogin;
+                                            friendRequestBody.Children.Add(friendRequestBodySenderLoginLabel);
+                                            StackPanel friendRequestBodyActions = new StackPanel();
+                                            friendRequestBodyActions.Orientation = Orientation.Horizontal;
+                                            Button acceptActionBtn = new Button();
+                                            acceptActionBtn.Margin = new Thickness(10, 5, 10, 5);
+                                            acceptActionBtn.Height = 25;
+                                            acceptActionBtn.Width = 65;
+                                            acceptActionBtn.Content = "Принять";
+                                            string myNewFriendId = myRequest.user;
+                                            string myRequestId = myRequest._id;
+                                            Dictionary<String, Object>  acceptActionBtnData = new Dictionary<String, Object>();
+                                            acceptActionBtnData.Add("friendId", ((string)(myNewFriendId)));
+                                            acceptActionBtnData.Add("requestId", ((string)(myRequestId)));
+                                            acceptActionBtnData.Add("request", ((Popup)(friendRequest)));
+                                            acceptActionBtn.DataContext = acceptActionBtnData;
+                                            acceptActionBtn.Click += AcceptFriendRequestHandler;
+                                            friendRequestBodyActions.Children.Add(acceptActionBtn);
+                                            Button rejectActionBtn = new Button();
+                                            rejectActionBtn.Margin = new Thickness(10, 5, 10, 5);
+                                            rejectActionBtn.Height = 25;
+                                            rejectActionBtn.Width = 65;
+                                            rejectActionBtn.Content = "Отклонить";
+                                            Dictionary<String, Object> rejectActionBtnData = new Dictionary<String, Object>();
+                                            rejectActionBtnData.Add("friendId", ((string)(myNewFriendId)));
+                                            rejectActionBtnData.Add("requestId", ((string)(myRequestId)));
+                                            rejectActionBtnData.Add("request", ((Popup)(friendRequest)));
+                                            rejectActionBtn.DataContext = rejectActionBtnData;
+                                            rejectActionBtn.Click += RejectFriendRequestHandler;
+                                            friendRequestBodyActions.Children.Add(rejectActionBtn);
+                                            friendRequestBody.Children.Add(friendRequestBodyActions);
+                                            friendRequest.Child = friendRequestBody;
+                                            friendRequests.Children.Add(friendRequest);
+                                            friendRequest.IsOpen = true;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        CloseManager();
-                    }
+                        else
+                        {
+                            CloseManager();
+                        }
 
+                    }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -184,43 +294,54 @@ namespace GamaManager
         {
             currentUserId = userId;
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + userId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+            try {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + userId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        currentUser = myobj.user;
-                        bool isUserExists = currentUser != null;
-                        if (isUserExists)
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            string userLogin = currentUser.login;
-                            ItemCollection userMenuItems = userMenu.Items;
-                            ComboBoxItem userLoginLabel = ((ComboBoxItem)(userMenuItems[0]));
-                            userLoginLabel.Content = userLogin;
-                            InitCache(userId);
+                            currentUser = myobj.user;
+                            bool isUserExists = currentUser != null;
+                            if (isUserExists)
+                            {
+                                string userLogin = currentUser.login;
+                                ItemCollection userMenuItems = userMenu.Items;
+                                ComboBoxItem userLoginLabel = ((ComboBoxItem)(userMenuItems[0]));
+                                userLoginLabel.Content = userLogin;
+                                ItemCollection profileMenuItems = profileMenu.Items;
+                                object rawMainProfileMenuItem = profileMenuItems[0];
+                                ComboBoxItem mainProfileMenuItem = ((ComboBoxItem)(rawMainProfileMenuItem));
+                                mainProfileMenuItem.Content = userLogin;
+                                InitCache(userId);
+                            }
+                            else
+                            {
+                                CloseManager();
+                            }
                         }
                         else
                         {
                             CloseManager();
                         }
-                    }
-                    else
-                    {
-                        CloseManager();
-                    }
 
+                    }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -237,7 +358,7 @@ namespace GamaManager
             friendRequestBackground = System.Windows.Media.Brushes.AliceBlue;
         }
 
-        public void GetGamesList ()
+        public void GetGamesList (string keywords)
         {
             try
             {
@@ -255,12 +376,25 @@ namespace GamaManager
                         bool isOKStatus = responseStatus == "OK";
                         if (isOKStatus)
                         {
+                            games.Children.Clear();
                             List<GameResponseInfo> loadedGames = myobj.games;
+                            loadedGames = loadedGames.Where<GameResponseInfo>((GameResponseInfo gameInfo) =>
+                            {
+                                int keywordsLength = keywords.Length;
+                                bool isKeywordsSetted = keywordsLength >= 1;
+                                bool isKeywordsNotSetted = !isKeywordsSetted;
+                                string gameName = gameInfo.name;
+                                string ignoreCaseKeywords = keywords.ToLower();
+                                string ignoreCaseGameName = gameName.ToLower();
+                                bool isGameNameMatch = ignoreCaseGameName.Contains(ignoreCaseKeywords);
+                                bool isSearchEnabled = isKeywordsSetted && isGameNameMatch;
+                                bool isGameMatch = isSearchEnabled || isKeywordsNotSetted;
+                                return isGameMatch;
+                            }).ToList<GameResponseInfo>();
                             int countLoadedGames = loadedGames.Count;
                             bool isGamesExists = countLoadedGames >= 1;
                             if (isGamesExists)
                             {
-                                games.Children.Clear();
                                 foreach (GameResponseInfo gamesListItem in loadedGames)
                                 {
                                     StackPanel newGame = new StackPanel();
@@ -352,9 +486,81 @@ namespace GamaManager
 
         public void RunGame()
         {
+            StartDetectGameHours();
             GameWindow window = new GameWindow(currentUserId);
             window.DataContext = gameActionLabel.DataContext;
+            window.Closed += ComputeGameHoursHandler;
             window.Show();
+        }
+
+        public void StartDetectGameHours ()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromHours(1);
+            timer.Tick += GameHoursUpdateHandler;
+            timer.Start();
+            timerHours = 0;
+        }
+
+        public void GameHoursUpdateHandler (object sender, EventArgs e)
+        {
+            timerHours++;
+        }
+
+        public void ComputeGameHoursHandler (object sender, EventArgs e)
+        {
+            ComputeGameHours();
+        }
+
+        public void ComputeGameHours ()
+        {
+            timer.Stop();
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            string gameName = gameNameLabel.Text;
+            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            string cachePath = appPath + gameName;
+            string filename = cachePath + @"\game.exe";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            object gameNameLabelData = gameNameLabel.DataContext;
+            string gameUploadedPath = ((string)(gameNameLabelData));
+            DateTime currentDate = DateTime.Now;
+            string gameLastLaunchDate = currentDate.ToLongDateString();
+            string rawTimerHours = timerHours.ToString();
+            int gameIndex = -1;
+            foreach (Game someGame in updatedGames)
+            {
+                string someGameName = someGame.name;
+                bool isNamesMatch = someGameName == gameName;
+                if (isNamesMatch)
+                {
+                    gameIndex = updatedGames.IndexOf(someGame);
+                    break;
+                }
+            }
+            bool isGameFound = gameIndex >= 0;
+            if (isGameFound)
+            {
+                Game currentGame = updatedGames[gameIndex];
+                string currentGameName = currentGame.name;
+                string currentGamePath = currentGame.path;
+                updatedGames[gameIndex] = new Game()
+                {
+                    name = currentGameName,
+                    path = currentGamePath,
+                    hours = rawTimerHours,
+                    date = gameLastLaunchDate,
+                };
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = updatedGames
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+            }
         }
 
         private void InstallGameHandler(object sender, RoutedEventArgs e)
@@ -418,10 +624,15 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
             List<Game> updatedGames = loadedContent.games;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
+            string gameHours = "0";
+            DateTime currentDate = DateTime.Now;
+            string gameLastLaunchDate = currentDate.ToLongDateString();
             updatedGames.Add(new Game()
             {
                 name = gameName,
-                path = gameUploadedPath
+                path = gameUploadedPath,
+                hours = gameHours,
+                date = gameLastLaunchDate,
             });
             string savedContent = js.Serialize(new SavedContent
             {
@@ -548,7 +759,8 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                 games = updatedGames
             });
             File.WriteAllText(saveDataFilePath, savedContent);
-            GetGamesList();
+            string keywords = keywordsLabel.Text;
+            GetGamesList(keywords);
         }
 
         public void GameDownloadedHandler (object sender, EventArgs e)
@@ -635,52 +847,59 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void RejectFriendRequest (string friendId, string requestId, Popup request)
         {
-
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/reject/?id=" + requestId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+            try {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/reject/?id=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
-                        webRequest.Method = "GET";
-                        webRequest.UserAgent = ".NET Framework Test Client";
-                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
                             {
-                                js = new JavaScriptSerializer();
-                                objText = innerReader.ReadToEnd();
-
-                                myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                status = myobj.status;
-                                isOkStatus = status == "OK";
-                                if (isOkStatus)
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                 {
-                                    User friend = myobj.user;
-                                    string friendLogin = friend.login;
-                                    string msgContent = "Вы отклонили приглашение в друзья";
-                                    MessageBox.Show(msgContent, "Внимание");
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        CloseFriendRequest(request);
+                                        User friend = myobj.user;
+                                        string friendLogin = friend.login;
+                                        string msgContent = "Вы отклонили приглашение в друзья";
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось отклонить приглашение", "Ошибка");
+                        else
+                        {
+                            MessageBox.Show("Не удалось отклонить приглашение", "Ошибка");
+                        }
                     }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -697,52 +916,168 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void AcceptFriendRequest (string friendId, string requestId, Popup request)
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
-                        webRequest.Method = "GET";
-                        webRequest.UserAgent = ".NET Framework Test Client";
-                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
                             {
-                                js = new JavaScriptSerializer();
-                                objText = innerReader.ReadToEnd();
-
-                                myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                status = myobj.status;
-                                isOkStatus = status == "OK";
-                                if (isOkStatus)
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                 {
-                                    User friend = myobj.user;
-                                    string friendLogin = friend.login;
-                                    string msgContent = "Пользователь " + friendLogin + " был добавлен в друзья";
-                                    MessageBox.Show(msgContent, "Внимание");
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        CloseFriendRequest(request);
+                                        User friend = myobj.user;
+                                        string friendLogin = friend.login;
+                                        string msgContent = "Пользователь " + friendLogin + " был добавлен в друзья";
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось принять приглашение", "Ошибка");
+                        else
+                        {
+                            MessageBox.Show("Не удалось принять приглашение", "Ошибка");
+                        }
                     }
                 }
             }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public CustomPopupPlacement[] FriendRequestPlacementHandler (Size popupSize, Size targetSize, Point offset)
+        {
+            return new CustomPopupPlacement[]
+            {
+                new CustomPopupPlacement(new Point(-50, 100), PopupPrimaryAxis.Vertical),
+                new CustomPopupPlacement(new Point(10, 20), PopupPrimaryAxis.Horizontal)
+            };
+        }
+
+        private void FilterGamesHandler(object sender, TextChangedEventArgs e)
+        {
+            FilterGames();
+        }
+
+        public void FilterGames ()
+        {
+            string keywords = keywordsLabel.Text;
+            GetGamesList(keywords);
+        }
+
+        private void ProfileItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)(sender));
+            int selectedIndex = comboBox.SelectedIndex;
+            ProfileItemSelected(selectedIndex);
+        }
+
+        private void ProfileItemSelected (int index)
+        {
+            bool isProfile = index == 2;
+            if (isProfile) {
+                mainControl.SelectedIndex = 1;
+            }
+            ResetMenu();
+        }
+
+        private void LibraryItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)(sender));
+            int selectedIndex = comboBox.SelectedIndex;
+            LibraryItemSelected(selectedIndex);
+        }
+
+        private void LibraryItemSelected (int index)
+        {
+            bool isHome = index == 1;
+            if (isHome)
+            {
+                mainControl.SelectedIndex = 0;
+            }
+            ResetMenu();
+        }
+
+        public void ResetMenu ()
+        {
+            if (isAppInit)
+            {
+                storeMenu.SelectedIndex = 0;
+                libraryMenu.SelectedIndex = 0;
+                communityMenu.SelectedIndex = 0;
+                profileMenu.SelectedIndex = 0;
+            }
+        }
+
+        private void ClientLoadedHandler (object sender, RoutedEventArgs e)
+        {
+            ClientLoaded();
+        }
+
+        public void ClientLoaded ()
+        {
+            isAppInit = true;
+        }
+
+        private void CommunityItemSelectedHandler(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)(sender));
+            int selectedIndex = comboBox.SelectedIndex;
+            CommunityItemSelected(selectedIndex);
+        }
+
+        public void CommunityItemSelected (int index) {
+            bool isHome = index == 1;
+            if (isHome)
+            {
+                mainControl.SelectedIndex = 0;
+            }
+            ResetMenu();
+        }
+
+        private void StoreItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)(sender));
+            int selectedIndex = comboBox.SelectedIndex;
+            StoreItemSelected(selectedIndex);
+        }
+
+        public void StoreItemSelected (int index)
+        {
+            bool isHome = index == 1;
+            if (isHome)
+            {
+                mainControl.SelectedIndex = 0;
+            }
+            ResetMenu();
         }
 
     }
@@ -756,6 +1091,8 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
     {
         public string name;
         public string path;
+        public string hours;
+        public string date;
     }
 
     class GamesListResponseInfo

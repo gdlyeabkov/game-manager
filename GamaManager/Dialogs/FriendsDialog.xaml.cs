@@ -41,80 +41,83 @@ namespace GamaManager.Dialogs
         public void GetFriends (string currentUserId, string keywords)
         {
             this.currentUserId = currentUserId;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        friends.Children.Clear();
-                        User currentUser = myobj.user;
-                        List<FriendResponseInfo> friendsIds = currentUser.friends;
-                        foreach (FriendResponseInfo friendInfo in friendsIds)
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            string friendId = friendInfo.id;
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
-                            webRequest.Method = "GET";
-                            webRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            friends.Children.Clear();
+                            User currentUser = myobj.user;
+                            List<FriendResponseInfo> friendsIds = currentUser.friends;
+                            foreach (FriendResponseInfo friendInfo in friendsIds)
                             {
-                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                string friendId = friendInfo.id;
+                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
                                 {
-                                    js = new JavaScriptSerializer();
-                                    objText = innerReader.ReadToEnd();
-
-                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                    status = myobj.status;
-                                    isOkStatus = status == "OK";
-                                    if (isOkStatus)
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                     {
-                                        User friend = myobj.user;
-                                        string friendLogin = friend.login;
-                                        string friendIgnoreCaseLogin = friendLogin.ToLower();
-                                        string ignoreCaseKeywords = keywords.ToLower();
-                                        bool isFriendMatch = friendIgnoreCaseLogin.Contains(ignoreCaseKeywords);
-                                        if (isFriendMatch)
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+
+                                        myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                        status = myobj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
                                         {
-                                            StackPanel friendsItem = new StackPanel();
-                                            friendsItem.Height = 35;
-                                            friendsItem.Orientation = Orientation.Horizontal;
-                                            Image friendAvatar = new Image();
-                                            friendAvatar.Width = 25;
-                                            friendAvatar.Height = 25;
-                                            friendAvatar.Margin = new Thickness(5);
-                                            friendAvatar.BeginInit();
-                                            Uri friendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                            friendAvatar.Source = new BitmapImage(friendAvatarUri);
-                                            friendAvatar.EndInit();
-                                            friendsItem.Children.Add(friendAvatar);
-                                            TextBlock friendLoginLabel = new TextBlock();
-                                            friendLoginLabel.Height = 25;
-                                            friendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
-                                            friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
-                                            friendLoginLabel.Text = friendLogin;
-                                            friendsItem.Children.Add(friendLoginLabel);
-                                            friends.Children.Add(friendsItem);
-                                            ContextMenu friendsItemContextMenu = new ContextMenu();
-                                            MenuItem friendsItemContextMenuItem = new MenuItem();
-                                            friendsItemContextMenuItem.Header = "Управление";
-                                            MenuItem innerFriendsItemContextMenuItem = new MenuItem();
-                                            innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
-                                            innerFriendsItemContextMenuItem.DataContext = friendId;
-                                            innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
-                                            friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
-                                            friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
-                                            friendsItem.ContextMenu = friendsItemContextMenu;
+                                            User friend = myobj.user;
+                                            string friendLogin = friend.login;
+                                            string friendIgnoreCaseLogin = friendLogin.ToLower();
+                                            string ignoreCaseKeywords = keywords.ToLower();
+                                            bool isFriendMatch = friendIgnoreCaseLogin.Contains(ignoreCaseKeywords);
+                                            if (isFriendMatch)
+                                            {
+                                                StackPanel friendsItem = new StackPanel();
+                                                friendsItem.Height = 35;
+                                                friendsItem.Orientation = Orientation.Horizontal;
+                                                Image friendAvatar = new Image();
+                                                friendAvatar.Width = 25;
+                                                friendAvatar.Height = 25;
+                                                friendAvatar.Margin = new Thickness(5);
+                                                friendAvatar.BeginInit();
+                                                Uri friendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                friendAvatar.Source = new BitmapImage(friendAvatarUri);
+                                                friendAvatar.EndInit();
+                                                friendsItem.Children.Add(friendAvatar);
+                                                TextBlock friendLoginLabel = new TextBlock();
+                                                friendLoginLabel.Height = 25;
+                                                friendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
+                                                friendLoginLabel.Text = friendLogin;
+                                                friendsItem.Children.Add(friendLoginLabel);
+                                                friends.Children.Add(friendsItem);
+                                                ContextMenu friendsItemContextMenu = new ContextMenu();
+                                                MenuItem friendsItemContextMenuItem = new MenuItem();
+                                                friendsItemContextMenuItem.Header = "Управление";
+                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
+                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
+                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                                friendsItem.ContextMenu = friendsItemContextMenu;
+                                            }
                                         }
                                     }
                                 }
@@ -122,6 +125,11 @@ namespace GamaManager.Dialogs
                         }
                     }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -135,29 +143,38 @@ namespace GamaManager.Dialogs
 
         public void RemoveFriend (string friendId)
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            try
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        MessageBox.Show("Друг был удален", "Внимание");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удается удалить друга", "Ошибка");
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            MessageBox.Show("Друг был удален", "Внимание");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                        }
                     }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 

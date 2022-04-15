@@ -61,62 +61,85 @@ namespace GamaManager.Dialogs
                         {
                             friends.Children.Clear();
                             User currentUser = myobj.user;
-                            List<FriendResponseInfo> friendsIds = currentUser.friends;
-                            foreach (FriendResponseInfo friendInfo in friendsIds)
+
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
                             {
-                                string friendId = friendInfo.id;
-                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
-                                webRequest.Method = "GET";
-                                webRequest.UserAgent = ".NET Framework Test Client";
-                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
                                 {
-                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    js = new JavaScriptSerializer();
+                                    objText = nestedReader.ReadToEnd();
+
+                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
                                     {
-                                        js = new JavaScriptSerializer();
-                                        objText = innerReader.ReadToEnd();
-
-                                        myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                        status = myobj.status;
-                                        isOkStatus = status == "OK";
-                                        if (isOkStatus)
+                                        List<Friend> friendsIds = myInnerObj.friends;
+                                        foreach (Friend friendInfo in friendsIds)
                                         {
-                                            User friend = myobj.user;
-                                            string friendLogin = friend.login;
-                                            string friendIgnoreCaseLogin = friendLogin.ToLower();
-                                            string ignoreCaseKeywords = keywords.ToLower();
-                                            bool isFriendMatch = friendIgnoreCaseLogin.Contains(ignoreCaseKeywords);
-                                            if (isFriendMatch)
+                                            string friendId = friendInfo.friend;
+                                            if (friendId != currentUserId)
                                             {
-                                                StackPanel friendsItem = new StackPanel();
-                                                friendsItem.Height = 35;
-                                                friendsItem.Orientation = Orientation.Horizontal;
-                                                Image friendAvatar = new Image();
-                                                friendAvatar.Width = 25;
-                                                friendAvatar.Height = 25;
-                                                friendAvatar.Margin = new Thickness(5);
-                                                friendAvatar.BeginInit();
-                                                Uri friendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                friendAvatar.Source = new BitmapImage(friendAvatarUri);
-                                                friendAvatar.EndInit();
-                                                friendsItem.Children.Add(friendAvatar);
-                                                TextBlock friendLoginLabel = new TextBlock();
-                                                friendLoginLabel.Height = 25;
-                                                friendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
-                                                friendLoginLabel.Text = friendLogin;
-                                                friendsItem.Children.Add(friendLoginLabel);
-                                                friends.Children.Add(friendsItem);
-                                                ContextMenu friendsItemContextMenu = new ContextMenu();
-                                                MenuItem friendsItemContextMenuItem = new MenuItem();
-                                                friendsItemContextMenuItem.Header = "Управление";
-                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
-                                                innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
-                                                innerFriendsItemContextMenuItem.DataContext = friendId;
-                                                innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
-                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
-                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
-                                                friendsItem.ContextMenu = friendsItemContextMenu;
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+
+                                                        myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            User friend = myobj.user;
+                                                            string friendLogin = friend.login;
+                                                            string friendIgnoreCaseLogin = friendLogin.ToLower();
+                                                            string ignoreCaseKeywords = keywords.ToLower();
+                                                            bool isFriendMatch = friendIgnoreCaseLogin.Contains(ignoreCaseKeywords);
+                                                            if (isFriendMatch)
+                                                            {
+                                                                StackPanel friendsItem = new StackPanel();
+                                                                friendsItem.Height = 35;
+                                                                friendsItem.Orientation = Orientation.Horizontal;
+                                                                Image friendAvatar = new Image();
+                                                                friendAvatar.Width = 25;
+                                                                friendAvatar.Height = 25;
+                                                                friendAvatar.Margin = new Thickness(5);
+                                                                friendAvatar.BeginInit();
+                                                                Uri friendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                friendAvatar.Source = new BitmapImage(friendAvatarUri);
+                                                                friendAvatar.EndInit();
+                                                                friendsItem.Children.Add(friendAvatar);
+                                                                TextBlock friendLoginLabel = new TextBlock();
+                                                                friendLoginLabel.Height = 25;
+                                                                friendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
+                                                                friendLoginLabel.Text = friendLogin;
+                                                                friendsItem.Children.Add(friendLoginLabel);
+                                                                friends.Children.Add(friendsItem);
+                                                                ContextMenu friendsItemContextMenu = new ContextMenu();
+                                                                MenuItem friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Управление";
+                                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                                innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                                                friendsItem.ContextMenu = friendsItemContextMenu;
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -146,7 +169,6 @@ namespace GamaManager.Dialogs
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -163,6 +185,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             MessageBox.Show("Друг был удален", "Внимание");
+                            GetFriends(currentUserId, "");
                         }
                         else
                         {

@@ -26,6 +26,7 @@ using System.IO;
 using System.Windows.Controls.Primitives;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Threading;
+using GamaManager.Dialogs;
 
 namespace GamaManager
 {
@@ -128,7 +129,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -138,14 +139,18 @@ namespace GamaManager
                         js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
 
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
 
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            User currentUser = myobj.user;
-                            List<FriendResponseInfo> friendsIds = currentUser.friends;
+                            List<Friend> friendsIds = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
                             int countFriends = friendsIds.Count;
                             string rawCountFriends = countFriends.ToString();
                             countFriendsLabel.Text = rawCountFriends;
@@ -1119,12 +1124,6 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         public string _id;
         public string login;
         public string password;
-        public List<FriendResponseInfo> friends;
-    }
-
-    class FriendResponseInfo
-    {
-        public string id;
     }
 
     class FriendRequestsResponseInfo

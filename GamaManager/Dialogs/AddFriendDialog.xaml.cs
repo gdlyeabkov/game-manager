@@ -129,23 +129,45 @@ namespace GamaManager.Dialogs
                                     usersItem.Children.Add(usersItemLoginLabel);
                                     users.Children.Add(usersItem);
                                     usersItem.DataContext = userId;
-                                    List<FriendResponseInfo> myFriends = currentUser.friends;
-                                    List<string> friendsIds = new List<string>();
-                                    foreach (FriendResponseInfo myFriend in myFriends)
+                                    
+                                    webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                                    webRequest.Method = "GET";
+                                    webRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
                                     {
-                                        string friendId = myFriend.id;
-                                        friendsIds.Add(friendId);
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+
+                                            FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                            status = myobj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                List<Friend> myFriends = myInnerObj.friends;
+
+
+                                                List<string> friendsIds = new List<string>();
+                                                foreach (Friend myFriend in myFriends)
+                                                {
+                                                    string friendId = myFriend.user;
+                                                    friendsIds.Add(friendId);
+                                                }
+                                                bool isMyFriend = friendsIds.Contains(userId);
+                                                if (isMyFriend)
+                                                {
+                                                    usersItemLoginLabel.Foreground = disabledColor;
+                                                }
+                                                else
+                                                {
+                                                    usersItem.MouseLeftButtonUp += ShowFriendCodeHandler;
+                                                }
+                                                usersIds.Add(userId);
+                                            }
+                                        }
                                     }
-                                    bool isMyFriend = friendsIds.Contains(userId);
-                                    if (isMyFriend)
-                                    {
-                                        usersItemLoginLabel.Foreground = disabledColor;
-                                    }
-                                    else
-                                    {
-                                        usersItem.MouseLeftButtonUp += ShowFriendCodeHandler;
-                                    }
-                                    usersIds.Add(userId);
                                 }
                             }
                         }
@@ -264,6 +286,19 @@ namespace GamaManager.Dialogs
     {
         public string status;
         public List<User> users;
+    }
+
+    class FriendsResponseInfo
+    {
+        public string status;
+        public List<Friend> friends;
+    }
+
+    class Friend
+    {
+        public string _id;
+        public string user;
+        public string friend;
     }
 
 }

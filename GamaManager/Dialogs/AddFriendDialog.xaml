@@ -1,0 +1,39 @@
+﻿<Window x:Class="GamaManager.Dialogs.AddFriendDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager.Dialogs"
+        mc:Ignorable="d"
+        Title="Добавить друга"
+        Height="450"
+        Width="800"
+    >
+    <DockPanel>
+        <StackPanel>
+            <TextBox
+                x:Name="friendCodeLabel"
+                Width="375"    
+                Margin="5"
+                TextChanged="DetectFriendCodeContentHandler"
+            />
+            <ScrollViewer
+                Height="315"    
+            >
+                <StackPanel
+                    x:Name="users"    
+                >
+
+                </StackPanel>
+            </ScrollViewer>
+            <Button
+                x:Name="sendFriendRequestBtn"
+                Margin="5"
+                Width="175"    
+                Content="Отправить приглашение"
+                IsEnabled="False"
+                Click="SendFriendRequestHandler"
+            />
+        </StackPanel>
+    </DockPanel>
+</Window>

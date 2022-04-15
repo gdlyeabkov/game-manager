@@ -34,3 +34,7 @@ C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\LoginDialog.baml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\DownloadGameDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\DownloadGameDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\AddFriendDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\AddFriendDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendsDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendsDialog.baml

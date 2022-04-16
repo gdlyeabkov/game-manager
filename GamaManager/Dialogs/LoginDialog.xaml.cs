@@ -43,7 +43,7 @@ namespace GamaManager.Dialogs
             string authPasswordFieldContent = authPasswordField.Password;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/check/?login=" + authLoginFieldContent + "&password=" + authPasswordFieldContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/check/?login=" + authLoginFieldContent + "&password=" + authPasswordFieldContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -90,7 +90,7 @@ namespace GamaManager.Dialogs
             string registerConfirmPasswordFieldContent = registerConfirmPasswordField.Password;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())

@@ -72,7 +72,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -188,7 +188,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -231,7 +231,7 @@ namespace GamaManager
         public void GetFriendRequests ()
         {
             try {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -261,7 +261,7 @@ namespace GamaManager
                             foreach (FriendRequest myRequest in myRequests)
                             {
                                 string senderId = myRequest.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + senderId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -363,7 +363,7 @@ namespace GamaManager
             currentUserId = userId;
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
             try {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + userId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -430,7 +430,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -916,7 +916,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         public void RejectFriendRequest (string friendId, string requestId, Popup request)
         {
             try {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -932,7 +932,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -986,7 +986,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1002,7 +1002,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1174,7 +1174,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
             object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
             string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
             string userAboutBoxContent = userAboutBox.Text;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1217,7 +1217,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                 Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
                 try
                 {
-                    /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                    /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1252,7 +1252,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                                 Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                 if (isMyFriendOnline)
                                 {*/
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + result);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())

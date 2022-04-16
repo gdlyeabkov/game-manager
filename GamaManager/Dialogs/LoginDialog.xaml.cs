@@ -1,9 +1,13 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
@@ -14,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WebSocketSharp;
 
 namespace GamaManager.Dialogs
 {
@@ -85,7 +90,8 @@ namespace GamaManager.Dialogs
             string registerConfirmPasswordFieldContent = registerConfirmPasswordField.Password;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -139,6 +145,39 @@ namespace GamaManager.Dialogs
         public void ToggleMode(int modeIndex)
         {
             links.SelectedIndex = modeIndex;
+        }
+
+        private void WindowLoadedHandler (object sender, RoutedEventArgs e)
+        {
+            // ListenSockets();
+        }
+
+        public async void ListenSockets()
+        {
+
+            var client = new SocketIO("http://localhost:4000/");
+            client.OnConnected += async (sender, e) =>
+            {
+                Debugger.Log(0, "debug", "client socket conntected");
+                // await client.EmitAsync("event", "event");
+            };
+            client.OnDisconnected += async (sender, e) =>
+            {
+                Debugger.Log(0, "debug", "client socket disconntected");
+                // await client.EmitAsync("event", "event");
+            };
+            client.OnError += async (sender, e) =>
+            {
+                Debugger.Log(0, "debug", "client socket error");
+            };
+
+            client.On("hello", response =>
+            {
+                Debugger.Log(0, "debug", response.ToString());
+                var result = response.GetValue<string>();
+                Debugger.Log(0, "debug", result);
+            });
+            await client.ConnectAsync();
         }
 
     }

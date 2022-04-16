@@ -428,11 +428,13 @@
                                 </Image>
                                 <StackPanel>
                                     <TextBlock
+                                        x:Name="userProfileNameLabel"
                                         Margin="15"
                                         FontSize="24"
                                         Text="Имя пользователя"    
                                     />
                                     <TextBlock
+                                        x:Name="userProfileCountryLabel"
                                         Margin="15"
                                         FontSize="14"
                                         Text="Россия"    
@@ -444,6 +446,7 @@
                                     Width="175"
                                     Height="35"
                                     Content="Редактировать профиль"    
+                                    Click="OpenEditProfileHandler"
                                 />
                             </DockPanel>
                             <DockPanel>
@@ -533,6 +536,156 @@
                                             </StackPanel>
                                         </DockPanel>
                                         -->
+                                    </StackPanel>
+                                </DockPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <Image
+                                    Margin="15"
+                                    Width="100"    
+                                    Height="100"    
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    VerticalAlignment="Top"
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        x:Name="userEditProfileNameLabel"
+                                        VerticalAlignment="Center"
+                                        Margin="15 5"
+                                        FontSize="24"
+                                        Text="Имя пользователя"    
+                                    />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Margin="15 5"
+                                        Text=">> Редактировать профиль"   
+                                    />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel>
+                                <DockPanel
+                                    Margin="25"
+                                >
+                                    <StackPanel
+                                        Margin="25"
+                                        DockPanel.Dock="Left"
+                                        Width="350"
+                                    >
+                                        
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="25"
+                                    >
+                                        <TextBlock
+                                            Text="Основное"    
+                                            FontSize="18"
+                                        />
+                                        <Separator
+                                            Margin="0 10"    
+                                        />
+                                        <StackPanel
+                                            Margin="15 0 0 0"    
+                                        >
+                                            <TextBlock
+                                                Text="Имя профиля"     
+                                                Margin="0 5"
+                                                FontSize="16"
+                                            />
+                                            <TextBox
+                                                x:Name="userNameBox"
+                                                HorizontalAlignment="Left"
+                                                Width="175"    
+                                                Margin="0 10"
+                                            />
+                                        </StackPanel>
+                                        <TextBlock
+                                            Text="Местоположение"    
+                                            FontSize="18"
+                                        />
+                                        <Separator
+                                            Margin="0 10"    
+                                        />
+                                        <StackPanel
+                                            Margin="15 0 0 0"    
+                                        >
+                                            <TextBlock
+                                                Text="Страна"     
+                                                Margin="0 5"
+                                                FontSize="16"
+                                            />
+                                            <ComboBox
+                                                x:Name="userCountryBox"
+                                                HorizontalAlignment="Left"
+                                                Width="175"    
+                                                Margin="0 10"    
+                                                SelectedIndex="0"
+                                            >
+                                                <ComboBoxItem
+                                                    Content="Россия"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="USA"    
+                                                />
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Text="О себе"    
+                                            FontSize="18"
+                                        />
+                                        <Separator
+                                            Margin="0 10"    
+                                        />
+                                        <StackPanel
+                                            Margin="15 0 0 0"    
+                                        >
+                                            <TextBox
+                                                x:Name="userAboutBox"
+                                                Height="125"
+                                                AcceptsReturn="True"
+                                                HorizontalAlignment="Left"
+                                                Width="575"    
+                                                Margin="0 10"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"    
+                                            Margin="0 25"
+                                        >
+                                            <Button
+                                                Margin="10 0"
+                                                Height="35"
+                                                Width="125"
+                                                Content="Отмена"    
+                                            />
+                                            <Button
+                                                Margin="10 0"
+                                                Width="125"
+                                                Content="Сохранить"
+                                                Click="SaveUserInfoHandler"
+                                            />
+                                        </StackPanel>
                                     </StackPanel>
                                 </DockPanel>
                             </DockPanel>

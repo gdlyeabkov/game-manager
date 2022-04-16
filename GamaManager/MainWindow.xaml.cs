@@ -27,6 +27,8 @@ using System.Windows.Controls.Primitives;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Threading;
 using GamaManager.Dialogs;
+using SocketIOClient;
+using Debugger = System.Diagnostics.Debugger;
 
 namespace GamaManager
 {
@@ -63,7 +65,64 @@ namespace GamaManager
             GetFriendRequests();
             GetGamesInfo();
             GetUserInfo();
-        
+            GetEditInfo();
+        }
+
+        public void GetEditInfo ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendsIds = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            int countFriends = friendsIds.Count;
+                            string rawCountFriends = countFriends.ToString();
+                            countFriendsLabel.Text = rawCountFriends;
+                            string currentUserName = currentUser.name;
+                            string currentUserCountry = currentUser.country;
+                            string currentUserAbout = currentUser.about;
+                            userEditProfileNameLabel.Text = currentUserName;
+                            userNameBox.Text = currentUserName;
+                            ItemCollection userCountryBoxItems = userCountryBox.Items;
+                            foreach (ComboBoxItem userCountryBoxItem in userCountryBoxItems)
+                            {
+                                object rawUserCountryBoxItemContent = userCountryBoxItem.Content;
+                                string userCountryBoxItemContent = rawUserCountryBoxItemContent.ToString();
+                                bool isUserCountry = userCountryBoxItemContent == currentUserCountry;
+                                if (isUserCountry)
+                                {
+                                    userCountryBox.SelectedIndex = userCountryBox.Items.IndexOf(userCountryBoxItem);
+                                }
+                            }
+                            userAboutBox.Text = currentUserAbout;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetGamesInfo ()
@@ -154,6 +213,10 @@ namespace GamaManager
                             int countFriends = friendsIds.Count;
                             string rawCountFriends = countFriends.ToString();
                             countFriendsLabel.Text = rawCountFriends;
+                            string currentUserName = currentUser.name;
+                            userProfileNameLabel.Text = currentUserName;
+                            string currentUserCountry = currentUser.country;
+                            userProfileCountryLabel.Text = currentUserCountry;
                         }
                     }
                 }
@@ -1050,6 +1113,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         public void ClientLoaded ()
         {
             isAppInit = true;
+            ListenSockets();
         }
 
         private void CommunityItemSelectedHandler(object sender, SelectionChangedEventArgs e)
@@ -1083,6 +1147,77 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                 mainControl.SelectedIndex = 0;
             }
             ResetMenu();
+        }
+
+        private void OpenEditProfileHandler (object sender, RoutedEventArgs e)
+        {
+            OpenEditProfile();
+        }
+
+        public void OpenEditProfile ()
+        {
+            mainControl.SelectedIndex = 2;
+        }
+
+        private void SaveUserInfoHandler (object sender, RoutedEventArgs e)
+        {
+            SaveUserInfo();
+        }
+
+        public void SaveUserInfo ()
+        {
+            string userNameBoxContent = userNameBox.Text;
+            int selectedCountryIndex = userCountryBox.SelectedIndex;
+            ItemCollection userCountryBoxItems = userCountryBox.Items;
+            object rawSelectedUserCountryBoxItem = userCountryBoxItems[selectedCountryIndex];
+            ComboBoxItem selectedUserCountryBoxItem = ((ComboBoxItem)(rawSelectedUserCountryBoxItem));
+            object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
+            string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
+            string userAboutBoxContent = userAboutBox.Text;
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    var objText = reader.ReadToEnd();
+
+                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                    string status = myobj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        MessageBox.Show("Профиль был обновлен", "Внимание");
+                        GetUserInfo();
+                        GetEditInfo();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удается редактировать профиль", "Ошибка");
+                    }
+                }
+            }
+        }
+
+        public async void ListenSockets()
+        {
+
+            var client = new SocketIO("http://localhost:4000/");
+            client.OnConnected += async (sender, e) =>
+            {
+                Debugger.Log(0, "debug", "client socket conntected");
+                client.EmitAsync("user_is_online", currentUserId);
+            };
+            client.On("friend_is_online", response =>
+            {
+                Debugger.Log(0, "debug", response.ToString());
+                var result = response.GetValue<string>();
+                Debugger.Log(0, "debug", result);
+            });
+            await client.ConnectAsync();
         }
 
     }
@@ -1124,6 +1259,9 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         public string _id;
         public string login;
         public string password;
+        public string name;
+        public string country;
+        public string about;
     }
 
     class FriendRequestsResponseInfo

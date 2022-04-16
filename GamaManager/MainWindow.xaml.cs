@@ -46,6 +46,7 @@ namespace GamaManager
         public bool isAppInit = false;
         public DispatcherTimer timer;
         public int timerHours = 0;
+        public SocketIO client;
 
         public MainWindow(string id)
         {
@@ -552,13 +553,23 @@ namespace GamaManager
             dialog.Show();
         }
 
-        public void RunGame()
+        async public void RunGame ()
         {
             StartDetectGameHours();
             GameWindow window = new GameWindow(currentUserId);
             window.DataContext = gameActionLabel.DataContext;
             window.Closed += ComputeGameHoursHandler;
             window.Show();
+            string gameName = gameNameLabel.Text;
+            try
+            {
+                await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+                await client.ConnectAsync();
+            }
         }
 
         public void StartDetectGameHours ()
@@ -884,7 +895,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void OpenFriendsDialog ()
         {
-            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId);
+            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client);
             dialog.Show();
         }
 
@@ -1204,113 +1215,199 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public async void ListenSockets()
         {
-
-            var client = new SocketIO("http://localhost:4000/");
-            client.OnConnected += async (sender, e) =>
+            try
             {
-                Debugger.Log(0, "debug", "client socket conntected");
-                client.EmitAsync("user_is_online", currentUserId);
-            };
-            client.On("friend_is_online", response =>
-            {
-                var result = response.GetValue<string>();
-                Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
-                try
+                client = new SocketIO("http://localhost:4000/");
+                client.OnConnected += async (sender, e) =>
                 {
-                    /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
-                    webRequest.Method = "GET";
-                    webRequest.UserAgent = ".NET Framework Test Client";
-                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    Debugger.Log(0, "debug", "client socket conntected");
+                    await client.EmitAsync("user_is_online", currentUserId);
+                };
+                client.On("friend_is_played", response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string gameName = result[1];
+                    // Debugger.Log(0, "debug", Environment.NewLine + "friend is played: " + userId + Environment.NewLine);
+
+                    try
                     {
-                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                         {
-                            JavaScriptSerializer js = new JavaScriptSerializer();
-                            var objText = reader.ReadToEnd();
-
-                            FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-
-                            string status = myobj.status;
-                            bool isOkStatus = status == "OK";
-                            if (isOkStatus)
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
                             {
-                                List<Friend> friends = myobj.friends;
-                                List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+
+                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
                                 {
-                                    string userId = joint.user;
-                                    bool isMyFriend = userId == currentUserId;
-                                    return isMyFriend;
-                                }).ToList<Friend>();
-                                List<string> friendsIds = new List<string>();
-                                foreach (Friend myFriend in myFriends)
-                                {
-                                    string friendId = myFriend.user;
-                                    friendsIds.Add(friendId);
-                                }
-                                bool isMyFriendOnline = friendsIds.Contains(result);
-                                Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
-                                Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
-                                Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
-                                if (isMyFriendOnline)
-                                {*/
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
-                                    innerWebRequest.Method = "GET";
-                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
-                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    List<Friend> friends = myobj.friends;
+                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
                                     {
-                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        string localUserId = joint.user;
+                                        bool isMyFriend = localUserId == currentUserId;
+                                        return isMyFriend;
+                                    }).ToList<Friend>();
+                                    List<string> friendsIds = new List<string>();
+                                    foreach (Friend myFriend in myFriends)
+                                    {
+                                        string friendId = myFriend.friend;
+                                        friendsIds.Add(friendId);
+                                    }
+                                    bool isMyFriendOnline = friendsIds.Contains(userId);
+                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                    if (isMyFriendOnline)
+                                    {
+
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
+                                        innerWebRequest.Method = "GET";
+                                        innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                         {
-                                            JavaScriptSerializer js = new JavaScriptSerializer();
-                                            var objText = innerReader.ReadToEnd();
-
-                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                                            string status = myInnerObj.status;
-                                            bool isOkStatus = status == "OK";
-                                            if (isOkStatus)
+                                            using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                             {
-                                                User sender = myInnerObj.user;
-                                                string senderName = sender.name;
-                                                /*Popup friendNotification = new Popup();
-                                                friendNotification.Placement = PlacementMode.Custom;
-                                                friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
-                                                friendNotification.PlacementTarget = this;
-                                                friendNotification.Width = 225;
-                                                friendNotification.Height = 275;
-                                                StackPanel friendNotificationBody = new StackPanel();
-                                                friendNotificationBody.Background = friendRequestBackground;
-                                                Image friendNotificationBodySenderAvatar = new Image();
-                                                friendNotificationBodySenderAvatar.Width = 100;
-                                                friendNotificationBodySenderAvatar.Height = 100;
-                                                friendNotificationBodySenderAvatar.BeginInit();
-                                                Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
-                                                friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
-                                                friendNotificationBodySenderAvatar.EndInit();
-                                                friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
-                                                TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
-                                                friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                friendNotificationBodySenderLoginLabel.Text = "Пользователь теперь" + senderName + " в сети";
-                                                friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
-                                                friendNotification.Child = friendNotificationBody;
-                                                friendRequests.Children.Add(friendNotification);
-                                                friendNotification.IsOpen = true;
-                                                friendNotifications.Children.Add(friendNotification);*/
-                                                MessageBox.Show("Пользователь теперь" + senderName + " в сети", "Внимание");
+                                                js = new JavaScriptSerializer();
+                                                objText = innerReader.ReadToEnd();
+
+                                                UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                status = myInnerObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    User sender = myInnerObj.user;
+                                                    string senderName = sender.name;
+                                                    MessageBox.Show("Пользователь " + senderName + " играет в " + gameName, "Внимание");
+                                                }
                                             }
                                         }
                                     }
-                                /*}
+                                }
                             }
                         }
-                    }*/
-                }
-                catch (System.Net.WebException)
+                    }
+                    catch
+                    {
+
+                    }
+                });
+
+                client.On("friend_is_online", response =>
                 {
-                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                    this.Close();
-                }
-            });
-            await client.ConnectAsync();
+                    var result = response.GetValue<string>();
+                    Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
+                    try
+                    {
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                        {
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            {
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+
+                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    List<Friend> friends = myobj.friends;
+                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                    {
+                                        string userId = joint.user;
+                                        bool isMyFriend = userId == currentUserId;
+                                        return isMyFriend;
+                                    }).ToList<Friend>();
+                                    List<string> friendsIds = new List<string>();
+                                    foreach (Friend myFriend in myFriends)
+                                    {
+                                        string friendId = myFriend.friend;
+                                        friendsIds.Add(friendId);
+                                    }
+                                    bool isMyFriendOnline = friendsIds.Contains(result);
+                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                    if (isMyFriendOnline)
+                                    {
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
+                                        innerWebRequest.Method = "GET";
+                                        innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                        {
+                                            using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = innerReader.ReadToEnd();
+
+                                                UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                status = myInnerObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    User sender = myInnerObj.user;
+                                                    string senderName = sender.name;
+                                                    /*Popup friendNotification = new Popup();
+                                                    friendNotification.Placement = PlacementMode.Custom;
+                                                    friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                    friendNotification.PlacementTarget = this;
+                                                    friendNotification.Width = 225;
+                                                    friendNotification.Height = 275;
+                                                    StackPanel friendNotificationBody = new StackPanel();
+                                                    friendNotificationBody.Background = friendRequestBackground;
+                                                    Image friendNotificationBodySenderAvatar = new Image();
+                                                    friendNotificationBodySenderAvatar.Width = 100;
+                                                    friendNotificationBodySenderAvatar.Height = 100;
+                                                    friendNotificationBodySenderAvatar.BeginInit();
+                                                    Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                    BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                    friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                    friendNotificationBodySenderAvatar.EndInit();
+                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                    TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                    friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                    friendNotificationBodySenderLoginLabel.Text = "Пользователь " + senderName + " теперь в сети";
+                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                    friendNotification.Child = friendNotificationBody;
+                                                    friendRequests.Children.Add(friendNotification);
+                                                    friendNotification.IsOpen = true;
+                                                    friendNotifications.Children.Add(friendNotification);*/
+                                                    MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        this.Close();
+                    }
+                });
+                await client.ConnectAsync();
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+                await client.ConnectAsync();
+            }
         }
 
     }

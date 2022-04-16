@@ -62,3 +62,5 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Text.Encodings.Web.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Text.Json.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.ValueTuple.xml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\ChatDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\ChatDialog.baml

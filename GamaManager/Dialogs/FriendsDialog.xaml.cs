@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,17 +25,19 @@ namespace GamaManager.Dialogs
     {
 
         public string currentUserId = "";
+        public SocketIO client;
 
-        public FriendsDialog(string currentUserId)
+        public FriendsDialog(string currentUserId, SocketIO client)
         {
             InitializeComponent();
 
-            Initialize(currentUserId);
+            Initialize(currentUserId, client);
         
         }
 
-        public void Initialize (string currentUserId)
+        public void Initialize (string currentUserId, SocketIO client)
         {
+            this.client = client;
             GetFriends(currentUserId, "");
         }
 
@@ -128,6 +131,11 @@ namespace GamaManager.Dialogs
                                                                 friends.Children.Add(friendsItem);
                                                                 ContextMenu friendsItemContextMenu = new ContextMenu();
                                                                 MenuItem friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Отправить сообщение";
+                                                                friendsItemContextMenuItem.DataContext = friendId;
+                                                                friendsItemContextMenuItem.Click += OpenChatHandler;
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem); 
+                                                                friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Управление";
                                                                 MenuItem innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
@@ -220,6 +228,21 @@ namespace GamaManager.Dialogs
         public void OpenAddFriendDialog()
         {
             Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId);
+            dialog.Show();
+        }
+
+        public void OpenChatHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            OpenChat(friend);
+        }
+
+        async public void OpenChat (string friend)
+        {
+            // await client.DisconnectAsync();
+            Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend);
             dialog.Show();
         }
 

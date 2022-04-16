@@ -115,6 +115,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ChatDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DownloadGameDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +153,9 @@
     </Compile>
     <Compile Include="Dialogs\AddFriendDialog.xaml.cs">
       <DependentUpon>AddFriendDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ChatDialog.xaml.cs">
+      <DependentUpon>ChatDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DownloadGameDialog.xaml.cs">
       <DependentUpon>DownloadGameDialog.xaml</DependentUpon>

@@ -67,6 +67,39 @@ namespace GamaManager
             GetGamesInfo();
             GetUserInfo();
             GetEditInfo();
+            GetGamesStats();
+        }
+
+        public void GetGamesStats()
+        {
+            DateTime currentDate = DateTime.Now;
+            int hours = currentDate.Hour;
+            int minutes = currentDate.Minute;
+            string rawHours = hours.ToString();
+            string rawMinutes = minutes.ToString();
+            string time = rawHours + ":" + rawMinutes;
+            int day = currentDate.Day;
+            string rawDay = day.ToString();
+            List<string>  monthLabels = new List<string>() {
+                "января",
+                "февраля",
+                "марта",
+                "апреля",
+                "мая",
+                "июня",
+                "июля",
+                "августа",
+                "сентября",
+                "октября",
+                "ноября",
+                "декабря"
+            };
+            int month = currentDate.Month;
+            string rawMonthLabel = monthLabels[month];
+            int year = currentDate.Year;
+            string rawYear = year.ToString();
+            string date = rawDay + " " + rawMonthLabel + " " + rawYear;
+            statsHeaderLabel.Text = "СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: " + date + " В " + time;
         }
 
         public void GetEditInfo ()
@@ -136,6 +169,7 @@ namespace GamaManager
             JavaScriptSerializer js = new JavaScriptSerializer();
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> myGames = loadedContent.games;
+            gamesInfo.Children.Clear();
             foreach (Game myGame in myGames)
             {
                 string myGameName = myGame.name;
@@ -384,14 +418,14 @@ namespace GamaManager
                             bool isUserExists = currentUser != null;
                             if (isUserExists)
                             {
-                                string userLogin = currentUser.login;
+                                string userName = currentUser.name;
                                 ItemCollection userMenuItems = userMenu.Items;
                                 ComboBoxItem userLoginLabel = ((ComboBoxItem)(userMenuItems[0]));
-                                userLoginLabel.Content = userLogin;
+                                userLoginLabel.Content = userName;
                                 ItemCollection profileMenuItems = profileMenu.Items;
                                 object rawMainProfileMenuItem = profileMenuItems[0];
                                 ComboBoxItem mainProfileMenuItem = ((ComboBoxItem)(rawMainProfileMenuItem));
-                                mainProfileMenuItem.Content = userLogin;
+                                mainProfileMenuItem.Content = userName;
                                 InitCache(userId);
                             }
                             else
@@ -640,6 +674,9 @@ namespace GamaManager
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
+
+            GetGamesInfo();
+        
         }
 
         private void InstallGameHandler(object sender, RoutedEventArgs e)
@@ -1125,6 +1162,31 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         {
             isAppInit = true;
             ListenSockets();
+            IncreaseUserToStats();
+        }
+
+        public void IncreaseUserToStats ()
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/stats/increase");
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    var objText = reader.ReadToEnd();
+
+                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                    string status = myobj.status;
+                    bool isErrorStatus = status == "Error";
+                    if (isErrorStatus)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    }
+                }
+            }
         }
 
         private void CommunityItemSelectedHandler(object sender, SelectionChangedEventArgs e)
@@ -1152,10 +1214,10 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void StoreItemSelected (int index)
         {
-            bool isHome = index == 1;
+            bool isHome = index == 6;
             if (isHome)
             {
-                mainControl.SelectedIndex = 0;
+                mainControl.SelectedIndex = 3;
             }
             ResetMenu();
         }
@@ -1202,6 +1264,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
                     if (isOkStatus)
                     {
                         MessageBox.Show("Профиль был обновлен", "Внимание");
+                        GetUser(currentUserId);
                         GetUserInfo();
                         GetEditInfo();
                     }
@@ -1407,6 +1470,40 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
             {
                 Debugger.Log(0, "debug", "Ошибка сокетов");
                 await client.ConnectAsync();
+            }
+        }
+
+        private void ClientClosedHandler (object sender, EventArgs e)
+        {
+            ClientClosed();
+        }
+
+        public void ClientClosed ()
+        {
+            DecreaseUserToStats();
+        }
+
+        public void DecreaseUserToStats ()
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/stats/decrease");
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    var objText = reader.ReadToEnd();
+
+                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                    string status = myobj.status;
+                    bool isErrorStatus = status == "Error";
+                    if (isErrorStatus)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    }
+                }
             }
         }
 

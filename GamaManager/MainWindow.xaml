@@ -11,6 +11,7 @@
     Width="800"
     WindowState="Maximized"
     Loaded="ClientLoadedHandler"
+    Closed="ClientClosedHandler"
 >
     <DockPanel
         x:Name="game"
@@ -216,23 +217,22 @@
                         Content="Инвернтарь"    
                     />
                 </ComboBox>
+                <ComboBox
+                    x:Name="userMenu"
+                    Margin="175 10 10 10"
+                    Width="175"
+                    SelectedIndex="0"
+                    SelectionChanged="UserMenuItemSelectedHandler"
+                >
+                    <ComboBoxItem
+                        Visibility="Collapsed"
+                        Content="Имя пользователя"    
+                    />
+                    <ComboBoxItem
+                        Content="Выйти из аккаунта"    
+                    />
+                </ComboBox>
             </StackPanel>
-            <ComboBox
-                x:Name="userMenu"
-                Margin="10"
-                Width="175"
-                HorizontalAlignment="Right"
-                SelectedIndex="0"
-                SelectionChanged="UserMenuItemSelectedHandler"
-            >
-                <ComboBoxItem
-                    Visibility="Collapsed"
-                    Content="Имя пользователя"    
-                />
-                <ComboBoxItem
-                    Content="Выйти из аккаунта"    
-                />
-            </ComboBox>
             <!--
                 <TextBlock
                     x:Name="userLoginLabel"
@@ -714,6 +714,27 @@
                                     </StackPanel>
                                 </DockPanel>
                             </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                x:Name="statsHeaderLabel"
+                                Margin="10"
+                                FontSize="24"
+                                Text="СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: 01 января 2000 В 00:00"
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

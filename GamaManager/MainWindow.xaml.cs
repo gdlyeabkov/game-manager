@@ -1174,7 +1174,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
             object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
             string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
             string userAboutBoxContent = userAboutBox.Text;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())

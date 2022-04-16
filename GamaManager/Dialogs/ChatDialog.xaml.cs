@@ -41,7 +41,7 @@ namespace GamaManager.Dialogs
             try
             {
                 
-                client = new SocketIO("http://localhost:4000/");
+                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
 
                 client.On("friend_send_msg", async response =>

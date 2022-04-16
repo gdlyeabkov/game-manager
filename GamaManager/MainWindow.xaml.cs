@@ -1213,9 +1213,102 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
             };
             client.On("friend_is_online", response =>
             {
-                Debugger.Log(0, "debug", response.ToString());
                 var result = response.GetValue<string>();
-                Debugger.Log(0, "debug", result);
+                Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
+                try
+                {
+                    /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+
+                            FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<Friend> friends = myobj.friends;
+                                List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                {
+                                    string userId = joint.user;
+                                    bool isMyFriend = userId == currentUserId;
+                                    return isMyFriend;
+                                }).ToList<Friend>();
+                                List<string> friendsIds = new List<string>();
+                                foreach (Friend myFriend in myFriends)
+                                {
+                                    string friendId = myFriend.user;
+                                    friendsIds.Add(friendId);
+                                }
+                                bool isMyFriendOnline = friendsIds.Contains(result);
+                                Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                if (isMyFriendOnline)
+                                {*/
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + result);
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            JavaScriptSerializer js = new JavaScriptSerializer();
+                                            var objText = innerReader.ReadToEnd();
+
+                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                            string status = myInnerObj.status;
+                                            bool isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                User sender = myInnerObj.user;
+                                                string senderName = sender.name;
+                                                /*Popup friendNotification = new Popup();
+                                                friendNotification.Placement = PlacementMode.Custom;
+                                                friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                friendNotification.PlacementTarget = this;
+                                                friendNotification.Width = 225;
+                                                friendNotification.Height = 275;
+                                                StackPanel friendNotificationBody = new StackPanel();
+                                                friendNotificationBody.Background = friendRequestBackground;
+                                                Image friendNotificationBodySenderAvatar = new Image();
+                                                friendNotificationBodySenderAvatar.Width = 100;
+                                                friendNotificationBodySenderAvatar.Height = 100;
+                                                friendNotificationBodySenderAvatar.BeginInit();
+                                                Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                friendNotificationBodySenderAvatar.EndInit();
+                                                friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                friendNotificationBodySenderLoginLabel.Text = "Пользователь теперь" + senderName + " в сети";
+                                                friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                friendNotification.Child = friendNotificationBody;
+                                                friendRequests.Children.Add(friendNotification);
+                                                friendNotification.IsOpen = true;
+                                                friendNotifications.Children.Add(friendNotification);*/
+                                                MessageBox.Show("Пользователь теперь" + senderName + " в сети", "Внимание");
+                                            }
+                                        }
+                                    }
+                                /*}
+                            }
+                        }
+                    }*/
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             });
             await client.ConnectAsync();
         }

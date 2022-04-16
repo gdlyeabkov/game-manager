@@ -16,6 +16,31 @@
         x:Name="game"
     >
         <StackPanel
+            x:Name="friendNotifications"    
+            DockPanel.Dock="Top"
+        >
+            <!--
+                <Popup
+                    IsOpen="True"
+                    Width="150"
+                    Height="150"
+                    Placement="Absolute"
+                >
+                    <Popup.Child>
+                        <StackPanel
+                            Background="Red"
+                            Width="150"
+                            Height="150"
+                        >
+                            <TextBlock
+                                Text="asd"    
+                            />
+                        </StackPanel>
+                    </Popup.Child>
+                </Popup>
+            -->
+        </StackPanel>
+        <StackPanel
             x:Name="friendRequests"    
             DockPanel.Dock="Top"
         >

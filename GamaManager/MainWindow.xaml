@@ -24,6 +24,10 @@
     <DockPanel
         x:Name="game"
     >
+        <MediaElement
+            x:Name="mainAudio"
+            Source="/Sounds/notification.wav"
+        />
         <StackPanel
             x:Name="friendNotifications"    
             DockPanel.Dock="Top"
@@ -83,6 +87,14 @@
                 <MenuItem
                     Header="Добавить друга"
                     Click="OpenAddFriendDialogHandler"
+                />
+            </MenuItem>
+            <MenuItem
+                Header="Справка"    
+            >
+                <MenuItem
+                    Header="О системе"
+                    Click="OpenSystemInfoDialogHandler"
                 />
             </MenuItem>
         </Menu>

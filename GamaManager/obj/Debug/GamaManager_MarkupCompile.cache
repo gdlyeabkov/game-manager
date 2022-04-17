@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\wpf_projects\GamaManager\GamaManager\App.xaml
-9321803844
-
-14958406299
+102032276868
+11926364607
+15-380815865
 34-498258516
-Dialogs\AddFriendDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
+Dialogs\AddFriendDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;Dialogs\SystemInfoDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
 
 False
 

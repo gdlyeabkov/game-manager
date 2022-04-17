@@ -199,6 +199,11 @@ namespace GamaManager.Dialogs
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Уведомления";
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                                innerFriendsItemContextMenuItem.Click += OpenFriendNotificationsDialogHandler;
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItem.ContextMenu = friendsItemContextMenu;
                                                             }
@@ -307,7 +312,22 @@ namespace GamaManager.Dialogs
         {
             InitSockets();
         }
-        
+
+        public void OpenFriendNotificationsDialogHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            OpenFriendNotificationsDialog(friendId);
+        }
+
+        public void OpenFriendNotificationsDialog (string friendId)
+        {
+            Dialogs.FriendNotificationsDialog dialog = new Dialogs.FriendNotificationsDialog(currentUserId);
+            dialog.DataContext = friendId;
+            dialog.Show();
+        }
+
         async public void InitSockets ()
         {
             try

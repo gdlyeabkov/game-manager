@@ -696,7 +696,8 @@ namespace GamaManager
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 string savedContent = js.Serialize(new SavedContent
                 {
-                    games = new List<Game>()
+                    games = new List<Game>(),
+                    friends = new List<FriendSettings>()
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -1320,8 +1321,30 @@ namespace GamaManager
                                     {
                                         CloseFriendRequest(request);
                                         User friend = myobj.user;
-                                        string friendLogin = friend.login;
-                                        string msgContent = "Пользователь " + friendLogin + " был добавлен в друзья";
+                                        string friendName = friend.name;
+                                        string msgContent = "Пользователь " + friendName + " был добавлен в друзья";
+                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                        js = new JavaScriptSerializer();
+                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                        List<Game> currentGames = loadedContent.games;
+                                        List<FriendSettings> currentFriends = loadedContent.friends;
+                                        List<FriendSettings> updatedFriends = currentFriends;
+                                        updatedFriends.Add(new FriendSettings()
+                                        {
+                                            id = friendId,
+                                            isFriendOnlineNotification = true,
+                                            isFriendPlayedNotification = true,
+                                            isFriendSendMsgNotification = true
+                                        });
+                                        string savedContent = js.Serialize(new SavedContent
+                                        {
+                                            games = currentGames,
+                                            friends = updatedFriends
+                                        });
+                                        File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
                                     }
                                 }
@@ -1778,6 +1801,9 @@ namespace GamaManager
                                                         highlightThicknessAnim.KeyFrames[1].KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(10));
                                                         stb_hightLightAnim.Begin(friendNotification);*/
 
+                                                        // mainAudio.Source = new Uri("/Sounds/notification.wav");
+                                                        mainAudio.Play();
+
                                                     });
 
                                                     // MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
@@ -1983,11 +2009,31 @@ namespace GamaManager
             }
         }
 
+        private void OpenSystemInfoDialogHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSystemInfoDialog();
+        }
+
+        public void OpenSystemInfoDialog ()
+        {
+            Dialogs.SystemInfoDialog dialog = new Dialogs.SystemInfoDialog();
+            dialog.Show();
+        }
+
     }
 
     class SavedContent
     {
         public List<Game> games;
+        public List<FriendSettings> friends;
+    }
+
+    class FriendSettings
+    {
+        public string id;
+        public bool isFriendOnlineNotification;
+        public bool isFriendPlayedNotification;
+        public bool isFriendSendMsgNotification;
     }
 
     class Game

@@ -64,3 +64,6 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Threading.Tasks.Extensi
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.ValueTuple.xml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\ChatDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\ChatDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\GamaManager_Content.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.baml

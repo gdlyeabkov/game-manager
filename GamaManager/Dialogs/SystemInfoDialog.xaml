@@ -1,0 +1,61 @@
+﻿<Window x:Class="GamaManager.Dialogs.SystemInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager.Dialogs"
+        mc:Ignorable="d"
+        Title="О системе"
+        Height="350"
+        Width="400"
+    >
+    <StackPanel
+        Margin="10"    
+    >
+        <TextBlock
+            TextWrapping="Wrap"
+            Text="Office ware game manager обнаружил следующие устройства и программное обеспечение:"
+        />
+        <Border
+            Height="215"
+            BorderThickness="1"
+            BorderBrush="Black"
+        >
+            <Border.Child>
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="10"    
+                    >
+                        <TextBlock
+                            Text="Информация о компьютере:"
+                        />
+                        <TextBlock
+                            Text="Процессор:"
+                        />
+                        <TextBlock
+                            Text="Версия ОС:"
+                        />
+                        <TextBlock
+                            Text="Видеокарта:"
+                        />
+                        <TextBlock
+                            Text="Звуковая карта:"
+                        />
+                        <TextBlock
+                            Text="Память:"
+                        />
+                        <TextBlock
+                            Text="Устройства VR:"
+                        />
+                        <TextBlock
+                            Text="Разное:"
+                        />
+                        <TextBlock
+                            Text="Место на диске:"
+                        />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border.Child>
+        </Border>
+    </StackPanel>
+</Window>

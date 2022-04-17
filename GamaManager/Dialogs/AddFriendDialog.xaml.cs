@@ -225,6 +225,28 @@ namespace GamaManager.Dialogs
                                         User friend = myobj.user;
                                         string friendLogin = friend.login;
                                         string msgContent = "Приглашение пользователю " + friendLogin + " было отправлено";
+                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                        js = new JavaScriptSerializer();
+                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                        List<Game> currentGames = loadedContent.games;
+                                        List<FriendSettings> currentFriends = loadedContent.friends;
+                                        List<FriendSettings> updatedFriends = currentFriends;
+                                        updatedFriends.Add(new FriendSettings()
+                                        {
+                                            id = friendId,
+                                            isFriendOnlineNotification = true,
+                                            isFriendPlayedNotification = true,
+                                            isFriendSendMsgNotification = true
+                                        });
+                                        string savedContent = js.Serialize(new SavedContent
+                                        {
+                                            games = currentGames,
+                                            friends = updatedFriends
+                                        });
+                                        File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Приглашение отправлено");
                                         this.Close();
                                     }

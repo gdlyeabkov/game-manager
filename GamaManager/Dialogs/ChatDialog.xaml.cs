@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,19 +34,15 @@ namespace GamaManager.Dialogs
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
-            // this.client = client;
             this.friendId = friendId;
-            // ReceiveMessages();
         }
 
         async public void ReceiveMessages ()
         {
             try
             {
-                
                 client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
-
                 client.On("friend_send_msg", async response =>
                 {
                     var rawResult = response.GetValue<string>();
@@ -51,28 +50,129 @@ namespace GamaManager.Dialogs
                     string userId = result[0];
                     string msg = result[1];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
-
-                    // SendMsg(msg);
                     try
                     {
-                        ItemCollection chatControlItems = chatControl.Items;
-                        object rawActiveChat = chatControlItems[activeChatIndex];
-                        TabItem activeChat = ((TabItem)(rawActiveChat));
-                        object rawActiveChatScrollContent = activeChat.Content;
-                        ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                        object rawActiveChatContent = activeChatScrollContent.Content;
-                        StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-                        TextBlock newMsg = new TextBlock();
-                        string newMsgContent = msg;
-                        newMsg.Text = newMsgContent;
-                        inputChatMsgBox.Text = "";
-                        activeChatContent.Children.Add(newMsg);
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                        {
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            {
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    List<Friend> friends = myobj.friends;
+                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                    {
+                                        string localUserId = joint.user;
+                                        bool isMyFriend = localUserId == currentUserId;
+                                        return isMyFriend;
+                                    }).ToList<Friend>();
+                                    List<string> friendsIds = new List<string>();
+                                    foreach (Friend myFriend in myFriends)
+                                    {
+                                        string friendId = myFriend.friend;
+                                        friendsIds.Add(friendId);
+                                    }
+                                    bool isMyFriendOnline = friendsIds.Contains(userId);
+                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                    if (isMyFriendOnline)
+                                    {
+                                        string currentFriendId = this.friendId;
+                                        bool isCurrentChat = currentFriendId == userId;
+                                        if (isCurrentChat)
+                                        {
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                try
+                                                {
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                                                    innerWebRequest.Method = "GET";
+                                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                    {
+                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerReader.ReadToEnd();
+
+                                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                            status = myobj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                User friend = myInnerObj.user;
+                                                                string friendName = friend.name;
+
+                                                                ItemCollection chatControlItems = chatControl.Items;
+                                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                                object rawActiveChatScrollContent = activeChat.Content;
+                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                                                StackPanel newMsg = new StackPanel();
+                                                                StackPanel newMsgHeader = new StackPanel();
+                                                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                Image newMsgHeaderAvatar = new Image();
+                                                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgHeaderAvatar.Width = 25;
+                                                                newMsgHeaderAvatar.Height = 25;
+                                                                newMsgHeaderAvatar.BeginInit();
+                                                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                newMsgHeaderAvatar.EndInit();
+                                                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgFriendNameLabel.Text = friendName;
+                                                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                TextBlock newMsgDateLabel = new TextBlock();
+                                                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                DateTime currentDate = DateTime.Now;
+                                                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                newMsgDateLabel.Text = rawCurrentDate;
+                                                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                newMsg.Children.Add(newMsgHeader);
+                                                                TextBlock newMsgLabel = new TextBlock();
+                                                                string newMsgContent = msg;
+                                                                newMsgLabel.Text = newMsgContent;
+                                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                inputChatMsgBox.Text = "";
+                                                                newMsg.Children.Add(newMsgLabel);
+
+                                                                activeChatContent.Children.Add(newMsg);
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                catch (System.Net.WebException)
+                                                {
+                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                    this.Close();
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    catch (Exception)
+                    catch (System.Net.WebException)
                     {
-                        Debugger.Log(0, "debug", "поток занят");
-                        await client.ConnectAsync();
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        this.Close();
                     }
+
 
                 });
             }
@@ -97,7 +197,39 @@ namespace GamaManager.Dialogs
         public void AddChat()
         {
             TabItem newChat = new TabItem();
+
             newChat.Header = friendId;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+
+                        var myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User friend = myobj.user;
+                            string friendName = friend.name;
+                            newChat.Header = friendName;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
             chatControl.Items.Add(newChat);
             ScrollViewer newChatScrollContent = new ScrollViewer();
             StackPanel newChatContent = new StackPanel();
@@ -113,21 +245,77 @@ namespace GamaManager.Dialogs
             SendMsg(newMsgContent);
         }
 
-        async public void SendMsg(string newMsgContent)
+        async public void SendMsg (string newMsgContent)
         {
             try
             {
-                ItemCollection chatControlItems = chatControl.Items;
-                object rawActiveChat = chatControlItems[activeChatIndex];
-                TabItem activeChat = ((TabItem)(rawActiveChat));
-                object rawActiveChatScrollContent = activeChat.Content;
-                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                object rawActiveChatContent = activeChatScrollContent.Content;
-                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-                TextBlock newMsg = new TextBlock();
-                newMsg.Text = newMsgContent;
-                inputChatMsgBox.Text = "";
-                activeChatContent.Children.Add(newMsg);
+
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string objText = innerReader.ReadToEnd();
+
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                User friend = myobj.user;
+                                string friendName = friend.name;
+                                ItemCollection chatControlItems = chatControl.Items;
+                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                object rawActiveChatScrollContent = activeChat.Content;
+                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                StackPanel newMsg = new StackPanel();
+                                StackPanel newMsgHeader = new StackPanel();
+                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                Image newMsgHeaderAvatar = new Image();
+                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgHeaderAvatar.Width = 25;
+                                newMsgHeaderAvatar.Height = 25;
+                                newMsgHeaderAvatar.BeginInit();
+                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                newMsgHeaderAvatar.EndInit();
+                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgFriendNameLabel.Text = friendName;
+                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                TextBlock newMsgDateLabel = new TextBlock();
+                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                DateTime currentDate = DateTime.Now;
+                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                newMsgDateLabel.Text = rawCurrentDate;
+                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                newMsg.Children.Add(newMsgHeader);
+                                TextBlock newMsgLabel = new TextBlock();
+                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                newMsgLabel.Text = newMsgContent;
+                                inputChatMsgBox.Text = "";
+                                newMsg.Children.Add(newMsgLabel);
+
+                                activeChatContent.Children.Add(newMsg);
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
             catch (Exception)
             {

@@ -9,6 +9,7 @@
         Title="Друзья"
         Height="800"
         Width="450"
+        Loaded="InitSocketsHandler"
     >
     <DockPanel>
         <StackPanel>

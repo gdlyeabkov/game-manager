@@ -29,6 +29,7 @@ using System.Windows.Threading;
 using GamaManager.Dialogs;
 using SocketIOClient;
 using Debugger = System.Diagnostics.Debugger;
+using System.Windows.Media.Animation;
 
 namespace GamaManager
 {
@@ -788,6 +789,7 @@ namespace GamaManager
                 this.Close();
             }
             SetUserStatus("played");
+            client.EmitAsync("user_is_toggle_status", "played");
         }
 
         public void StartDetectGameHours ()
@@ -867,6 +869,8 @@ namespace GamaManager
             GetGamesInfo();
 
             SetUserStatus("online");
+
+            client.EmitAsync("user_is_toggle_status", "online");
 
         }
 
@@ -1416,32 +1420,37 @@ namespace GamaManager
 
         public void SetUserStatus (string userStatus)
         {
-            try {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+            if (client != null) {
+                try {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-
-                        RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-
-                        string status = myobj.status;
-                        bool isErrorStatus = status == "Error";
-                        if (isErrorStatus)
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
                         {
-                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+
+                            RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                            string status = myobj.status;
+                            bool isErrorStatus = status == "Error";
+                            if (isErrorStatus)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            }
+
+                            // client.EmitAsync("user_is_toggle_status", userStatus);
+
                         }
                     }
                 }
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
         }
 
@@ -1706,34 +1715,212 @@ namespace GamaManager
                                                 {
                                                     User sender = myInnerObj.user;
                                                     string senderName = sender.name;
-                                                    /*Popup friendNotification = new Popup();
-                                                    friendNotification.Placement = PlacementMode.Custom;
-                                                    friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
-                                                    friendNotification.PlacementTarget = this;
-                                                    friendNotification.Width = 225;
-                                                    friendNotification.Height = 275;
-                                                    StackPanel friendNotificationBody = new StackPanel();
-                                                    friendNotificationBody.Background = friendRequestBackground;
-                                                    Image friendNotificationBodySenderAvatar = new Image();
-                                                    friendNotificationBodySenderAvatar.Width = 100;
-                                                    friendNotificationBodySenderAvatar.Height = 100;
-                                                    friendNotificationBodySenderAvatar.BeginInit();
-                                                    Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                    BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
-                                                    friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
-                                                    friendNotificationBodySenderAvatar.EndInit();
-                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
-                                                    TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
-                                                    friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                    friendNotificationBodySenderLoginLabel.Text = "Пользователь " + senderName + " теперь в сети";
-                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
-                                                    friendNotification.Child = friendNotificationBody;
-                                                    friendRequests.Children.Add(friendNotification);
-                                                    friendNotification.IsOpen = true;
-                                                    friendNotifications.Children.Add(friendNotification);*/
-                                                    MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
+
+                                                    this.Dispatcher.Invoke(async () =>
+                                                    {
+                                                        Popup friendNotification = new Popup();
+                                                        friendNotification.Placement = PlacementMode.Custom;
+                                                        friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                        friendNotification.PlacementTarget = this;
+                                                        friendNotification.Width = 225;
+                                                        friendNotification.Height = 275;
+                                                        StackPanel friendNotificationBody = new StackPanel();
+                                                        friendNotificationBody.Background = friendRequestBackground;
+                                                        Image friendNotificationBodySenderAvatar = new Image();
+                                                        friendNotificationBodySenderAvatar.Width = 100;
+                                                        friendNotificationBodySenderAvatar.Height = 100;
+                                                        friendNotificationBodySenderAvatar.BeginInit();
+                                                        Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                        BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                        friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                        friendNotificationBodySenderAvatar.EndInit();
+                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                        TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                        friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                        friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " теперь в сети";
+                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                        friendNotification.Child = friendNotificationBody;
+                                                        friendRequests.Children.Add(friendNotification);
+                                                        friendNotification.IsOpen = true;
+                                                        friendNotification.StaysOpen = false;
+                                                        friendNotifications.Children.Add(friendNotification);
+                                                        friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                        DispatcherTimer timer = new DispatcherTimer();
+                                                        timer.Interval = TimeSpan.FromSeconds(3);
+                                                        timer.Tick += delegate
+                                                        {
+                                                            friendNotification.IsOpen = false;
+                                                            timer.Stop();
+                                                        };
+                                                        timer.Start();
+                                                        /*DoubleAnimation animation = new DoubleAnimation();
+                                                        animation.To = 0.0;
+                                                        animation.Duration = new Duration(TimeSpan.FromSeconds(5));*/
+                                                        /*this.Dispatcher.Invoke(() =>
+                                                        {
+                                                            Popup notification = friendNotification;
+                                                            DoubleAnimation animation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromSeconds(5)));
+                                                            animation.AutoReverse = false;
+                                                            animation.Completed += delegate
+                                                            {
+                                                                notification.IsOpen = false;
+                                                            };
+                                                            notification.BeginAnimation(UIElement.OpacityProperty, animation);
+                                                        });*/
+
+                                                        /*Storyboard stb_hightLightAnim = (Storyboard)this.Resources["HighLightAnim"];
+                                                        stb_hightLightAnim.Completed += new EventHandler(OnAnimationCompleted);
+                                                        DoubleAnimationUsingKeyFrames highlightThicknessAnim
+                                                        highlightThicknessAnim = (DoubleAnimationUsingKeyFrames)stb_hightLightAnim.Children[0];
+                                                        highlightThicknessAnim.KeyFrames[0].Value = 1.0;
+                                                        highlightThicknessAnim.KeyFrames[1].Value = 0.0;
+                                                        highlightThicknessAnim.KeyFrames[0].KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0));
+                                                        highlightThicknessAnim.KeyFrames[1].KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(10));
+                                                        stb_hightLightAnim.Begin(friendNotification);*/
+
+                                                    });
+
+                                                    // MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
+
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        this.Close();
+                    }
+                    // здесь GetFriends();
+                });
+                client.On("friend_send_msg", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string msg = result[1];
+                    Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
+                    try
+                    {
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                        {
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            {
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+
+                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    List<Friend> friends = myobj.friends;
+                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                    {
+                                        string localUserId = joint.user;
+                                        bool isMyFriend = localUserId == currentUserId;
+                                        return isMyFriend;
+                                    }).ToList<Friend>();
+                                    List<string> friendsIds = new List<string>();
+                                    foreach (Friend myFriend in myFriends)
+                                    {
+                                        string friendId = myFriend.friend;
+                                        friendsIds.Add(friendId);
+                                    }
+                                    bool isMyFriendOnline = friendsIds.Contains(userId);
+                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                    if (isMyFriendOnline)
+                                    {
+                                        string currentFriendId = userId;
+                                        bool isCurrentChat = currentFriendId == userId;
+                                        if (isCurrentChat)
+                                        {
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                try
+                                                {
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + userId);
+                                                    innerWebRequest.Method = "GET";
+                                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                    {
+                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerReader.ReadToEnd();
+
+                                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                            status = myobj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                User friend = myInnerObj.user;
+                                                                string senderName = friend.name;
+                                                                Application app = Application.Current;
+                                                                WindowCollection windows = app.Windows;
+                                                                IEnumerable<Window> myWindows = windows.OfType<Window>();
+                                                                int countChatWindows = myWindows.Count(window =>
+                                                                {
+                                                                    string windowTitle = window.Title;
+                                                                    bool isChatWindow = windowTitle == "Чат";
+                                                                    return isChatWindow;
+                                                                });
+                                                                bool isNotOpenedChatWindows = countChatWindows <= 0;
+                                                                if (isNotOpenedChatWindows)
+                                                                {
+                                                                    this.Dispatcher.Invoke(async () =>
+                                                                    {
+                                                                        Popup friendNotification = new Popup();
+                                                                        friendNotification.Placement = PlacementMode.Custom;
+                                                                        friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                                        friendNotification.PlacementTarget = this;
+                                                                        friendNotification.Width = 225;
+                                                                        friendNotification.Height = 275;
+                                                                        StackPanel friendNotificationBody = new StackPanel();
+                                                                        friendNotificationBody.Background = friendRequestBackground;
+                                                                        Image friendNotificationBodySenderAvatar = new Image();
+                                                                        friendNotificationBodySenderAvatar.Width = 100;
+                                                                        friendNotificationBodySenderAvatar.Height = 100;
+                                                                        friendNotificationBodySenderAvatar.BeginInit();
+                                                                        Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                        BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                                        friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                                        friendNotificationBodySenderAvatar.EndInit();
+                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                                        TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                                        friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                                        friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
+                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                                        friendNotification.Child = friendNotificationBody;
+                                                                        friendRequests.Children.Add(friendNotification);
+                                                                        friendNotification.IsOpen = true;
+                                                                        friendNotifications.Children.Add(friendNotification);
+                                                                        friendNotification.StaysOpen = false;
+                                                                        friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                                    });
+
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                catch (System.Net.WebException)
+                                                {
+                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                    this.Close();
+                                                }
+                                            });
                                         }
                                     }
                                 }
@@ -1755,6 +1942,11 @@ namespace GamaManager
             }
         }
 
+        public void OnAnimationCompleted(object sender, EventArgs e)
+        {
+            Storyboard storyboard = ((Storyboard)(sender));
+        }
+
         private void ClientClosedHandler (object sender, EventArgs e)
         {
             ClientClosed();
@@ -1764,6 +1956,7 @@ namespace GamaManager
         {
             DecreaseUserToStats();
             SetUserStatus("offline");
+            client.EmitAsync("user_is_toggle_status", "offline");
         }
 
         public void DecreaseUserToStats ()

@@ -1,6 +1,7 @@
 ﻿using SocketIOClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -39,7 +40,7 @@ namespace GamaManager.Dialogs
         
         }
 
-        public void Initialize (string currentUserId, SocketIO client)
+        public void Initialize(string currentUserId, SocketIO client)
         {
             InitializeConstants(client);
             GetFriends(currentUserId, "");
@@ -300,6 +301,49 @@ namespace GamaManager.Dialogs
             // await client.DisconnectAsync();
             Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend);
             dialog.Show();
+        }
+
+        public void InitSocketsHandler (object sender, RoutedEventArgs e)
+        {
+            InitSockets();
+        }
+        
+        async public void InitSockets ()
+        {
+            try
+            {
+                client.On("friend_is_online", async response =>
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        GetFriends(currentUserId, "");
+                    });
+                });
+                client.On("friend_is_played", async response =>
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        GetFriends(currentUserId, "");
+                    });
+                });
+                client.On("friend_is_toggle_status", async response =>
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        GetFriends(currentUserId, "");
+                    });
+                });
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+                await client.ConnectAsync();
+            }
+            catch (Exception)
+            {
+                Debugger.Log(0, "debug", "поток занят");
+                await client.ConnectAsync();
+            }
         }
 
     }

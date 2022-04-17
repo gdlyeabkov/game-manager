@@ -13,6 +13,14 @@
     Loaded="ClientLoadedHandler"
     Closed="ClientClosedHandler"
 >
+    <Window.Resources>
+        <Storyboard x:Key="HighLightAnim">
+            <ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="highlight_bar" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <SplineThicknessKeyFrame/>
+                <SplineThicknessKeyFrame/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
     <DockPanel
         x:Name="game"
     >

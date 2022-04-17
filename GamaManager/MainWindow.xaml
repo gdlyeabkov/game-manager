@@ -735,6 +735,62 @@
                                 FontSize="24"
                                 Text="СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: 01 января 2000 В 00:00"
                             />
+                            <Grid
+                                HorizontalAlignment="Left"
+                                Width="350"
+                                Margin="25"    
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="165"    
+                                    />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"        
+                                    />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"    
+                                    Grid.Column="1"
+                                    TextAlignment="Right"
+                                    Text="Сейчас"
+                                />
+                                <TextBlock
+                                    Grid.Row="0"    
+                                    Grid.Column="2"
+                                    TextAlignment="Right"
+                                    Text="Максимум"
+                                />
+                                <TextBlock
+                                    Grid.Row="1"    
+                                    Grid.Column="0"
+                                    Text="Пользователей в сети"
+                                />
+                                <TextBlock
+                                    x:Name="countLifeUsersLabel"
+                                    Grid.Row="1"    
+                                    Grid.Column="1"
+                                    TextAlignment="Right"
+                                    FontWeight="ExtraBlack"
+                                    Foreground="SkyBlue"
+                                    Text="0"
+                                />
+                                <TextBlock
+                                    x:Name="countMaxUsersLabel"
+                                    Grid.Row="1"    
+                                    Grid.Column="2"
+                                    TextAlignment="Right"
+                                    FontWeight="ExtraBlack"
+                                    Foreground="SkyBlue"
+                                    Text="0"
+                                />
+                            </Grid>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

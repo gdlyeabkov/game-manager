@@ -76,7 +76,19 @@ namespace GamaManager
             int hours = currentDate.Hour;
             int minutes = currentDate.Minute;
             string rawHours = hours.ToString();
+            int measureLength = rawHours.Length;
+            bool isAddPrefix = measureLength <= 1;
+            if (isAddPrefix)
+            {
+                rawHours = "0" + rawHours;
+            }
             string rawMinutes = minutes.ToString();
+            measureLength = rawMinutes.Length;
+            isAddPrefix = measureLength <= 1;
+            if (isAddPrefix)
+            {
+                rawMinutes = "0" + rawMinutes;
+            }
             string time = rawHours + ":" + rawMinutes;
             int day = currentDate.Day;
             string rawDay = day.ToString();
@@ -100,6 +112,31 @@ namespace GamaManager
             string rawYear = year.ToString();
             string date = rawDay + " " + rawMonthLabel + " " + rawYear;
             statsHeaderLabel.Text = "СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: " + date + " В " + time;
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/get");
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    var objText = reader.ReadToEnd();
+
+                    GamesStatsResponseInfo myobj = (GamesStatsResponseInfo)js.Deserialize(objText, typeof(GamesStatsResponseInfo));
+
+                    string status = myobj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        int countUsers = myobj.users;
+                        int countMaxUsers = myobj.users;
+                        string rawCountUsers = countUsers.ToString();
+                        string rawCountMaxUsers = countMaxUsers.ToString();
+                        countLifeUsersLabel.Text = rawCountUsers;
+                        countMaxUsersLabel.Text = rawCountMaxUsers;
+                    }
+                }
+            }
         }
 
         public void GetEditInfo ()
@@ -1167,7 +1204,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void IncreaseUserToStats ()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/stats/increase");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1214,10 +1251,11 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void StoreItemSelected (int index)
         {
-            bool isHome = index == 6;
-            if (isHome)
+            bool isGamesStats = index == 6;
+            if (isGamesStats)
             {
                 mainControl.SelectedIndex = 3;
+                GetGamesStats();
             }
             ResetMenu();
         }
@@ -1485,7 +1523,7 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
 
         public void DecreaseUserToStats ()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/stats/decrease");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1562,6 +1600,13 @@ Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder
         public string _id;
         public string user;
         public string friend;
+    }
+
+    public class GamesStatsResponseInfo
+    {
+        public string status;
+        public int users;
+        public int maxUsers;
     }
 
 }

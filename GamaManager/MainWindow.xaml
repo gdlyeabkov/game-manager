@@ -791,6 +791,51 @@
                                     Text="0"
                                 />
                             </Grid>
+                            <TextBlock
+                                FontSize="18"
+                                Foreground="AliceBlue"
+                                Text="Лучшие игры по количеству игроков"    
+                                Margin="15"
+                            />
+                            <!--
+                            <StackPanel
+                                x:Name="popularGames"    
+                            />
+                            -->
+                            <Grid
+                                x:Name="popularGames"
+                                Margin="15"
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="100"
+                                    />
+                                    <ColumnDefinition
+                                        Width="100"
+                                    />
+                                    <ColumnDefinition
+                                        Width="100"    
+                                    />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Text="Прямо сейчас"    
+                                />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Text="Макс. сегодня"    
+                                />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Text="Игра"    
+                                />
+                            </Grid>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

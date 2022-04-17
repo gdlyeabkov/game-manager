@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -26,6 +27,9 @@ namespace GamaManager.Dialogs
 
         public string currentUserId = "";
         public SocketIO client;
+        public Brush onlineBrush;
+        public Brush playedBrush;
+        public Brush offlineBrush;
 
         public FriendsDialog(string currentUserId, SocketIO client)
         {
@@ -37,8 +41,16 @@ namespace GamaManager.Dialogs
 
         public void Initialize (string currentUserId, SocketIO client)
         {
-            this.client = client;
+            InitializeConstants(client);
             GetFriends(currentUserId, "");
+        }
+
+        public void InitializeConstants(SocketIO client)
+        {
+            this.client = client;
+            onlineBrush = System.Windows.Media.Brushes.Blue;
+            playedBrush = System.Windows.Media.Brushes.Green;
+            offlineBrush = System.Windows.Media.Brushes.LightGray;
         }
 
         public void GetFriends (string currentUserId, string keywords)
@@ -105,6 +117,7 @@ namespace GamaManager.Dialogs
                                                         {
                                                             User friend = myobj.user;
                                                             string friendLogin = friend.login;
+                                                            string friendStatus = friend.status;
                                                             string friendIgnoreCaseLogin = friendLogin.ToLower();
                                                             string ignoreCaseKeywords = keywords.ToLower();
                                                             bool isFriendMatch = friendIgnoreCaseLogin.Contains(ignoreCaseKeywords);
@@ -114,6 +127,21 @@ namespace GamaManager.Dialogs
                                                                 friendsItem.Height = 35;
                                                                 friendsItem.Orientation = Orientation.Horizontal;
                                                                 Image friendAvatar = new Image();
+
+                                                                Setter effectSetter = new Setter();
+                                                                effectSetter.Property = ScrollViewer.EffectProperty;
+                                                                effectSetter.Value = new DropShadowEffect
+                                                                {
+                                                                    ShadowDepth = 4,
+                                                                    Direction = 330,
+                                                                    Color = Colors.Green,
+                                                                    Opacity = 0.5,
+                                                                    BlurRadius = 4
+                                                                };
+                                                                Style dropShadowScrollViewerStyle = new Style(typeof(ScrollViewer));
+                                                                dropShadowScrollViewerStyle.Setters.Add(effectSetter);
+                                                                friendAvatar.Resources.Add(typeof(ScrollViewer), dropShadowScrollViewerStyle);
+
                                                                 friendAvatar.Width = 25;
                                                                 friendAvatar.Height = 25;
                                                                 friendAvatar.Margin = new Thickness(5);
@@ -128,6 +156,34 @@ namespace GamaManager.Dialogs
                                                                 friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
                                                                 friendLoginLabel.Text = friendLogin;
                                                                 friendsItem.Children.Add(friendLoginLabel);
+                                                                TextBlock friendStatusLabel = new TextBlock();
+                                                                friendStatusLabel.Height = 25;
+                                                                friendStatusLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                friendStatusLabel.Margin = new Thickness(10, 5, 10, 5);
+                                                                friendStatusLabel.Text = "не в сети";
+                                                                bool isFriendOnline = friendStatus == "online";
+                                                                bool isFriendPlayed = friendStatus == "played";
+                                                                bool isFriendOffline = friendStatus == "offline";
+                                                                friendStatusLabel.Foreground = offlineBrush;
+                                                                if (isFriendOnline)
+                                                                {
+                                                                    friendLoginLabel.Foreground = onlineBrush;
+                                                                    friendStatusLabel.Foreground = onlineBrush;
+                                                                    friendStatusLabel.Text = "в сети";
+                                                                }
+                                                                else if (isFriendPlayed)
+                                                                {
+                                                                    friendLoginLabel.Foreground = playedBrush;
+                                                                    friendStatusLabel.Foreground = playedBrush;
+                                                                    friendStatusLabel.Text = "играет";
+                                                                }
+                                                                else if (isFriendOffline)
+                                                                {
+                                                                    friendLoginLabel.Foreground = offlineBrush;
+                                                                    friendStatusLabel.Foreground = offlineBrush;
+                                                                    friendStatusLabel.Text = "не в сети";
+                                                                }
+                                                                friendsItem.Children.Add(friendStatusLabel);
                                                                 friends.Children.Add(friendsItem);
                                                                 ContextMenu friendsItemContextMenu = new ContextMenu();
                                                                 MenuItem friendsItemContextMenuItem = new MenuItem();

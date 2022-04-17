@@ -24,6 +24,7 @@ namespace GamaManager.Dialogs
     {
 
         public string currentUserId = "";
+        public string downloadedGameId = "";
 
         public DownloadGameDialog(string currentUserId)
         {
@@ -37,6 +38,9 @@ namespace GamaManager.Dialogs
         {
             object rawDialogData = this.DataContext;
             Dictionary<String, Object> dialogData = ((Dictionary<String, Object>)(rawDialogData));
+            object rawGameId = dialogData["id"];
+            string gameId = ((string)(rawGameId));
+            downloadedGameId = gameId;
             object rawGameName = dialogData["name"];
             string gameName = ((string)(rawGameName));
             object rawGameUrl = dialogData["url"];
@@ -72,7 +76,11 @@ namespace GamaManager.Dialogs
             bool isErrorsNotFound = downloadError == null;
             if (isErrorsNotFound)
             {
-                this.DataContext = "OK";
+                // this.DataContext = "OK";
+                Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                dialogData.Add("id", downloadedGameId);
+                dialogData.Add("status", "OK");
+                this.DataContext = dialogData;
                 this.Close();
             }
             else

@@ -78,12 +78,12 @@
                 Text="Когда этот друг заходит в игру"    
             />
             <CheckBox
-                x:Name="onlineNotificationCheckBox"
+                x:Name="playedNotificationCheckBox"
                 Grid.Row="1"
                 Grid.Column="1"    
             />
             <CheckBox
-                x:Name="onlineSoundCheckBox"
+                x:Name="playedSoundCheckBox"
                 Grid.Row="1"
                 Grid.Column="2"    
             />
@@ -93,12 +93,12 @@
                 Text="Когда этот друг подключается к сети"    
             />
             <CheckBox
-                x:Name="playedNotificationCheckBox"
+                x:Name="onlineNotificationCheckBox"
                 Grid.Row="2"
                 Grid.Column="1"    
             />
             <CheckBox
-                x:Name="playedSoundCheckBox"
+                x:Name="onlineSoundCheckBox"
                 Grid.Row="2"
                 Grid.Column="2"    
             />
@@ -135,6 +135,6 @@
                 Content="Отмена"    
                 Click="CloseHandler"
             />
-        </StackPanel>    
+        </StackPanel>
     </DockPanel>
 </Window>

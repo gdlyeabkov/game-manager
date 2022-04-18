@@ -12,6 +12,16 @@
         Loaded="InitSocketsHandler"
     >
     <DockPanel>
+        <ScrollViewer
+            Height="65"
+        >
+            <StackPanel
+                x:Name="favoriteFriends"    
+                Orientation="Horizontal"    
+            >
+                
+            </StackPanel>
+        </ScrollViewer>
         <StackPanel>
             <StackPanel
                 Orientation="Horizontal"    

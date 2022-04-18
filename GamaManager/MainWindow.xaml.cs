@@ -69,6 +69,76 @@ namespace GamaManager
             GetUserInfo();
             GetEditInfo();
             GetGamesStats();
+            CheckFriendsCache();
+        }
+
+        public void CheckFriendsCache()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
+                            }
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                            int updatedFriendsCount = updatedFriends.Count;
+                            for (int i = 0; i < updatedFriendsCount; i++)
+                            {
+                                FriendSettings currentFriend = updatedFriends[i];
+                                string currentFriendId = currentFriend.id;
+                                bool isFriendExists = friendsIds.Contains(currentFriendId);
+                                bool isFriendNotExists = !isFriendExists;
+                                if (isFriendNotExists)
+                                {
+                                    updatedFriends.Remove(currentFriend);
+                                }
+                            }
+                            string savedContent = js.Serialize(new SavedContent
+                            {
+                                games = currentGames,
+                                friends = updatedFriends
+                            });
+                            File.WriteAllText(saveDataFilePath, savedContent);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetGamesStats()
@@ -1340,7 +1410,8 @@ namespace GamaManager
                                             isFriendPlayedNotification = true,
                                             isFriendPlayedSound = true,
                                             isFriendSendMsgNotification = true,
-                                            isFriendSendMsgSound = true
+                                            isFriendSendMsgSound = true,
+                                            isFavoriteFriend = false
                                         });
                                         string savedContent = js.Serialize(new SavedContent
                                         {
@@ -2129,6 +2200,7 @@ namespace GamaManager
         public bool isFriendPlayedSound;
         public bool isFriendSendMsgNotification;
         public bool isFriendSendMsgSound;
+        public bool isFavoriteFriend;
     }
 
     class Game

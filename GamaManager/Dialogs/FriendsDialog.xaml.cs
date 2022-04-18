@@ -191,7 +191,44 @@ namespace GamaManager.Dialogs
                                                                 friendsItemContextMenuItem.Header = "Отправить сообщение";
                                                                 friendsItemContextMenuItem.DataContext = friendId;
                                                                 friendsItemContextMenuItem.Click += OpenChatHandler;
-                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem); 
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                                                friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.DataContext = friendId;
+
+                                                                bool isFavoriteFriend = false;
+                                                                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                                                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                                js = new JavaScriptSerializer();
+                                                                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                                                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                List<Game> currentGames = loadedContent.games;
+                                                                List<FriendSettings> currentFriends = loadedContent.friends;
+                                                                List<FriendSettings> updatedFriends = currentFriends;
+                                                                List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                                                                {
+                                                                    return friend.id == friendId;
+                                                                }).ToList();
+                                                                int countCachedFriends = cachedFriends.Count;
+                                                                bool isCachedFriendsExists = countCachedFriends >= 1;
+                                                                if (isCachedFriendsExists)
+                                                                {
+                                                                    FriendSettings cachedFriend = cachedFriends[0];
+                                                                    isFavoriteFriend = cachedFriend.isFavoriteFriend;
+                                                                }
+
+                                                                bool isFriendInFavorites = isFavoriteFriend;
+                                                                if (isFriendInFavorites)
+                                                                {
+                                                                    friendsItemContextMenuItem.Header = "Добавить в избранные";
+                                                                    friendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
+                                                                }
+                                                                else
+                                                                {
+                                                                    friendsItemContextMenuItem.Header = "Удалить из избранных";
+                                                                    friendsItemContextMenuItem.Click += RemoveFriendFromFavoriteHandler;
+                                                                }
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Управление";
                                                                 MenuItem innerFriendsItemContextMenuItem = new MenuItem();
@@ -390,6 +427,82 @@ namespace GamaManager.Dialogs
             {
                 Debugger.Log(0, "debug", "поток занят");
                 await client.ConnectAsync();
+            }
+        }
+
+        public void AddFriendToFavoriteHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            AddFriendToFavorite(friend);
+        }
+
+        public void AddFriendToFavorite (string currentFriendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            List<FriendSettings> updatedFriends = currentFriends;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == currentFriendId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = true;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+            }
+        }
+
+        public void RemoveFriendFromFavoriteHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            RemoveFriendFromFavorite (friend);
+        }
+
+        public void RemoveFriendFromFavorite (string currentFriendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            List<FriendSettings> updatedFriends = currentFriends;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == currentFriendId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = false;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
             }
         }
 

@@ -254,6 +254,33 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                            {
+                                return friend.id == friendId;
+                            }).ToList();
+                            int countCachedFriends = cachedFriends.Count;
+                            bool isCachedFriendsExists = countCachedFriends >= 1;
+                            if (isCachedFriendsExists)
+                            {
+                                FriendSettings cachedFriend = cachedFriends[0];
+                                updatedFriends.Remove(cachedFriend);
+                                string savedContent = js.Serialize(new SavedContent
+                                {
+                                    games = currentGames,
+                                    friends = updatedFriends
+                                });
+                                File.WriteAllText(saveDataFilePath, savedContent);
+                            }
+
                             MessageBox.Show("Друг был удален", "Внимание");
                             GetFriends(currentUserId, "");
                         }

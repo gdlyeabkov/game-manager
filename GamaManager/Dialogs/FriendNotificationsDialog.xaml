@@ -37,6 +37,7 @@
                 </Image.Source>
             </Image>
             <TextBlock
+                x:Name="friendNameLabel"
                 VerticalAlignment="Center"
                 FontSize="18"
                 Text="Имя пользователя"
@@ -97,7 +98,7 @@
                 Grid.Column="1"    
             />
             <CheckBox
-                x:Name="playedNotificationSound"
+                x:Name="playedSoundCheckBox"
                 Grid.Row="2"
                 Grid.Column="2"    
             />
@@ -132,7 +133,7 @@
                 Height="25"
                 Width="125"
                 Content="Отмена"    
-                Click="SaveFriendNotificationsHandler"
+                Click="CloseHandler"
             />
         </StackPanel>    
     </DockPanel>

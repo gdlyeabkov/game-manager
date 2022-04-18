@@ -67,3 +67,5 @@ C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\ChatDialog.baml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\GamaManager_Content.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendNotificationsDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendNotificationsDialog.baml

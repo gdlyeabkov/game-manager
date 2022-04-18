@@ -238,8 +238,11 @@ namespace GamaManager.Dialogs
                                         {
                                             id = friendId,
                                             isFriendOnlineNotification = true,
+                                            isFriendOnlineSound = true,
                                             isFriendPlayedNotification = true,
-                                            isFriendSendMsgNotification = true
+                                            isFriendPlayedSound = true,
+                                            isFriendSendMsgNotification = true,
+                                            isFriendSendMsgSound = true
                                         });
                                         string savedContent = js.Serialize(new SavedContent
                                         {

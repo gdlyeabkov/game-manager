@@ -29,30 +29,251 @@
                         <TextBlock
                             Text="Информация о компьютере:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="computerProducerLabel"
+                                Text="Производитель: "    
+                            />
+                            <TextBlock
+                                x:Name="computerModelLabel"
+                                Text="Модель: "    
+                            />
+                            <TextBlock
+                                x:Name="computerTypeLabel"
+                                Text="Тип: "    
+                            />
+                            <TextBlock
+                                x:Name="computerSensorInputLabel"
+                                Text="Сенсорный ввод: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Процессор:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="processorProducerLabel"
+                                Text="Производитель процессора: "    
+                            />
+                            <TextBlock
+                                x:Name="processorFamilyLabel"
+                                Text="Семейство процессора: "    
+                            />
+                            <TextBlock
+                                x:Name="processorModelLabel"
+                                Text="Модель процессора: "    
+                            />
+                            <TextBlock
+                                x:Name="processorSteppingLabel"
+                                Text="Степпинг процессора: "    
+                            />
+                            <TextBlock
+                                Text="Тип процессора: "    
+                            />
+                            <TextBlock
+                                x:Name="processorFrequencyLabel" 
+                                Text="Тактовая частота: "    
+                            />
+                            <TextBlock
+                                x:Name="processorLogicalCoresLabel" 
+                                Text="Логических процессоров: "    
+                            />
+                            <TextBlock
+                                x:Name="processorPhysicalCoresLabel" 
+                                Text="Физических процессоров: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Версия ОС:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="osVersionLabel"
+                                Text="ОС: "    
+                            />
+                            <TextBlock
+                                x:Name="osFsLabel"
+                                Text="Файловая система"    
+                            />
+                            <TextBlock
+                                x:Name="osCryptoProvidersCodesLabel"
+                                Text="Коды Crypto Provider: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Видеокарта:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="videoCardModelLabel" 
+                                Text="Модель: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDirectXDriverLabel"
+                                Text="Драйвер DirectX: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDriverVersionLabel"
+                                Text="Версия драйвера: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDirectXDriverVersionLabel"
+                                Text="Версия драйвера DirectX: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDateLabel"
+                                Text="Дата выхода: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardOpenGLDriverVersionLabel"
+                                Text="Версия OpenGL: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDepthLabel"
+                                Text="Глубина цвета: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardRateLabel"
+                                Text="Частота обновления: "    
+                            />
+                            <TextBlock
+                                Text="Карта DirectX: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardProducerIdLabel"
+                                Text="ID производителя: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDeviceIdLabel"
+                                Text="ID карты: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardVersionLabel"
+                                Text="Версия: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDisplaysCountLabel"
+                                Text="Кол-во экранов: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardCountLabel"
+                                Text="Количество логических видеокарт: "    
+                            />
+                            <TextBlock
+                                Text="SLI или Crossfire: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardScreenResolutionLabel"
+                                Text="Разрешение осн. экрана: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardDesktopResolutionLabel"
+                                Text="Разрешение рабочего стола: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardScreenSizeLabel"
+                                Text="Размер осн. экрана: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardBusLabel"
+                                Text="Осн. тип шины: "    
+                            />
+                            <TextBlock
+                                x:Name="videoCardRamLabel"
+                                Text="Осн. видеопамять: "    
+                            />
+                            <TextBlock
+                                Text="Поддерживаемое сглаживание: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Звуковая карта:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="audioDeviceLabel"
+                                Text="Аудиоустройство: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Память:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                x:Name="ramSizeLabel"
+                                Text="Оперативная память: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Устройства VR:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                Text="Шлем виртуальной реальности: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Разное:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                Text="Язык интерфейса: "    
+                            />
+                            <TextBlock
+                                Text="Тип носителя: "    
+                            />
+                            <TextBlock
+                                Text="Места на диске: "    
+                            />
+                            <TextBlock
+                                Text="Наиболее свободный диск: "    
+                            />
+                            <TextBlock
+                                Text="Дата установки операционной системы: "    
+                            />
+                            <TextBlock
+                                Text="Игровое устройство: "    
+                            />
+                            <TextBlock
+                                Text="Хэш MAC-адреса: "    
+                            />
+                        </StackPanel>
                         <TextBlock
                             Text="Место на диске:"
                         />
+                        <StackPanel
+                            Margin="5"     
+                        >
+                            <TextBlock
+                                Text="Хэш серийного номера диска: "    
+                            />
+                            <TextBlock
+                                Text="Число SSD: "    
+                            />
+                            <TextBlock
+                                x:Name="driveSpaceSizeLabel"
+                                Text="Размеры SSD: "
+                            />
+                            <TextBlock
+                                Text="Число жестких дисков: "    
+                            />
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </Border.Child>

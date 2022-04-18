@@ -13,7 +13,11 @@
     >
     <DockPanel>
         <ScrollViewer
-            Height="65"
+            x:Name="favoriteFriendsWrap"
+            HorizontalScrollBarVisibility="Visible"
+            VerticalScrollBarVisibility="Disabled"
+            DockPanel.Dock="Top"
+            Height="100"
         >
             <StackPanel
                 x:Name="favoriteFriends"    

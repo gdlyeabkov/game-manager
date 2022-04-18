@@ -264,7 +264,8 @@
         </StackPanel>
         <TabControl
             x:Name="mainControl"
-            SelectedIndex="0"    
+            SelectedIndex="0"
+            SelectionChanged="ToggleWindowHandler"
         >
             <TabItem
                 Visibility="Collapsed"    
@@ -486,6 +487,7 @@
                                     />
                                 </StackPanel>
                                 <Button
+                                    x:Name="editProfileBtn"
                                     Margin="25"
                                     HorizontalAlignment="Right"
                                     Width="175"
@@ -496,6 +498,7 @@
                             </DockPanel>
                             <DockPanel>
                                 <DockPanel
+                                    x:Name="userProfileDetails"
                                     Margin="25"
                                 >
                                     <StackPanel

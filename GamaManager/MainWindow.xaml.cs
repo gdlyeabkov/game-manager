@@ -48,7 +48,7 @@ namespace GamaManager
         public DispatcherTimer timer;
         public int timerHours = 0;
         public SocketIO client;
-
+        
         public MainWindow(string id)
         {
             InitializeComponent();
@@ -57,16 +57,15 @@ namespace GamaManager
 
         }
 
-        public void Initialize(string id)
+        public void Initialize (string id)
         {
-            
             GetUser(id);
             InitConstants();
             ShowOffers();
             GetGamesList("");
             GetFriendRequests();
             GetGamesInfo();
-            GetUserInfo();
+            GetUserInfo(currentUserId, true);
             GetEditInfo();
             GetGamesStats();
             CheckFriendsCache();
@@ -393,22 +392,24 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo ()
+        public void GetUserInfo (string id, bool isLocalUser)
         {
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             JavaScriptSerializer js = new JavaScriptSerializer();
-            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-            List<Game> myGames = loadedContent.games;
-            int countGames = myGames.Count;
-            string rawCountGames = countGames.ToString();
-            countGamesLabel.Text = rawCountGames;
-
+            if (isLocalUser)
+            {
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                List<Game> myGames = loadedContent.games;
+                int countGames = myGames.Count;
+                string rawCountGames = countGames.ToString();
+                countGamesLabel.Text = rawCountGames;
+            }
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -418,25 +419,45 @@ namespace GamaManager
                         js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
 
-                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
 
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            List<Friend> friendsIds = myobj.friends.Where<Friend>((Friend joint) =>
+                            User user = myobj.user; 
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                             {
-                                string userId = joint.user;
-                                bool isMyFriend = userId == currentUserId;
-                                return isMyFriend;
-                            }).ToList<Friend>();
-                            int countFriends = friendsIds.Count;
-                            string rawCountFriends = countFriends.ToString();
-                            countFriendsLabel.Text = rawCountFriends;
-                            string currentUserName = currentUser.name;
-                            userProfileNameLabel.Text = currentUserName;
-                            string currentUserCountry = currentUser.country;
-                            userProfileCountryLabel.Text = currentUserCountry;
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+
+                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<Friend> friendsIds = myInnerObj.friends.Where<Friend>((Friend joint) =>
+                                        {
+                                            string userId = joint.user;
+                                            bool isMyFriend = userId == id;
+                                            return isMyFriend;
+                                        }).ToList<Friend>();
+                                        int countFriends = friendsIds.Count;
+                                        string rawCountFriends = countFriends.ToString();
+                                        countFriendsLabel.Text = rawCountFriends;
+                                        string currentUserName = user.name;
+                                        userProfileNameLabel.Text = currentUserName;
+                                        string currentUserCountry = user.country;
+                                        userProfileCountryLabel.Text = currentUserCountry;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -446,6 +467,16 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+            editProfileBtn.IsEnabled = isLocalUser;
+            Visibility visibility = Visibility.Collapsed;
+            if (isLocalUser)
+            {
+                visibility = Visibility.Visible;
+            }
+            else {
+                visibility = Visibility.Collapsed;
+            }
+            userProfileDetails.Visibility = visibility;
         }
 
         public void GetFriendRequests ()
@@ -1021,6 +1052,7 @@ namespace GamaManager
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -1036,7 +1068,8 @@ namespace GamaManager
             });
             string savedContent = js.Serialize(new SavedContent
             {
-                games = updatedGames
+                games = updatedGames,
+                friends = currentFriends
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = "Играть";
@@ -1255,7 +1288,7 @@ namespace GamaManager
 
         public void OpenFriendsDialog ()
         {
-            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client);
+            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl);
             dialog.Show();
         }
 
@@ -1467,11 +1500,17 @@ namespace GamaManager
 
         private void ProfileItemSelected (int index)
         {
-            bool isProfile = index == 2;
-            if (isProfile) {
-                mainControl.SelectedIndex = 1;
+            if (isAppInit)
+            {
+                bool isProfile = index == 2;
+                if (isProfile) {
+                    object mainControlData = mainControl.DataContext;
+                    string userId = currentUserId;
+                    GetUserInfo(userId, userId == currentUserId);
+                    mainControl.SelectedIndex = 1;
+                }
+                ResetMenu();
             }
-            ResetMenu();
         }
 
         private void LibraryItemSelectedHandler (object sender, SelectionChangedEventArgs e)
@@ -1510,6 +1549,7 @@ namespace GamaManager
         public void ClientLoaded ()
         {
             isAppInit = true;
+            mainControl.DataContext = currentUserId;
             ListenSockets();
             IncreaseUserToStats();
             SetUserStatus("online");
@@ -1652,7 +1692,7 @@ namespace GamaManager
                     {
                         MessageBox.Show("Профиль был обновлен", "Внимание");
                         GetUser(currentUserId);
-                        GetUserInfo();
+                        GetUserInfo(currentUserId, true);
                         GetEditInfo();
                     }
                     else
@@ -2181,6 +2221,27 @@ namespace GamaManager
         {
             Dialogs.SystemInfoDialog dialog = new Dialogs.SystemInfoDialog();
             dialog.Show();
+        }
+
+        private void ToggleWindowHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ToggleWindow();
+        }
+
+        public void ToggleWindow ()
+        {
+            if (isAppInit)
+            {
+                int selectedWindowIndex = mainControl.SelectedIndex;
+                bool isProfileWindow = selectedWindowIndex == 1;
+                if (isProfileWindow)
+                {
+                    object mainControlData = mainControl.DataContext;
+                    string userId = ((string)(mainControlData));
+                    bool isLocalUser = userId == currentUserId;
+                    GetUserInfo(userId, isLocalUser);
+                }
+            }
         }
 
     }

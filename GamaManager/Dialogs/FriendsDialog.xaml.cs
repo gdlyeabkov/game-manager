@@ -31,27 +31,29 @@ namespace GamaManager.Dialogs
         public Brush onlineBrush;
         public Brush playedBrush;
         public Brush offlineBrush;
-
-        public FriendsDialog(string currentUserId, SocketIO client)
+        public TabControl mainControl;
+        
+        public FriendsDialog(string currentUserId, SocketIO client, TabControl mainControl)
         {
             InitializeComponent();
 
-            Initialize(currentUserId, client);
+            Initialize(currentUserId, client, mainControl);
         
         }
 
-        public void Initialize(string currentUserId, SocketIO client)
+        public void Initialize(string currentUserId, SocketIO client, TabControl mainControl)
         {
-            InitializeConstants(client);
+            InitializeConstants(client, mainControl);
             GetFriends(currentUserId, "");
         }
 
-        public void InitializeConstants(SocketIO client)
+        public void InitializeConstants(SocketIO client, TabControl mainControl)
         {
             this.client = client;
             onlineBrush = System.Windows.Media.Brushes.Blue;
             playedBrush = System.Windows.Media.Brushes.Green;
             offlineBrush = System.Windows.Media.Brushes.LightGray;
+            this.mainControl = mainControl;
         }
 
         public void GetFriends (string currentUserId, string keywords)
@@ -117,6 +119,7 @@ namespace GamaManager.Dialogs
                                                         if (isOkStatus)
                                                         {
                                                             User friend = myobj.user;
+                                                            string localFriendId = friend._id;
                                                             string friendLogin = friend.login;
                                                             string friendStatus = friend.status;
                                                             string friendIgnoreCaseLogin = friendLogin.ToLower();
@@ -193,8 +196,20 @@ namespace GamaManager.Dialogs
                                                                 friendsItemContextMenuItem.Click += OpenChatHandler;
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Открыть профиль";
                                                                 friendsItemContextMenuItem.DataContext = friendId;
+                                                                friendsItemContextMenuItem.Click += OpenFriendProfileHandler;
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                                                friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Управление";
+                                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                                innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
 
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 bool isFavoriteFriend = false;
                                                                 Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                                                                 string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -205,9 +220,9 @@ namespace GamaManager.Dialogs
                                                                 List<Game> currentGames = loadedContent.games;
                                                                 List<FriendSettings> currentFriends = loadedContent.friends;
                                                                 List<FriendSettings> updatedFriends = currentFriends;
-                                                                List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                                                                List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
                                                                 {
-                                                                    return friend.id == friendId;
+                                                                    return localFriend.id == friendId;
                                                                 }).ToList();
                                                                 int countCachedFriends = cachedFriends.Count;
                                                                 bool isCachedFriendsExists = countCachedFriends >= 1;
@@ -216,26 +231,19 @@ namespace GamaManager.Dialogs
                                                                     FriendSettings cachedFriend = cachedFriends[0];
                                                                     isFavoriteFriend = cachedFriend.isFavoriteFriend;
                                                                 }
-
                                                                 bool isFriendInFavorites = isFavoriteFriend;
                                                                 if (isFriendInFavorites)
                                                                 {
-                                                                    friendsItemContextMenuItem.Header = "Добавить в избранные";
-                                                                    friendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
+                                                                    innerFriendsItemContextMenuItem.Header = "Удалить из избранных";
+                                                                    innerFriendsItemContextMenuItem.Click += RemoveFriendFromFavoriteHandler;
                                                                 }
                                                                 else
                                                                 {
-                                                                    friendsItemContextMenuItem.Header = "Удалить из избранных";
-                                                                    friendsItemContextMenuItem.Click += RemoveFriendFromFavoriteHandler;
+                                                                    innerFriendsItemContextMenuItem.Header = "Добавить в избранные";
+                                                                    innerFriendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
                                                                 }
-                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
-                                                                friendsItemContextMenuItem = new MenuItem();
-                                                                friendsItemContextMenuItem.Header = "Управление";
-                                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
-                                                                innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
-                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
-                                                                innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.Header = "Уведомления";
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
@@ -244,6 +252,78 @@ namespace GamaManager.Dialogs
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItem.ContextMenu = friendsItemContextMenu;
                                                             }
+
+                                                            favoriteFriends.Children.Clear();
+                                                            favoriteFriendsWrap.Visibility = Visibility.Collapsed;
+                                                            Environment.SpecialFolder favoriteLocalApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                            string favoriteLocalApplicationDataFolderPath = Environment.GetFolderPath(favoriteLocalApplicationDataFolder);
+                                                            string favoriteSaveDataFilePath = favoriteLocalApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                            js = new JavaScriptSerializer();
+                                                            string favoriteSaveDataFileContent = File.ReadAllText(favoriteSaveDataFilePath);
+                                                            SavedContent favoriteLoadedContent = js.Deserialize<SavedContent>(favoriteSaveDataFileContent);
+                                                            List<FriendSettings> favoriteCurrentFriends = favoriteLoadedContent.friends;
+                                                            List<FriendSettings> localFavoriteFriends = favoriteCurrentFriends.Where<FriendSettings>((FriendSettings settings) =>
+                                                            {
+                                                                return settings.isFavoriteFriend;
+                                                            }).ToList<FriendSettings>();
+                                                            List<string> localFavoriteFriendIds = new List<string>();
+                                                            foreach (FriendSettings localFavoriteFriend in localFavoriteFriends)
+                                                            {
+                                                                string localFavoriteFriendId = localFavoriteFriend.id;
+                                                                localFavoriteFriendIds.Add(localFavoriteFriendId);
+                                                            }
+                                                            bool isLocalFavoriteFriend = localFavoriteFriendIds.Contains(localFriendId);
+                                                            if (isLocalFavoriteFriend)
+                                                            {
+                                                                favoriteFriendsWrap.Visibility = Visibility.Visible;
+                                                                StackPanel favoriteFriendsItem = new StackPanel();
+                                                                favoriteFriendsItem.Height = 65;
+                                                                Image favoriteFriendAvatar = new Image();
+                                                                Setter favoriteEffectSetter = new Setter();
+                                                                favoriteEffectSetter.Property = ScrollViewer.EffectProperty;
+                                                                favoriteEffectSetter.Value = new DropShadowEffect
+                                                                {
+                                                                    ShadowDepth = 4,
+                                                                    Direction = 330,
+                                                                    Color = Colors.Green,
+                                                                    Opacity = 0.5,
+                                                                    BlurRadius = 4
+                                                                };
+                                                                Style favoriteDropShadowScrollViewerStyle = new Style(typeof(ScrollViewer));
+                                                                favoriteDropShadowScrollViewerStyle.Setters.Add(favoriteEffectSetter);
+                                                                favoriteFriendAvatar.Resources.Add(typeof(ScrollViewer), favoriteDropShadowScrollViewerStyle);
+                                                                favoriteFriendAvatar.Width = 25;
+                                                                favoriteFriendAvatar.Height = 25;
+                                                                favoriteFriendAvatar.Margin = new Thickness(5);
+                                                                favoriteFriendAvatar.BeginInit();
+                                                                Uri favoriteFriendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                favoriteFriendAvatar.Source = new BitmapImage(favoriteFriendAvatarUri);
+                                                                favoriteFriendAvatar.EndInit();
+                                                                favoriteFriendsItem.Children.Add(favoriteFriendAvatar);
+                                                                TextBlock favoriteFriendLoginLabel = new TextBlock();
+                                                                favoriteFriendLoginLabel.Height = 25;
+                                                                favoriteFriendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                favoriteFriendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
+                                                                favoriteFriendLoginLabel.Text = friendLogin;
+                                                                favoriteFriendsItem.Children.Add(favoriteFriendLoginLabel);
+                                                                bool isFavoriteFriendOnline = friendStatus == "online";
+                                                                bool isFavoriteFriendPlayed = friendStatus == "played";
+                                                                bool isFavoriteFriendOffline = friendStatus == "offline";
+                                                                if (isFavoriteFriendOnline)
+                                                                {
+                                                                    favoriteFriendLoginLabel.Foreground = onlineBrush;
+                                                                }
+                                                                else if (isFavoriteFriendPlayed)
+                                                                {
+                                                                    favoriteFriendLoginLabel.Foreground = playedBrush;
+                                                                }
+                                                                else if (isFavoriteFriendOffline)
+                                                                {
+                                                                    favoriteFriendLoginLabel.Foreground = offlineBrush;
+                                                                }
+                                                                favoriteFriends.Children.Add(favoriteFriendsItem);
+                                                            }
+
                                                         }
                                                     }
                                                 }
@@ -465,6 +545,7 @@ namespace GamaManager.Dialogs
                     friends = updatedFriends
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
+                GetFriends(currentUserId, "");
             }
         }
 
@@ -503,7 +584,23 @@ namespace GamaManager.Dialogs
                     friends = updatedFriends
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
+                GetFriends(currentUserId, "");
             }
+        }
+
+        public void OpenFriendProfileHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            OpenFriendProfile(friend);
+        }
+
+        async public void OpenFriendProfile (string friendId)
+        {
+            mainControl.DataContext = friendId;
+            mainControl.SelectedIndex = 1;
+            this.Close();
         }
 
     }

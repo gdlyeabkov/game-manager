@@ -447,7 +447,6 @@ namespace GamaManager.Dialogs
 
         async public void OpenChat (string friend)
         {
-            // await client.DisconnectAsync();
             Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend);
             dialog.Show();
         }

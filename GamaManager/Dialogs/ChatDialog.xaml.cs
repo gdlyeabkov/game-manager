@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -13,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -30,6 +32,27 @@ namespace GamaManager.Dialogs
         public SocketIO client;
         public string friendId;
 
+        private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
+        private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
+        private const UInt32 FLASHW_ALL = 3; //Flash both the window caption and taskbar button.        
+        private const UInt32 FLASHW_TIMER = 4; //Flash continuously, until the FLASHW_STOP flag is set.        
+        private const UInt32 FLASHW_TIMERNOFG = 12; //Flash continuously until the window comes to the foreground.  
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct FLASHWINFO
+        {
+            public UInt32 cbSize; //The size of the structure in bytes.            
+            public IntPtr hwnd; //A Handle to the Window to be Flashed. The window can be either opened or minimized.
+
+
+            public UInt32 dwFlags; //The Flash Status.            
+            public UInt32 uCount; // number of times to flash the window            
+            public UInt32 dwTimeout; //The rate at which the Window is to be flashed, in milliseconds. If Zero, the function uses the default cursor blink rate.        
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
         public ChatDialog(string currentUserId, SocketIO client, string friendId)
         {
             InitializeComponent();
@@ -154,6 +177,7 @@ namespace GamaManager.Dialogs
                                                             }
                                                         }
                                                     }
+                                                    FlashWindow(this);
                                                 }
                                                 catch (System.Net.WebException)
                                                 {
@@ -334,6 +358,46 @@ namespace GamaManager.Dialogs
             {
                 Debugger.Log(0, "debug", "Нельзя отправить повторно");
             }
+        }
+
+
+        public void FlashWindow(Window win, UInt32 count = UInt32.MaxValue)
+        {
+            //Don't flash if the window is active            
+            if (win.IsActive) return;
+            WindowInteropHelper h = new WindowInteropHelper(win);
+            FLASHWINFO info = new FLASHWINFO
+            {
+                hwnd = h.Handle,
+                dwFlags = FLASHW_ALL | FLASHW_TIMER,
+                uCount = count,
+                dwTimeout = 0
+            };
+
+            info.cbSize = Convert.ToUInt32(Marshal.SizeOf(info));
+            FlashWindowEx(ref info);
+        }
+
+        public void StopFlashingWindow(Window win)
+        {
+            WindowInteropHelper h = new WindowInteropHelper(win);
+            FLASHWINFO info = new FLASHWINFO();
+            info.hwnd = h.Handle;
+            info.cbSize = Convert.ToUInt32(Marshal.SizeOf(info));
+            info.dwFlags = FLASHW_STOP;
+            info.uCount = UInt32.MaxValue;
+            info.dwTimeout = 0;
+            FlashWindowEx(ref info);
+        }
+
+        private void StopBlinkWindowHandler (object sender, RoutedEventArgs e)
+        {
+            StopBlinkWindow();
+        }
+
+        public void StopBlinkWindow()
+        {
+            StopFlashingWindow(this);
         }
 
     }

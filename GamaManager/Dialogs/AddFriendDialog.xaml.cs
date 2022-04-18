@@ -146,13 +146,17 @@ namespace GamaManager.Dialogs
                                             isOkStatus = status == "OK";
                                             if (isOkStatus)
                                             {
-                                                List<Friend> myFriends = myInnerObj.friends;
+                                                List<Friend> friends = myInnerObj.friends;
 
+                                                List<Friend> myFriends = friends.Where<Friend>((Friend friend) =>
+                                                {
+                                                    return friend.user == currentUserId;
+                                                }).ToList<Friend>();
 
                                                 List<string> friendsIds = new List<string>();
                                                 foreach (Friend myFriend in myFriends)
                                                 {
-                                                    string friendId = myFriend.user;
+                                                    string friendId = myFriend.friend;
                                                     friendsIds.Add(friendId);
                                                 }
                                                 bool isMyFriend = friendsIds.Contains(userId);

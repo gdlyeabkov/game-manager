@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:GamaManager"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
+    xmlns:p ="clr-namespace:GamaManager.Properties"
     Title="Office Ware Game Manager"
     Height="450"
     Width="800"
@@ -94,7 +95,15 @@
                 />
             </MenuItem>
             <MenuItem
-                Header="Друзья"    
+                Header="Вид"    
+            >
+                <MenuItem
+                    Header="Проигрыватель"
+                    Click="OpenPlayerHandler"
+                />
+            </MenuItem>
+            <MenuItem
+                Header="{x:Static p:Resources.friendsMenuItemLabel}"    
             >
                 <MenuItem
                     Header="Добавить друга"
@@ -124,6 +133,7 @@
                     Width="20"
                     Height="20"
                     Margin="10"
+                    Foreground="LightGray"
                     MouseLeftButtonUp="BackForHistoryHandler"
                 />
                 <materialDesign:PackIcon
@@ -132,6 +142,7 @@
                     Width="20"
                     Height="20"
                     Margin="10"
+                    Foreground="LightGray"
                     MouseLeftButtonUp="ForwardForHistoryHandler"
                 />
                 <ComboBox

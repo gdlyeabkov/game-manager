@@ -237,6 +237,7 @@ namespace GamaManager.Dialogs
                                         SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                         List<Game> currentGames = loadedContent.games;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
+                                        Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -252,7 +253,8 @@ namespace GamaManager.Dialogs
                                         string savedContent = js.Serialize(new SavedContent
                                         {
                                             games = currentGames,
-                                            friends = updatedFriends
+                                            friends = updatedFriends,
+                                            settings = currentSettings
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Приглашение отправлено");

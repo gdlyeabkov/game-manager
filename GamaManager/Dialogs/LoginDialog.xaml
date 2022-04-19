@@ -22,7 +22,7 @@
                 >
                     <StackPanel>
                         <TextBlock
-                            Text="{x:Static p:Resources.LoginDialogHeaderLabel}"
+                            Text="Войти в игровой менеджер"
                             HorizontalAlignment="Center"
                             FontSize="24"
                         />

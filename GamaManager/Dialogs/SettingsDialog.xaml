@@ -10,149 +10,167 @@
         Width="650"
         WindowStartupLocation="CenterScreen"
     >
-    <DockPanel Focusable="False" IsManipulationEnabled="False" IsItemsHost="False" >
+    <DockPanel
+        DockPanel.Dock="Top"    
+    >
         <StackPanel
-            DockPanel.Dock="Bottom"
-            Height="35"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal"    
-        >
-            <Button
-                Width="125"
-                Height="25"
-                Margin="5"
-                Content="ОК"    
-            />
-            <Button
-                Width="125"
-                Height="25"
-                Margin="5"
-                Content="Отмена"    
-            />
-        </StackPanel>
-        <DockPanel
-            DockPanel.Dock="Top"    
+            x:Name="tabs"
+            Width="200"
         >
             <StackPanel
-                Width="250"    
+                Background="LightGray"
+                Margin="10"
+                DataContext="0"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
             >
-                <StackPanel
-                    Margin="10"
-                    DataContext="0"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Аккаунт"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="1"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Семья"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="2"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="В игре"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="3"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Интерфейс"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="4"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Библиотека"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="5"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Загрузки"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="6"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Cloud"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="7"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Музыка"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="8"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Трансляция"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="9"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Remote Play"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="10"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Браузер"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="11"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Контроллер"    
-                    />
-                </StackPanel>
-                <StackPanel
-                    Margin="10"    
-                    DataContext="12"
-                    MouseLeftButtonUp="SelectSettingsTabHandler"
-                >
-                    <TextBlock
-                        Text="Кэш шейдеров"    
-                    />
-                </StackPanel>
+                <TextBlock
+                    Margin="5"
+                    Text="Аккаунт"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="1"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Семья"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="2"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="В игре"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="3"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Интерфейс"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="4"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Библиотека"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="5"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Загрузки"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="6"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Cloud"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="7"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Музыка"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="8"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Трансляция"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="9"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Remote Play"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="10"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Браузер"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="11"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Контроллер"    
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="10"    
+                DataContext="12"
+                MouseLeftButtonUp="SelectSettingsTabHandler"
+            >
+                <TextBlock
+                    Margin="5"
+                    Text="Кэш шейдеров"    
+                />
+            </StackPanel>
+        </StackPanel>
+        <DockPanel>
+
+            <StackPanel
+                DockPanel.Dock="Bottom"
+                Height="35"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"    
+            >
+                <Button
+                    Width="125"
+                    Height="25"
+                    Margin="5"
+                    Content="ОК"    
+                    Click="SaveSettingsHandler"    
+                />
+                <Button
+                    Width="125"
+                    Height="25"
+                    Margin="5"
+                    Content="Отмена"    
+                    Click="CancelHandler"
+                />
             </StackPanel>
             <TabControl
                 x:Name="settingsControl"    
@@ -258,19 +276,45 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
+                            Text="Оверлей Office ware game manager"    
+                            Margin="0 5"
+                        />
+                        <TextBlock
+                            Text="Сочетание клавиш для открытия оверлея"    
+                            Margin="0 5"
+                        />
+                        <TextBox
+                            x:Name="overlayHotKeyBox"
+                            IsReadOnly="True"
+                            Width="125"
+                            Margin="0 5"
+                            HorizontalAlignment="Left"
+                            KeyDown="OverlayHotKeyHandler"
+                        />
+                    </StackPanel>
+                </TabItem>
+                <TabItem Visibility="Collapsed">
+                    <StackPanel
+                        Margin="10"
+                        HorizontalAlignment="Left"    
+                    >
+                        <TextBlock
                             Text="Выберите язык"    
                             Margin="0 5"
                         />
                         <ComboBox
+                            x:Name="langSelector"
                             SelectedIndex="0"
                             Width="125"
                             Margin="0 5"
-                            HorizontalAlignment="Left"    
+                            HorizontalAlignment="Left"
                         >
                             <ComboBoxItem
+                                DataContext="ru-RU"
                                 Content="Русский"    
                             />
                             <ComboBoxItem
+                                DataContext="en-US"
                                 Content="English"    
                             />
                         </ComboBox>
@@ -279,6 +323,7 @@
                             Margin="0 5"
                         />
                         <ComboBox
+                            x:Name="startWindowSelector"
                             SelectedIndex="0"
                             Width="125"
                             Margin="0 5"
@@ -399,45 +444,9 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Office ware game manager Cloud хранит ваши данные продукта,&#10;чтобы они совпадали на любом ПК."    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
-                        <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -446,45 +455,50 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Музыкальная библиотека"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
+                        <TextBox
+                            x:Name="musicLibraryListBox"
+                            Width="400"
+                            VerticalScrollBarVisibility="Auto"
+                            Height="75"
                             Margin="0 5"
-                            HorizontalAlignment="Left"    
+                        />
+                        <StackPanel
+                            Orientation="Horizontal"    
                         >
-                            <ComboBoxItem
-                                Content="Русский"    
+                            <Button
+                                Width="85"
+                                Height="25"
+                                Margin="5 0"
+                                Content="Добавить"
+                                Click="AddPathToMusicSettingsHandler"
                             />
-                            <ComboBoxItem
-                                Content="English"    
+                            <Button
+                                Width="85"
+                                Height="25"
+                                Margin="5 0"
+                                Content="Удалить"    
                             />
-                        </ComboBox>
+                            <Button
+                                Width="85"
+                                Height="25"
+                                Margin="5 0"
+                                Content="Сканировать"    
+                            />
+                        </StackPanel>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
+                            Text="Громкость"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                        <Slider
+                            x:Name="musicSettingsVolumeSlider"
+                            HorizontalAlignment="Left"
+                            Width="100"
+                            Minimum="0"
+                            Maximum="100"
+                        />
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -493,92 +507,9 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="У вас недостаточно прав для ведения трансляций"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
-                        <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Visibility="Collapsed">
-                    <StackPanel
-                        Margin="10"
-                        HorizontalAlignment="Left"    
-                    >
-                        <TextBlock
-                            Text="Выберите язык"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
-                        <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">

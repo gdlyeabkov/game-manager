@@ -49,16 +49,37 @@ namespace GamaManager
         public int timerHours = 0;
         public SocketIO client;
         public List<int> history;
-        public int historyCursor = 0;
+        public int historyCursor = -1;
         public Brush disabledColor;
         public Brush enabledColor;
 
         public MainWindow(string id)
         {
+
+            PreInit(id);
+
             InitializeComponent();
 
             Initialize(id);
 
+        }
+
+        public void PreInit (string id)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\save-data.txt";
+            string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id;
+            bool isCacheFolderExists = Directory.Exists(cachePath);
+            if (isCacheFolderExists)
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                Settings currentSettings = loadedContent.settings;
+                string lang = currentSettings.language;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(lang);
+            }
         }
 
         public void Initialize (string id)
@@ -73,6 +94,7 @@ namespace GamaManager
             GetEditInfo();
             GetGamesStats();
             CheckFriendsCache();
+            LoadStartWindow();
         }
 
         public void CheckFriendsCache()
@@ -114,6 +136,7 @@ namespace GamaManager
                             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                             List<Game> currentGames = loadedContent.games;
+                            Settings currentSettings = loadedContent.settings;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = 0; i < updatedFriendsCount; i++)
@@ -130,7 +153,8 @@ namespace GamaManager
                             string savedContent = js.Serialize(new SavedContent
                             {
                                 games = currentGames,
-                                friends = updatedFriends
+                                friends = updatedFriends,
+                                settings = currentSettings
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -682,7 +706,24 @@ namespace GamaManager
             disabledColor = System.Windows.Media.Brushes.LightGray;
             enabledColor = System.Windows.Media.Brushes.Black;
             history = new List<int>();
-            history.Add(0);
+        }
+
+        public void LoadStartWindow ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            int currentStartWindow = currentSettings.startWindow;
+            
+            mainControl.SelectedIndex = currentStartWindow;
+            AddHistoryRecord();
+            arrowBackBtn.Foreground = disabledColor;
+            arrowForwardBtn.Foreground = disabledColor;
+
         }
 
         public void GetGamesList (string keywords)
@@ -806,7 +847,18 @@ namespace GamaManager
                 string savedContent = js.Serialize(new SavedContent
                 {
                     games = new List<Game>(),
-                    friends = new List<FriendSettings>()
+                    friends = new List<FriendSettings>(),
+                    settings = new Settings()
+                    {
+                        language = "ru-RU",
+                        startWindow = 0,
+                        overlayHotKey = "Shift + Tab",
+                        music = new MusicSettings()
+                        {
+                            paths = new List<string>(),
+                            volume = 100
+                        }
+                    }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -825,7 +877,7 @@ namespace GamaManager
 
         public void OpenSettings ()
         {
-            Dialogs.SettingsDialog dialog = new Dialogs.SettingsDialog();
+            Dialogs.SettingsDialog dialog = new Dialogs.SettingsDialog(currentUserId);
             dialog.Show();
         }
 
@@ -946,6 +998,8 @@ namespace GamaManager
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -979,7 +1033,9 @@ namespace GamaManager
                 };
                 string savedContent = js.Serialize(new SavedContent
                 {
-                    games = updatedGames
+                    games = updatedGames,
+                    friends = currentFriends,
+                    settings = currentSettings
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -1072,6 +1128,7 @@ namespace GamaManager
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> updatedGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -1088,7 +1145,8 @@ namespace GamaManager
             string savedContent = js.Serialize(new SavedContent
             {
                 games = updatedGames,
-                friends = currentFriends
+                friends = currentFriends,
+                settings = currentSettings
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = "Играть";
@@ -1450,6 +1508,7 @@ namespace GamaManager
                                         string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                                         SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                         List<Game> currentGames = loadedContent.games;
+                                        Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
@@ -1466,7 +1525,8 @@ namespace GamaManager
                                         string savedContent = js.Serialize(new SavedContent
                                         {
                                             games = currentGames,
-                                            friends = updatedFriends
+                                            friends = updatedFriends,
+                                            settings = currentSettings
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -2380,12 +2440,24 @@ namespace GamaManager
             this.Close();
         }
 
+        private void OpenPlayerHandler(object sender, RoutedEventArgs e)
+        {
+            OpenPlayer();
+        }
+
+        public void OpenPlayer ()
+        {
+            Dialogs.PlayerDialog dialog = new Dialogs.PlayerDialog(currentUserId);
+            dialog.Show();
+        }
+
     }
 
     class SavedContent
     {
         public List<Game> games;
         public List<FriendSettings> friends;
+        public Settings settings;
     }
 
     class FriendSettings
@@ -2460,6 +2532,20 @@ namespace GamaManager
         public string status;
         public int users;
         public int maxUsers;
+    }
+
+    public class Settings
+    {
+        public string language;
+        public int startWindow;
+        public string overlayHotKey;
+        public MusicSettings music;
+    }
+
+    public class MusicSettings
+    {
+        public double volume;
+        public List<string> paths;
     }
 
 }

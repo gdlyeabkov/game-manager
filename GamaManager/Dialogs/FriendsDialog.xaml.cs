@@ -388,6 +388,7 @@ namespace GamaManager.Dialogs
                             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                             List<Game> currentGames = loadedContent.games;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
+                            Settings currentSettings = loadedContent.settings;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -401,7 +402,8 @@ namespace GamaManager.Dialogs
                                 string savedContent = js.Serialize(new SavedContent
                                 {
                                     games = currentGames,
-                                    friends = updatedFriends
+                                    friends = updatedFriends,
+                                    settings = currentSettings
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }
@@ -564,6 +566,7 @@ namespace GamaManager.Dialogs
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
             List<FriendSettings> updatedFriends = currentFriends;
+            Settings currentSettings = loadedContent.settings;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -577,7 +580,8 @@ namespace GamaManager.Dialogs
                 string savedContent = js.Serialize(new SavedContent
                 {
                     games = currentGames,
-                    friends = updatedFriends
+                    friends = updatedFriends,
+                    settings = currentSettings
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -602,6 +606,7 @@ namespace GamaManager.Dialogs
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings; 
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -616,7 +621,8 @@ namespace GamaManager.Dialogs
                 string savedContent = js.Serialize(new SavedContent
                 {
                     games = currentGames,
-                    friends = updatedFriends
+                    friends = updatedFriends,
+                    settings = currentSettings
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");

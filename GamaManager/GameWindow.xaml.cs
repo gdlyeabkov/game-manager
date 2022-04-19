@@ -136,12 +136,44 @@ namespace GamaManager
 
         private void GlobalHotKeyHandler (object sender, KeyEventArgs e)
         {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            string overlayHotKey = currentSettings.overlayHotKey;
+            bool isModifiersApplied = overlayHotKey.Contains("+");
+            bool isNeedShiftModifier = false;
+            bool isNeedCtrlModifier = false;
+            Key currentKey = e.Key;
+            string rawCurrentKey = currentKey.ToString();
+            string overlayKey = rawCurrentKey;
+            if (isModifiersApplied)
+            {
+                string[] overlayHotKeyParts = overlayHotKey.Split(new Char[] { '+' });
+                string overlayModifier = overlayHotKeyParts[0];
+                overlayModifier = overlayModifier.Trim();
+                isNeedShiftModifier = overlayModifier == "Shift";
+                isNeedCtrlModifier = overlayModifier == "Ctrl";
+                overlayKey = overlayHotKeyParts[1];
+                overlayKey = overlayKey.Trim();
+            }
+            else
+            {
+                overlayKey = overlayHotKey;
+            }
             var shiftModifier = Keyboard.Modifiers & ModifierKeys.Shift;
             bool isShiftModifierEnabled = shiftModifier > 0;
-            Key currentKey = e.Key;
+            var ctrlModifier = Keyboard.Modifiers & ModifierKeys.Control;
+            bool isCtrlModifierEnabled = ctrlModifier > 0;
             Key tabKey = Key.Tab;
-            bool isTabKey = currentKey == tabKey;
-            bool isToggleAside = isTabKey && isShiftModifierEnabled;
+            // bool isTabKey = currentKey == tabKey;
+            bool isTabKey = rawCurrentKey == overlayKey;
+            // bool isToggleAside = isTabKey && isShiftModifierEnabled;
+            bool isToggleAside = isTabKey && ((isShiftModifierEnabled && isNeedShiftModifier) || !isNeedShiftModifier) && ((isCtrlModifierEnabled && isNeedCtrlModifier) || !isNeedCtrlModifier);
             if (isToggleAside)
             {
                 Visibility currentVisibility = gameManagerAside.Visibility;

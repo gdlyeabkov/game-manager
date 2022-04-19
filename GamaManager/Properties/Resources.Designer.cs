@@ -61,11 +61,11 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Login to game manager.
+        ///   Ищет локализованную строку, похожую на Friends.
         /// </summary>
-        public static string LoginDialogHeaderLabel {
+        public static string friendsMenuItemLabel {
             get {
-                return ResourceManager.GetString("LoginDialogHeaderLabel", resourceCulture);
+                return ResourceManager.GetString("friendsMenuItemLabel", resourceCulture);
             }
         }
     }

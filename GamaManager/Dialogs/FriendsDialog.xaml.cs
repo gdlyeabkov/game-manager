@@ -89,18 +89,26 @@ namespace GamaManager.Dialogs
                                 {
                                     js = new JavaScriptSerializer();
                                     objText = nestedReader.ReadToEnd();
-
                                     FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-
                                     status = myobj.status;
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-                                        List<Friend> friendsIds = myInnerObj.friends;
-                                        foreach (Friend friendInfo in friendsIds)
+                                        List<Friend> receivedFriends = myInnerObj.friends;
+                                        List<Friend> myFriends = receivedFriends.Where<Friend>((Friend friend) =>
+                                        {
+                                            return friend.user == currentUserId;
+                                        }).ToList<Friend>();
+                                        List<string> friendsIds = new List<string>();
+                                        foreach (Friend friendInfo in myFriends)
                                         {
                                             string friendId = friendInfo.friend;
-                                            if (friendId != currentUserId)
+                                            friendsIds.Add(friendId);
+                                        }
+                                        foreach (Friend friendInfo in myFriends)
+                                        {
+                                            string friendId = friendInfo.friend;
+                                            if (friendsIds.Contains(friendId))
                                             {
                                                 webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + friendId);
                                                 webRequest.Method = "GET";

@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:GamaManager.Dialogs"
     mc:Ignorable="d"
+    xmlns:p ="clr-namespace:GamaManager.Properties"
     Title="Войти"
     Height="250"
     Width="800"
@@ -21,7 +22,7 @@
                 >
                     <StackPanel>
                         <TextBlock
-                            Text="Войти в игровой менеджер"
+                            Text="{x:Static p:Resources.LoginDialogHeaderLabel}"
                             HorizontalAlignment="Center"
                             FontSize="24"
                         />

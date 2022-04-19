@@ -82,6 +82,18 @@
             DockPanel.Dock="Top"    
         >
             <MenuItem
+                Header="Office ware game manager"    
+            >
+                <MenuItem
+                    Header="Войти в другой аккаунт"
+                    Click="LoginToAnotherAccountHandler"
+                />
+                <MenuItem
+                    Header="Настройки"
+                    Click="OpenSettingsHandler"    
+                />
+            </MenuItem>
+            <MenuItem
                 Header="Друзья"    
             >
                 <MenuItem
@@ -107,16 +119,20 @@
                 Orientation="Horizontal"    
             >
                 <materialDesign:PackIcon
+                    x:Name="arrowBackBtn"
                     Kind="ArrowBack"
                     Width="20"
                     Height="20"
                     Margin="10"
+                    MouseLeftButtonUp="BackForHistoryHandler"
                 />
                 <materialDesign:PackIcon
+                    x:Name="arrowForwardBtn"
                     Kind="ArrowForward"
                     Width="20"
                     Height="20"
                     Margin="10"
+                    MouseLeftButtonUp="ForwardForHistoryHandler"
                 />
                 <ComboBox
                     x:Name="storeMenu"

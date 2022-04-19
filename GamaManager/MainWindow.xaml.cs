@@ -48,7 +48,11 @@ namespace GamaManager
         public DispatcherTimer timer;
         public int timerHours = 0;
         public SocketIO client;
-        
+        public List<int> history;
+        public int historyCursor = 0;
+        public Brush disabledColor;
+        public Brush enabledColor;
+
         public MainWindow(string id)
         {
             InitializeComponent();
@@ -675,6 +679,10 @@ namespace GamaManager
             visible = Visibility.Visible;
             invisible = Visibility.Collapsed;
             friendRequestBackground = System.Windows.Media.Brushes.AliceBlue;
+            disabledColor = System.Windows.Media.Brushes.LightGray;
+            enabledColor = System.Windows.Media.Brushes.Black;
+            history = new List<int>();
+            history.Add(0);
         }
 
         public void GetGamesList (string keywords)
@@ -807,6 +815,17 @@ namespace GamaManager
         public void ShowOffers()
         {
             Dialogs.OffersDialog dialog = new Dialogs.OffersDialog();
+            dialog.Show();
+        }
+
+        public void OpenSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSettings();
+        }
+
+        public void OpenSettings ()
+        {
+            Dialogs.SettingsDialog dialog = new Dialogs.SettingsDialog();
             dialog.Show();
         }
 
@@ -1264,9 +1283,7 @@ namespace GamaManager
             bool isExit = index == 1;
             if (isExit)
             {
-                Dialogs.LoginDialog dialog = new Dialogs.LoginDialog();
-                dialog.Show();
-                this.Close();
+                Logout();
             }
         }
 
@@ -1506,11 +1523,24 @@ namespace GamaManager
                 if (isProfile) {
                     object mainControlData = mainControl.DataContext;
                     string userId = currentUserId;
-                    GetUserInfo(userId, userId == currentUserId);
+                    bool isLocalUser = userId == currentUserId;
+                    GetUserInfo(userId, isLocalUser);
                     mainControl.SelectedIndex = 1;
+
+                    AddHistoryRecord();
+
                 }
                 ResetMenu();
             }
+        }
+
+        public void AddHistoryRecord ()
+        {
+            int selectedWindowIndex = mainControl.SelectedIndex;
+            historyCursor++;
+            history.Add(selectedWindowIndex);
+            arrowBackBtn.Foreground = enabledColor;
+            arrowForwardBtn.Foreground = disabledColor;
         }
 
         private void LibraryItemSelectedHandler (object sender, SelectionChangedEventArgs e)
@@ -1526,6 +1556,9 @@ namespace GamaManager
             if (isHome)
             {
                 mainControl.SelectedIndex = 0;
+
+                AddHistoryRecord();
+
             }
             ResetMenu();
         }
@@ -1627,6 +1660,9 @@ namespace GamaManager
             if (isHome)
             {
                 mainControl.SelectedIndex = 0;
+            
+                AddHistoryRecord();
+
             }
             ResetMenu();
         }
@@ -1645,6 +1681,9 @@ namespace GamaManager
             {
                 mainControl.SelectedIndex = 3;
                 GetGamesStats();
+
+                AddHistoryRecord();
+
             }
             ResetMenu();
         }
@@ -1657,6 +1696,9 @@ namespace GamaManager
         public void OpenEditProfile ()
         {
             mainControl.SelectedIndex = 2;
+        
+            AddHistoryRecord();
+
         }
 
         private void SaveUserInfoHandler (object sender, RoutedEventArgs e)
@@ -2237,6 +2279,7 @@ namespace GamaManager
             if (isAppInit)
             {
                 int selectedWindowIndex = mainControl.SelectedIndex;
+
                 bool isProfileWindow = selectedWindowIndex == 1;
                 if (isProfileWindow)
                 {
@@ -2246,6 +2289,95 @@ namespace GamaManager
                     GetUserInfo(userId, isLocalUser);
                 }
             }
+        }
+
+        private void BackForHistoryHandler (object sender, MouseButtonEventArgs e)
+        {
+            BackForHistory();
+        }
+
+        public void BackForHistory ()
+        {
+            int countHistoryRecords = history.Count;
+            bool isBackForHistoryRecords = countHistoryRecords >= 2;
+            if (isBackForHistoryRecords)
+            {
+                bool isCanMoveCursor = historyCursor >= 1;
+                if (isCanMoveCursor)
+                {
+                    historyCursor--;
+                    int windowIndex = history[historyCursor];
+                    mainControl.SelectedIndex = windowIndex;
+                    bool isFirstRecord = historyCursor <= 0;
+                    arrowForwardBtn.Foreground = enabledColor;
+                    if (isFirstRecord)
+                    {
+                        arrowBackBtn.Foreground = disabledColor;
+                    }
+                }
+            }
+            Debugger.Log(0, "debug", Environment.NewLine + "historyCursor: " + historyCursor.ToString() + ", historyCount: " + history.Count().ToString() + Environment.NewLine);
+        }
+
+        private void ForwardForHistoryHandler (object sender, MouseButtonEventArgs e)
+        {
+            ForwardForHistory();
+        }
+
+        public void ForwardForHistory()
+        {
+            int countHistoryRecords = history.Count;
+            bool isCanMoveCursor = historyCursor < countHistoryRecords - 1;
+            if (isCanMoveCursor)
+            {
+                historyCursor++;
+                int windowIndex = history[historyCursor];
+                mainControl.SelectedIndex = windowIndex;
+                bool isLastRecord = historyCursor == countHistoryRecords - 1;
+                arrowBackBtn.Foreground = enabledColor;
+                if (isLastRecord)
+                {
+                    arrowForwardBtn.Foreground = disabledColor;
+                }
+            }
+            Debugger.Log(0, "debug", Environment.NewLine + "historyCursor: " + historyCursor.ToString() + ", historyCount: " + history.Count().ToString() + Environment.NewLine);
+        }
+
+        private void LoginToAnotherAccountHandler(object sender, RoutedEventArgs e)
+        {
+            LoginToAnotherAccount();
+        }
+
+        public void LoginToAnotherAccount ()
+        {
+            Dialogs.AcceptExitDialog dialog = new Dialogs.AcceptExitDialog();
+            dialog.Closed += AcceptExitDialogHandler;
+            dialog.Show();
+        }
+
+        public void AcceptExitDialogHandler (object sender, EventArgs e)
+        {
+            Dialogs.AcceptExitDialog dialog = ((Dialogs.AcceptExitDialog)(sender));
+            object data = dialog.DataContext;
+            string dialogData = ((string)(data));
+            AcceptExitDialog(dialogData);
+        }
+
+
+        public void AcceptExitDialog (string dialogData)
+        {
+            bool isAccept = dialogData == "OK";
+            if (isAccept)
+            {
+                Logout();
+            }
+        }
+
+        public void Logout ()
+        {
+            Dialogs.LoginDialog dialog = new Dialogs.LoginDialog();
+            dialog.Show();
+            this.Close();
         }
 
     }

@@ -69,3 +69,14 @@ C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SystemInfoDialog.baml
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendNotificationsDialog.g.cs
 C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\FriendNotificationsDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\AcceptExitDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\AcceptExitDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SettingsDialog.g.cs
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dialogs\SettingsDialog.baml
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\Dictionary1.baml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\en-US\GamaManager.resources.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\ru-RU\GamaManager.resources.dll
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\GamaManager.Properties.Resources.en-US.resources
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\GamaManager.Properties.Resources.ru-RU.resources
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\en-US\GamaManager.resources.dll
+C:\wpf_projects\GamaManager\GamaManager\obj\Debug\ru-RU\GamaManager.resources.dll

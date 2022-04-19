@@ -447,8 +447,36 @@ namespace GamaManager.Dialogs
 
         async public void OpenChat (string friend)
         {
-            Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend);
-            dialog.Show();
+            Application app = Application.Current;
+            WindowCollection windows = app.Windows;
+            IEnumerable<Window> myWindows = windows.OfType<Window>();
+            List<Window> chatWindows = myWindows.Where<Window>(window =>
+            {
+                string windowTitle = window.Title;
+                bool isChatWindow = windowTitle == "Чат";
+                object windowData = window.DataContext;
+                bool isWindowDataExists = windowData != null;
+                bool isChatExists = true;
+                if (isWindowDataExists && isChatWindow)
+                {
+                    string localFriend = ((string)(windowData));
+                    isChatExists = friend == localFriend;
+                }
+                return isWindowDataExists && isChatWindow && isChatExists;
+            }).ToList<Window>();
+            int countChatWindows = chatWindows.Count;
+            bool isNotOpenedChatWindows = countChatWindows <= 0;
+            if (isNotOpenedChatWindows)
+            {
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false);
+                dialog.DataContext = friend;
+                dialog.Show();
+            }
+            else
+            {
+                Dialogs.ChatDialog chatWindow = ((ChatDialog)(chatWindows[0]));
+                chatWindow.Focus();
+            }
         }
 
         public void InitSocketsHandler (object sender, RoutedEventArgs e)

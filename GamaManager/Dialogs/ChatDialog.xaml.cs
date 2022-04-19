@@ -31,6 +31,7 @@ namespace GamaManager.Dialogs
         public string currentUserId;
         public SocketIO client;
         public string friendId;
+        public bool isStartBlink;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -53,11 +54,12 @@ namespace GamaManager.Dialogs
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-        public ChatDialog(string currentUserId, SocketIO client, string friendId)
+        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink)
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
             this.friendId = friendId;
+            this.isStartBlink = isStartBlink; 
         }
 
         async public void ReceiveMessages ()
@@ -216,6 +218,11 @@ namespace GamaManager.Dialogs
         {
             AddChat();
             ReceiveMessages();
+            GetMsgs();
+            if (isStartBlink)
+            {
+                FlashWindow(this);
+            }
         }
 
         public void AddChat()
@@ -269,6 +276,116 @@ namespace GamaManager.Dialogs
             SendMsg(newMsgContent);
         }
 
+        public void GetMsgs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        {
+                            if (isOkStatus)
+                            {
+                                try
+                                {
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+
+                                            MsgsResponseInfo myInnerObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                List<Msg> msgs = myInnerObj.msgs;
+                                                foreach (Msg msg in msgs)
+                                                {
+                                                    string newMsgUserId = msg.user;
+                                                    string newMsgFriendId = msg.friend;
+                                                    bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == friendId) || (newMsgUserId == friendId && newMsgFriendId == currentUserId);
+                                                    if (isCurrentChatMsg)
+                                                    {
+                                                        string newMsgContent = msg.content;
+                                                        User friend = myobj.user;
+                                                        string friendName = friend.name;
+                                                        ItemCollection chatControlItems = chatControl.Items;
+                                                        object rawActiveChat = chatControlItems[activeChatIndex];
+                                                        TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                        object rawActiveChatScrollContent = activeChat.Content;
+                                                        ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                        object rawActiveChatContent = activeChatScrollContent.Content;
+                                                        StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                                        StackPanel newMsg = new StackPanel();
+                                                        StackPanel newMsgHeader = new StackPanel();
+                                                        newMsgHeader.Orientation = Orientation.Horizontal;
+                                                        Image newMsgHeaderAvatar = new Image();
+                                                        newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                        newMsgHeaderAvatar.Width = 25;
+                                                        newMsgHeaderAvatar.Height = 25;
+                                                        newMsgHeaderAvatar.BeginInit();
+                                                        Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                        newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                        newMsgHeaderAvatar.EndInit();
+                                                        newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                        TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                        newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                        newMsgFriendNameLabel.Text = friendName;
+                                                        newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                        TextBlock newMsgDateLabel = new TextBlock();
+                                                        newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                        DateTime currentDate = DateTime.Now;
+                                                        string rawCurrentDate = currentDate.ToLongTimeString();
+                                                        newMsgDateLabel.Text = rawCurrentDate;
+                                                        newMsgHeader.Children.Add(newMsgDateLabel);
+                                                        newMsg.Children.Add(newMsgHeader);
+                                                        TextBlock newMsgLabel = new TextBlock();
+                                                        newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                        newMsgLabel.Text = newMsgContent;
+                                                        inputChatMsgBox.Text = "";
+                                                        newMsg.Children.Add(newMsgLabel);
+                                                        activeChatContent.Children.Add(newMsg);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (System.Net.WebException)
+                                {
+                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                    this.Close();
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+        
         async public void SendMsg (string newMsgContent)
         {
             try
@@ -347,7 +464,7 @@ namespace GamaManager.Dialogs
             }
             try
             {
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent);
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId);
 
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -357,6 +474,36 @@ namespace GamaManager.Dialogs
             catch (InvalidOperationException)
             {
                 Debugger.Log(0, "debug", "Нельзя отправить повторно");
+            }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        {
+                            if (isOkStatus)
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -401,4 +548,18 @@ namespace GamaManager.Dialogs
         }
 
     }
+
+    class MsgsResponseInfo
+    {
+        public List<Msg> msgs;
+        public string status;
+    }
+
+    class Msg
+    {
+        public string user;
+        public string friend;
+        public string content;
+    }
+
 }

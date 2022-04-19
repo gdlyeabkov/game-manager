@@ -2032,6 +2032,7 @@ namespace GamaManager
                     string[] result = rawResult.Split(new char[] { '|' });
                     string userId = result[0];
                     string msg = result[1];
+                    string chatId = result[2];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
@@ -2110,33 +2111,36 @@ namespace GamaManager
                                                                 {
                                                                     this.Dispatcher.Invoke(async () =>
                                                                     {
-                                                                        Popup friendNotification = new Popup();
-                                                                        friendNotification.Placement = PlacementMode.Custom;
-                                                                        friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
-                                                                        friendNotification.PlacementTarget = this;
-                                                                        friendNotification.Width = 225;
-                                                                        friendNotification.Height = 275;
-                                                                        StackPanel friendNotificationBody = new StackPanel();
-                                                                        friendNotificationBody.Background = friendRequestBackground;
-                                                                        Image friendNotificationBodySenderAvatar = new Image();
-                                                                        friendNotificationBodySenderAvatar.Width = 100;
-                                                                        friendNotificationBodySenderAvatar.Height = 100;
-                                                                        friendNotificationBodySenderAvatar.BeginInit();
-                                                                        Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                                        BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
-                                                                        friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
-                                                                        friendNotificationBodySenderAvatar.EndInit();
-                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
-                                                                        TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
-                                                                        friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                                        friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
-                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
-                                                                        friendNotification.Child = friendNotificationBody;
-                                                                        friendRequests.Children.Add(friendNotification);
-                                                                        friendNotification.IsOpen = true;
-                                                                        friendNotifications.Children.Add(friendNotification);
-                                                                        friendNotification.StaysOpen = false;
-                                                                        friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                                        if (chatId == currentUserId && friendsIds.Contains(userId))
+                                                                        {
+                                                                            Popup friendNotification = new Popup();
+                                                                            friendNotification.Placement = PlacementMode.Custom;
+                                                                            friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                                            friendNotification.PlacementTarget = this;
+                                                                            friendNotification.Width = 225;
+                                                                            friendNotification.Height = 275;
+                                                                            StackPanel friendNotificationBody = new StackPanel();
+                                                                            friendNotificationBody.Background = friendRequestBackground;
+                                                                            Image friendNotificationBodySenderAvatar = new Image();
+                                                                            friendNotificationBodySenderAvatar.Width = 100;
+                                                                            friendNotificationBodySenderAvatar.Height = 100;
+                                                                            friendNotificationBodySenderAvatar.BeginInit();
+                                                                            Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                            BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                                            friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                                            friendNotificationBodySenderAvatar.EndInit();
+                                                                            friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                                            TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                                            friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                                            friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
+                                                                            friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                                            friendNotification.Child = friendNotificationBody;
+                                                                            friendRequests.Children.Add(friendNotification);
+                                                                            friendNotification.IsOpen = true;
+                                                                            friendNotifications.Children.Add(friendNotification);
+                                                                            friendNotification.StaysOpen = false;
+                                                                            friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                                        }
                                                                     });
 
                                                                 }

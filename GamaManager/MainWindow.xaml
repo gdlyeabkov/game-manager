@@ -27,7 +27,10 @@
     >
         <MediaElement
             x:Name="mainAudio"
+            Loaded="AudioLoadedHandler"
+            LoadedBehavior="Manual"
             Source="/Sounds/notification.wav"
+            MediaOpened="mainAudio_MediaOpened"
         />
         <StackPanel
             x:Name="friendNotifications"    

@@ -1938,8 +1938,12 @@ namespace GamaManager
                                                                     timer.Stop();
                                                                 };
                                                                 timer.Start();
-                                                                
-                                                                mainAudio.Play();
+
+                                                                // mainAudio.Play();
+                                                                MediaElement audio = new MediaElement();
+                                                                audio.LoadedBehavior = MediaState.Manual;
+                                                                audio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.RelativeOrAbsolute);
+                                                                audio.Play();
 
                                                             });
 
@@ -2043,6 +2047,7 @@ namespace GamaManager
                                                         bool isNotificationEnabled = cachedFriend.isFriendOnlineNotification;
                                                         if (isNotificationEnabled)
                                                         {
+
                                                             this.Dispatcher.Invoke(async () =>
                                                             {
                                                                 Popup friendNotification = new Popup();
@@ -2106,11 +2111,22 @@ namespace GamaManager
                                                                 stb_hightLightAnim.Begin(friendNotification);*/
 
                                                                 // mainAudio.Source = new Uri("/Sounds/notification.wav");
-                                                                mainAudio.Play();
+                                                                // mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
+                                                                // mainAudio.MediaOpened += ;
+                                                                // mainAudio.Play();
 
                                                             });
 
                                                             // MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
+
+                                                            mainAudio.Dispatcher.Invoke(() =>
+                                                            {
+                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
+                                                                // mainAudio.MediaOpened += ;
+                                                                mainAudio.Play();
+                                                            });
+
+
                                                         }
                                                     }
                                                 }
@@ -2449,6 +2465,16 @@ namespace GamaManager
         {
             Dialogs.PlayerDialog dialog = new Dialogs.PlayerDialog(currentUserId);
             dialog.Show();
+        }
+
+        private void AudioLoadedHandler(object sender, RoutedEventArgs e)
+        {
+            mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
+        }
+
+        private void mainAudio_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            mainAudio.Play();
         }
 
     }

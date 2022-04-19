@@ -201,6 +201,70 @@ namespace GamaManager.Dialogs
 
 
                 });
+                client.On("friend_write_msg", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string msg = result[1];
+                    Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
+                    try
+                    {
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                        {
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            {
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    List<Friend> friends = myobj.friends;
+                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                    {
+                                        string localUserId = joint.user;
+                                        bool isMyFriend = localUserId == currentUserId;
+                                        return isMyFriend;
+                                    }).ToList<Friend>();
+                                    List<string> friendsIds = new List<string>();
+                                    foreach (Friend myFriend in myFriends)
+                                    {
+                                        string friendId = myFriend.friend;
+                                        friendsIds.Add(friendId);
+                                    }
+                                    bool isMyFriendOnline = friendsIds.Contains(userId);
+                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
+                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
+                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
+                                    if (isMyFriendOnline)
+                                    {
+                                        string currentFriendId = this.friendId;
+                                        bool isCurrentChat = currentFriendId == userId;
+                                        if (isCurrentChat)
+                                        {
+                                            this.Dispatcher.Invoke(async () =>
+                                            {
+                                                userIsWritingLabel.Visibility = Visibility.Visible;
+                                                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(true);
+                                                userIsWritingLabel.Visibility = Visibility.Hidden;
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        this.Close();
+                    }
+                });
             }
             catch (System.Net.WebSockets.WebSocketException)
             {
@@ -251,6 +315,10 @@ namespace GamaManager.Dialogs
                             User friend = myobj.user;
                             string friendName = friend.name;
                             newChat.Header = friendName;
+
+                            string userIsWritingLabelContent = friendName + " печатает...";
+                            userIsWritingLabel.Text = userIsWritingLabelContent;
+
                         }
                     }
                 }
@@ -545,6 +613,16 @@ namespace GamaManager.Dialogs
         public void StopBlinkWindow()
         {
             StopFlashingWindow(this);
+        }
+
+        private void InputToChatFieldHandler (object sender, TextChangedEventArgs e)
+        {
+            InputToChatField();
+        }
+
+        public void InputToChatField ()
+        {
+            client.EmitAsync("user_write_msg", currentUserId + "|" + this.friendId);
         }
 
     }

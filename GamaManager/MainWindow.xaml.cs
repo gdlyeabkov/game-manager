@@ -2221,12 +2221,13 @@ namespace GamaManager
                                                                         bool isNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
                                                                         if (isNotificationEnabled)
                                                                         {
-                                                                            //this.Dispatcher.Invoke(async () =>
                                                                             Application.Current.Dispatcher.Invoke(async () =>
                                                                             {
                                                                                 if (chatId == currentUserId && friendsIds.Contains(userId))
                                                                                  {
                                                                                     Popup friendNotification = new Popup();
+                                                                                    friendNotification.DataContext = friend._id;
+                                                                                    friendNotification.MouseLeftButtonUp += OpenChatFromPopupHandler;
                                                                                     friendNotification.Placement = PlacementMode.Custom;
                                                                                     friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
                                                                                     friendNotification.PlacementTarget = this;
@@ -2492,15 +2493,42 @@ namespace GamaManager
             Dialogs.PlayerDialog dialog = new Dialogs.PlayerDialog(currentUserId);
             dialog.Show();
         }
-
-        private void AudioLoadedHandler(object sender, RoutedEventArgs e)
+        
+        public void OpenChatFromPopupHandler (object sender, RoutedEventArgs e)
         {
-            mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
+            Popup popup = ((Popup)(sender));
+            object popupData = popup.DataContext;
+            string friendId = ((string)(popupData));
+            OpenChatFromPopup(friendId, popup);
         }
 
-        private void mainAudio_MediaOpened(object sender, RoutedEventArgs e)
+        public void OpenChatFromPopup (string id, Popup popup)
         {
-            // mainAudio.Play();
+            Application app = Application.Current;
+            WindowCollection windows = app.Windows;
+            IEnumerable<Window> myWindows = windows.OfType<Window>();
+            List<Window> chatWindows = myWindows.Where<Window>(window =>
+            {
+                string windowTitle = window.Title;
+                bool isChatWindow = windowTitle == "Чат";
+                object windowData = window.DataContext;
+                bool isWindowDataExists = windowData != null;
+                bool isChatExists = true;
+                if (isWindowDataExists && isChatWindow)
+                {
+                    string localFriend = ((string)(windowData));
+                    isChatExists = id == localFriend;
+                }
+                return isWindowDataExists && isChatWindow && isChatExists;
+            }).ToList<Window>();
+            int countChatWindows = chatWindows.Count;
+            bool isNotOpenedChatWindows = countChatWindows <= 0;
+            if (isNotOpenedChatWindows)
+            {
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false);
+                dialog.Show();
+                popup.IsOpen = false;
+            }
         }
 
     }

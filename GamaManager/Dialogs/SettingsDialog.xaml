@@ -465,7 +465,7 @@
                             Height="75"
                             Margin="0 5"
                             IsReadOnly="True"
-                            GotFocus="SelectMusicLibraryHandler"
+                            GotMouseCapture="SelectMusicLibraryHandler"
                         />
                         <StackPanel
                             Orientation="Horizontal"    

@@ -32,6 +32,7 @@ namespace GamaManager.Dialogs
         public SocketIO client;
         public string friendId;
         public bool isStartBlink;
+        public DateTime lastInputTimeStamp;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -280,6 +281,7 @@ namespace GamaManager.Dialogs
 
         public void Initialize()
         {
+            lastInputTimeStamp = DateTime.Now;
             AddChat();
             ReceiveMessages();
             GetMsgs();
@@ -622,7 +624,16 @@ namespace GamaManager.Dialogs
 
         public void InputToChatField ()
         {
-            client.EmitAsync("user_write_msg", currentUserId + "|" + this.friendId);
+            DateTime currentDateTime = DateTime.Now;
+            TimeSpan diff = currentDateTime.Subtract(lastInputTimeStamp);
+            double diffInSeconds = diff.TotalSeconds;
+            bool isNeedEmit = diffInSeconds > 10;
+            if (isNeedEmit)
+            {
+                string eventData = currentUserId + "|" + this.friendId;
+                client.EmitAsync("user_write_msg", eventData);
+            }
+            lastInputTimeStamp = currentDateTime;
         }
 
     }

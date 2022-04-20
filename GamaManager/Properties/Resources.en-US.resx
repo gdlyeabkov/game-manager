@@ -123,6 +123,12 @@
   <data name="attentionLabelContent" xml:space="preserve">
     <value>Attention</value>
   </data>
+  <data name="audioStatePausedLabelContent" xml:space="preserve">
+    <value>suspended</value>
+  </data>
+  <data name="audioStatePlayingLabelContent" xml:space="preserve">
+    <value>now playing</value>
+  </data>
   <data name="backBtnContent" xml:space="preserve">
     <value>Back</value>
   </data>
@@ -153,6 +159,15 @@
   <data name="errorLabelContent" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="exitBtnContent" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="exitDescLabelContent" xml:space="preserve">
+    <value>You are about to exit the Office ware game manager. You'll need to re-enter&amp;#10;your username and password in order to log back into Office ware Game Manager.</value>
+  </data>
+  <data name="exitLabelContent" xml:space="preserve">
+    <value>Exit</value>
+  </data>
   <data name="friendsAndChatLabelContent" xml:space="preserve">
     <value>Friends and chat</value>
   </data>
@@ -164,6 +179,10 @@
   </data>
   <data name="friendsMenuItemLabelContent" xml:space="preserve">
     <value>Friends</value>
+  </data>
+  <data name="fromLabelContent" xml:space="preserve">
+    <value> from </value>
+    <comment> </comment>
   </data>
   <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
     <value>Login to another account</value>
@@ -204,8 +223,14 @@
   <data name="playBtnLabelContent" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="playerLabelContent" xml:space="preserve">
+    <value>Player</value>
+  </data>
   <data name="profileMenuItemProfileLabelContent" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="requireContinueLabelContent" xml:space="preserve">
+    <value>Do you want to continue?</value>
   </data>
   <data name="saveBtnContent" xml:space="preserve">
     <value>Save</value>

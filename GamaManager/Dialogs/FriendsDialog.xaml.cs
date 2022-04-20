@@ -443,7 +443,7 @@ namespace GamaManager.Dialogs
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId);
+            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client);
             dialog.Show();
         }
 

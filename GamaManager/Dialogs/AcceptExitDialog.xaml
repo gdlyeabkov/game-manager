@@ -5,19 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
-        Title="Выход"
+        xmlns:p="clr-namespace:GamaManager.Properties"
+        Title="{x:Static p:Resources.exitLabelContent}"
         Height="250"
         Width="800"
     >
     <StackPanel>
         <TextBlock
             Margin="15"
-            Text="Вы собираетесь выйти из Office ware game manager. Вам потребуется заново ввести&#10;ваши логин и парроль, чтобы снова войти в Office ware game manager."
+            Text="{x:Static p:Resources.exitDescLabelContent}"
         />
 
         <TextBlock
             Margin="15"
-            Text="Вы хотите продолжить?"
+            Text="{x:Static p:Resources.requireContinueLabelContent}"
         />
         <StackPanel
             Orientation="Horizontal"    
@@ -26,14 +27,14 @@
                 Width="125"
                 Height="25"
                 Margin="10"
-                Content="Выйти"
+                Content="{x:Static p:Resources.exitBtnContent}"
                 Click="CloseClientHandler"
             />
             <Button
                 Width="125"
                 Height="25"
                 Margin="10"
-                Content="Отмена"
+                Content="{x:Static p:Resources.cancelBtnContent}"
                 Click="CancelHandler"
             />
         </StackPanel>

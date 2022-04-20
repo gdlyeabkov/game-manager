@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Проигрыватель"
+        xmlns:p="clr-namespace:GamaManager.Properties"
+        Title="{x:Static p:Resources.playerLabelContent}"
         Height="485"
         Width="800"
     >
@@ -37,14 +38,14 @@
                     Width="250"
                 >
                     <TextBlock
+                        x:Name="audioStateLabel"
                         HorizontalAlignment="Right"
                         Margin="10"
-                        Text="Сейчас играет"    
                     />
                     <TextBlock
+                        x:Name="activeTrackNameLabel"
                         HorizontalAlignment="Right"
                         Margin="10"
-                        Text="Музыка"    
                     />
                 </StackPanel>
                 <StackPanel>
@@ -107,8 +108,10 @@
                                     Background="LightGray"
                                 >
                                     <Slider
+                                        Minimum="0"
+                                        Maximum="1"
                                         Value="1"
-                                        Margin="15"    
+                                        Margin="15"
                                         ValueChanged="SetVolumeHandler"
                                     />
                                 </StackPanel>
@@ -116,7 +119,11 @@
                         </Popup>
                     </StackPanel>
                     <Slider
+                        x:Name="timeline"
                         Margin="10"
+                        Minimum="0"
+                        Maximum="100"
+                        ValueChanged="SetTimeLinePositionHandler"
                     />
                 </StackPanel>
             </DockPanel>
@@ -124,9 +131,15 @@
                 Height="250"
                 Margin="10"
             >
-                <StackPanel
+                <Grid
                     x:Name="libraries"    
-                />
+                >
+                    <Grid.RowDefinitions />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
             </ScrollViewer>
             <TextBlock
                 x:Name="tracksStatsLabel"

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,26 +28,28 @@ namespace GamaManager.Dialogs
         public List<string> usersIds;
         private User currentUser = null;
         public Brush disabledColor;
+        public SocketIO client;
 
-        public AddFriendDialog(string currentUserId)
+        public AddFriendDialog(string currentUserId, SocketIO client)
         {
             InitializeComponent();
 
-            Initialize(currentUserId);
+            Initialize(currentUserId, client);
 
         }
 
-        public void Initialize (string currentUserId)
+        public void Initialize (string currentUserId, SocketIO client)
         {
-            InitializeConstants(currentUserId);
+            InitializeConstants(currentUserId, client);
             GetUser();
             GetUsers();
         }
 
-        public void InitializeConstants(string currentUserId)
+        public void InitializeConstants(string currentUserId, SocketIO client)
         {
             this.currentUserId = currentUserId;
             disabledColor = System.Windows.Media.Brushes.LightGray;
+            this.client = client;
         }
 
         public void GetUser ()
@@ -257,6 +260,8 @@ namespace GamaManager.Dialogs
                                             settings = currentSettings
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
+                                        string eventData = currentUserId + "|" + friendId;
+                                        client.EmitAsync("user_send_friend_request", eventData);
                                         MessageBox.Show(msgContent, "Приглашение отправлено");
                                         this.Close();
                                     }

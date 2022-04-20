@@ -79,6 +79,24 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на suspended.
+        /// </summary>
+        public static string audioStatePausedLabelContent {
+            get {
+                return ResourceManager.GetString("audioStatePausedLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на now playing.
+        /// </summary>
+        public static string audioStatePlayingLabelContent {
+            get {
+                return ResourceManager.GetString("audioStatePlayingLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Back.
         /// </summary>
         public static string backBtnContent {
@@ -169,6 +187,33 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Exit.
+        /// </summary>
+        public static string exitBtnContent {
+            get {
+                return ResourceManager.GetString("exitBtnContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You are about to exit the Office ware game manager. You&apos;ll need to re-enter&amp;#10;your username and password in order to log back into Office ware Game Manager..
+        /// </summary>
+        public static string exitDescLabelContent {
+            get {
+                return ResourceManager.GetString("exitDescLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Exit.
+        /// </summary>
+        public static string exitLabelContent {
+            get {
+                return ResourceManager.GetString("exitLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Friends and chat.
         /// </summary>
         public static string friendsAndChatLabelContent {
@@ -201,6 +246,15 @@ namespace GamaManager.Properties {
         public static string friendsMenuItemLabelContent {
             get {
                 return ResourceManager.GetString("friendsMenuItemLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на  from .
+        /// </summary>
+        public static string fromLabelContent {
+            get {
+                return ResourceManager.GetString("fromLabelContent", resourceCulture);
             }
         }
         
@@ -322,11 +376,29 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Player.
+        /// </summary>
+        public static string playerLabelContent {
+            get {
+                return ResourceManager.GetString("playerLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Profile.
         /// </summary>
         public static string profileMenuItemProfileLabelContent {
             get {
                 return ResourceManager.GetString("profileMenuItemProfileLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Do you want to continue?.
+        /// </summary>
+        public static string requireContinueLabelContent {
+            get {
+                return ResourceManager.GetString("requireContinueLabelContent", resourceCulture);
             }
         }
         

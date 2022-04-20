@@ -1364,7 +1364,7 @@ namespace GamaManager
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId);
+            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client);
             dialog.Show();
         }
 
@@ -1833,8 +1833,6 @@ namespace GamaManager
                     string[] result = rawResult.Split(new char[] { '|' });
                     string userId = result[0];
                     string gameName = result[1];
-                    // Debugger.Log(0, "debug", Environment.NewLine + "friend is played: " + userId + Environment.NewLine);
-
                     try
                     {
                         HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
@@ -1846,9 +1844,7 @@ namespace GamaManager
                             {
                                 JavaScriptSerializer js = new JavaScriptSerializer();
                                 var objText = reader.ReadToEnd();
-
                                 FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-
                                 string status = myobj.status;
                                 bool isOkStatus = status == "OK";
                                 if (isOkStatus)
@@ -1872,8 +1868,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + result);
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get/?id=" + userId);
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -1882,17 +1877,13 @@ namespace GamaManager
                                             {
                                                 js = new JavaScriptSerializer();
                                                 objText = innerReader.ReadToEnd();
-
                                                 UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                                                 status = myInnerObj.status;
                                                 isOkStatus = status == "OK";
                                                 if (isOkStatus)
                                                 {
                                                     User sender = myInnerObj.user;
                                                     string senderName = sender.name;
-
-
                                                     Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                                                     string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
                                                     string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
@@ -1934,14 +1925,15 @@ namespace GamaManager
                                                                 friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
                                                                 TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
                                                                 friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                                friendNotificationBodySenderLoginLabel.Text = "Пользователь " + senderName + " играет в " + gameName;
+                                                                string newLine = Environment.NewLine;
+                                                                friendNotificationBodySenderLoginLabel.Text = "Пользователь " + senderName + newLine + " играет в " + newLine + gameName;
                                                                 friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
                                                                 friendNotification.Child = friendNotificationBody;
                                                                 friendRequests.Children.Add(friendNotification);
                                                                 friendNotification.IsOpen = true;
                                                                 friendNotification.StaysOpen = false;
-                                                                friendNotifications.Children.Add(friendNotification);
-                                                                friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                                friendNotification.PopupAnimation = PopupAnimation.Fade;
+                                                                friendNotification.AllowsTransparency = true;
                                                                 DispatcherTimer timer = new DispatcherTimer();
                                                                 timer.Interval = TimeSpan.FromSeconds(3);
                                                                 timer.Tick += delegate
@@ -1950,20 +1942,20 @@ namespace GamaManager
                                                                     timer.Stop();
                                                                 };
                                                                 timer.Start();
-
-                                                                // mainAudio.Play();
-                                                                MediaElement audio = new MediaElement();
-                                                                audio.LoadedBehavior = MediaState.Manual;
-                                                                audio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.RelativeOrAbsolute);
-                                                                audio.Play();
-
+                                                                friendNotifications.Children.Add(friendNotification);
                                                             });
-
                                                             // MessageBox.Show("Пользователь " + senderName + " играет в " + gameName, "Внимание");
-                                                        
+                                                        }
+                                                        bool isSoundEnabled = cachedFriend.isFriendPlayedSound;
+                                                        if (isSoundEnabled)
+                                                        {
+                                                            Application.Current.Dispatcher.Invoke(() =>
+                                                            {
+                                                                mainAudio.LoadedBehavior = MediaState.Play;
+                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
+                                                            });
                                                         }
                                                     }
-
                                                 }
                                             }
                                         }
@@ -2087,8 +2079,8 @@ namespace GamaManager
                                                                 friendRequests.Children.Add(friendNotification);
                                                                 friendNotification.IsOpen = true;
                                                                 friendNotification.StaysOpen = false;
-                                                                friendNotifications.Children.Add(friendNotification);
-                                                                friendNotification.PopupAnimation = PopupAnimation.Slide;
+                                                                friendNotification.PopupAnimation = PopupAnimation.Fade;
+                                                                friendNotification.AllowsTransparency = true;
                                                                 DispatcherTimer timer = new DispatcherTimer();
                                                                 timer.Interval = TimeSpan.FromSeconds(3);
                                                                 timer.Tick += delegate
@@ -2097,48 +2089,17 @@ namespace GamaManager
                                                                     timer.Stop();
                                                                 };
                                                                 timer.Start();
-                                                                /*DoubleAnimation animation = new DoubleAnimation();
-                                                                animation.To = 0.0;
-                                                                animation.Duration = new Duration(TimeSpan.FromSeconds(5));*/
-                                                                /*this.Dispatcher.Invoke(() =>
-                                                                {
-                                                                    Popup notification = friendNotification;
-                                                                    DoubleAnimation animation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromSeconds(5)));
-                                                                    animation.AutoReverse = false;
-                                                                    animation.Completed += delegate
-                                                                    {
-                                                                        notification.IsOpen = false;
-                                                                    };
-                                                                    notification.BeginAnimation(UIElement.OpacityProperty, animation);
-                                                                });*/
-
-                                                                /*Storyboard stb_hightLightAnim = (Storyboard)this.Resources["HighLightAnim"];
-                                                                stb_hightLightAnim.Completed += new EventHandler(OnAnimationCompleted);
-                                                                DoubleAnimationUsingKeyFrames highlightThicknessAnim
-                                                                highlightThicknessAnim = (DoubleAnimationUsingKeyFrames)stb_hightLightAnim.Children[0];
-                                                                highlightThicknessAnim.KeyFrames[0].Value = 1.0;
-                                                                highlightThicknessAnim.KeyFrames[1].Value = 0.0;
-                                                                highlightThicknessAnim.KeyFrames[0].KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0));
-                                                                highlightThicknessAnim.KeyFrames[1].KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(10));
-                                                                stb_hightLightAnim.Begin(friendNotification);*/
-
-                                                                // mainAudio.Source = new Uri("/Sounds/notification.wav");
-                                                                // mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
-                                                                // mainAudio.MediaOpened += ;
-                                                                // mainAudio.Play();
-
+                                                                friendNotifications.Children.Add(friendNotification);
                                                             });
-
-                                                            // MessageBox.Show("Пользователь " + senderName + " теперь в сети", "Внимание");
-
-                                                            mainAudio.Dispatcher.Invoke(() =>
+                                                        }
+                                                        bool isSoundEnabled = cachedFriend.isFriendOnlineSound;
+                                                        if (isSoundEnabled)
+                                                        {
+                                                            Application.Current.Dispatcher.Invoke(() =>
                                                             {
-                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav", UriKind.Absolute); ;
-                                                                // mainAudio.MediaOpened += ;
-                                                                mainAudio.Play();
+                                                                mainAudio.LoadedBehavior = MediaState.Play;
+                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
                                                             });
-
-
                                                         }
                                                     }
                                                 }
@@ -2239,40 +2200,81 @@ namespace GamaManager
                                                                 bool isNotOpenedChatWindows = countChatWindows <= 0;
                                                                 if (isNotOpenedChatWindows)
                                                                 {
-                                                                    this.Dispatcher.Invoke(async () =>
-                                                                    {
-                                                                        if (chatId == currentUserId && friendsIds.Contains(userId))
-                                                                        {
-                                                                            Popup friendNotification = new Popup();
-                                                                            friendNotification.Placement = PlacementMode.Custom;
-                                                                            friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
-                                                                            friendNotification.PlacementTarget = this;
-                                                                            friendNotification.Width = 225;
-                                                                            friendNotification.Height = 275;
-                                                                            StackPanel friendNotificationBody = new StackPanel();
-                                                                            friendNotificationBody.Background = friendRequestBackground;
-                                                                            Image friendNotificationBodySenderAvatar = new Image();
-                                                                            friendNotificationBodySenderAvatar.Width = 100;
-                                                                            friendNotificationBodySenderAvatar.Height = 100;
-                                                                            friendNotificationBodySenderAvatar.BeginInit();
-                                                                            Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                                            BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
-                                                                            friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
-                                                                            friendNotificationBodySenderAvatar.EndInit();
-                                                                            friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
-                                                                            TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
-                                                                            friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                                            friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
-                                                                            friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
-                                                                            friendNotification.Child = friendNotificationBody;
-                                                                            friendRequests.Children.Add(friendNotification);
-                                                                            friendNotification.IsOpen = true;
-                                                                            friendNotifications.Children.Add(friendNotification);
-                                                                            friendNotification.StaysOpen = false;
-                                                                            friendNotification.PopupAnimation = PopupAnimation.Slide;
-                                                                        }
-                                                                    });
 
+                                                                    Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                                    string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                                                    string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                                    js = new JavaScriptSerializer();
+                                                                    string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                                                    SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                    List<Game> currentGames = loadedContent.games;
+                                                                    List<FriendSettings> updatedFriends = loadedContent.friends;
+                                                                    List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
+                                                                    {
+                                                                        return localFriend.id == userId;
+                                                                    }).ToList();
+                                                                    int countCachedFriends = cachedFriends.Count;
+                                                                    bool isCachedFriendsExists = countCachedFriends >= 1;
+                                                                    if (isCachedFriendsExists)
+                                                                    {
+                                                                        FriendSettings cachedFriend = cachedFriends[0];
+                                                                        bool isNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
+                                                                        if (isNotificationEnabled)
+                                                                        {
+                                                                            //this.Dispatcher.Invoke(async () =>
+                                                                            Application.Current.Dispatcher.Invoke(async () =>
+                                                                            {
+                                                                                if (chatId == currentUserId && friendsIds.Contains(userId))
+                                                                                 {
+                                                                                    Popup friendNotification = new Popup();
+                                                                                    friendNotification.Placement = PlacementMode.Custom;
+                                                                                    friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                                                    friendNotification.PlacementTarget = this;
+                                                                                    friendNotification.Width = 225;
+                                                                                    friendNotification.Height = 275;
+                                                                                    StackPanel friendNotificationBody = new StackPanel();
+                                                                                    friendNotificationBody.Background = friendRequestBackground;
+                                                                                    Image friendNotificationBodySenderAvatar = new Image();
+                                                                                    friendNotificationBodySenderAvatar.Width = 100;
+                                                                                    friendNotificationBodySenderAvatar.Height = 100;
+                                                                                    friendNotificationBodySenderAvatar.BeginInit();
+                                                                                    Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                                    BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                                                    friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                                                    friendNotificationBodySenderAvatar.EndInit();
+                                                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                                                    TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                                                    friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                                                    friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
+                                                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                                                    friendNotification.Child = friendNotificationBody;
+                                                                                    friendRequests.Children.Add(friendNotification);
+                                                                                    friendNotification.IsOpen = true;
+                                                                                    friendNotification.StaysOpen = false;
+                                                                                    friendNotification.PopupAnimation = PopupAnimation.Fade;
+                                                                                    friendNotification.AllowsTransparency = true;
+                                                                                    DispatcherTimer timer = new DispatcherTimer();
+                                                                                    timer.Interval = TimeSpan.FromSeconds(3);
+                                                                                    timer.Tick += delegate
+                                                                                    {
+                                                                                        friendNotification.IsOpen = false;
+                                                                                        timer.Stop();
+                                                                                    };
+                                                                                    timer.Start();
+                                                                                    friendNotifications.Children.Add(friendNotification);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        bool isSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                        if (isSoundEnabled)
+                                                                        {
+                                                                            Application.Current.Dispatcher.Invoke(() =>
+                                                                            {
+                                                                                mainAudio.LoadedBehavior = MediaState.Play;
+                                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
+                                                                            });
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -2294,6 +2296,18 @@ namespace GamaManager
                     {
                         MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                         this.Close();
+                    }
+                });
+                client.On("user_receive_friend_request", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string friendId = result[0];
+                    string userId = result[1];
+                    bool isRequestForMe = userId == currentUserId;
+                    if (isRequestForMe)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => GetFriendRequests());
                     }
                 });
                 await client.ConnectAsync();
@@ -2486,7 +2500,7 @@ namespace GamaManager
 
         private void mainAudio_MediaOpened(object sender, RoutedEventArgs e)
         {
-            mainAudio.Play();
+            // mainAudio.Play();
         }
 
     }

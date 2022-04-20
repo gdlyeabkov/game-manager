@@ -123,6 +123,12 @@
   <data name="attentionLabelContent" xml:space="preserve">
     <value>Внимание</value>
   </data>
+  <data name="audioStatePausedLabelContent" xml:space="preserve">
+    <value>Приостановлено</value>
+  </data>
+  <data name="audioStatePlayingLabelContent" xml:space="preserve">
+    <value>Сейчас играет</value>
+  </data>
   <data name="backBtnContent" xml:space="preserve">
     <value>Назад</value>
   </data>
@@ -153,6 +159,15 @@
   <data name="errorLabelContent" xml:space="preserve">
     <value>Ошибка</value>
   </data>
+  <data name="exitBtnContent" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="exitDescLabelContent" xml:space="preserve">
+    <value>Вы собираетесь выйти из Office ware game manager. Вам потребуется заново ввести&amp;#10;ваши логин и парроль, чтобы снова войти в Office ware game manager.</value>
+  </data>
+  <data name="exitLabelContent" xml:space="preserve">
+    <value>Выход</value>
+  </data>
   <data name="friendsAndChatLabelContent" xml:space="preserve">
     <value>Друзья и чат</value>
   </data>
@@ -164,6 +179,9 @@
   </data>
   <data name="friendsMenuItemLabelContent" xml:space="preserve">
     <value>Друзья</value>
+  </data>
+  <data name="fromLabelContent" xml:space="preserve">
+    <value> из </value>
   </data>
   <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
     <value>Войти в другой аккаунт</value>
@@ -204,8 +222,14 @@
   <data name="playBtnLabelContent" xml:space="preserve">
     <value>Играть</value>
   </data>
+  <data name="playerLabelContent" xml:space="preserve">
+    <value>Проигрыватель</value>
+  </data>
   <data name="profileMenuItemProfileLabelContent" xml:space="preserve">
     <value>Профиль</value>
+  </data>
+  <data name="requireContinueLabelContent" xml:space="preserve">
+    <value>Вы хотите продолжить?</value>
   </data>
   <data name="saveBtnContent" xml:space="preserve">
     <value>Сохранить</value>

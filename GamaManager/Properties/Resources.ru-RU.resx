@@ -117,7 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="friendsMenuItemLabel" xml:space="preserve">
+  <data name="addFriendDialogTitleContent" xml:space="preserve">
+    <value>Добавить друга</value>
+  </data>
+  <data name="attentionLabelContent" xml:space="preserve">
+    <value>Внимание</value>
+  </data>
+  <data name="backBtnContent" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="cancelBtnContent" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="editProfileAboutLabelContent" xml:space="preserve">
+    <value>О себе</value>
+  </data>
+  <data name="editProfileBtnContent" xml:space="preserve">
+    <value>Редактировать профиль</value>
+  </data>
+  <data name="editProfileCountryLabelContent" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="editProfileLabelContent" xml:space="preserve">
+    <value>&gt;&gt; Редактировать профиль</value>
+  </data>
+  <data name="editProfileLocationLabelContent" xml:space="preserve">
+    <value>Местоположение</value>
+  </data>
+  <data name="editProfileMainInfoLabelContent" xml:space="preserve">
+    <value>Основное</value>
+  </data>
+  <data name="editProfileNameLabelContent" xml:space="preserve">
+    <value>Имя профиля</value>
+  </data>
+  <data name="errorLabelContent" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="friendsAndChatLabelContent" xml:space="preserve">
+    <value>Друзья и чат</value>
+  </data>
+  <data name="friendsLabelContent" xml:space="preserve">
     <value>Друзья</value>
+  </data>
+  <data name="friendsMenuItemAddFriendLabelContent" xml:space="preserve">
+    <value>Добавить друга</value>
+  </data>
+  <data name="friendsMenuItemLabelContent" xml:space="preserve">
+    <value>Друзья</value>
+  </data>
+  <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
+    <value>Войти в другой аккаунт</value>
+  </data>
+  <data name="gameManagerMenuItemSettingsLabelContent" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="gamesLabelContent" xml:space="preserve">
+    <value>Игры</value>
+  </data>
+  <data name="gameUploadedLabelContent" xml:space="preserve">
+    <value>Игра загружена</value>
+  </data>
+  <data name="helpMenuItemLabelContent" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
+    <value>О системе</value>
+  </data>
+  <data name="installBtnLabelContent" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="libraryMenuItemHomeLabelContent" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
+  <data name="libraryMenuLabelContent" xml:space="preserve">
+    <value>Библиотека</value>
+  </data>
+  <data name="logoutLabelContent" xml:space="preserve">
+    <value>Выйти из аккаунта</value>
+  </data>
+  <data name="nextBtnContent" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="offersDialogTitleContent" xml:space="preserve">
+    <value>Office Ware - Предложения</value>
+  </data>
+  <data name="playBtnLabelContent" xml:space="preserve">
+    <value>Играть</value>
+  </data>
+  <data name="profileMenuItemProfileLabelContent" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="saveBtnContent" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="sendFriendRequestLabelContent" xml:space="preserve">
+    <value>Отправить приглашение</value>
+  </data>
+  <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
+    <value>Статистика</value>
+  </data>
+  <data name="storeMenuLabelContent" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="uploadGameErrorLabelContent" xml:space="preserve">
+    <value>Не удалось загрузить игру.</value>
+  </data>
+  <data name="uploadingLabelContent" xml:space="preserve">
+    <value>Загрузка игры</value>
+  </data>
+  <data name="viewMenuItemLabelContent" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="viewMenuItemPlayerLabelContent" xml:space="preserve">
+    <value>Проигрыватель</value>
   </data>
 </root>

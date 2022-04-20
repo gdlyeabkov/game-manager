@@ -85,7 +85,9 @@ namespace GamaManager.Dialogs
             }
             else
             {
-                MessageBox.Show("Не удалось загрузить игру", "Ошибка");
+                string uploadGameErrorLabelContent = Properties.Resources.uploadGameErrorLabelContent;
+                string errorLabelContent = Properties.Resources.errorLabelContent;
+                MessageBox.Show(uploadGameErrorLabelContent, errorLabelContent);
                 this.DataContext = "Error";
                 this.Close();
             }

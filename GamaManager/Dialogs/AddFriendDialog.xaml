@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
-        Title="Добавить друга"
+        xmlns:p="clr-namespace:GamaManager.Properties"
+        Title="{x:Static p:Resources.addFriendDialogTitleContent}"
         Height="450"
         Width="800"
     >
@@ -30,7 +31,7 @@
                 x:Name="sendFriendRequestBtn"
                 Margin="5"
                 Width="175"    
-                Content="Отправить приглашение"
+                Content="{x:Static p:Resources.sendFriendRequestLabelContent}"
                 IsEnabled="False"
                 Click="SendFriendRequestHandler"
             />

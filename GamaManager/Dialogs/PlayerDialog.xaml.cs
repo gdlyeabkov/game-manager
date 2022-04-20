@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,10 @@ namespace GamaManager.Dialogs
 
         public string currentUserId = "";
         public bool isPlaying = false;
+        public Uri firstTrackUri;
+        public List<string> tracks = new List<string>();
+        public int tracksCursor = 0;
+        public string rawCountTracks = "0";
 
         public PlayerDialog(string currentUserId)
         {
@@ -59,14 +64,11 @@ namespace GamaManager.Dialogs
                     if (isSound)
                     {
 
-                        /*List<string> filesList = files.ToList<string>();
-                        int filePathIndex = filesList.IndexOf(filePath);
-                        bool isFirstSound = filePathIndex == 0;*/
                         tracksCursor++;
                         bool isFirstSound = tracksCursor == 0;
                         if (isFirstSound)
                         {
-                            audio.Source = new Uri(filePath);
+                            firstTrackUri = new Uri(filePath);
                         }
 
                         StackPanel librariesItem = new StackPanel();
@@ -102,10 +104,15 @@ namespace GamaManager.Dialogs
                         librariesItemDurationLabel.HorizontalAlignment = HorizontalAlignment.Right;
                         librariesItem.Children.Add(librariesItemDurationLabel);
                         libraries.Children.Add(librariesItem);
+                    
+                        tracks.Add(filePath);
+
                     }
                 }
             }
-
+            int countTracks = tracksCursor + 1;
+            rawCountTracks = countTracks.ToString();
+            ResetTrackStatsLabel();
         }
 
         private void OpenVolumeDialogHandler(object sender, MouseButtonEventArgs e)
@@ -145,7 +152,31 @@ namespace GamaManager.Dialogs
 
         public void PlayPreviousTrack ()
         {
-
+            tracksCursor--;
+            int activeTrackIndex = tracksCursor - 1;
+            int newTrackIndex = activeTrackIndex + 1;
+            int countTracks = tracks.Count;
+            bool isTrackAvailable = newTrackIndex > -1 && newTrackIndex < countTracks;
+            if (isTrackAvailable)
+            {
+                int currentTrackNumber = newTrackIndex - 1;
+                string rawCurrentTrackNumber = currentTrackNumber.ToString();
+                string tracksStatsLabelContent = rawCurrentTrackNumber + " из " + rawCountTracks;
+                tracksStatsLabel.Text = tracksStatsLabelContent;
+                string newTrack = tracks[newTrackIndex];
+                firstTrackUri = new Uri(newTrack);
+                audio.Source = firstTrackUri;
+            }
+            else
+            {
+                countTracks = tracks.Count;
+                int lastTrackIndex = countTracks - 1;
+                string newTrack = tracks[lastTrackIndex];
+                firstTrackUri = new Uri(newTrack);
+                isPlaying = false;
+                tracksCursor = 0;
+                ResetTrackStatsLabel();
+            }
         }
 
         private void PlayTrackHandler (object sender, MouseButtonEventArgs e)
@@ -157,12 +188,14 @@ namespace GamaManager.Dialogs
         {
             if (isPlaying)
             {
-                audio.Pause();
+                audio.LoadedBehavior = MediaState.Pause;
             }
             else
             {
-                audio.Position = TimeSpan.FromSeconds(0);
-                audio.Play();
+                audio.LoadedBehavior = MediaState.Play;
+                audio.Source = firstTrackUri;
+                string tracksStatsLabelContent = "1 из " + rawCountTracks;
+                tracksStatsLabel.Text = tracksStatsLabelContent;
             }
             isPlaying = !isPlaying;
         }
@@ -175,8 +208,59 @@ namespace GamaManager.Dialogs
 
         public void PlayNextTrack()
         {
+            TrackEnded();
+        }
 
-        } 
+        public void TrackEnded ()
+        {
+            tracksCursor++;
+            int activeTrackIndex = tracksCursor - 1;
+            int newTrackIndex = activeTrackIndex + 1;
+            int countTracks = tracks.Count;
+            bool isTrackAvailable = newTrackIndex > 0 && newTrackIndex < countTracks;
+            if (isTrackAvailable)
+            {
+                int currentTrackNumber = newTrackIndex + 1;
+                string rawCurrentTrackNumber = currentTrackNumber.ToString();
+                string tracksStatsLabelContent = rawCurrentTrackNumber + " из " + rawCountTracks;
+                tracksStatsLabel.Text = tracksStatsLabelContent;
+                string newTrack = tracks[newTrackIndex];
+                firstTrackUri = new Uri(newTrack);
+                audio.Source = firstTrackUri;
+            }
+            else
+            {
+                string newTrack = tracks[0];
+                firstTrackUri = new Uri(newTrack);
+                isPlaying = false;
+                tracksCursor = 0;
+                ResetTrackStatsLabel();
+            }
+        }
+
+        private void  TrackEndedHandler (object sender, RoutedEventArgs e)
+        {
+            TrackEnded();
+        }
+
+        public void ResetTrackStatsLabel ()
+        {
+            string tracksStatsLabelContent = "0 из " + rawCountTracks;
+            tracksStatsLabel.Text = tracksStatsLabelContent;
+        }
+
+        private void SetVolumeHandler (object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Slider slider = ((Slider)(sender));
+            double volume = slider.Value;
+            SetVolume(volume);
+        }
+
+        public void SetVolume (double volume)
+        {
+            double updatedVolume = volume;
+            audio.Volume = updatedVolume;
+        }
 
     }
 }

@@ -117,7 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="friendsMenuItemLabel" xml:space="preserve">
+  <data name="addFriendDialogTitleContent" xml:space="preserve">
+    <value>Add friend</value>
+  </data>
+  <data name="attentionLabelContent" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="backBtnContent" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="cancelBtnContent" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="editProfileAboutLabelContent" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="editProfileBtnContent" xml:space="preserve">
+    <value>Edit profile</value>
+  </data>
+  <data name="editProfileCountryLabelContent" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="editProfileLabelContent" xml:space="preserve">
+    <value>&gt;&gt; Edit profile</value>
+  </data>
+  <data name="editProfileLocationLabelContent" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="editProfileMainInfoLabelContent" xml:space="preserve">
+    <value>Main info</value>
+  </data>
+  <data name="editProfileNameLabelContent" xml:space="preserve">
+    <value>Profile name</value>
+  </data>
+  <data name="errorLabelContent" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="friendsAndChatLabelContent" xml:space="preserve">
+    <value>Friends and chat</value>
+  </data>
+  <data name="friendsLabelContent" xml:space="preserve">
     <value>Friends</value>
+  </data>
+  <data name="friendsMenuItemAddFriendLabelContent" xml:space="preserve">
+    <value>Add friend</value>
+  </data>
+  <data name="friendsMenuItemLabelContent" xml:space="preserve">
+    <value>Friends</value>
+  </data>
+  <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
+    <value>Login to another account</value>
+  </data>
+  <data name="gameManagerMenuItemSettingsLabelContent" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="gamesLabelContent" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="gameUploadedLabelContent" xml:space="preserve">
+    <value>Game is uploaded</value>
+  </data>
+  <data name="helpMenuItemLabelContent" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
+    <value>About system</value>
+  </data>
+  <data name="installBtnLabelContent" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="libraryMenuItemHomeLabelContent" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="libraryMenuLabelContent" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="logoutLabelContent" xml:space="preserve">
+    <value>Logout from account</value>
+  </data>
+  <data name="nextBtnContent" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="offersDialogTitleContent" xml:space="preserve">
+    <value>Office Ware - Offers</value>
+  </data>
+  <data name="playBtnLabelContent" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="profileMenuItemProfileLabelContent" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="saveBtnContent" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="sendFriendRequestLabelContent" xml:space="preserve">
+    <value>Send request</value>
+  </data>
+  <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
+    <value>Stats</value>
+  </data>
+  <data name="storeMenuLabelContent" xml:space="preserve">
+    <value>Store</value>
+  </data>
+  <data name="uploadGameErrorLabelContent" xml:space="preserve">
+    <value>Can not upload game.</value>
+  </data>
+  <data name="uploadingLabelContent" xml:space="preserve">
+    <value>Uploading</value>
+  </data>
+  <data name="viewMenuItemLabelContent" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="viewMenuItemPlayerLabelContent" xml:space="preserve">
+    <value>Player</value>
   </data>
 </root>

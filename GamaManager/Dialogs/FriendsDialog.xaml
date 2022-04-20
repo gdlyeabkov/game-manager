@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Друзья"
+        xmlns:p="clr-namespace:GamaManager.Properties"
+        Title="{x:Static p:Resources.friendsLabelContent}"
         Height="800"
         Width="450"
         Loaded="InitSocketsHandler"
@@ -34,7 +35,7 @@
                 <TextBlock
                     Margin="10 5"
                     VerticalAlignment="Center"
-                    Text="Друзья"    
+                    Text="{x:Static p:Resources.friendsLabelContent}"
                 />
                 <TextBox
                     x:Name="keywordsLabel"

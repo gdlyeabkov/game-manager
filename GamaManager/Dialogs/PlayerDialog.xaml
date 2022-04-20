@@ -14,9 +14,9 @@
         <MediaElement
             x:Name="audio"
             Volume="1"
-            Source="C:\Users\ПК\Downloads\2yxa_ru_speak_imp852518_222872.mp3"
             ScrubbingEnabled="True"
-            LoadedBehavior="Manual"
+            LoadedBehavior="Play"
+            MediaEnded="TrackEndedHandler"
         />
         <StackPanel>
             <DockPanel
@@ -99,7 +99,7 @@
                             x:Name="volumeDialog"
                             StaysOpen="False"
                             Width="125"
-                            IsOpen="True"
+                            IsOpen="False"
                             Placement="MousePoint"
                         >
                             <Popup.Child>
@@ -107,7 +107,9 @@
                                     Background="LightGray"
                                 >
                                     <Slider
+                                        Value="1"
                                         Margin="15"    
+                                        ValueChanged="SetVolumeHandler"
                                     />
                                 </StackPanel>
                             </Popup.Child>
@@ -127,6 +129,7 @@
                 />
             </ScrollViewer>
             <TextBlock
+                x:Name="tracksStatsLabel"
                 TextAlignment="Center"
                 Text="0 из 0 - 00:00:00"    
                 Margin="10"

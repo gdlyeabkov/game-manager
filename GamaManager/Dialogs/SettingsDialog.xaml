@@ -464,6 +464,8 @@
                             VerticalScrollBarVisibility="Auto"
                             Height="75"
                             Margin="0 5"
+                            IsReadOnly="True"
+                            GotFocus="SelectMusicLibraryHandler"
                         />
                         <StackPanel
                             Orientation="Horizontal"    
@@ -479,7 +481,8 @@
                                 Width="85"
                                 Height="25"
                                 Margin="5 0"
-                                Content="Удалить"    
+                                Content="Удалить"
+                                Click="RemoveMusicLibraryHandler"
                             />
                             <Button
                                 Width="85"

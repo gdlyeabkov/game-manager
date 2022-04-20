@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
-        Title="Office Ware - Предложения"
+        xmlns:p="clr-namespace:GamaManager.Properties"
+        Title="{x:Static p:Resources.offersDialogTitleContent}"
         Height="650"
         Width="600"
         WindowStartupLocation="CenterScreen"
@@ -107,7 +108,7 @@
                 Height="35"
                 Width="75"
                 Margin="10"    
-                Content="Назад"
+                Content="{x:Static p:Resources.backBtnContent}"
                 IsEnabled="False"
                 Click="BackBtnHandler"
             />
@@ -116,7 +117,7 @@
                 Height="35"
                 Width="75"
                 Margin="10"    
-                Content="Далее"
+                Content="{x:Static p:Resources.nextBtnContent}"
                 Click="NextBtnHandler"
             />
             <Button
@@ -124,7 +125,7 @@
                 Height="35"
                 Width="75"
                 Margin="10"    
-                Content="Отмена"
+                Content="{x:Static p:Resources.cancelBtnContent}"
                 Click="CancelBtnHandler"
             />
         </StackPanel>

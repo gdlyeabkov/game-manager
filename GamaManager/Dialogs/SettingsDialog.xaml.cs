@@ -142,21 +142,29 @@ namespace GamaManager.Dialogs
                 try
                 {
                     string lineContent = musicLibraryListBox.GetLineText(lineIndex);
-                    lineContent = lineContent.Trim();
-                    int lineContentLength = lineContent.Length;
-                    // bool isPath = lineContentLength >= 1;
-                    bool isNotFirstCaretBreak = lineContent != @"\r\n";
-                    bool isNotSecondCaretBreak = lineContent != @"\n";
-                    bool isNotThirdCaretBreak = lineContent != @"\r";
-                    bool isNotFourthCaretBreak = lineContent != @"";
-                    bool isPath = isNotFirstCaretBreak && isNotSecondCaretBreak && isNotThirdCaretBreak && isNotFourthCaretBreak;
-                    if (isPath)
+                    bool isLineContentExists = lineContent != null;
+                    if (isLineContentExists)
                     {
-                        musicSettings.paths.Add(lineContent);
+                        lineContent = lineContent.Trim();
+                        int lineContentLength = lineContent.Length;
+                        // bool isPath = lineContentLength >= 1;
+                        bool isNotFirstCaretBreak = lineContent != @"\r\n";
+                        bool isNotSecondCaretBreak = lineContent != @"\n";
+                        bool isNotThirdCaretBreak = lineContent != @"\r";
+                        bool isNotFourthCaretBreak = lineContent != @"";
+                        bool isPath = isNotFirstCaretBreak && isNotSecondCaretBreak && isNotThirdCaretBreak && isNotFourthCaretBreak;
+                        if (isPath)
+                        {
+                            musicSettings.paths.Add(lineContent);
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                     else
                     {
-                        continue;
+                        break;
                     }
                 }
                 catch (ArgumentOutOfRangeException)
@@ -243,6 +251,37 @@ namespace GamaManager.Dialogs
                 string newLine = Environment.NewLine;
                 string newPath = newLine + path;
                 musicLibraryListBox.Text += newPath;
+            }
+        }
+
+        
+        private void SelectMusicLibraryHandler (object sender, RoutedEventArgs e)
+        {
+            SelectMusicLibrary();
+        }
+
+        public void SelectMusicLibrary ()
+        {
+            int caretIndex = musicLibraryListBox.CaretIndex;
+            int lineIndex = musicLibraryListBox.GetLineIndexFromCharacterIndex(caretIndex);
+            int startSelectionIndex = musicLibraryListBox.GetCharacterIndexFromLineIndex(lineIndex);
+            int endSelectionIndex = musicLibraryListBox.GetLineLength(lineIndex);
+            musicLibraryListBox.Select(startSelectionIndex, endSelectionIndex);
+        }
+
+        private void RemoveMusicLibraryHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveMusicLibrary();
+        }
+
+        public void RemoveMusicLibrary ()
+        {
+            int selectionLength = musicLibraryListBox.SelectionLength;
+            bool isLibrarySelected = selectionLength >= 1;
+            if (isLibrarySelected)
+            {
+                string selectedText = musicLibraryListBox.SelectedText;
+                musicLibraryListBox.Text = musicLibraryListBox.Text.Replace(selectedText, "");
             }
         }
 

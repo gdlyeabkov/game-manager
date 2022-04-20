@@ -30,6 +30,7 @@ using GamaManager.Dialogs;
 using SocketIOClient;
 using Debugger = System.Diagnostics.Debugger;
 using System.Windows.Media.Animation;
+using System.Collections;
 
 namespace GamaManager
 {
@@ -95,6 +96,11 @@ namespace GamaManager
             GetGamesStats();
             CheckFriendsCache();
             LoadStartWindow();
+        }
+
+        public void ResetEditInfoHandler (object sender, RoutedEventArgs e)
+        {
+            GetEditInfo();
         }
 
         public void CheckFriendsCache()
@@ -1149,12 +1155,14 @@ namespace GamaManager
                 settings = currentSettings
             });
             File.WriteAllText(saveDataFilePath, savedContent);
-            gameActionLabel.Content = "Играть";
+            gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
             gameActionLabel.IsEnabled = true;
             removeGameBtn.Visibility = visible;
             string gamePath = ((string)(gameNameLabel.DataContext));
             gameActionLabel.DataContext = filename;
-            MessageBox.Show("Игра загружена", "Готово");
+            string gameUploadedLabelContent = Properties.Resources.gameUploadedLabelContent;
+            string attentionLabelContent = Properties.Resources.attentionLabelContent;
+            MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }
 
         private void SelectGameHandler (object sender, MouseButtonEventArgs e)
@@ -1190,7 +1198,7 @@ namespace GamaManager
             bool isGameExists = gameNames.Contains(gameName);
             if (isGameExists)
             {
-                gameActionLabel.Content = "Играть";
+                gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
                 int gameIndex = gameNames.IndexOf(gameName);
                 Game loadedGame = loadedGames[gameIndex];
                 string gamePath = loadedGame.path;
@@ -1200,7 +1208,7 @@ namespace GamaManager
             }
             else
             {
-                gameActionLabel.Content = "Установить";
+                gameActionLabel.Content = Properties.Resources.installBtnLabelContent;
                 gameActionLabel.DataContext = gameData;
                 removeGameBtn.Visibility = invisible;
             }
@@ -1248,8 +1256,8 @@ namespace GamaManager
         {
             object rawGameActionLabelContent = gameActionLabel.Content;
             string gameActionLabelContent = rawGameActionLabelContent.ToString();
-            bool isPlayAction = gameActionLabelContent == "Играть";
-            bool isInstallAction = gameActionLabelContent == "Установить";
+            bool isPlayAction = gameActionLabelContent == Properties.Resources.playBtnLabelContent;
+            bool isInstallAction = gameActionLabelContent == Properties.Resources.installBtnLabelContent;
             if (isPlayAction)
             {
                 RunGame();
@@ -1275,6 +1283,8 @@ namespace GamaManager
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
             updatedGames = updatedGames.Where((Game someGame) =>
             {
                 string gameName = gameNameLabel.Text;
@@ -1300,7 +1310,9 @@ namespace GamaManager
             }).ToList();
             string savedContent = js.Serialize(new SavedContent
             {
-                games = updatedGames
+                games = updatedGames,
+                friends = currentFriends,
+                settings = currentSettings
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;

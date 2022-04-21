@@ -49,6 +49,7 @@ namespace GamaManager.Dialogs
 
         public void InitializeConstants(SocketIO client, TabControl mainControl)
         {
+            this.DataContext = null;
             this.client = client;
             onlineBrush = System.Windows.Media.Brushes.Blue;
             playedBrush = System.Windows.Media.Brushes.Green;
@@ -199,6 +200,15 @@ namespace GamaManager.Dialogs
                                                                 friends.Children.Add(friendsItem);
                                                                 ContextMenu friendsItemContextMenu = new ContextMenu();
                                                                 MenuItem friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Присоединиться к игре";
+                                                                friendsItemContextMenuItem.DataContext = friendId;
+                                                                friendsItemContextMenuItem.Click += JoinToGameHandler;
+                                                                bool isGameSameForMe = true;
+                                                                if (isGameSameForMe)
+                                                                {
+                                                                    friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                                                }
+                                                                friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Отправить сообщение";
                                                                 friendsItemContextMenuItem.DataContext = friendId;
                                                                 friendsItemContextMenuItem.Click += OpenChatHandler;
@@ -641,6 +651,20 @@ namespace GamaManager.Dialogs
         {
             mainControl.DataContext = friendId;
             mainControl.SelectedIndex = 1;
+            this.Close();
+        }
+
+        public void JoinToGameHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            JoinToGame(friend);
+        }
+
+        public void JoinToGame(string friendId)
+        {
+            this.DataContext = friendId;
             this.Close();
         }
 

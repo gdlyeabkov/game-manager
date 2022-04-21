@@ -16,6 +16,10 @@ using System.Speech.Synthesis;
 using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
+using System.Windows.Interop;
+using System.Drawing;
+using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace GamaManager
 {
@@ -31,6 +35,8 @@ namespace GamaManager
         public bool isAppInit = false;
         public string currentUserId = "";
         private User currentUser;
+        public string currentGameName = "";
+        public System.Windows.Media.Brush notificationBackground;
 
         public GameWindow(string userId)
         {
@@ -42,8 +48,14 @@ namespace GamaManager
 
         public void Initialize (string userId)
         {
-            currentUserId = userId;
+            InitConstants(userId);
             GetUser(userId);
+        }
+
+        public void InitConstants (string userId)
+        {
+            currentUserId = userId;
+            notificationBackground = System.Windows.Media.Brushes.AliceBlue;
         }
 
         public void GetUser(string userId)
@@ -112,6 +124,9 @@ namespace GamaManager
                 control.DataContext = gameName;
                 control.Loaded += GameLoadedHandler;
                 control.Unloaded += GameUnloadedHandler;
+                
+                currentGameName = gameName;
+            
             }
             catch (Exception)
             {
@@ -169,11 +184,11 @@ namespace GamaManager
             bool isShiftModifierEnabled = shiftModifier > 0;
             var ctrlModifier = Keyboard.Modifiers & ModifierKeys.Control;
             bool isCtrlModifierEnabled = ctrlModifier > 0;
-            Key tabKey = Key.Tab;
-            // bool isTabKey = currentKey == tabKey;
-            bool isTabKey = rawCurrentKey == overlayKey;
-            // bool isToggleAside = isTabKey && isShiftModifierEnabled;
-            bool isToggleAside = isTabKey && ((isShiftModifierEnabled && isNeedShiftModifier) || !isNeedShiftModifier) && ((isCtrlModifierEnabled && isNeedCtrlModifier) || !isNeedCtrlModifier);
+            bool isOverlayKey = rawCurrentKey == overlayKey;
+            bool isToggleAside = isOverlayKey && ((isShiftModifierEnabled && isNeedShiftModifier) || !isNeedShiftModifier) && ((isCtrlModifierEnabled && isNeedCtrlModifier) || !isNeedCtrlModifier);
+            Key sKey = Key.S;
+            bool isSKey = currentKey == sKey;
+            bool isTakeScreenShot = isShiftModifierEnabled && isSKey;
             if (isToggleAside)
             {
                 Visibility currentVisibility = gameManagerAside.Visibility;
@@ -185,6 +200,73 @@ namespace GamaManager
                 else
                 {
                     gameManagerAside.Visibility = visible;
+                }
+            }
+            else if (isTakeScreenShot)
+            {
+                Bitmap bitmap = new Bitmap((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                using (Graphics g = Graphics.FromImage(bitmap))
+                {
+                    g.CopyFromScreen(0, 0, 0, 0, bitmap.Size);
+                }
+                IntPtr handle = IntPtr.Zero;
+                try
+                {
+                    handle = bitmap.GetHbitmap();
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                    img.Source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+                    localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                    localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                    string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+                    string cachePath = appPath + currentGameName;
+                    DateTimeOffset currentDateTime = DateTimeOffset.UtcNow;
+                    long unixTimeMilliseconds = currentDateTime.ToUnixTimeMilliseconds();
+                    string rawMillis = unixTimeMilliseconds.ToString();
+                    string generatedScreenShotName = rawMillis + @".jpg";
+                    string bitmapPath = cachePath + @"\" + generatedScreenShotName;
+                    bitmap.Save(bitmapPath);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        audio.LoadedBehavior = MediaState.Play;
+                        audio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\screenshot.wav");
+                    });
+
+                    Popup notification = new Popup();
+                    notification.Placement = PlacementMode.Custom;
+                    notification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(NotificationPlacementHandler);
+                    notification.PlacementTarget = this;
+                    notification.Width = 225;
+                    notification.Height = 275;
+                    System.Windows.Controls.Image notificationBodySenderAvatar = new System.Windows.Controls.Image();
+                    notificationBodySenderAvatar.Width = 100;
+                    notificationBodySenderAvatar.Height = 100;
+                    notificationBodySenderAvatar.BeginInit();
+                    Uri notificationBodySenderAvatarUri = new Uri(bitmapPath);
+                    BitmapImage notificationBodySenderAvatarImg = new BitmapImage(notificationBodySenderAvatarUri);
+                    notificationBodySenderAvatar.Source = notificationBodySenderAvatarImg;
+                    notificationBodySenderAvatar.EndInit();
+                    notification.Child = notificationBodySenderAvatar;
+                    notifications.Children.Add(notification);
+                    notification.IsOpen = true;
+                    notification.StaysOpen = false;
+                    notification.PopupAnimation = PopupAnimation.Fade;
+                    notification.AllowsTransparency = true;
+                    DispatcherTimer timer = new DispatcherTimer();
+                    timer.Interval = TimeSpan.FromSeconds(3);
+                    timer.Tick += delegate
+                    {
+                        notification.IsOpen = false;
+                        timer.Stop();
+                    };
+                    timer.Start();
+                    notifications.Children.Add(notification);
+
+                }
+                catch (Exception)
+                {
+
                 }
             }
         }
@@ -200,6 +282,15 @@ namespace GamaManager
         public void CloseGame()
         {
             this.Close();
+        }
+
+        public CustomPopupPlacement[] NotificationPlacementHandler (System.Windows.Size popupSize, System.Windows.Size targetSize, System.Windows.Point offset)
+        {
+            return new CustomPopupPlacement[]
+            {
+                new CustomPopupPlacement(new System.Windows.Point(-50, 100), PopupPrimaryAxis.Vertical),
+                new CustomPopupPlacement(new System.Windows.Point(10, 20), PopupPrimaryAxis.Horizontal)
+            };
         }
 
     }

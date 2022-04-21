@@ -9,5 +9,6 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("sounds/notification.wav")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("sounds/screenshot.wav")]
 
 

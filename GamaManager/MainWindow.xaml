@@ -7,6 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     xmlns:p="clr-namespace:GamaManager.Properties"
+    xmlns:oxy="http://oxyplot.org/wpf"        
     Title="Office Ware Game Manager"
     Height="450"
     Width="800"
@@ -70,9 +71,41 @@
                     Header="{x:Static p:Resources.friendsListLabelContent}"
                     Click="OpenFriendsDialogHandler"
                 />
+                <Separator />
                 <MenuItem
                     Header="{x:Static p:Resources.friendsMenuItemAddFriendLabelContent}"
                     Click="OpenAddFriendDialogHandler"
+                />
+                <MenuItem
+                    Header="Сменить имя или аватар"
+                    Click="SetNameOrAvatarHandler"
+                />
+                <Separator />
+                <MenuItem
+                    x:Name="onlineUserStatusMenuItem"
+                    IsCheckable="True"
+                    Header="В сети"
+                    DataContext="online"
+                    Click="UpdateUserStatusHandler"
+                />
+                <!--
+                <MenuItem
+                    Header="Нет на месте"
+                    DataContext="not here"
+                    Click="UpdateUserStatusHandler"
+                />
+                <MenuItem
+                    Header="Отошел"
+                    DataContext="away"
+                    Click="UpdateUserStatusHandler"
+                />
+                -->
+                <MenuItem
+                    x:Name="offlineUserStatusMenuItem"
+                    IsCheckable="True"
+                    Header="Не в сети"
+                    DataContext="offline"
+                    Click="UpdateUserStatusHandler"
                 />
             </MenuItem>
             <MenuItem
@@ -341,21 +374,13 @@
                                 Text="Super fighters"    
                             />
                                 <Button
-                                x:Name="gameActionLabel"
-                                HorizontalAlignment="Left"
-                                Height="35"
-                                Width="125"
-                                Content="Установить"
-                                Click="GameActionHandler"    
-                            />
-                                <!--
-                                <ProgressBar
-                                    x:Name="gameInstalledProgress"
-                                    Height="25"
-                                    Width="350"
-                                    Margin="0 5"
+                                    x:Name="gameActionLabel"
+                                    HorizontalAlignment="Left"
+                                    Height="35"
+                                    Width="125"
+                                    Content="Установить"
+                                    Click="GameActionHandler"    
                                 />
-                            -->
                             </StackPanel>
                             <materialDesign:PackIcon
                                 x:Name="removeGameBtn"
@@ -689,6 +714,11 @@
                                 FontSize="24"
                                 Text="СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: 01 января 2000 В 00:00"
                             />
+                            <oxy:PlotView
+                                Width="250"
+                                Height="250"
+                                Model="{Binding statsModel}"    
+                            />
                             <Grid
                                 HorizontalAlignment="Left"
                                 Width="350"
@@ -831,6 +861,67 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions />
                             </Grid>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <Image
+                                    Margin="15"
+                                    Width="50"    
+                                    Height="50"    
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="24"
+                                        Text="Имя пользователя"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="14"
+                                        Text="Фильтровать по игре"    
+                                    />
+                                </StackPanel>
+                                <ComboBox
+                                    x:Name="screenShotsFilter"
+                                    Margin="25"
+                                    HorizontalAlignment="Right"
+                                    Width="175"
+                                    Height="35"
+                                    SelectedIndex="0"
+                                    SelectionChanged="SelectScreenShotsFilterHandler"
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"
+                                        Content="Выбрать игру"
+                                    />
+                                    <ComboBoxItem
+                                        Content="Все игры"
+                                    />
+                                </ComboBox>
+                            </DockPanel>
+                            <StackPanel
+                                x:Name="screenShots"
+                                Margin="25"
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

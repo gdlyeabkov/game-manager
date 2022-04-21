@@ -16,6 +16,12 @@
         x:Name="game"
         LayoutUpdated="game_LayoutUpdated"
     >
+        <MediaElement
+            x:Name="audio"    
+        />
+        <StackPanel
+            x:Name="notifications"    
+        />
         <StackPanel
             x:Name="gameManagerAside"
             Visibility="Collapsed"

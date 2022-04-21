@@ -31,6 +31,8 @@ using SocketIOClient;
 using Debugger = System.Diagnostics.Debugger;
 using System.Windows.Media.Animation;
 using System.Collections;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace GamaManager
 {
@@ -54,15 +56,19 @@ namespace GamaManager
         public Brush disabledColor;
         public Brush enabledColor;
         public bool isFullScreenMode = false;
+        public PlotModel statsModel { get; private set; }
 
         public MainWindow(string id)
         {
+            
 
             PreInit(id);
 
             InitializeComponent();
 
             Initialize(id);
+
+            SetStatsChart();
 
         }
 
@@ -99,6 +105,16 @@ namespace GamaManager
             LoadStartWindow();
             GetOnlineFriends();
             GetDownloads();
+            GetScreenShots("", true);
+        }
+
+        public void SetStatsChart ()
+        {
+            statsModel = new PlotModel()
+            {
+                Title = "Example 1"
+            };
+            statsModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
         }
 
         public void GetDownloads ()
@@ -581,8 +597,8 @@ namespace GamaManager
                 gameStats.Children.Add(gameStatsNameLabel);
                 StackPanel gameStatsInfo = new StackPanel();
                 gameStatsInfo.Margin = new Thickness(10);
-                gameStatsInfo.VerticalAlignment = VerticalAlignment.Bottom;
-                gameStatsInfo.HorizontalAlignment = HorizontalAlignment.Right;
+                gameStatsInfo.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+                gameStatsInfo.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                 TextBlock gameStatsInfoHoursLabel = new TextBlock();
                 gameStatsInfoHoursLabel.Margin = new Thickness(0, 5, 0, 5);
                 string gameStatsInfoHoursLabelContent = myGameHours + " часов всего";
@@ -1059,7 +1075,7 @@ namespace GamaManager
             dialog.Show();
         }
 
-        async public void RunGame ()
+        async public void RunGame (string joinedGameName = "")
         {
             StartDetectGameHours();
             GameWindow window = new GameWindow(currentUserId);
@@ -1081,7 +1097,13 @@ namespace GamaManager
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            string currentGameName = gameNameLabel.Text;
+            string currentGameName = joinedGameName;
+            int joinedGameNameLength = joinedGameName.Length;
+            bool isNotJoinedGame = joinedGameNameLength <= 0;
+            if (isNotJoinedGame)
+            {
+                currentGameName = gameNameLabel.Text;
+            }
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             string cachePath = appPath + currentGameName;
             string filename = cachePath + @"\game.exe";
@@ -1139,7 +1161,10 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-            SetUserStatus("played");
+
+            // SetUserStatus("played");
+            UpdateUserStatus("played");
+
             client.EmitAsync("user_is_toggle_status", "played");
         }
 
@@ -1225,7 +1250,8 @@ namespace GamaManager
 
             GetGamesInfo();
 
-            SetUserStatus("online");
+            // SetUserStatus("online");
+            UpdateUserStatus("online");
 
             client.EmitAsync("user_is_toggle_status", "online");
 
@@ -1551,7 +1577,20 @@ namespace GamaManager
         public void OpenFriendsDialog ()
         {
             Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl);
+            dialog.Closed += JoinToGameHandler;
             dialog.Show();
+        }
+
+        public void JoinToGameHandler(object sender, EventArgs e)
+        {
+            Dialogs.FriendsDialog dialog = ((Dialogs.FriendsDialog)(sender));
+            object dialogData = dialog.DataContext;
+            bool isDialogDataExists = dialogData != null;
+            if (isDialogDataExists)
+            {
+                string friend = ((string)(dialogData));
+                RunGame();
+            }
         }
 
         public void CloseFriendRequestHandler (object sender, RoutedEventArgs e)
@@ -1767,15 +1806,19 @@ namespace GamaManager
             if (isAppInit)
             {
                 bool isProfile = index == 2;
+                bool isContent = index == 5;
                 if (isProfile) {
                     object mainControlData = mainControl.DataContext;
                     string userId = currentUserId;
                     bool isLocalUser = userId == currentUserId;
                     GetUserInfo(userId, isLocalUser);
                     mainControl.SelectedIndex = 1;
-
                     AddHistoryRecord();
-
+                }
+                else if (isContent)
+                {
+                    mainControl.SelectedIndex = 5;
+                    AddHistoryRecord();
                 }
                 ResetMenu();
             }
@@ -1811,9 +1854,7 @@ namespace GamaManager
             else if (isDownloads)
             {
                 mainControl.SelectedIndex = 4;
-
                 AddHistoryRecord();
-
             }
             ResetMenu();
         }
@@ -1840,7 +1881,10 @@ namespace GamaManager
             mainControl.DataContext = currentUserId;
             ListenSockets();
             IncreaseUserToStats();
-            SetUserStatus("online");
+            
+            // SetUserStatus("online");
+            UpdateUserStatus("online");
+
         }
 
         public void SetUserStatus (string userStatus)
@@ -1951,9 +1995,7 @@ namespace GamaManager
         public void OpenEditProfile ()
         {
             mainControl.SelectedIndex = 2;
-        
             AddHistoryRecord();
-
         }
 
         private void SaveUserInfoHandler (object sender, RoutedEventArgs e)
@@ -2516,7 +2558,10 @@ namespace GamaManager
         public void ClientClosed ()
         {
             DecreaseUserToStats();
-            SetUserStatus("offline");
+            
+            // SetUserStatus("offline");
+            UpdateUserStatus("offline");
+
             client.EmitAsync("user_is_toggle_status", "offline");
         }
 
@@ -2731,6 +2776,150 @@ namespace GamaManager
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
             }
         }
+
+        public void JoinToGameFromPopupHandler(object sender, RoutedEventArgs e)
+        {
+            Popup popup = ((Popup)(sender));
+            object popupData = popup.DataContext;
+            string gameName = ((string)(popupData));
+            JoinToGameFromPopup(gameName, popup);
+        }
+
+        public void JoinToGameFromPopup(string gameName, Popup popup)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> myGames = loadedContent.games;
+            List<string> myGamesNames = new List<string>();
+            foreach (Game myGame in myGames)
+            {
+                string myGameName = myGame.name;
+                myGamesNames.Add(myGameName);
+            }
+            bool isSameGameForMe = myGamesNames.Contains(gameName);
+            if (isSameGameForMe)
+            {
+                RunGame(gameName);
+                popup.IsOpen = false;
+            }
+        }
+
+        private void SetNameOrAvatarHandler (object sender, RoutedEventArgs e)
+        {
+            SetNameOrAvatar();
+        }
+
+        public void SetNameOrAvatar ()
+        {
+            mainControl.SelectedIndex = 2;
+            AddHistoryRecord();
+        }
+
+        private void UpdateUserStatusHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object data = menuItem.DataContext;
+            string status = ((string)(data));
+            UpdateUserStatus(status);
+        }
+
+        public void UpdateUserStatus (string status)
+        {
+            bool isOnlineStatus = status == "online";
+            bool isOfflineStatus = status == "offline";
+            if (isOnlineStatus)
+            {
+                offlineUserStatusMenuItem.IsChecked = false;
+            }
+            else if (isOfflineStatus)
+            {
+                onlineUserStatusMenuItem.IsChecked = false;
+            }
+            else
+            {
+                onlineUserStatusMenuItem.IsChecked = false;
+                offlineUserStatusMenuItem.IsChecked = false;
+            }
+            SetUserStatus(status);
+        }
+
+        public void GetScreenShots (string filter, bool isInit)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            string[] games = Directory.GetDirectories(appPath);
+            screenShots.Children.Clear();
+            foreach (string game in games)
+            {
+                FileInfo gameInfo = new FileInfo(game);
+                string gameName = gameInfo.Name;
+                if (isInit)
+                {
+                    ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+                    screenShotsFilterItem.Content = gameName;
+                    screenShotsFilter.Items.Add(screenShotsFilterItem);
+                }
+                string[] files = Directory.GetFileSystemEntries(game);
+                foreach (string file in files)
+                {
+                    string ext = System.IO.Path.GetExtension(file);
+                    bool isScreenShot = ext == ".jpg";
+                    if (isScreenShot)
+                    {
+                        Image screenShot = new Image();
+                        screenShot.Width = 250;
+                        screenShot.Height = 250;
+                        screenShot.BeginInit();
+                        Uri screenShotUri = new Uri(file);
+                        screenShot.Source = new BitmapImage(screenShotUri);
+                        screenShot.EndInit();
+                        string insensitiveCaseFilter = filter.ToLower();
+                        string insensitiveCaseGameName = gameName.ToLower();
+                        int filterLength = filter.Length;
+                        bool isNotFilter = filterLength <= 0;
+                        bool isWordsMatches = insensitiveCaseGameName.Contains(insensitiveCaseFilter);
+                        bool isFilterMatches = isWordsMatches || isNotFilter;
+                        if (isFilterMatches)
+                        {
+                            screenShots.Children.Add(screenShot);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SelectScreenShotsFilterHandler(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedIndex = screenShotsFilter.SelectedIndex;
+            SelectScreenShotsFilter(selectedIndex);
+        }
+
+        public void SelectScreenShotsFilter (int selectedIndex)
+        {
+            if (isAppInit)
+            {
+                bool isSecondItem = selectedIndex == 1;
+                if (isSecondItem)
+                {
+                    screenShotsFilter.SelectedIndex = 0;
+                    GetScreenShots("", false);
+                }
+                else
+                {
+                    object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
+                    ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
+                    object rawFilter = selectedItem.Content;
+                    string filter = rawFilter.ToString();
+                    GetScreenShots(filter, false);
+                }
+            }
+        }
+
 
     }
 

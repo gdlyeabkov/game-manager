@@ -53,6 +53,7 @@ namespace GamaManager
         public int historyCursor = -1;
         public Brush disabledColor;
         public Brush enabledColor;
+        public bool isFullScreenMode = false;
 
         public MainWindow(string id)
         {
@@ -96,6 +97,177 @@ namespace GamaManager
             GetGamesStats();
             CheckFriendsCache();
             LoadStartWindow();
+            GetOnlineFriends();
+            GetDownloads();
+        }
+
+        public void GetDownloads ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            int dowloadsCursor = 0;
+            downloads.Children.Clear();
+            downloads.RowDefinitions.Clear();
+            foreach (Game currentGame in currentGames)
+            {
+                string currentGameName = currentGame.name;
+                string currentGamePath = currentGame.path;
+                string currentGameInstallDate = currentGame.installDate;
+                try
+                {
+                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/games/get");
+                    innerWebRequest.Method = "GET";
+                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> games = myobj.games;
+                                List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                {
+                                    string gameName = game.name;
+                                    bool isNamesMatches = game.name == currentGameName;
+                                    return isNamesMatches;
+                                }).ToList<GameResponseInfo>();
+                                int countResults = gameResults.Count;
+                                bool isResultsFound = countResults >= 1;
+                                if (isResultsFound)
+                                {
+                                    GameResponseInfo foundedGame = gameResults[0];
+                                    string currentGameImg = foundedGame.image;
+                                    dowloadsCursor++;
+                                    FileInfo currentGameInfo = new FileInfo(currentGamePath);
+                                    long currentGameSize = currentGameInfo.Length;
+                                    double currentGameSizeInGb = currentGameSize / 1024 / 1024 / 1024;
+                                    string rawCurrentGameSize = currentGameSizeInGb + " Гб";
+                                    RowDefinition download = new RowDefinition();
+                                    download.Height = new GridLength(275);
+                                    downloads.RowDefinitions.Add(download);
+                                    RowDefinitionCollection rows = downloads.RowDefinitions;
+                                    int rowsCount = rows.Count;
+                                    int lastRowIndex = rowsCount - 1;
+                                    Image downloadImg = new Image();
+                                    downloadImg.BeginInit();
+                                    downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
+                                    downloadImg.EndInit();
+                                    downloadImg.Margin = new Thickness(15, 0, 15, 0);
+                                    downloads.Children.Add(downloadImg);
+                                    Grid.SetRow(downloadImg, lastRowIndex);
+                                    Grid.SetColumn(downloadImg, 0);
+                                    StackPanel downloadInfo = new StackPanel();
+                                    TextBlock downloadNameLabel = new TextBlock();
+                                    downloadNameLabel.Text = currentGameName;
+                                    downloadNameLabel.FontSize = 24;
+                                    downloadNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    downloadInfo.Children.Add(downloadNameLabel);
+                                    TextBlock downloadSizeLabel = new TextBlock();
+                                    downloadSizeLabel.Text = rawCurrentGameSize;
+                                    downloadSizeLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    downloadInfo.Children.Add(downloadSizeLabel);
+                                    downloads.Children.Add(downloadInfo);
+                                    Grid.SetRow(downloadInfo, lastRowIndex);
+                                    Grid.SetColumn(downloadInfo, 1);
+                                    TextBlock downloadDateLabel = new TextBlock();
+                                    downloadDateLabel.Text = currentGameInstallDate;
+                                    downloadDateLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    downloads.Children.Add(downloadDateLabel);
+                                    Grid.SetRow(downloadDateLabel, lastRowIndex);
+                                    Grid.SetColumn(downloadDateLabel, 2);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            countDownloadsLabel.Text = "Загрузки (" + dowloadsCursor + ")";
+        }
+
+        public void GetOnlineFriends ()
+        {
+            
+            string friendsListLabelHeaderContent = Properties.Resources.friendsListLabelContent;
+            string onlineLabelContent = Properties.Resources.onlineLabelContent;
+            friendsListLabel.Header = friendsListLabelHeaderContent;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        FriendsResponseInfo myObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> myFriends = myObj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<Friend> myOnlineFriends = myFriends.Where<Friend>((Friend friend) =>
+                            {
+                                string friendId = friend.friend;
+                                bool isUserOnline = false;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://digitaldistributtionservice.herokuapp.com/api/users/get?id=" + friendId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string userStatus = user.status;
+                                            isUserOnline = userStatus == "online";
+                                        }
+                                    }
+                                }
+                                return isUserOnline;
+                            }).ToList<Friend>();
+                            int countOnlineFriends = myOnlineFriends.Count;
+                            string rawCountOnlineFriends = countOnlineFriends.ToString();
+                            string friendsOnlineCountLabelContent = " (" + onlineLabelContent + " " + rawCountOnlineFriends + ")";
+                            friendsListLabel.Header += friendsOnlineCountLabelContent;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void ResetEditInfoHandler (object sender, RoutedEventArgs e)
@@ -1029,6 +1201,7 @@ namespace GamaManager
                 string currentGameId = currentGame.id;
                 string currentGameName = currentGame.name;
                 string currentGamePath = currentGame.path;
+                string currentInstallDate = currentGame.installDate;
                 updatedGames[gameIndex] = new Game()
                 {
                     id = currentGameId,
@@ -1036,6 +1209,7 @@ namespace GamaManager
                     path = currentGamePath,
                     hours = rawTimerHours,
                     date = gameLastLaunchDate,
+                    installDate = currentInstallDate,
                 };
                 string savedContent = js.Serialize(new SavedContent
                 {
@@ -1147,6 +1321,7 @@ namespace GamaManager
                 path = gameUploadedPath,
                 hours = gameHours,
                 date = gameLastLaunchDate,
+                installDate = gameLastLaunchDate
             });
             string savedContent = js.Serialize(new SavedContent
             {
@@ -1162,6 +1337,7 @@ namespace GamaManager
             gameActionLabel.DataContext = filename;
             string gameUploadedLabelContent = Properties.Resources.gameUploadedLabelContent;
             string attentionLabelContent = Properties.Resources.attentionLabelContent;
+            GetDownloads();
             MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }
 
@@ -1323,7 +1499,6 @@ namespace GamaManager
         {
             Dialogs.DownloadGameDialog dialog = ((Dialogs.DownloadGameDialog)(sender));
             object dialogData = dialog.DataContext;
-            // string status = ((string)(dialogData));
             Dictionary<String, Object> parsedDialogData = ((Dictionary<String, Object>)(dialogData));
             object rawStatus = parsedDialogData["status"];
             object rawId = parsedDialogData["id"];
@@ -1368,7 +1543,7 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void OpenFriendsDialogHandler (object sender, MouseButtonEventArgs e)
+        private void OpenFriendsDialogHandler (object sender, RoutedEventArgs e)
         {
             OpenFriendsDialog();
         }
@@ -1625,9 +1800,17 @@ namespace GamaManager
         private void LibraryItemSelected (int index)
         {
             bool isHome = index == 1;
+            bool isDownloads = index == 3;
             if (isHome)
             {
                 mainControl.SelectedIndex = 0;
+
+                AddHistoryRecord();
+
+            }
+            else if (isDownloads)
+            {
+                mainControl.SelectedIndex = 4;
 
                 AddHistoryRecord();
 
@@ -2531,6 +2714,24 @@ namespace GamaManager
             }
         }
 
+        private void ToggleFullScreenModeHandler (object sender, MouseButtonEventArgs e)
+        {
+            ToggleFullScreenMode();
+        }
+
+        public void ToggleFullScreenMode ()
+        {
+            isFullScreenMode = !isFullScreenMode;
+            if (isFullScreenMode)
+            {
+                this.WindowStyle = WindowStyle.None;
+            }
+            else
+            {
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
+            }
+        }
+
     }
 
     class SavedContent
@@ -2559,6 +2760,7 @@ namespace GamaManager
         public string path;
         public string hours;
         public string date;
+        public string installDate;
     }
 
     class GamesListResponseInfo

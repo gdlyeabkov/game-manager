@@ -466,6 +466,7 @@
                             Margin="0 5"
                             IsReadOnly="True"
                             GotMouseCapture="SelectMusicLibraryHandler"
+                            LostMouseCapture="SelectMusicLibraryHandler"
                         />
                         <StackPanel
                             Orientation="Horizontal"    

@@ -232,6 +232,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Friends list.
+        /// </summary>
+        public static string friendsListLabelContent {
+            get {
+                return ResourceManager.GetString("friendsListLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Add friend.
         /// </summary>
         public static string friendsMenuItemAddFriendLabelContent {
@@ -363,6 +372,15 @@ namespace GamaManager.Properties {
         public static string offersDialogTitleContent {
             get {
                 return ResourceManager.GetString("offersDialogTitleContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на is online.
+        /// </summary>
+        public static string onlineLabelContent {
+            get {
+                return ResourceManager.GetString("onlineLabelContent", resourceCulture);
             }
         }
         

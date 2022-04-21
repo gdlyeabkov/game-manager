@@ -174,6 +174,9 @@
   <data name="friendsLabelContent" xml:space="preserve">
     <value>Friends</value>
   </data>
+  <data name="friendsListLabelContent" xml:space="preserve">
+    <value>Friends list</value>
+  </data>
   <data name="friendsMenuItemAddFriendLabelContent" xml:space="preserve">
     <value>Add friend</value>
   </data>
@@ -218,6 +221,9 @@
   </data>
   <data name="offersDialogTitleContent" xml:space="preserve">
     <value>Office Ware - Offers</value>
+  </data>
+  <data name="onlineLabelContent" xml:space="preserve">
+    <value>is online</value>
   </data>
   <data name="playBtnLabelContent" xml:space="preserve">
     <value>Play</value>

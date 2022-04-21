@@ -34,52 +34,11 @@
             x:Name="friendNotifications"    
             DockPanel.Dock="Top"
         >
-            <!--
-                <Popup
-                    IsOpen="True"
-                    Width="150"
-                    Height="150"
-                    Placement="Absolute"
-                >
-                    <Popup.Child>
-                        <StackPanel
-                            Background="Red"
-                            Width="150"
-                            Height="150"
-                        >
-                            <TextBlock
-                                Text="asd"    
-                            />
-                        </StackPanel>
-                    </Popup.Child>
-                </Popup>
-            -->
         </StackPanel>
         <StackPanel
             x:Name="friendRequests"    
             DockPanel.Dock="Top"
-        >
-            <!--
-                <Popup
-                    IsOpen="True"
-                    Width="150"
-                    Height="150"
-                    Placement="Absolute"
-                >
-                    <Popup.Child>
-                        <StackPanel
-                            Background="Red"
-                            Width="150"
-                            Height="150"
-                        >
-                            <TextBlock
-                                Text="asd"    
-                            />
-                        </StackPanel>
-                    </Popup.Child>
-                </Popup>
-            -->
-        </StackPanel>
+        />
         <Menu
             DockPanel.Dock="Top"    
         >
@@ -106,6 +65,11 @@
             <MenuItem
                 Header="{x:Static p:Resources.friendsMenuItemLabelContent}"    
             >
+                <MenuItem
+                    x:Name="friendsListLabel"
+                    Header="{x:Static p:Resources.friendsListLabelContent}"
+                    Click="OpenFriendsDialogHandler"
+                />
                 <MenuItem
                     Header="{x:Static p:Resources.friendsMenuItemAddFriendLabelContent}"
                     Click="OpenAddFriendDialogHandler"
@@ -280,6 +244,14 @@
                         Content="{x:Static p:Resources.logoutLabelContent}"    
                     />
                 </ComboBox>
+                <materialDesign:PackIcon
+                    Kind="Rectangle"
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                    Width="24"
+                    Height="24"
+                    MouseLeftButtonUp="ToggleFullScreenModeHandler"
+                />
             </StackPanel>
             <!--
                 <TextBlock
@@ -335,79 +307,9 @@
                         </StackPanel>
                         <ScrollViewer>
                             <StackPanel
-                            x:Name="games"
-                            Width="350"
-                        >
-                                <!--
-                                <StackPanel
-                                    x:Name="someGame"
-                                    MouseLeftButtonUp="SelectGameHandler" 
-                                    Orientation="Horizontal"
-                                    Height="35"
-                                    DataContext="Super fighters|https://mythologicinteractive.com/Content/Downloads/Superfighters.exe|https://mythologicinteractive.com/Images/SFDBanner1.png"
-                                >
-                                    <Image
-                                        Margin="5"
-                                        Width="25"
-                                        Height="25"
-                                    >
-                                        <Image.Source>
-                                            <BitmapImage
-                                                UriSource="https://mythologicinteractive.com/Images/SFDBanner1.png"
-                                            />
-                                        </Image.Source>
-                                    </Image>
-                                    <TextBlock
-                                        Margin="5"
-                                        Text="Super fighters"    
-                                    />
-                                </StackPanel>
-                                <StackPanel
-                                    MouseLeftButtonUp="SelectGameHandler" 
-                                    Orientation="Horizontal"
-                                    Height="35"
-                                    DataContext="Barbarian Onslaught|https://mythologicinteractive.com/Content/Downloads/BarbarianOnslaughtTheSecretOfSteel.exe|https://mythologicinteractive.com/Images/Screenshots/BOTSoS/00.png"
-                                >
-                                    <Image
-                                        Margin="5"
-                                        Width="25"
-                                        Height="25"
-                                    >
-                                        <Image.Source>
-                                            <BitmapImage
-                                                UriSource="https://mythologicinteractive.com/Images/Screenshots/BOTSoS/00.png"
-                                            />
-                                        </Image.Source>
-                                    </Image>
-                                    <TextBlock
-                                        Margin="5"
-                                        Text="Barbarian Onslaught"    
-                                    />
-                                </StackPanel>
-                                <StackPanel
-                                    MouseLeftButtonUp="SelectGameHandler" 
-                                    Orientation="Horizontal"
-                                    Height="35"
-                                    DataContext="Barbarian Onslaught The Secret of Steel|https://mythologicinteractive.com/Images/Screenshots/BOTSoS/02.png|https://mythologicinteractive.com/Images/Screenshots/BOTSoS/02.png"
-                                >
-                                    <Image
-                                        Margin="5"
-                                        Width="25"
-                                        Height="25"
-                                    >
-                                        <Image.Source>
-                                            <BitmapImage
-                                                UriSource="https://mythologicinteractive.com/Images/Screenshots/BOTSoS/02.png"
-                                            />
-                                        </Image.Source>
-                                    </Image>
-                                    <TextBlock
-                                        Margin="5"
-                                        Text="Barbarian Onslaught: The Secret of Steel"    
-                                    />
-                                </StackPanel>
-                            -->
-                            </StackPanel>
+                                x:Name="games"
+                                Width="350"
+                            />
                         </ScrollViewer>
                     </DockPanel>
                     <StackPanel
@@ -849,11 +751,6 @@
                                 Text="Лучшие игры по количеству игроков"    
                                 Margin="15"
                             />
-                            <!--
-                            <StackPanel
-                                x:Name="popularGames"    
-                            />
-                            -->
                             <Grid
                                 x:Name="popularGames"
                                 Margin="15"
@@ -887,6 +784,52 @@
                                     Grid.Column="2"
                                     Text="Игра"    
                                 />
+                            </Grid>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <TextBlock
+                                    x:Name="countDownloadsLabel"
+                                    FontSize="18"
+                                    Foreground="AliceBlue"
+                                    Text="Загрузки(0)"    
+                                    Margin="15"
+                                />
+                                    <Separator
+                                    Margin="50 0"
+                                    BorderBrush="Black" 
+                                    BorderThickness="1"
+                                />
+                            </DockPanel>
+                            <Grid
+                                Margin="15"
+                                x:Name="downloads"
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="250"
+                                    />
+                                    <ColumnDefinition
+                                        Width="650"
+                                    />
+                                    <ColumnDefinition
+                                        Width="250"    
+                                    />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions />
                             </Grid>
                         </StackPanel>
                     </DockPanel>

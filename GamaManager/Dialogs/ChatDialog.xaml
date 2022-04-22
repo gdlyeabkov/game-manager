@@ -74,12 +74,12 @@
                                 Margin="15"
                                 Width="35"
                                 Height="35"
-                                DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-21-512.png"
                                 MouseLeftButtonUp="AddEmojiMsgHandler"
                             >
                                 <Image.Source>
                                     <BitmapImage
-                                        UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                        UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-21-512.png"
                                     />
                                 </Image.Source>
                             </Image>

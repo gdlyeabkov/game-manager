@@ -35,6 +35,8 @@ using OxyPlot;
 using OxyPlot.Series;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Collections.Specialized;
+using Sparrow.Chart;
 
 namespace GamaManager
 {
@@ -58,8 +60,7 @@ namespace GamaManager
         public Brush disabledColor;
         public Brush enabledColor;
         public bool isFullScreenMode = false;
-        public PlotModel statsModel { get; private set; }
-
+        
         public MainWindow(string id)
         {
             
@@ -112,11 +113,20 @@ namespace GamaManager
 
         public void SetStatsChart ()
         {
-            statsModel = new PlotModel()
+            
+            Sparrow.Chart.ChartPoint point = new Sparrow.Chart.ChartPoint();
+            PointsCollection points = new PointsCollection();
+            points.Add(new ChartPoint());
+            points.Add(new ChartPoint());
+            points.Add(new ChartPoint());
+            points.Add(new ChartPoint());
+            points.Add(new ChartPoint());
+            var asss = new Sparrow.Chart.AreaSeries()
             {
-                Title = "Example 1"
+                Points = points
             };
-            statsModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
+            chart.Series.Add(asss);
+
         }
 
         public void GetDownloads ()
@@ -167,6 +177,7 @@ namespace GamaManager
                                 {
                                     GameResponseInfo foundedGame = gameResults[0];
                                     string currentGameImg = foundedGame.image;
+                                    // string gameName = foundedGame.name;
                                     dowloadsCursor++;
                                     FileInfo currentGameInfo = new FileInfo(currentGamePath);
                                     long currentGameSize = currentGameInfo.Length;
@@ -180,7 +191,9 @@ namespace GamaManager
                                     int lastRowIndex = rowsCount - 1;
                                     Image downloadImg = new Image();
                                     downloadImg.BeginInit();
-                                    downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
+                                    // downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
+                                    Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                    downloadImg.Source = new BitmapImage();
                                     downloadImg.EndInit();
                                     downloadImg.Margin = new Thickness(15, 0, 15, 0);
                                     downloads.Children.Add(downloadImg);
@@ -512,6 +525,10 @@ namespace GamaManager
 
         public void GetEditInfo ()
         {
+            editProfileAvatarImg.BeginInit();
+            editProfileAvatarImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+            editProfileAvatarImg.EndInit();
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
@@ -956,10 +973,13 @@ namespace GamaManager
                                 return isGameMatch;
                             }).ToList<GameResponseInfo>();
                             int countLoadedGames = loadedGames.Count;
-                            bool isGamesExists = countLoadedGames >= 1;
+                            // bool isGamesExists = countLoadedGames >= 1;
+                            bool isGamesExists = myobj.games.Count >= 1;
                             if (isGamesExists)
                             {
-                                foreach (GameResponseInfo gamesListItem in loadedGames)
+                                activeGame.Visibility = visible;
+                                // foreach (GameResponseInfo gamesListItem in loadedGames)
+                                foreach (GameResponseInfo gamesListItem in myobj.games)
                                 {
                                     StackPanel newGame = new StackPanel();
                                     newGame.MouseLeftButtonUp += SelectGameHandler;
@@ -968,8 +988,10 @@ namespace GamaManager
                                     string gamesListItemId = gamesListItem._id;
                                     Debugger.Log(0, "debug", Environment.NewLine + "gamesListItemId: " + gamesListItemId + Environment.NewLine);
                                     string gamesListItemName = gamesListItem.name;
-                                    string gamesListItemUrl = gamesListItem.url;
-                                    string gamesListItemImage = gamesListItem.image;
+                                    // string gamesListItemUrl = gamesListItem.url;
+                                    string gamesListItemUrl = @"http://localhost:4000/api/game/distributive/?name=" + gamesListItemName;
+                                    // string gamesListItemImage = gamesListItem.image;
+                                    string gamesListItemImage = @"http://localhost:4000/api/game/thumbnail/?name=" + gamesListItemName;
                                     Dictionary<String, Object> newGameData = new Dictionary<String, Object>();
                                     newGameData.Add("id", gamesListItemId);
                                     newGameData.Add("name", gamesListItemName);
@@ -981,28 +1003,40 @@ namespace GamaManager
                                     newGamePhoto.Width = 25;
                                     newGamePhoto.Height = 25;
                                     newGamePhoto.BeginInit();
+                                    // Uri newGamePhotoUri = new Uri(gamesListItemImage);
+                                    // Uri newGamePhotoUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                     Uri newGamePhotoUri = new Uri(gamesListItemImage);
                                     newGamePhoto.Source = new BitmapImage(newGamePhotoUri);
                                     newGamePhoto.EndInit();
                                     newGame.Children.Add(newGamePhoto);
+                                    newGamePhoto.ImageFailed += SetDefaultThumbnailHandler;
                                     TextBlock newGameLabel = new TextBlock();
                                     newGameLabel.Margin = new Thickness(5);
                                     newGameLabel.Text = gamesListItem.name;
                                     newGame.Children.Add(newGameLabel);
                                     games.Children.Add(newGame);
                                 }
-                                GameResponseInfo firstGame = loadedGames[0];
+                                // GameResponseInfo firstGame = loadedGames[0];
+                                GameResponseInfo firstGame = myobj.games[0];
                                 Dictionary<String, Object> firstGameData = new Dictionary<String, Object>();
                                 string firstGameId = firstGame._id;
                                 string firstGameName = firstGame.name;
-                                string firstGameUrl = firstGame.url;
-                                string firstGameImage = firstGame.image;
+                                /*string firstGameUrl = firstGame.url;
+                                string firstGameImage = firstGame.image;*/
+                                string firstGameUrl = @"http://localhost:4000/api/game/distributive/?name=" + firstGameName;
+                                string firstGameImage = @"http://localhost:4000/api/game/thumbnail/?name=" + firstGameName;
+
+
                                 Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
                                 firstGameData.Add("id", firstGameId);
                                 firstGameData.Add("name", firstGameName);
                                 firstGameData.Add("url", firstGameUrl);
                                 firstGameData.Add("image", firstGameImage);
                                 SelectGame(firstGameData);
+                            }
+                            else
+                            {
+                                activeGame.Visibility = invisible;
                             }
                         }
                     }
@@ -1366,6 +1400,12 @@ namespace GamaManager
             string gameUploadedLabelContent = Properties.Resources.gameUploadedLabelContent;
             string attentionLabelContent = Properties.Resources.attentionLabelContent;
             GetDownloads();
+
+            /*ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = filename;
+            startInfo.Arguments = "/D=" + cachePath + " /VERYSILENT";
+            Process.Start(startInfo);*/
+
             MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }
 
@@ -1395,10 +1435,13 @@ namespace GamaManager
             string gameName = ((string)(dataParts["name"]));
             string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));
-            gamePhoto.BeginInit();
-            Uri gameImageUri = new Uri(gameImg);
-            gamePhoto.Source = new BitmapImage(gameImageUri);
-            gamePhoto.EndInit();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // gamePhoto.BeginInit();
+                Uri gameImageUri = new Uri(gameImg);
+                gamePhoto.Source = new BitmapImage(gameImageUri);
+                // gamePhoto.EndInit();
+            });
             bool isGameExists = gameNames.Contains(gameName);
             if (isGameExists)
             {
@@ -2017,38 +2060,37 @@ namespace GamaManager
             string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
             string userAboutBoxContent = userAboutBox.Text;
 
-            //Create form
-            /*HttpClient _httpClient = new HttpClient();
-            var form = new MultipartFormDataContent();
-            byte[] bytefile = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
-            var fileContent = new ByteArrayContent(bytefile);
-            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-            form.Add(fileContent, "img", "avatar.png");
-            var response = await _httpClient.PostAsync("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent, form);
-            response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Debugger.Log(0, "debug", Environment.NewLine + "responseContent: " + responseContent + Environment.NewLine);*/
+            HttpClient httpClient = new HttpClient();
+            MultipartFormDataContent form = new MultipartFormDataContent();
+            // byte[] imagebytearraystring = ImageFileToByteArray(@"C:\Users\ПК\Downloads\a.jpg");
+            ImageSource source = editProfileAvatarImg.Source;
+            BitmapImage bitmapImage = ((BitmapImage)(source));
+            byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
+            form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+            httpClient.Dispose();
+            string sd = response.Content.ReadAsStringAsync().Result;
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(sd, typeof(RegisterResponseInfo));
+            string status = myobj.status;
+            bool isOkStatus = status == "OK";
+            if (isOkStatus)
+            {
+                GetUser(currentUserId);
+                GetUserInfo(currentUserId, true);
+                GetEditInfo();
+                MessageBox.Show("Профиль был обновлен", "Внимание");
+            }
+            else
+            {
+                MessageBox.Show("Не удается обновить профиль", "Ошибка");
+            }
 
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
-            // webRequest.Method = "GET";
+            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
             webRequest.Method = "POST";
             webRequest.ContentType = "multipart/form-data";
             webRequest.UserAgent = ".NET Framework Test Client";
-
-            /*Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            byte[] bytefile = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
-            postParameters.Add("img", new FileParameter(bytefile, "avatar.jpg", "image/jpg"));
-            string formDataBoundary = String.Format("----------{0:N}", Guid.NewGuid());
-            byte[] formData = GetMultipartFormData(postParameters, formDataBoundary);
-            webRequest.ContentLength = formData.Length;*/
-
-            /*var boundary = "-----------------------------28520690214962";
-            Stream reqStream = webRequest.GetRequestStream();
-            StreamWriter reqWriter = new StreamWriter(reqStream);
-            var propFormat = boundary + Environment.NewLine + "Content-Disposition: form-data; name=\"{0}\"" + Environment.NewLine + Environment.NewLine + "{1}" + Environment.NewLine + Environment.NewLine;
-            byte[] bytes = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
-            var tmp = string.Format(propFormat, "img", bytes);
-            reqWriter.Write(tmp);*/
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
             {
                 using (var reader = new StreamReader(webResponse.GetResponseStream()))
@@ -2072,13 +2114,13 @@ namespace GamaManager
                         MessageBox.Show("Не удается редактировать профиль", "Ошибка");
                     }
                 }
-            }
+            }*/
         }
 
-        public byte[] getJPGFromImageControl(BitmapImage imageC)
+        public byte[] getPngFromImageControl(BitmapImage imageC)
         {
             MemoryStream memStream = new MemoryStream();
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(imageC));
             encoder.Save(memStream);
             return memStream.ToArray();
@@ -3050,6 +3092,40 @@ namespace GamaManager
             return formData;
         }
 
+        private void SetDefautAvatarHandler(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image avatar = ((Image)(sender));
+            SetDefautAvatar(avatar);
+        }
+
+        public void SetDefautAvatar (Image avatar)
+        {
+            avatar.BeginInit();
+            avatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+            avatar.EndInit();
+        }
+
+        public void SetDefaultThumbnailHandler(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image avatar = ((Image)(sender));
+            SetDefaultThumbnail(avatar);
+        }
+
+        public void SetDefaultThumbnail(Image avatar)
+        {
+            avatar.BeginInit();
+            avatar.Source = new BitmapImage(new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png"));
+            avatar.EndInit();
+        }
+
+        private byte[] ImageFileToByteArray(string fullFilePath)
+        {
+            FileStream fs = File.OpenRead(fullFilePath);
+            byte[] bytes = new byte[fs.Length];
+            fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+            fs.Close();
+            return bytes;
+        }
 
     }
 

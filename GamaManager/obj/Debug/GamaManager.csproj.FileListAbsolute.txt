@@ -125,3 +125,5 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.Wpf.Shared.dll
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.Wpf.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.Wpf.Shared.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Sparrow.Chart.Wpf.40.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Sparrow.Chart.Wpf.40.xml

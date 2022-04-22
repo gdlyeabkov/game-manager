@@ -60,10 +60,11 @@ namespace GamaManager
         public Brush disabledColor;
         public Brush enabledColor;
         public bool isFullScreenMode = false;
-        
+        public ObservableCollection<Model> Collection { get; set; }
+
         public MainWindow(string id)
         {
-            
+
 
             PreInit(id);
 
@@ -75,7 +76,7 @@ namespace GamaManager
 
         }
 
-        public void PreInit (string id)
+        public void PreInit(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -93,7 +94,7 @@ namespace GamaManager
             }
         }
 
-        public void Initialize (string id)
+        public void Initialize(string id)
         {
             GetUser(id);
             InitConstants();
@@ -111,12 +112,12 @@ namespace GamaManager
             GetScreenShots("", true);
         }
 
-        public void SetStatsChart ()
+        public void SetStatsChart()
         {
-            
-            Sparrow.Chart.ChartPoint point = new Sparrow.Chart.ChartPoint();
+            /*Sparrow.Chart.ChartPoint point = new Sparrow.Chart.ChartPoint();
             PointsCollection points = new PointsCollection();
-            points.Add(new ChartPoint());
+            ChartPoint chartPoint = new ChartPoint();
+            points.Add(chartPoint);
             points.Add(new ChartPoint());
             points.Add(new ChartPoint());
             points.Add(new ChartPoint());
@@ -125,11 +126,24 @@ namespace GamaManager
             {
                 Points = points
             };
-            chart.Series.Add(asss);
+            chartUsersStats.Series.Add(asss);*/
+
+            /*List<CPU> source = new List<CPU>();
+            DateTime dt = DateTime.Now;
+            System.Random rad = new Random(System.DateTime.Now.Millisecond);
+            for (int n = 0; n < 100; n++)
+            {
+                dt = dt.AddSeconds(1);
+                CPU cpu = new CPU(dt, rad.Next(100), 51);
+                source.Add(cpu);
+            }
+            ((Sparrow.Chart.LineSeries)(chartUsersStats.Series[0])).PointsSource = source;*/
+
+            GenerateDatas();
 
         }
 
-        public void GetDownloads ()
+        public void GetDownloads()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -232,9 +246,9 @@ namespace GamaManager
             countDownloadsLabel.Text = "Загрузки (" + dowloadsCursor + ")";
         }
 
-        public void GetOnlineFriends ()
+        public void GetOnlineFriends()
         {
-            
+
             string friendsListLabelHeaderContent = Properties.Resources.friendsListLabelContent;
             string onlineLabelContent = Properties.Resources.onlineLabelContent;
             friendsListLabel.Header = friendsListLabelHeaderContent;
@@ -301,7 +315,7 @@ namespace GamaManager
             }
         }
 
-        public void ResetEditInfoHandler (object sender, RoutedEventArgs e)
+        public void ResetEditInfoHandler(object sender, RoutedEventArgs e)
         {
             GetEditInfo();
         }
@@ -399,7 +413,7 @@ namespace GamaManager
             string time = rawHours + ":" + rawMinutes;
             int day = currentDate.Day;
             string rawDay = day.ToString();
-            List<string>  monthLabels = new List<string>() {
+            List<string> monthLabels = new List<string>() {
                 "января",
                 "февраля",
                 "марта",
@@ -523,7 +537,7 @@ namespace GamaManager
 
         }
 
-        public void GetEditInfo ()
+        public void GetEditInfo()
         {
             editProfileAvatarImg.BeginInit();
             editProfileAvatarImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId));
@@ -584,7 +598,7 @@ namespace GamaManager
             }
         }
 
-        public void GetGamesInfo ()
+        public void GetGamesInfo()
         {
 
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -633,7 +647,7 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo (string id, bool isLocalUser)
+        public void GetUserInfo(string id, bool isLocalUser)
         {
             JavaScriptSerializer js = new JavaScriptSerializer();
             if (isLocalUser)
@@ -666,7 +680,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            User user = myobj.user; 
+                            User user = myobj.user;
                             HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
@@ -714,15 +728,17 @@ namespace GamaManager
             {
                 visibility = Visibility.Visible;
             }
-            else {
+            else
+            {
                 visibility = Visibility.Collapsed;
             }
             userProfileDetails.Visibility = visibility;
         }
 
-        public void GetFriendRequests ()
+        public void GetFriendRequests()
         {
-            try {
+            try
+            {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -807,7 +823,7 @@ namespace GamaManager
                                             acceptActionBtn.Content = "Принять";
                                             string myNewFriendId = myRequest.user;
                                             string myRequestId = myRequest._id;
-                                            Dictionary<String, Object>  acceptActionBtnData = new Dictionary<String, Object>();
+                                            Dictionary<String, Object> acceptActionBtnData = new Dictionary<String, Object>();
                                             acceptActionBtnData.Add("friendId", ((string)(myNewFriendId)));
                                             acceptActionBtnData.Add("requestId", ((string)(myRequestId)));
                                             acceptActionBtnData.Add("request", ((Popup)(friendRequest)));
@@ -850,11 +866,12 @@ namespace GamaManager
             }
         }
 
-        public void GetUser (string userId)
+        public void GetUser(string userId)
         {
             currentUserId = userId;
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
-            try {
+            try
+            {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -905,13 +922,13 @@ namespace GamaManager
             }
         }
 
-        public void CloseManager ()
+        public void CloseManager()
         {
             MessageBox.Show("Не удалось подключиться", "Ошибка");
             this.Close();
         }
 
-        public void InitConstants ()
+        public void InitConstants()
         {
             visible = Visibility.Visible;
             invisible = Visibility.Collapsed;
@@ -921,7 +938,7 @@ namespace GamaManager
             history = new List<int>();
         }
 
-        public void LoadStartWindow ()
+        public void LoadStartWindow()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -931,7 +948,7 @@ namespace GamaManager
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             Settings currentSettings = loadedContent.settings;
             int currentStartWindow = currentSettings.startWindow;
-            
+
             mainControl.SelectedIndex = currentStartWindow;
             AddHistoryRecord();
             arrowBackBtn.Foreground = disabledColor;
@@ -939,7 +956,7 @@ namespace GamaManager
 
         }
 
-        public void GetGamesList (string keywords)
+        public void GetGamesList(string keywords)
         {
             try
             {
@@ -1048,7 +1065,7 @@ namespace GamaManager
             }
         }
 
-        public void InitCache (string id)
+        public void InitCache(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -1100,18 +1117,18 @@ namespace GamaManager
             dialog.Show();
         }
 
-        public void OpenSettingsHandler (object sender, RoutedEventArgs e)
+        public void OpenSettingsHandler(object sender, RoutedEventArgs e)
         {
             OpenSettings();
         }
 
-        public void OpenSettings ()
+        public void OpenSettings()
         {
             Dialogs.SettingsDialog dialog = new Dialogs.SettingsDialog(currentUserId);
             dialog.Show();
         }
 
-        async public void RunGame (string joinedGameName = "")
+        async public void RunGame(string joinedGameName = "")
         {
             StartDetectGameHours();
             GameWindow window = new GameWindow(currentUserId);
@@ -1204,7 +1221,7 @@ namespace GamaManager
             client.EmitAsync("user_is_toggle_status", "played");
         }
 
-        public void StartDetectGameHours ()
+        public void StartDetectGameHours()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromHours(1);
@@ -1213,17 +1230,17 @@ namespace GamaManager
             timerHours = 0;
         }
 
-        public void GameHoursUpdateHandler (object sender, EventArgs e)
+        public void GameHoursUpdateHandler(object sender, EventArgs e)
         {
             timerHours++;
         }
 
-        public void ComputeGameHoursHandler (object sender, EventArgs e)
+        public void ComputeGameHoursHandler(object sender, EventArgs e)
         {
             ComputeGameHours();
         }
 
-        public void ComputeGameHours ()
+        public void ComputeGameHours()
         {
             timer.Stop();
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -1353,8 +1370,8 @@ namespace GamaManager
             gameActionLabel.IsEnabled = false;
         }
 
-        
-        public void GameSuccessDownloaded (string id)
+
+        public void GameSuccessDownloaded(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -1409,7 +1426,7 @@ namespace GamaManager
             MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }
 
-        private void SelectGameHandler (object sender, MouseButtonEventArgs e)
+        private void SelectGameHandler(object sender, MouseButtonEventArgs e)
         {
             StackPanel game = ((StackPanel)(sender));
             object rawGameData = game.DataContext;
@@ -1417,7 +1434,7 @@ namespace GamaManager
             SelectGame(gameData);
         }
 
-        public void SelectGame (Dictionary<String, Object> gameData)
+        public void SelectGame(Dictionary<String, Object> gameData)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -1467,7 +1484,7 @@ namespace GamaManager
             GameAction();
         }
 
-        public void AddUserToGameStats (string gameId)
+        public void AddUserToGameStats(string gameId)
         {
             try
             {
@@ -1487,7 +1504,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            
+
                         }
                     }
                 }
@@ -1515,12 +1532,12 @@ namespace GamaManager
             }
         }
 
-        private void RemoveGameHandler (object sender, RoutedEventArgs e)
+        private void RemoveGameHandler(object sender, RoutedEventArgs e)
         {
             RemoveGame();
         }
 
-        public void RemoveGame ()
+        public void RemoveGame()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -1566,7 +1583,7 @@ namespace GamaManager
             GetGamesList(keywords);
         }
 
-        public void GameDownloadedHandler (object sender, EventArgs e)
+        public void GameDownloadedHandler(object sender, EventArgs e)
         {
             Dialogs.DownloadGameDialog dialog = ((Dialogs.DownloadGameDialog)(sender));
             object dialogData = dialog.DataContext;
@@ -1578,7 +1595,7 @@ namespace GamaManager
             GameDownloaded(status, id);
         }
 
-        public void GameDownloaded (string status, string id)
+        public void GameDownloaded(string status, string id)
         {
             bool isOkStatus = status == "OK";
             if (isOkStatus)
@@ -1589,7 +1606,7 @@ namespace GamaManager
 
         private void UserMenuItemSelectedHandler(object sender, RoutedEventArgs e)
         {
-            ComboBox userMenu =  ((ComboBox)(sender));
+            ComboBox userMenu = ((ComboBox)(sender));
             int userMenuItemIndex = userMenu.SelectedIndex;
             UserMenuItemSelected(userMenuItemIndex);
         }
@@ -1614,12 +1631,12 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void OpenFriendsDialogHandler (object sender, RoutedEventArgs e)
+        private void OpenFriendsDialogHandler(object sender, RoutedEventArgs e)
         {
             OpenFriendsDialog();
         }
 
-        public void OpenFriendsDialog ()
+        public void OpenFriendsDialog()
         {
             Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl);
             dialog.Closed += JoinToGameHandler;
@@ -1638,7 +1655,7 @@ namespace GamaManager
             }
         }
 
-        public void CloseFriendRequestHandler (object sender, RoutedEventArgs e)
+        public void CloseFriendRequestHandler(object sender, RoutedEventArgs e)
         {
             PackIcon btn = ((PackIcon)(sender));
             object btnData = btn.DataContext;
@@ -1646,13 +1663,13 @@ namespace GamaManager
             CloseFriendRequest(request);
         }
 
-            
-        public void CloseFriendRequest (Popup request)
+
+        public void CloseFriendRequest(Popup request)
         {
             friendRequests.Children.Remove(request);
         }
 
-        public void RejectFriendRequestHandler (object sender, RoutedEventArgs e)
+        public void RejectFriendRequestHandler(object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             object rawBtnData = btn.DataContext;
@@ -1663,9 +1680,10 @@ namespace GamaManager
             RejectFriendRequest(friendId, requestId, request);
         }
 
-        public void RejectFriendRequest (string friendId, string requestId, Popup request)
+        public void RejectFriendRequest(string friendId, string requestId, Popup request)
         {
-            try {
+            try
+            {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -1721,7 +1739,7 @@ namespace GamaManager
             }
         }
 
-        public void AcceptFriendRequestHandler (object sender, RoutedEventArgs e)
+        public void AcceptFriendRequestHandler(object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             object rawBtnData = btn.DataContext;
@@ -1732,7 +1750,7 @@ namespace GamaManager
             AcceptFriendRequest(friendId, requestId, request);
         }
 
-        public void AcceptFriendRequest (string friendId, string requestId, Popup request)
+        public void AcceptFriendRequest(string friendId, string requestId, Popup request)
         {
             try
             {
@@ -1819,7 +1837,7 @@ namespace GamaManager
             }
         }
 
-        public CustomPopupPlacement[] FriendRequestPlacementHandler (Size popupSize, Size targetSize, Point offset)
+        public CustomPopupPlacement[] FriendRequestPlacementHandler(Size popupSize, Size targetSize, Point offset)
         {
             return new CustomPopupPlacement[]
             {
@@ -1833,26 +1851,27 @@ namespace GamaManager
             FilterGames();
         }
 
-        public void FilterGames ()
+        public void FilterGames()
         {
             string keywords = keywordsLabel.Text;
             GetGamesList(keywords);
         }
 
-        private void ProfileItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        private void ProfileItemSelectedHandler(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = ((ComboBox)(sender));
             int selectedIndex = comboBox.SelectedIndex;
             ProfileItemSelected(selectedIndex);
         }
 
-        private void ProfileItemSelected (int index)
+        private void ProfileItemSelected(int index)
         {
             if (isAppInit)
             {
                 bool isProfile = index == 2;
                 bool isContent = index == 5;
-                if (isProfile) {
+                if (isProfile)
+                {
                     object mainControlData = mainControl.DataContext;
                     string userId = currentUserId;
                     bool isLocalUser = userId == currentUserId;
@@ -1869,7 +1888,7 @@ namespace GamaManager
             }
         }
 
-        public void AddHistoryRecord ()
+        public void AddHistoryRecord()
         {
             int selectedWindowIndex = mainControl.SelectedIndex;
             historyCursor++;
@@ -1878,14 +1897,14 @@ namespace GamaManager
             arrowForwardBtn.Foreground = disabledColor;
         }
 
-        private void LibraryItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        private void LibraryItemSelectedHandler(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = ((ComboBox)(sender));
             int selectedIndex = comboBox.SelectedIndex;
             LibraryItemSelected(selectedIndex);
         }
 
-        private void LibraryItemSelected (int index)
+        private void LibraryItemSelected(int index)
         {
             bool isHome = index == 1;
             bool isDownloads = index == 3;
@@ -1904,7 +1923,7 @@ namespace GamaManager
             ResetMenu();
         }
 
-        public void ResetMenu ()
+        public void ResetMenu()
         {
             if (isAppInit)
             {
@@ -1915,27 +1934,29 @@ namespace GamaManager
             }
         }
 
-        private void ClientLoadedHandler (object sender, RoutedEventArgs e)
+        private void ClientLoadedHandler(object sender, RoutedEventArgs e)
         {
             ClientLoaded();
         }
 
-        public void ClientLoaded ()
+        public void ClientLoaded()
         {
             isAppInit = true;
             mainControl.DataContext = currentUserId;
             ListenSockets();
             IncreaseUserToStats();
-            
+
             // SetUserStatus("online");
             UpdateUserStatus("online");
 
         }
 
-        public void SetUserStatus (string userStatus)
+        public void SetUserStatus(string userStatus)
         {
-            if (client != null) {
-                try {
+            if (client != null)
+            {
+                try
+                {
                     HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
@@ -1968,7 +1989,7 @@ namespace GamaManager
             }
         }
 
-        public void IncreaseUserToStats ()
+        public void IncreaseUserToStats()
         {
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase");
             webRequest.Method = "GET";
@@ -1999,26 +2020,27 @@ namespace GamaManager
             CommunityItemSelected(selectedIndex);
         }
 
-        public void CommunityItemSelected (int index) {
+        public void CommunityItemSelected(int index)
+        {
             bool isHome = index == 1;
             if (isHome)
             {
                 mainControl.SelectedIndex = 0;
-            
+
                 AddHistoryRecord();
 
             }
             ResetMenu();
         }
 
-        private void StoreItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        private void StoreItemSelectedHandler(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = ((ComboBox)(sender));
             int selectedIndex = comboBox.SelectedIndex;
             StoreItemSelected(selectedIndex);
         }
 
-        public void StoreItemSelected (int index)
+        public void StoreItemSelected(int index)
         {
             bool isGamesStats = index == 6;
             if (isGamesStats)
@@ -2032,23 +2054,23 @@ namespace GamaManager
             ResetMenu();
         }
 
-        private void OpenEditProfileHandler (object sender, RoutedEventArgs e)
+        private void OpenEditProfileHandler(object sender, RoutedEventArgs e)
         {
             OpenEditProfile();
         }
 
-        public void OpenEditProfile ()
+        public void OpenEditProfile()
         {
             mainControl.SelectedIndex = 2;
             AddHistoryRecord();
         }
 
-        private void SaveUserInfoHandler (object sender, RoutedEventArgs e)
+        private void SaveUserInfoHandler(object sender, RoutedEventArgs e)
         {
             SaveUserInfo();
         }
 
-        async public void SaveUserInfo ()
+        async public void SaveUserInfo()
         {
 
             string userNameBoxContent = userNameBox.Text;
@@ -2533,7 +2555,7 @@ namespace GamaManager
                                                                             Application.Current.Dispatcher.Invoke(async () =>
                                                                             {
                                                                                 if (chatId == currentUserId && friendsIds.Contains(userId))
-                                                                                 {
+                                                                                {
                                                                                     Popup friendNotification = new Popup();
                                                                                     friendNotification.DataContext = friend._id;
                                                                                     friendNotification.MouseLeftButtonUp += OpenChatFromPopupHandler;
@@ -2634,22 +2656,22 @@ namespace GamaManager
             Storyboard storyboard = ((Storyboard)(sender));
         }
 
-        private void ClientClosedHandler (object sender, EventArgs e)
+        private void ClientClosedHandler(object sender, EventArgs e)
         {
             ClientClosed();
         }
 
-        public void ClientClosed ()
+        public void ClientClosed()
         {
             DecreaseUserToStats();
-            
+
             // SetUserStatus("offline");
             UpdateUserStatus("offline");
 
             client.EmitAsync("user_is_toggle_status", "offline");
         }
 
-        public void DecreaseUserToStats ()
+        public void DecreaseUserToStats()
         {
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
             webRequest.Method = "GET";
@@ -2673,23 +2695,23 @@ namespace GamaManager
             }
         }
 
-        private void OpenSystemInfoDialogHandler (object sender, RoutedEventArgs e)
+        private void OpenSystemInfoDialogHandler(object sender, RoutedEventArgs e)
         {
             OpenSystemInfoDialog();
         }
 
-        public void OpenSystemInfoDialog ()
+        public void OpenSystemInfoDialog()
         {
             Dialogs.SystemInfoDialog dialog = new Dialogs.SystemInfoDialog();
             dialog.Show();
         }
 
-        private void ToggleWindowHandler (object sender, SelectionChangedEventArgs e)
+        private void ToggleWindowHandler(object sender, SelectionChangedEventArgs e)
         {
             ToggleWindow();
         }
 
-        public void ToggleWindow ()
+        public void ToggleWindow()
         {
             if (isAppInit)
             {
@@ -2706,12 +2728,12 @@ namespace GamaManager
             }
         }
 
-        private void BackForHistoryHandler (object sender, MouseButtonEventArgs e)
+        private void BackForHistoryHandler(object sender, MouseButtonEventArgs e)
         {
             BackForHistory();
         }
 
-        public void BackForHistory ()
+        public void BackForHistory()
         {
             int countHistoryRecords = history.Count;
             bool isBackForHistoryRecords = countHistoryRecords >= 2;
@@ -2734,7 +2756,7 @@ namespace GamaManager
             Debugger.Log(0, "debug", Environment.NewLine + "historyCursor: " + historyCursor.ToString() + ", historyCount: " + history.Count().ToString() + Environment.NewLine);
         }
 
-        private void ForwardForHistoryHandler (object sender, MouseButtonEventArgs e)
+        private void ForwardForHistoryHandler(object sender, MouseButtonEventArgs e)
         {
             ForwardForHistory();
         }
@@ -2763,14 +2785,14 @@ namespace GamaManager
             LoginToAnotherAccount();
         }
 
-        public void LoginToAnotherAccount ()
+        public void LoginToAnotherAccount()
         {
             Dialogs.AcceptExitDialog dialog = new Dialogs.AcceptExitDialog();
             dialog.Closed += AcceptExitDialogHandler;
             dialog.Show();
         }
 
-        public void AcceptExitDialogHandler (object sender, EventArgs e)
+        public void AcceptExitDialogHandler(object sender, EventArgs e)
         {
             Dialogs.AcceptExitDialog dialog = ((Dialogs.AcceptExitDialog)(sender));
             object data = dialog.DataContext;
@@ -2779,7 +2801,7 @@ namespace GamaManager
         }
 
 
-        public void AcceptExitDialog (string dialogData)
+        public void AcceptExitDialog(string dialogData)
         {
             bool isAccept = dialogData == "OK";
             if (isAccept)
@@ -2788,7 +2810,7 @@ namespace GamaManager
             }
         }
 
-        public void Logout ()
+        public void Logout()
         {
             Dialogs.LoginDialog dialog = new Dialogs.LoginDialog();
             dialog.Show();
@@ -2800,13 +2822,13 @@ namespace GamaManager
             OpenPlayer();
         }
 
-        public void OpenPlayer ()
+        public void OpenPlayer()
         {
             Dialogs.PlayerDialog dialog = new Dialogs.PlayerDialog(currentUserId);
             dialog.Show();
         }
-        
-        public void OpenChatFromPopupHandler (object sender, RoutedEventArgs e)
+
+        public void OpenChatFromPopupHandler(object sender, RoutedEventArgs e)
         {
             Popup popup = ((Popup)(sender));
             object popupData = popup.DataContext;
@@ -2814,7 +2836,7 @@ namespace GamaManager
             OpenChatFromPopup(friendId, popup);
         }
 
-        public void OpenChatFromPopup (string id, Popup popup)
+        public void OpenChatFromPopup(string id, Popup popup)
         {
             Application app = Application.Current;
             WindowCollection windows = app.Windows;
@@ -2843,12 +2865,12 @@ namespace GamaManager
             }
         }
 
-        private void ToggleFullScreenModeHandler (object sender, MouseButtonEventArgs e)
+        private void ToggleFullScreenModeHandler(object sender, MouseButtonEventArgs e)
         {
             ToggleFullScreenMode();
         }
 
-        public void ToggleFullScreenMode ()
+        public void ToggleFullScreenMode()
         {
             isFullScreenMode = !isFullScreenMode;
             if (isFullScreenMode)
@@ -2892,18 +2914,18 @@ namespace GamaManager
             }
         }
 
-        private void SetNameOrAvatarHandler (object sender, RoutedEventArgs e)
+        private void SetNameOrAvatarHandler(object sender, RoutedEventArgs e)
         {
             SetNameOrAvatar();
         }
 
-        public void SetNameOrAvatar ()
+        public void SetNameOrAvatar()
         {
             mainControl.SelectedIndex = 2;
             AddHistoryRecord();
         }
 
-        private void UpdateUserStatusHandler (object sender, RoutedEventArgs e)
+        private void UpdateUserStatusHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object data = menuItem.DataContext;
@@ -2911,7 +2933,7 @@ namespace GamaManager
             UpdateUserStatus(status);
         }
 
-        public void UpdateUserStatus (string status)
+        public void UpdateUserStatus(string status)
         {
             bool isOnlineStatus = status == "online";
             bool isOfflineStatus = status == "offline";
@@ -2931,7 +2953,7 @@ namespace GamaManager
             SetUserStatus(status);
         }
 
-        public void GetScreenShots (string filter, bool isInit)
+        public void GetScreenShots(string filter, bool isInit)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -2983,7 +3005,7 @@ namespace GamaManager
             SelectScreenShotsFilter(selectedIndex);
         }
 
-        public void SelectScreenShotsFilter (int selectedIndex)
+        public void SelectScreenShotsFilter(int selectedIndex)
         {
             if (isAppInit)
             {
@@ -3004,7 +3026,7 @@ namespace GamaManager
             }
         }
 
-        private void SetEditProfileTabHandler (object sender, MouseButtonEventArgs e)
+        private void SetEditProfileTabHandler(object sender, MouseButtonEventArgs e)
         {
             StackPanel tab = ((StackPanel)(sender));
             object tabData = tab.DataContext;
@@ -3013,17 +3035,17 @@ namespace GamaManager
             SetEditProfileTabHandler(parsedTabIndex);
         }
 
-        public void SetEditProfileTabHandler (int index)
+        public void SetEditProfileTabHandler(int index)
         {
             editProfileTabControl.SelectedIndex = index;
         }
 
-        private void UploadAvatarHandler (object sender, RoutedEventArgs e)
+        private void UploadAvatarHandler(object sender, RoutedEventArgs e)
         {
             UploadAvatar();
         }
 
-        public void UploadAvatar ()
+        public void UploadAvatar()
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.Title = "Выберите лого";
@@ -3098,7 +3120,7 @@ namespace GamaManager
             SetDefautAvatar(avatar);
         }
 
-        public void SetDefautAvatar (Image avatar)
+        public void SetDefautAvatar(Image avatar)
         {
             avatar.BeginInit();
             avatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
@@ -3125,6 +3147,15 @@ namespace GamaManager
             fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
             fs.Close();
             return bytes;
+        }
+
+        private void GenerateDatas ()
+        {
+            this.Collection = new ObservableCollection<Model>();
+            this.Collection.Add(new Model(10, 1, 5, 4));
+            this.Collection.Add(new Model(10, 1, 5, 4));
+            this.Collection.Add(new Model(10, 1, 5, 4));
+            this.Collection.Add(new Model(10, 1, 5, 4));
         }
 
     }
@@ -3237,6 +3268,58 @@ namespace GamaManager
             File = file;
             FileName = filename;
             ContentType = contenttype;
+        }
+    }
+
+
+    public class CPU
+    {
+        private DateTime time;
+        public DateTime Time
+        {
+            get { return time; }
+            set { time = value; }
+        }
+
+        private double percentage;
+        public double Percentage
+        {
+            get { return percentage; }
+            set { percentage = value; }
+        }
+
+        private double memoryUsage;
+        public double MemoryUsage
+        {
+            get { return memoryUsage; }
+            set { memoryUsage = value; }
+        }
+
+        public CPU()
+        {
+        }
+        public CPU(DateTime time, double percentage, double memoryUsage)
+        {
+            this.Time = time;
+            this.Percentage = percentage;
+            this.MemoryUsage = memoryUsage;
+        }
+
+    }
+
+    public class Model
+    {
+        public double High { get; set; }
+        public double Low { get; set; }
+        public double Open { get; set; }
+        public double Close { get; set; }
+
+        public Model(double high, double low, double open, double close)
+        {
+            High = high;
+            Low = low;
+            Open = open;
+            Close = close;
         }
     }
 

@@ -62,8 +62,8 @@ namespace GamaManager.Dialogs
                                 {
                                     TabItem newGame = new TabItem();
                                     string gamesListItemName = gamesListItem.name;
-                                    string gamesListItemUrl = gamesListItem.url;
-                                    string gamesListItemImage = gamesListItem.image;
+                                    string gamesListItemUrl = @"http://localhost:4000/api/game/distributive/?name=" + gamesListItemName;
+                                    string gamesListItemImage = @"http://localhost:4000/api/game/thumbnail/?name=" + gamesListItemName;
                                     Image newGamePhoto = new Image();
                                     newGamePhoto.Margin = new Thickness(5);
                                     newGamePhoto.Width = 500;

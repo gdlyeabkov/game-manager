@@ -851,16 +851,34 @@
                                 Width="800"
                                 Height="300"
                                 VerticalAlignment="Bottom"
-                                Name="chart"    
+                                x:Name="chartUsersStats"
                             >
+                                <sparrow:SparrowChart.Series>
+                                    <sparrow:LineSeries PointsSource="{Binding Collection}">
+                                    </sparrow:LineSeries>
+                                </sparrow:SparrowChart.Series>
                                 <sparrow:SparrowChart.Legend>
-                                    <sparrow:Legend Header="Пользователи" LegendPosition="Outside" HorizontalAlignment="Right" VerticalAlignment="Top" ShowIcon="True"></sparrow:Legend>
+                                    <sparrow:Legend
+                                        Header="Пользователи"
+                                        LegendPosition="Outside"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        ShowIcon="True"
+                                    />
                                 </sparrow:SparrowChart.Legend>
                                 <sparrow:SparrowChart.XAxis>
-                                    <sparrow:LinearXAxis MinValue="0" MaxValue="10" MajorTicksPosition="Cross"></sparrow:LinearXAxis>
+                                    <sparrow:LinearXAxis
+                                        MinValue="0"
+                                        MaxValue="10"
+                                        MajorTicksPosition="Cross"
+                                    />
                                 </sparrow:SparrowChart.XAxis>
                                 <sparrow:SparrowChart.YAxis>
-                                    <sparrow:LinearYAxis MinValue="0" MaxValue="10" MajorTicksPosition="Cross"></sparrow:LinearYAxis>
+                                    <sparrow:LinearYAxis
+                                        MinValue="0"
+                                        MaxValue="10"
+                                        MajorTicksPosition="Cross"
+                                    />
                                 </sparrow:SparrowChart.YAxis>
                             </sparrow:SparrowChart>
                             <Grid
@@ -974,6 +992,64 @@
                             Margin="175 0"
                             Background="Blue"    
                         >
+                            <sparrow:SparrowChart
+                                Theme="Grayscale"
+                                OverlayMode="SeriesFirst"
+                                Width="800"
+                                Height="300"
+                                VerticalAlignment="Bottom"
+                                x:Name="chartDownloads"
+                            >
+                                <sparrow:SparrowChart.Series>
+                                    <sparrow:LineSeries
+                                        XPath="ad"    
+                                    >
+                                        <sparrow:LineSeries.LinePoints>
+                                            <PointCollection>
+                                                <Point
+                                                    X="0"
+                                                    Y="0"
+                                                />
+                                                <Point
+                                                    X="2"
+                                                    Y="2"
+                                                />
+                                                <Point
+                                                    X="5"
+                                                    Y="2"
+                                                />
+                                                <Point
+                                                    X="2"
+                                                    Y="5"
+                                                />
+                                            </PointCollection>
+                                        </sparrow:LineSeries.LinePoints>
+                                    </sparrow:LineSeries>
+                                </sparrow:SparrowChart.Series>
+                                <sparrow:SparrowChart.Legend>
+                                    <sparrow:Legend
+                                        Header="Пользователи"
+                                        LegendPosition="Outside"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        ShowIcon="True"
+                                    />
+                                </sparrow:SparrowChart.Legend>
+                                <sparrow:SparrowChart.XAxis>
+                                    <sparrow:LinearXAxis
+                                        MinValue="0"
+                                        MaxValue="10"
+                                        MajorTicksPosition="Cross"
+                                    />
+                                </sparrow:SparrowChart.XAxis>
+                                <sparrow:SparrowChart.YAxis>
+                                    <sparrow:LinearYAxis
+                                        MinValue="0"
+                                        MaxValue="10"
+                                        MajorTicksPosition="Cross"
+                                    />
+                                </sparrow:SparrowChart.YAxis>
+                            </sparrow:SparrowChart>
                             <DockPanel>
                                 <TextBlock
                                     x:Name="countDownloadsLabel"

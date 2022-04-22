@@ -16,5 +16,5 @@ C:\wpf_projects\GamaManager\GamaManager\App.xaml
 601912886914
 Dialogs\AcceptExitDialog.xaml;Dialogs\AddFriendDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendNotificationsDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;Dialogs\PlayerDialog.xaml;Dialogs\SettingsDialog.xaml;Dialogs\SystemInfoDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
 
-False
+True
 

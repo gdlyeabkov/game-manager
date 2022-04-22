@@ -33,6 +33,8 @@ using System.Windows.Media.Animation;
 using System.Collections;
 using OxyPlot;
 using OxyPlot.Series;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace GamaManager
 {
@@ -2003,8 +2005,9 @@ namespace GamaManager
             SaveUserInfo();
         }
 
-        public void SaveUserInfo ()
+        async public void SaveUserInfo ()
         {
+
             string userNameBoxContent = userNameBox.Text;
             int selectedCountryIndex = userCountryBox.SelectedIndex;
             ItemCollection userCountryBoxItems = userCountryBox.Items;
@@ -2013,9 +2016,39 @@ namespace GamaManager
             object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
             string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
             string userAboutBoxContent = userAboutBox.Text;
+
+            //Create form
+            /*HttpClient _httpClient = new HttpClient();
+            var form = new MultipartFormDataContent();
+            byte[] bytefile = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
+            var fileContent = new ByteArrayContent(bytefile);
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            form.Add(fileContent, "img", "avatar.png");
+            var response = await _httpClient.PostAsync("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent, form);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            Debugger.Log(0, "debug", Environment.NewLine + "responseContent: " + responseContent + Environment.NewLine);*/
+
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
-            webRequest.Method = "GET";
+            // webRequest.Method = "GET";
+            webRequest.Method = "POST";
+            webRequest.ContentType = "multipart/form-data";
             webRequest.UserAgent = ".NET Framework Test Client";
+
+            /*Dictionary<string, object> postParameters = new Dictionary<string, object>();
+            byte[] bytefile = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
+            postParameters.Add("img", new FileParameter(bytefile, "avatar.jpg", "image/jpg"));
+            string formDataBoundary = String.Format("----------{0:N}", Guid.NewGuid());
+            byte[] formData = GetMultipartFormData(postParameters, formDataBoundary);
+            webRequest.ContentLength = formData.Length;*/
+
+            /*var boundary = "-----------------------------28520690214962";
+            Stream reqStream = webRequest.GetRequestStream();
+            StreamWriter reqWriter = new StreamWriter(reqStream);
+            var propFormat = boundary + Environment.NewLine + "Content-Disposition: form-data; name=\"{0}\"" + Environment.NewLine + Environment.NewLine + "{1}" + Environment.NewLine + Environment.NewLine;
+            byte[] bytes = getJPGFromImageControl(((BitmapImage)(editProfileAvatarImg.Source)));
+            var tmp = string.Format(propFormat, "img", bytes);
+            reqWriter.Write(tmp);*/
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
             {
                 using (var reader = new StreamReader(webResponse.GetResponseStream()))
@@ -2040,6 +2073,15 @@ namespace GamaManager
                     }
                 }
             }
+        }
+
+        public byte[] getJPGFromImageControl(BitmapImage imageC)
+        {
+            MemoryStream memStream = new MemoryStream();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageC));
+            encoder.Save(memStream);
+            return memStream.ToArray();
         }
 
         public async void ListenSockets()
@@ -2920,6 +2962,94 @@ namespace GamaManager
             }
         }
 
+        private void SetEditProfileTabHandler (object sender, MouseButtonEventArgs e)
+        {
+            StackPanel tab = ((StackPanel)(sender));
+            object tabData = tab.DataContext;
+            string tabIndex = tabData.ToString();
+            int parsedTabIndex = Int32.Parse(tabIndex);
+            SetEditProfileTabHandler(parsedTabIndex);
+        }
+
+        public void SetEditProfileTabHandler (int index)
+        {
+            editProfileTabControl.SelectedIndex = index;
+        }
+
+        private void UploadAvatarHandler (object sender, RoutedEventArgs e)
+        {
+            UploadAvatar();
+        }
+
+        public void UploadAvatar ()
+        {
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Title = "Выберите лого";
+            ofd.Filter = "Png documents (.png)|*.png";
+            bool? res = ofd.ShowDialog();
+            bool isOpened = res != false;
+            if (isOpened)
+            {
+                string filePath = ofd.FileName;
+                editProfileAvatarImg.BeginInit();
+                editProfileAvatarImg.Source = new BitmapImage(new Uri(filePath));
+                editProfileAvatarImg.EndInit();
+            }
+        }
+
+        private static byte[] GetMultipartFormData(Dictionary<string, object> postParameters, string boundary)
+        {
+            Stream formDataStream = new System.IO.MemoryStream();
+            bool needsCLRF = false;
+            Encoding encoding = Encoding.UTF8;
+
+            foreach (var param in postParameters)
+            {
+
+                if (needsCLRF)
+                {
+                    formDataStream.Write(encoding.GetBytes("\r\n"), 0, encoding.GetByteCount("\r\n"));
+                }
+                needsCLRF = true;
+
+                if (param.Value is FileParameter) // to check if parameter if of file type
+                {
+                    FileParameter fileToUpload = (FileParameter)param.Value;
+
+                    // Add just the first part of this param, since we will write the file data directly to the Stream
+                    string header = string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"; filename=\"{2}\"\r\nContent-Type: {3}\r\n\r\n",
+                        boundary,
+                        param.Key,
+                        fileToUpload.FileName ?? param.Key,
+                        fileToUpload.ContentType ?? "application/octet-stream");
+
+                    formDataStream.Write(encoding.GetBytes(header), 0, encoding.GetByteCount(header));
+                    // Write the file data directly to the Stream, rather than serializing it to a string.
+                    formDataStream.Write(fileToUpload.File, 0, fileToUpload.File.Length);
+                }
+                else
+                {
+                    string postData = string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}",
+                        boundary,
+                        param.Key,
+                        param.Value);
+                    formDataStream.Write(encoding.GetBytes(postData), 0, encoding.GetByteCount(postData));
+                }
+            }
+
+            // Add the end of the request.  Start with a newline
+            string footer = "\r\n--" + boundary + "--\r\n";
+            formDataStream.Write(encoding.GetBytes(footer), 0, encoding.GetByteCount(footer));
+
+            // Dump the Stream into a byte[]
+            formDataStream.Position = 0;
+            byte[] formData = new byte[formDataStream.Length];
+            formDataStream.Read(formData, 0, formData.Length);
+            formDataStream.Close();
+
+            return formData;
+        }
+
 
     }
 
@@ -3017,6 +3147,21 @@ namespace GamaManager
     {
         public double volume;
         public List<string> paths;
+    }
+
+    public class FileParameter
+    {
+        public byte[] File { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public FileParameter(byte[] file) : this(file, null) { }
+        public FileParameter(byte[] file, string filename) : this(file, filename, null) { }
+        public FileParameter(byte[] file, string filename, string contenttype)
+        {
+            File = file;
+            FileName = filename;
+            ContentType = contenttype;
+        }
     }
 
 }

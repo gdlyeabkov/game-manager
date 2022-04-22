@@ -460,7 +460,6 @@ namespace GamaManager.Dialogs
         {
             try
             {
-
                 try
                 {
                     HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
@@ -577,7 +576,6 @@ namespace GamaManager.Dialogs
             }
         }
 
-
         public void FlashWindow(Window win, UInt32 count = UInt32.MaxValue)
         {
             //Don't flash if the window is active            
@@ -634,6 +632,174 @@ namespace GamaManager.Dialogs
                 client.EmitAsync("user_write_msg", eventData);
             }
             lastInputTimeStamp = currentDateTime;
+        }
+
+        private void ToggleRingHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleRing();
+        }
+
+        public void ToggleRing ()
+        {
+
+        }
+
+        private void AttachFileHandler (object sender, RoutedEventArgs e)
+        {
+            AttachFile();
+        }
+
+        public void AttachFile ()
+        {
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Title = "Выберите лого";
+            ofd.Filter = "Png documents (.png)|*.png";
+            bool? res = ofd.ShowDialog();
+            bool isOpened = res != false;
+            if (isOpened)
+            {
+
+            }
+        }
+
+        private void OpenEmojiPopupHandler (object sender, RoutedEventArgs e)
+        {
+            OpenEmojiPopup();
+        }
+
+        public void OpenEmojiPopup () {
+            emojiPopup.IsOpen = true;
+        }
+
+        private void AddEmojiMsgHandler(object sender, MouseButtonEventArgs e)
+        {
+            Image emoji = ((Image)(sender));
+            object rawEmojiData = emoji.DataContext;
+            string emojiData = rawEmojiData.ToString();
+            AddEmojiMsg(emojiData);
+        }
+
+        async public void AddEmojiMsg (string emojiData)
+        {
+            try
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string objText = innerReader.ReadToEnd();
+
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                User friend = myobj.user;
+                                string friendName = friend.name;
+                                ItemCollection chatControlItems = chatControl.Items;
+                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                object rawActiveChatScrollContent = activeChat.Content;
+                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                StackPanel newMsg = new StackPanel();
+                                StackPanel newMsgHeader = new StackPanel();
+                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                Image newMsgHeaderAvatar = new Image();
+                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgHeaderAvatar.Width = 25;
+                                newMsgHeaderAvatar.Height = 25;
+                                newMsgHeaderAvatar.BeginInit();
+                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                newMsgHeaderAvatar.EndInit();
+                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgFriendNameLabel.Text = friendName;
+                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                TextBlock newMsgDateLabel = new TextBlock();
+                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                DateTime currentDate = DateTime.Now;
+                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                newMsgDateLabel.Text = rawCurrentDate;
+                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                newMsg.Children.Add(newMsgHeader);
+                                Image newMsgLabel = new Image();
+                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                newMsgLabel.Width = 35;
+                                newMsgLabel.Height = 35;
+                                newMsgLabel.BeginInit();
+                                newMsgLabel.Source = new BitmapImage(new Uri(emojiData));
+                                newMsgLabel.EndInit();
+                                inputChatMsgBox.Text = "";
+                                newMsg.Children.Add(newMsgLabel);
+
+                                activeChatContent.Children.Add(newMsg);
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            catch (Exception)
+            {
+                Debugger.Log(0, "debug", "поток занят");
+            }
+            try
+            {
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId);
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+            }
+            catch (InvalidOperationException)
+            {
+                Debugger.Log(0, "debug", "Нельзя отправить повторно");
+            }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + emojiData);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        {
+                            if (isOkStatus)
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
     }

@@ -28,15 +28,88 @@
             >
                 <TextBox
                     x:Name="inputChatMsgBox"    
-                    Width="675"
+                    Width="445"
                     Height="25"
                     TextChanged="InputToChatFieldHandler"
                 />
                 <Button
                     Content="Отправить"
-                    Width="125"
+                    Width="85"
                     Height="25"
                     Click="SendMsgHandler"
+                />
+                <Button
+                    Content="Эмоджи"
+                    Width="85"
+                    Height="25"
+                    Click="OpenEmojiPopupHandler"
+                />
+                <Popup
+                    x:Name="emojiPopup"
+                    Width="225"
+                    Height="75"
+                    IsOpen="False"
+                    Placement="Mouse"
+                    StaysOpen="False"
+                >
+                    <Popup.Child>
+                        <StackPanel
+                            Background="LightGray"
+                            Orientation="Horizontal"    
+                        >
+                            <Image
+                                Margin="15"
+                                Width="35"
+                                Height="35"
+                                DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
+                            >
+                                <Image.Source>
+                                    <BitmapImage
+                                        UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                    />
+                                </Image.Source>
+                            </Image>
+                            <Image
+                                Margin="15"
+                                Width="35"
+                                Height="35"
+                                DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
+                            >
+                                <Image.Source>
+                                    <BitmapImage
+                                        UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                    />
+                                </Image.Source>
+                            </Image>
+                            <Image
+                                Margin="15"
+                                Width="35"
+                                Height="35"
+                                DataContext="https://cdn4.iconfinder.com/data/icons/emoji-18/61/14-512.png"
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
+                            >
+                                <Image.Source>
+                                    <BitmapImage
+                                        UriSource="https://cdn4.iconfinder.com/data/icons/emoji-18/61/14-512.png"
+                                    />
+                                </Image.Source>
+                            </Image>
+                        </StackPanel>
+                    </Popup.Child>
+                </Popup>
+                <Button
+                    Content="Прикрепить"
+                    Width="85"
+                    Height="25"
+                    Click="AttachFileHandler"
+                />
+                <Button
+                    Content="Голосовой чат"
+                    Width="85"
+                    Height="25"
+                    Click="ToggleRingHandler"
                 />
             </StackPanel>
         </StackPanel>

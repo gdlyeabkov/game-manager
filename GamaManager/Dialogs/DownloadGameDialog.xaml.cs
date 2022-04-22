@@ -43,8 +43,9 @@ namespace GamaManager.Dialogs
             downloadedGameId = gameId;
             object rawGameName = dialogData["name"];
             string gameName = ((string)(rawGameName));
-            object rawGameUrl = dialogData["url"];
-            string gameUrl = ((string)(rawGameUrl));
+            /*object rawGameUrl = dialogData["url"];
+            string gameUrl = ((string)(rawGameUrl));*/
+            string gameUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gameName;
 
             Uri uri = new Uri(gameUrl);
             WebClient wc = new WebClient();

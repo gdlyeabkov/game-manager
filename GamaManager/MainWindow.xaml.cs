@@ -2159,8 +2159,7 @@ namespace GamaManager
                  * glitch выдает ошибку с сокетами
                  * client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 */
-                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
-                client = new SocketIO("http://localhost:4000/");
+                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 client.OnConnected += async (sender, e) =>
                 {
                     Debugger.Log(0, "debug", "client socket conntected");

@@ -75,7 +75,7 @@ namespace GamaManager.Dialogs
             try
             {
                 // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
-                client = new SocketIO("http://localhost:4000/");
+                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
                 {
@@ -211,7 +211,7 @@ namespace GamaManager.Dialogs
                                                                     newMsgLabel.Height = 35;
                                                                     newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                                     newMsgLabel.BeginInit();
-                                                                    Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                                    Uri newMsgLabelUri = new Uri("https://digitaldistributtionservice.herokuapp.com/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
                                                                     newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                                     newMsgLabel.EndInit();
                                                                     inputChatMsgBox.Text = "";
@@ -568,16 +568,7 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.Height = 35;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.BeginInit();
-                                                            /*List<Byte> newMsgContentItems = new List<byte>();
-                                                            foreach (string rawNewMsgContentItem in newMsgContent.Split(new char[] { '|' }))
-                                                            {
-                                                                byte newMsgContentItem = Byte.Parse(rawNewMsgContentItem);
-                                                                newMsgContentItems.Add(newMsgContentItem);
-                                                            }
-                                                            newMsgLabel.Source = LoadImage(newMsgContentItems.ToArray());*/
-                                                            // Uri newMsgLabelUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                            // Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + newMsgContent);
-                                                            Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
+                                                            Uri newMsgLabelUri = new Uri("https://digitaldistributtionservice.herokuapp.com/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
                                                             newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                             newMsgLabel.EndInit();
                                                             inputChatMsgBox.Text = "";
@@ -932,16 +923,6 @@ namespace GamaManager.Dialogs
         {
             byte[] rawImage = ImageFileToByteArray(filePath);
             string newMsgContent = "";
-            /*int rawImageItemIndex = -1;
-            foreach (byte rawImageItem in rawImage)
-            {
-                rawImageItemIndex++;
-                newMsgContent += rawImageItem;
-                if (rawImageItemIndex < rawImage.Length - 2)
-                {
-                    newMsgContent += "^";
-                }
-            }*/
             try
             {
                 try
@@ -1026,7 +1007,7 @@ namespace GamaManager.Dialogs
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 byte[] imagebytearraystring = ImageFileToByteArray(filePath);
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock" + System.IO.Path.GetExtension(filePath));
-                string url = @"http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath);
+                string url = @"https://digitaldistributtionservice.herokuapp.com/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath);
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
                 string sd = response.Content.ReadAsStringAsync().Result;

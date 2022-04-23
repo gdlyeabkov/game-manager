@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -402,6 +403,7 @@ namespace GamaManager.Dialogs
                                                     {
                                                         string newMsgType = msg.type;
                                                         string newMsgContent = msg.content;
+                                                        string newMsgId = msg._id;
                                                         bool isTextMsg = newMsgType == "text";
                                                         bool isEmojiMsg = newMsgType == "emoji";
                                                         bool isFileMsg = newMsgType == "file";
@@ -533,13 +535,17 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.Height = 35;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.BeginInit();
-                                                            List<Byte> newMsgContentItems = new List<byte>();
+                                                            /*List<Byte> newMsgContentItems = new List<byte>();
                                                             foreach (string rawNewMsgContentItem in newMsgContent.Split(new char[] { '|' }))
                                                             {
                                                                 byte newMsgContentItem = Byte.Parse(rawNewMsgContentItem);
                                                                 newMsgContentItems.Add(newMsgContentItem);
                                                             }
-                                                            newMsgLabel.Source = LoadImage(newMsgContentItems.ToArray());
+                                                            newMsgLabel.Source = LoadImage(newMsgContentItems.ToArray());*/
+                                                            // Uri newMsgLabelUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            // Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + newMsgContent);
+                                                            Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
+                                                            newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                             newMsgLabel.EndInit();
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
@@ -876,8 +882,8 @@ namespace GamaManager.Dialogs
         public void AttachFile ()
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.Title = "Выберите лого";
-            ofd.Filter = "Png documents (.png)|*.png";
+            ofd.Title = "Выберите изображение";
+            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff";
             bool? res = ofd.ShowDialog();
             bool isOpened = res != false;
             if (isOpened)
@@ -891,16 +897,16 @@ namespace GamaManager.Dialogs
         {
             byte[] rawImage = ImageFileToByteArray(filePath);
             string newMsgContent = "";
-            int rawImageItemIndex = -1;
+            /*int rawImageItemIndex = -1;
             foreach (byte rawImageItem in rawImage)
             {
                 rawImageItemIndex++;
                 newMsgContent += rawImageItem;
                 if (rawImageItemIndex < rawImage.Length - 2)
                 {
-                    newMsgContent += "|";
+                    newMsgContent += "^";
                 }
-            }
+            }*/
             try
             {
                 try
@@ -954,8 +960,14 @@ namespace GamaManager.Dialogs
                                 newMsgHeader.Children.Add(newMsgDateLabel);
                                 newMsg.Children.Add(newMsgHeader);
                                 Image newMsgLabel = new Image();
+                                newMsgLabel.Width = 25;
+                                newMsgLabel.Height = 25;
+                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                 newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                newMsgLabel.BeginInit();
                                 newMsgLabel.Source = new BitmapImage(new Uri(filePath));
+                                newMsgLabel.EndInit();
+                                newMsg.Children.Add(newMsgLabel);
                                 inputChatMsgBox.Text = "";
                                 activeChatContent.Children.Add(newMsg);
                             }
@@ -987,28 +999,14 @@ namespace GamaManager.Dialogs
             try
             {
                 string newMsgType = "file";
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgContent + "&type=" + newMsgType);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        string objText = innerReader.ReadToEnd();
-
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        {
-                            if (isOkStatus)
-                            {
-
-                            }
-                        }
-                    }
-                }
+                HttpClient httpClient = new HttpClient();
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = ImageFileToByteArray(filePath);
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock" + System.IO.Path.GetExtension(filePath));
+                string url = @"http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath);
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                string sd = response.Content.ReadAsStringAsync().Result;
             }
             catch (System.Net.WebException)
             {
@@ -1159,7 +1157,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private byte[] ImageFileToByteArray(string fullFilePath)
+        public byte[] ImageFileToByteArray(string fullFilePath)
         {
             FileStream fs = File.OpenRead(fullFilePath);
             byte[] bytes = new byte[fs.Length];
@@ -1178,6 +1176,7 @@ namespace GamaManager.Dialogs
 
     class Msg
     {
+        public string _id;
         public string user;
         public string friend;
         public string content;

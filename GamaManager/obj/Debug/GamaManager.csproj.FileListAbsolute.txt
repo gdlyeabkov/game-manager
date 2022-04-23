@@ -127,3 +127,17 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.Wpf.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\OxyPlot.Wpf.Shared.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Sparrow.Chart.Wpf.40.dll
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Sparrow.Chart.Wpf.40.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\iConfRTCWinForm.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\iConfRTCWPF.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\RTC.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.DirectShow.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.IceLink.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.IceLink.Simple.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.IceLink.WebRTC.AForge.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.IceLink.WebRTC.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.DirectShow.xml

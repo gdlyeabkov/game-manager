@@ -34,7 +34,7 @@ namespace GamaManager.Dialogs
 
         }
 
-        public void Initialize ()
+        async public void Initialize ()
         {
             object rawDialogData = this.DataContext;
             Dictionary<String, Object> dialogData = ((Dictionary<String, Object>)(rawDialogData));
@@ -55,6 +55,8 @@ namespace GamaManager.Dialogs
             string cachePath = appFolder + gameName;
             Directory.CreateDirectory(cachePath);
             string filename = cachePath + @"\game.exe";
+            wc.Headers.Add("User-Agent: Other");   //that is the simple line!
+            // await wc.DownloadFileTaskAsync(uri, filename);
             wc.DownloadFileAsync(uri, filename);
             wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
@@ -71,13 +73,12 @@ namespace GamaManager.Dialogs
                 gameInstalledProgress.Value = 0;
             }
         }
-        private void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        private void wc_DownloadFileCompleted (object sender, AsyncCompletedEventArgs e)
         {
             Exception downloadError = e.Error;
             bool isErrorsNotFound = downloadError == null;
             if (isErrorsNotFound)
             {
-                // this.DataContext = "OK";
                 Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
                 dialogData.Add("id", downloadedGameId);
                 dialogData.Add("status", "OK");
@@ -89,7 +90,10 @@ namespace GamaManager.Dialogs
                 string uploadGameErrorLabelContent = Properties.Resources.uploadGameErrorLabelContent;
                 string errorLabelContent = Properties.Resources.errorLabelContent;
                 MessageBox.Show(uploadGameErrorLabelContent, errorLabelContent);
-                this.DataContext = "Error";
+                Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                dialogData.Add("id", "0");
+                dialogData.Add("status", "Error");
+                this.DataContext = dialogData;
                 this.Close();
             }
         }

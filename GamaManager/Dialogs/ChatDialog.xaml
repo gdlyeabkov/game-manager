@@ -11,7 +11,9 @@
         Loaded="InitializeHandler"
         GotFocus="StopBlinkWindowHandler"
     >
-    <StackPanel>
+    <StackPanel
+        x:Name="chatContainer"
+    >
         <TabControl
             x:Name="chatControl"    
             Height="375"

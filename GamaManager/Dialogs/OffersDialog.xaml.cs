@@ -61,6 +61,7 @@ namespace GamaManager.Dialogs
                                 foreach (GameResponseInfo gamesListItem in myobj.games)
                                 {
                                     TabItem newGame = new TabItem();
+                                    newGame.Visibility = Visibility.Collapsed;
                                     string gamesListItemName = gamesListItem.name;
                                     string gamesListItemUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gamesListItemName;
                                     string gamesListItemImage = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + gamesListItemName;
@@ -75,6 +76,11 @@ namespace GamaManager.Dialogs
                                     newGame.Content = newGamePhoto;
                                     offersControl.Items.Add(newGame);
                                 }
+                                bool isOnlyOneGame = countLoadedGames == 1;
+                                if (isOnlyOneGame)
+                                {
+                                    nextBtn.IsEnabled = false;
+                                }
                             }
                         }
                     }
@@ -82,7 +88,7 @@ namespace GamaManager.Dialogs
             }
             catch
             {
-
+                this.Close();
             }
         }
 

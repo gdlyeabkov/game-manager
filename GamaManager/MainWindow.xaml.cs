@@ -1138,7 +1138,7 @@ namespace GamaManager
             string gameName = gameNameLabel.Text;
             try
             {
-                await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
+                // await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
             }
             catch (System.Net.WebSockets.WebSocketException)
             {
@@ -1373,7 +1373,7 @@ namespace GamaManager
         }
 
 
-        public void GameSuccessDownloaded(string id)
+        public void GameSuccessDownloaded (string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -1412,7 +1412,7 @@ namespace GamaManager
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
-            gameActionLabel.IsEnabled = true;
+            // gameActionLabel.IsEnabled = true;
             removeGameBtn.Visibility = visible;
             string gamePath = ((string)(gameNameLabel.DataContext));
             gameActionLabel.DataContext = filename;
@@ -1604,6 +1604,7 @@ namespace GamaManager
             {
                 GameSuccessDownloaded(id);
             }
+            gameActionLabel.IsEnabled = true;
         }
 
         private void UserMenuItemSelectedHandler(object sender, RoutedEventArgs e)
@@ -2154,7 +2155,12 @@ namespace GamaManager
         {
             try
             {
-                client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                /*
+                 * glitch выдает ошибку с сокетами
+                 * client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                */
+                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
+                client = new SocketIO("http://localhost:4000/");
                 client.OnConnected += async (sender, e) =>
                 {
                     Debugger.Log(0, "debug", "client socket conntected");

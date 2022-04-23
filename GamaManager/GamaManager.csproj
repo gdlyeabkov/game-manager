@@ -40,11 +40,41 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.2.2.0\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.0.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Video.2.2.0\lib\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow, Version=2.2.0.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Video.DirectShow.2.2.0\lib\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
     <Reference Include="Cake.Powershell, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Cake.Powershell.1.0.1\lib\net46\Cake.Powershell.dll</HintPath>
     </Reference>
     <Reference Include="DotNetProjects.DataVisualization.Toolkit, Version=6.1.94.0, Culture=neutral, PublicKeyToken=79778c5f2eed289b, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetProjects.WpfToolkit.DataVisualization.6.1.94\lib\net40\DotNetProjects.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="FM, Version=2.0.0.5, Culture=neutral, PublicKeyToken=5d9b678c7ad6da32, processorArchitecture=MSIL">
+      <HintPath>..\packages\FM.2.0.0.5\lib\net40\FM.dll</HintPath>
+    </Reference>
+    <Reference Include="FM.IceLink, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3d875ad72cbda3e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\FM.IceLink.2.2.0\lib\net45\FM.IceLink.dll</HintPath>
+    </Reference>
+    <Reference Include="FM.IceLink.Simple, Version=2.9.32.0, Culture=neutral, PublicKeyToken=be2ad24fd77899bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\FM.IceLink.Simple.2.9.32\lib\net45\FM.IceLink.Simple.dll</HintPath>
+    </Reference>
+    <Reference Include="FM.IceLink.WebRTC, Version=2.2.0.0, Culture=neutral, PublicKeyToken=f0ff3cecc9278ef2, processorArchitecture=MSIL">
+      <HintPath>..\packages\FM.IceLink.WebRTC.2.2.0\lib\net45\FM.IceLink.WebRTC.dll</HintPath>
+    </Reference>
+    <Reference Include="FM.IceLink.WebRTC.AForge, Version=2.9.32.0, Culture=neutral, PublicKeyToken=be2ad24fd77899bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\FM.IceLink.WebRTC.AForge.2.9.32\lib\net45\FM.IceLink.WebRTC.AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="iConfRTCWinForm, Version=1.0.1.55, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=AMD64">
+      <HintPath>..\packages\iConfRTC.WPF.X64.1.0.1.55\lib\iConfRTCWinForm.dll</HintPath>
+    </Reference>
+    <Reference Include="iConfRTCWPF, Version=1.0.1.18, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=AMD64">
+      <HintPath>..\packages\iConfRTC.WPF.X64.1.0.1.55\lib\iConfRTCWPF.dll</HintPath>
     </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
@@ -98,6 +128,9 @@
       <HintPath>..\packages\OxyPlot.Wpf.Shared.2.1.0\lib\net45\OxyPlot.Wpf.Shared.dll</HintPath>
     </Reference>
     <Reference Include="ReachFramework" />
+    <Reference Include="RTC, Version=1.0.1.18, Culture=neutral, PublicKeyToken=4300bc540bfb680e, processorArchitecture=AMD64">
+      <HintPath>..\packages\iConfRTC.WPF.X64.1.0.1.55\lib\RTC.dll</HintPath>
+    </Reference>
     <Reference Include="SocketIOClient, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c9a3629195a82104, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIOClient.3.0.0\lib\netstandard2.0\SocketIOClient.dll</HintPath>
     </Reference>

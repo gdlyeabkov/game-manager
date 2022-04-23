@@ -1,4 +1,6 @@
-﻿using SocketIOClient;
+﻿using AVSPEED;
+using NAudio.Wave;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,6 +35,10 @@ namespace GamaManager.Dialogs
         public string friendId;
         public bool isStartBlink;
         public DateTime lastInputTimeStamp;
+        public bool isStartRing = false;
+        public WaveIn waveSource;
+        public WaveFileWriter waveFile;
+        // public RTCControl rtcControl = null;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -67,7 +73,8 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                client = new SocketIO("http://localhost:4000/");
                 await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
                 {
@@ -397,6 +404,7 @@ namespace GamaManager.Dialogs
                                                         string newMsgContent = msg.content;
                                                         bool isTextMsg = newMsgType == "text";
                                                         bool isEmojiMsg = newMsgType == "emoji";
+                                                        bool isFileMsg = newMsgType == "file";
                                                         if (isTextMsg)
                                                         {
                                                             User friend = myobj.user;
@@ -485,6 +493,58 @@ namespace GamaManager.Dialogs
                                                             newMsg.Children.Add(newMsgLabel);
                                                             activeChatContent.Children.Add(newMsg);
                                                         }
+                                                        else if (isFileMsg)
+                                                        {
+                                                            User friend = myobj.user;
+                                                            string friendName = friend.name;
+                                                            ItemCollection chatControlItems = chatControl.Items;
+                                                            object rawActiveChat = chatControlItems[activeChatIndex];
+                                                            TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                            object rawActiveChatScrollContent = activeChat.Content;
+                                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                            object rawActiveChatContent = activeChatScrollContent.Content;
+                                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                                            StackPanel newMsg = new StackPanel();
+                                                            StackPanel newMsgHeader = new StackPanel();
+                                                            newMsgHeader.Orientation = Orientation.Horizontal;
+                                                            Image newMsgHeaderAvatar = new Image();
+                                                            newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                            newMsgHeaderAvatar.Width = 25;
+                                                            newMsgHeaderAvatar.Height = 25;
+                                                            newMsgHeaderAvatar.BeginInit();
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                            newMsgHeaderAvatar.EndInit();
+                                                            newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                            TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                            newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                            newMsgFriendNameLabel.Text = friendName;
+                                                            newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                            TextBlock newMsgDateLabel = new TextBlock();
+                                                            newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                            DateTime currentDate = DateTime.Now;
+                                                            string rawCurrentDate = currentDate.ToLongTimeString();
+                                                            newMsgDateLabel.Text = rawCurrentDate;
+                                                            newMsgHeader.Children.Add(newMsgDateLabel);
+                                                            newMsg.Children.Add(newMsgHeader);
+                                                            Image newMsgLabel = new Image();
+                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                            newMsgLabel.Width = 35;
+                                                            newMsgLabel.Height = 35;
+                                                            newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                            newMsgLabel.BeginInit();
+                                                            List<Byte> newMsgContentItems = new List<byte>();
+                                                            foreach (string rawNewMsgContentItem in newMsgContent.Split(new char[] { '|' }))
+                                                            {
+                                                                byte newMsgContentItem = Byte.Parse(rawNewMsgContentItem);
+                                                                newMsgContentItems.Add(newMsgContentItem);
+                                                            }
+                                                            newMsgLabel.Source = LoadImage(newMsgContentItems.ToArray());
+                                                            newMsgLabel.EndInit();
+                                                            inputChatMsgBox.Text = "";
+                                                            newMsg.Children.Add(newMsgLabel);
+                                                            activeChatContent.Children.Add(newMsg);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -508,7 +568,25 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
         }
-        
+
+        private BitmapImage LoadImage(byte[] imageData)
+        {
+            if (imageData == null || imageData.Length == 0) return null;
+            var image = new BitmapImage();
+            using (var mem = new MemoryStream(imageData))
+            {
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+            image.Freeze();
+            return image;
+        }
+
         async public void SendMsg (string newMsgContent)
         {
             try
@@ -690,11 +768,103 @@ namespace GamaManager.Dialogs
 
         private void ToggleRingHandler (object sender, RoutedEventArgs e)
         {
-            ToggleRing();
+            Button btn = ((Button)(sender));
+            ToggleRing(btn);
         }
 
-        public void ToggleRing ()
+        async public void ToggleRing (Button btn)
         {
+            isStartRing = !isStartRing;
+            if (isStartRing)
+            {
+                waveSource = new WaveIn();
+                waveSource.WaveFormat = new WaveFormat(44100, 1);
+                waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(MicroDataAvailableHandler);
+                waveSource.RecordingStopped += new EventHandler<StoppedEventArgs>(MicroRecordingStoppedHandler);
+
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string tempRecordFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\record.wav";
+
+                waveFile = new WaveFileWriter(tempRecordFilePath, waveSource.WaveFormat);
+                waveSource.StartRecording();
+
+                btn.Content = "Остановить голосовой чат";
+
+            }
+            else
+            {
+
+                waveSource.StopRecording();
+            
+                btn.Content = "Начать голосовой чат";
+            
+            }
+        }
+
+        public void MicroDataAvailableHandler (object sender, WaveInEventArgs e)
+        {
+            byte[] buffer = e.Buffer;
+            int recordedBytes = e.BytesRecorded;
+            MicroDataAvailable(buffer, recordedBytes);
+        }
+
+        public void MicroDataAvailable (byte[] buffer, int recordedBytes)
+        {
+            if (waveFile != null)
+            {
+                waveFile.Write(buffer, 0, recordedBytes);
+                waveFile.Flush();
+
+                /*string rawBuffer = "";
+                foreach (byte someByte in buffer) {
+                    string rawByte = someByte.ToString();
+                    rawBuffer += rawByte;
+                }
+                string rawRecordedBytes = recordedBytes.ToString();
+                string eventData = currentUserId + "|" + this.friendId + "|" + rawBuffer + "|" + rawRecordedBytes;
+                client.EmitAsync("user_is_speak", eventData);*/
+
+            }
+        }
+
+        public void MicroRecordingStoppedHandler (object sender, StoppedEventArgs e)
+        {
+            MicroRecordingStopped();
+        }
+
+        public void MicroRecordingStopped ()
+        {
+            if (waveSource != null)
+            {
+                waveSource.Dispose();
+                waveSource = null;
+            }
+
+            if (waveFile != null)
+            {
+                waveFile.Dispose();
+                waveFile = null;
+            }
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string tempRecordFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\record.wav";
+            WaveFileReader waveFileReader = new WaveFileReader(tempRecordFilePath);
+            IWavePlayer player = new WaveOut(WaveCallbackInfo.FunctionCallback());
+            player.Volume = 1.0f;
+            player.Init(waveFileReader);
+            player.Play();
+            while (true)
+            {
+                if (player.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
+                {
+                    player.Dispose();
+                    waveFileReader.Close();
+                    waveFileReader.Dispose();
+                    break;
+                }
+            };
 
         }
 
@@ -712,7 +882,138 @@ namespace GamaManager.Dialogs
             bool isOpened = res != false;
             if (isOpened)
             {
+                string filePath = ofd.FileName;
+                SendFileMsg(filePath);
+            }
+        }
 
+        async public void SendFileMsg (string filePath)
+        {
+            byte[] rawImage = ImageFileToByteArray(filePath);
+            string newMsgContent = "";
+            int rawImageItemIndex = -1;
+            foreach (byte rawImageItem in rawImage)
+            {
+                rawImageItemIndex++;
+                newMsgContent += rawImageItem;
+                if (rawImageItemIndex < rawImage.Length - 2)
+                {
+                    newMsgContent += "|";
+                }
+            }
+            try
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string objText = innerReader.ReadToEnd();
+
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                User friend = myobj.user;
+                                string friendName = friend.name;
+                                ItemCollection chatControlItems = chatControl.Items;
+                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                object rawActiveChatScrollContent = activeChat.Content;
+                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                StackPanel newMsg = new StackPanel();
+                                StackPanel newMsgHeader = new StackPanel();
+                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                Image newMsgHeaderAvatar = new Image();
+                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgHeaderAvatar.Width = 25;
+                                newMsgHeaderAvatar.Height = 25;
+                                newMsgHeaderAvatar.BeginInit();
+                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                newMsgHeaderAvatar.EndInit();
+                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newMsgFriendNameLabel.Text = friendName;
+                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                TextBlock newMsgDateLabel = new TextBlock();
+                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                DateTime currentDate = DateTime.Now;
+                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                newMsgDateLabel.Text = rawCurrentDate;
+                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                newMsg.Children.Add(newMsgHeader);
+                                Image newMsgLabel = new Image();
+                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                newMsgLabel.Source = new BitmapImage(new Uri(filePath));
+                                inputChatMsgBox.Text = "";
+                                activeChatContent.Children.Add(newMsg);
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            catch (Exception)
+            {
+                Debugger.Log(0, "debug", "поток занят");
+            }
+            try
+            {
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId);
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+            }
+            catch (InvalidOperationException)
+            {
+                Debugger.Log(0, "debug", "Нельзя отправить повторно");
+            }
+            try
+            {
+                string newMsgType = "file";
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgContent + "&type=" + newMsgType);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        {
+                            if (isOkStatus)
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -856,6 +1157,15 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        private byte[] ImageFileToByteArray(string fullFilePath)
+        {
+            FileStream fs = File.OpenRead(fullFilePath);
+            byte[] bytes = new byte[fs.Length];
+            fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+            fs.Close();
+            return bytes;
         }
 
     }

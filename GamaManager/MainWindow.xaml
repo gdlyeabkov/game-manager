@@ -1229,16 +1229,41 @@
                                         Margin="25"    
                                     >
                                         <TextBlock
-                                            Text="Форумы Steam"
+                                            FontSize="20"
+                                            Margin="0 25"
+                                            Text="Форумы Office ware game manager"
                                         />
                                         <Grid
                                             x:Name="forums"    
                                         >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
+                                                <ColumnDefinition
+                                                    Width="225"    
+                                                />
+                                                <ColumnDefinition
+                                                    Width="225"    
+                                                />
                                             </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition
+                                                    Height="50"    
+                                                />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                Text="Форум"  
+                                            />
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="1"                                                Text="Последнее сообщение"    
+                                            />
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="2"
+                                                Text="Обсуждения"    
+                                            />
                                         </Grid>
                                     </StackPanel>
                                 </TabItem>
@@ -1383,11 +1408,92 @@
                                         <StackPanel
                                             x:Name="forumTopicMsgs"    
                                         />
-                                        <StackPanel>
-                                            <TextBox
-                                                x:Name="forumTopicMsgBox"  
-                                                Margin="5"
+                                        <DockPanel>
+                                            <TextBlock
+                                                DockPanel.Dock="Left"
+                                                Text="Сообщения 0 из 0"
+                                                Margin="10 0"
                                             />
+                                            <StackPanel
+                                                Margin="15 0"
+                                                HorizontalAlignment="Right"
+                                                DockPanel.Dock="Right"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Kind="ArrowBack"    
+                                                />
+                                                <TextBlock
+                                                    Text="1"
+                                                    Margin="10 0"
+                                                />
+                                                <TextBlock
+                                                    Text="2"
+                                                    Margin="10 0"
+                                                />
+                                                <TextBlock
+                                                    Text="3"
+                                                    Margin="10 0"
+                                                />
+                                                <TextBlock
+                                                    Text="4"
+                                                    Margin="10 0"
+                                                />
+                                                <TextBlock
+                                                    Text="5"
+                                                    Margin="10 0"
+                                                />
+                                                <materialDesign:PackIcon
+                                                    Kind="ArrowForward"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <StackPanel
+                                            Margin="0 15"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                Text="Показывать на странице"
+                                                Margin="10 0"
+                                            />
+                                            <TextBlock
+                                                Text="15"
+                                                Margin="10 0"
+                                            />
+                                            <TextBlock
+                                                Text="30"
+                                                Margin="10 0"
+                                            />
+                                            <TextBlock
+                                                Text="50"
+                                                Margin="10 0"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Background="LightGray"    
+                                        >
+                                            <DockPanel>
+                                                <TextBox
+                                                    x:Name="forumTopicMsgBox"  
+                                                    DockPanel.Dock="Right"
+                                                    Margin="5"
+                                                    Height="50"
+                                                    Width="650"
+                                                />
+                                                <Image
+                                                    DockPanel.Dock="Left"
+                                                    Margin="15"
+                                                    Width="35"    
+                                                    Height="35"    
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                            </DockPanel>
                                             <Button
                                                 x:Name="addDiscussionMsgBtn"
                                                 Width="125"

@@ -117,28 +117,36 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
-                innerWebRequest.Method = "GET";
-                innerWebRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
                     using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         ForumsListResponseInfo myobj = (ForumsListResponseInfo)js.Deserialize(objText, typeof(ForumsListResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            for (int i = 0; i < forums.Children.Count;  i++) {
+                                UIElement element = forums.Children[i];
+                                int row = Grid.GetRow(element);
+                                bool isForumItemElement = row >= 1;
+                                if (isForumItemElement)
+                                {
+                                    forums.Children.Remove(element);
+                                }
+                            }
                             List<Forum> forumsList = myobj.forums;
                             foreach (Forum forumsListItem in forumsList)
                             {
                                 string forumId = forumsListItem._id;
                                 string forumTitle = forumsListItem.title;
                                 RowDefinition row = new RowDefinition();
+                                row.Height = new GridLength(50);
                                 forums.RowDefinitions.Add(row);
                                 RowDefinitionCollection rows = forums.RowDefinitions;
                                 int countRows = rows.Count;
@@ -152,11 +160,105 @@ namespace GamaManager
                                 forumNameLabel.MouseLeftButtonUp += SelectForumHandler;
                                 TextBlock forumLastMsgDateLabel = new TextBlock();
                                 forumLastMsgDateLabel.Text = "00/00/00";
+
+                                List<ForumTopicMsg> totalForumMsgs = new List<ForumTopicMsg>();
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        ForumTopicsResponseInfo myInnerObj = (ForumTopicsResponseInfo)js.Deserialize(objText, typeof(ForumTopicsResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<Topic> topics = myInnerObj.topics;
+                                            foreach (Topic topic in topics)
+                                            {
+                                                string topicId = topic._id;
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                                nestedWebRequest.Method = "GET";
+                                                nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                {
+                                                    using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = nestedReader.ReadToEnd();
+                                                        ForumTopicMsgsResponseInfo myNestedObj = (ForumTopicMsgsResponseInfo)js.Deserialize(objText, typeof(ForumTopicMsgsResponseInfo));
+                                                        status = myNestedObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<ForumTopicMsg> msgs = myNestedObj.msgs;
+                                                            foreach (ForumTopicMsg msg in msgs)
+                                                            {
+                                                                totalForumMsgs.Add(msg);
+                                                            }        
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                int countTotalForumMsgs = totalForumMsgs.Count;
+                                bool isMultipleMsgs = countTotalForumMsgs >= 2;
+                                bool isOnlyOneMsg = countTotalForumMsgs == 1;
+                                if (isMultipleMsgs)
+                                {
+                                    IEnumerable<ForumTopicMsg> orderedMsgs = totalForumMsgs.OrderBy((ForumTopicMsg localMsg) => localMsg.date);
+                                    List<ForumTopicMsg> orderedMsgsList = orderedMsgs.ToList<ForumTopicMsg>();
+                                    int countMsgs = orderedMsgsList.Count;
+                                    int lastMsgIndex = countMsgs - 1;
+                                    ForumTopicMsg msg = orderedMsgsList[lastMsgIndex];
+                                    DateTime msgDate = msg.date;
+                                    string parsedMsgDate = msgDate.ToLongDateString();
+                                    forumLastMsgDateLabel.Text = parsedMsgDate;
+                                }
+                                else if (isOnlyOneMsg)
+                                {
+                                    IEnumerable<ForumTopicMsg> orderedMsgs = totalForumMsgs.OrderBy((ForumTopicMsg localMsg) => localMsg.date);
+                                    List<ForumTopicMsg> orderedMsgsList = orderedMsgs.ToList<ForumTopicMsg>();
+                                    ForumTopicMsg msg = orderedMsgsList[0];
+                                    DateTime msgDate = msg.date;
+                                    string parsedMsgDate = msgDate.ToLongDateString();
+                                    forumLastMsgDateLabel.Text = parsedMsgDate;
+                                }
+                                else
+                                {
+                                    forumLastMsgDateLabel.Text = "---";
+                                }
+
                                 forums.Children.Add(forumLastMsgDateLabel);
                                 Grid.SetRow(forumLastMsgDateLabel, lastRowIndex);
                                 Grid.SetColumn(forumLastMsgDateLabel, 1);
                                 TextBlock forumDiscussionsCountLabel = new TextBlock();
-                                forumDiscussionsCountLabel.Text = "0";
+                                innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        ForumTopicsResponseInfo myInnerObj = (ForumTopicsResponseInfo)js.Deserialize(objText, typeof(ForumTopicsResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<Topic> topics = myInnerObj.topics;
+                                            int countTopics = topics.Count;
+                                            string rawCountTopics = countTopics.ToString();
+                                            forumDiscussionsCountLabel.Text = rawCountTopics;
+                                        }
+                                    }
+                                }
                                 forums.Children.Add(forumDiscussionsCountLabel);
                                 Grid.SetRow(forumDiscussionsCountLabel, lastRowIndex);
                                 Grid.SetColumn(forumDiscussionsCountLabel, 2);
@@ -221,10 +323,46 @@ namespace GamaManager
                                         List<ForumTopicMsg> msgs = myInnerObj.msgs;
                                         foreach (ForumTopicMsg msg in msgs)
                                         {
+                                            StackPanel forumTopicMsg = new StackPanel();
+                                            forumTopicMsg.Background = System.Windows.Media.Brushes.LightGray;
+                                            forumTopicMsg.Margin = new Thickness(10);
+                                            StackPanel msgHeader = new StackPanel();
+                                            msgHeader.Orientation = Orientation.Horizontal;
+                                            Image msgHeaderUserAvatar = new Image();
+                                            msgHeaderUserAvatar.Margin = new Thickness(10, 0, 10, 0);
+                                            msgHeaderUserAvatar.Width = 25;
+                                            msgHeaderUserAvatar.Height = 25;
+                                            msgHeaderUserAvatar.BeginInit();
+                                            msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                            msgHeaderUserAvatar.EndInit();
+                                            msgHeader.Children.Add(msgHeaderUserAvatar);
+                                            TextBlock msgHeaderUserNameLabel = new TextBlock();
+                                            msgHeaderUserNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                            msgHeaderUserNameLabel.Text = "Пользователь";
+                                            msgHeader.Children.Add(msgHeaderUserNameLabel);
+                                            TextBlock msgHeaderDateLabel = new TextBlock();
+                                            msgHeaderDateLabel.Margin = new Thickness(10, 0, 10, 0);
+                                            msgHeaderDateLabel.Text = "00/00/00";
+                                            msgHeader.Children.Add(msgHeaderDateLabel);
+                                            forumTopicMsg.Children.Add(msgHeader);
                                             string msgContent = msg.content;
                                             TextBlock msgContentLabel = new TextBlock();
+                                            msgContentLabel.Margin = new Thickness(10);
                                             msgContentLabel.Text = msgContent;
-                                            forumTopicMsgs.Children.Add(msgContentLabel);
+                                            forumTopicMsg.Children.Add(msgContentLabel);
+                                            StackPanel msgFooter = new StackPanel();
+                                            msgFooter.Orientation = Orientation.Horizontal;
+                                            TextBlock msgFooterEditLabel = new TextBlock();
+                                            msgFooterEditLabel.Margin = new Thickness(10, 0, 10, 0);
+                                            msgFooterEditLabel.Text = "Отредактировано пользователем 00/00/0000";
+                                            msgFooter.Children.Add(msgFooterEditLabel);
+                                            TextBlock msgFooterNumberLabel = new TextBlock();
+                                            msgFooterNumberLabel.Margin = new Thickness(10, 0, 10, 0);
+                                            msgFooterNumberLabel.TextAlignment = TextAlignment.Right;
+                                            msgFooterNumberLabel.Text = "#1";
+                                            msgFooter.Children.Add(msgFooterNumberLabel);
+                                            forumTopicMsg.Children.Add(msgFooter);
+                                            forumTopicMsgs.Children.Add(forumTopicMsg);
                                         }
                                     }
                                 }
@@ -292,6 +430,7 @@ namespace GamaManager
                                             string topicId = topic._id;
                                             string topicTitle = topic.title;
                                             RowDefinition row = new RowDefinition();
+                                            row.Height = new GridLength(50);
                                             forumTopics.RowDefinitions.Add(row);
                                             RowDefinitionCollection rows = forums.RowDefinitions;
                                             int countRows = rows.Count;
@@ -309,7 +448,54 @@ namespace GamaManager
                                             Grid.SetRow(topicLastMsgDateLabel, lastRowIndex);
                                             Grid.SetColumn(topicLastMsgDateLabel, 1);
                                             TextBlock forumMsgsCountLabel = new TextBlock();
-                                            forumMsgsCountLabel.Text = "0";
+
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    ForumTopicMsgsResponseInfo myNestedObj = (ForumTopicMsgsResponseInfo)js.Deserialize(objText, typeof(ForumTopicMsgsResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        List<ForumTopicMsg> msgs = myNestedObj.msgs;
+                                                        int countMsgs = msgs.Count;
+                                                        string rawCountMsgs = countMsgs.ToString();
+                                                        forumMsgsCountLabel.Text = rawCountMsgs;
+                                                        bool isMultipleMsgs = countMsgs >= 2;
+                                                        bool isOnlyOneMsg = countMsgs == 1;
+                                                        if (isMultipleMsgs)
+                                                        {
+                                                            IEnumerable<ForumTopicMsg> orderedMsgs = msgs.OrderBy((ForumTopicMsg localMsg) => localMsg.date);
+                                                            List<ForumTopicMsg> orderedMsgsList = orderedMsgs.ToList<ForumTopicMsg>();
+                                                            int lastMsgIndex = countMsgs - 1;
+                                                            ForumTopicMsg msg = orderedMsgsList[lastMsgIndex];
+                                                            DateTime msgDate = msg.date;
+                                                            string parsedMsgDate = msgDate.ToLongDateString();
+                                                            topicLastMsgDateLabel.Text = parsedMsgDate;
+                                                        }
+                                                        else if (isOnlyOneMsg)
+                                                        {
+                                                            IEnumerable<ForumTopicMsg> orderedMsgs = msgs.OrderBy((ForumTopicMsg localMsg) => localMsg.date);
+                                                            List<ForumTopicMsg> orderedMsgsList = orderedMsgs.ToList<ForumTopicMsg>();
+                                                            ForumTopicMsg msg = orderedMsgsList[0];
+                                                            DateTime msgDate = msg.date;
+                                                            string parsedMsgDate = msgDate.ToLongDateString();
+                                                            topicLastMsgDateLabel.Text = parsedMsgDate;
+                                                        }
+                                                        else
+                                                        {
+                                                            topicLastMsgDateLabel.Text = "---";
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                             forumTopics.Children.Add(forumMsgsCountLabel);
                                             Grid.SetRow(forumMsgsCountLabel, lastRowIndex);
                                             Grid.SetColumn(forumMsgsCountLabel, 2);
@@ -3685,6 +3871,7 @@ namespace GamaManager
         public string _id;
         public string content;
         public string topic;
+        public DateTime date;
     }
 
 }

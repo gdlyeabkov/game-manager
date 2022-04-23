@@ -110,6 +110,222 @@ namespace GamaManager
             GetOnlineFriends();
             GetDownloads();
             GetScreenShots("", true);
+            GetForums();
+        }
+
+        public void GetForums ()
+        {
+            try
+            {
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        ForumsListResponseInfo myobj = (ForumsListResponseInfo)js.Deserialize(objText, typeof(ForumsListResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Forum> forumsList = myobj.forums;
+                            foreach (Forum forumsListItem in forumsList)
+                            {
+                                string forumId = forumsListItem._id;
+                                string forumTitle = forumsListItem.title;
+                                RowDefinition row = new RowDefinition();
+                                forums.RowDefinitions.Add(row);
+                                RowDefinitionCollection rows = forums.RowDefinitions;
+                                int countRows = rows.Count;
+                                int lastRowIndex = countRows - 1;
+                                TextBlock forumNameLabel = new TextBlock();
+                                forumNameLabel.Text = forumTitle;
+                                forums.Children.Add(forumNameLabel);
+                                Grid.SetRow(forumNameLabel, lastRowIndex);
+                                Grid.SetColumn(forumNameLabel, 0);
+                                forumNameLabel.DataContext = forumId;
+                                forumNameLabel.MouseLeftButtonUp += SelectForumHandler;
+                                TextBlock forumLastMsgDateLabel = new TextBlock();
+                                forumLastMsgDateLabel.Text = "00/00/00";
+                                forums.Children.Add(forumLastMsgDateLabel);
+                                Grid.SetRow(forumLastMsgDateLabel, lastRowIndex);
+                                Grid.SetColumn(forumLastMsgDateLabel, 1);
+                                TextBlock forumDiscussionsCountLabel = new TextBlock();
+                                forumDiscussionsCountLabel.Text = "0";
+                                forums.Children.Add(forumDiscussionsCountLabel);
+                                Grid.SetRow(forumDiscussionsCountLabel, lastRowIndex);
+                                Grid.SetColumn(forumDiscussionsCountLabel, 2);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectTopicHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock topicNameLabel = ((TextBlock)(sender));
+            object topicData = topicNameLabel.DataContext;
+            string topicId = ((string)(topicData));
+            SelectTopic(topicId);
+        }
+
+        public void SelectTopic (string id)
+        {
+            addDiscussionMsgBtn.DataContext = id;
+            mainControl.SelectedIndex = 8;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ForumTopicResponseInfo myobj = (ForumTopicResponseInfo)js.Deserialize(objText, typeof(ForumTopicResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Topic topic = myobj.topic;
+                            string title = topic.title;
+                            activeTopicNameLabel.Text = title;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + id);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ForumTopicMsgsResponseInfo myInnerObj = (ForumTopicMsgsResponseInfo)js.Deserialize(objText, typeof(ForumTopicMsgsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        forumTopicMsgs.Children.Clear();
+                                        List<ForumTopicMsg> msgs = myInnerObj.msgs;
+                                        foreach (ForumTopicMsg msg in msgs)
+                                        {
+                                            string msgContent = msg.content;
+                                            TextBlock msgContentLabel = new TextBlock();
+                                            msgContentLabel.Text = msgContent;
+                                            forumTopicMsgs.Children.Add(msgContentLabel);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectForumHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock forumNameLabel = ((TextBlock)(sender));
+            object forumData = forumNameLabel.DataContext;
+            string forumId = ((string)(forumData));
+            SelectForum(forumId);
+        }
+
+        public void SelectForum (string id)
+        {
+            addDiscussionBtn.DataContext = id;
+            mainControl.SelectedIndex = 7;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ForumResponseInfo myobj = (ForumResponseInfo)js.Deserialize(objText, typeof(ForumResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Forum currentForum = myobj.forum;
+                            string title = currentForum.title;
+                            activeForumNameLabel.Text = title;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + id);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ForumTopicsResponseInfo myInnerObj = (ForumTopicsResponseInfo)js.Deserialize(objText, typeof(ForumTopicsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        forumTopics.Children.Clear();
+                                        List<Topic> topics = myInnerObj.topics;
+                                        foreach (Topic topic in topics)
+                                        {
+                                            string topicId = topic._id;
+                                            string topicTitle = topic.title;
+                                            RowDefinition row = new RowDefinition();
+                                            forumTopics.RowDefinitions.Add(row);
+                                            RowDefinitionCollection rows = forums.RowDefinitions;
+                                            int countRows = rows.Count;
+                                            int lastRowIndex = countRows - 1;
+                                            TextBlock topicNameLabel = new TextBlock();
+                                            topicNameLabel.Text = topicTitle;
+                                            forumTopics.Children.Add(topicNameLabel);
+                                            Grid.SetRow(topicNameLabel, lastRowIndex);
+                                            Grid.SetColumn(topicNameLabel, 0);
+                                            topicNameLabel.DataContext = topicId;
+                                            topicNameLabel.MouseLeftButtonUp += SelectTopicHandler;
+                                            TextBlock topicLastMsgDateLabel = new TextBlock();
+                                            topicLastMsgDateLabel.Text = "00/00/00";
+                                            forumTopics.Children.Add(topicLastMsgDateLabel);
+                                            Grid.SetRow(topicLastMsgDateLabel, lastRowIndex);
+                                            Grid.SetColumn(topicLastMsgDateLabel, 1);
+                                            TextBlock forumMsgsCountLabel = new TextBlock();
+                                            forumMsgsCountLabel.Text = "0";
+                                            forumTopics.Children.Add(forumMsgsCountLabel);
+                                            Grid.SetRow(forumMsgsCountLabel, lastRowIndex);
+                                            Grid.SetColumn(forumMsgsCountLabel, 2);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void SetStatsChart()
@@ -2025,10 +2241,10 @@ namespace GamaManager
 
         public void CommunityItemSelected(int index)
         {
-            bool isHome = index == 1;
-            if (isHome)
+            bool isDiscussions = index == 2;
+            if (isDiscussions)
             {
-                mainControl.SelectedIndex = 0;
+                mainControl.SelectedIndex = 6;
 
                 AddHistoryRecord();
 
@@ -3165,7 +3381,96 @@ namespace GamaManager
             this.Collection.Add(new Model(10, 1, 5, 4));
         }
 
+        private void AddDiscussionHandler (object sender, RoutedEventArgs e)
+        {
+            object btnData = addDiscussionBtn.DataContext;
+            string forumId = ((string)(btnData));
+            AddDiscussion(forumId);
+        }
+
+        public void AddDiscussion(string forumId)
+        {
+            try
+            {
+                string title = discussionTitleBox.Text;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/create/?forum=" + forumId + "&title=" + title);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ForumResponseInfo myobj = (ForumResponseInfo)js.Deserialize(objText, typeof(ForumResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            SelectForum(forumId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenAddDiscussionDialogHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAddDiscussionDialog();
+        }
+
+        public void OpenAddDiscussionDialog ()
+        {
+            addDiscussionDialog.Visibility = visible;
+        }
+
+        private void SendMsgToTopicHandler (object sender, RoutedEventArgs e)
+        {
+            object topicData = addDiscussionMsgBtn.DataContext;
+            string topicId = ((string)(topicData));
+            SendMsgToTopic(topicId);
+        }
+
+        public void SendMsgToTopic (string topicId)
+        {
+            string newMsgContent = forumTopicMsgBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ForumResponseInfo myobj = (ForumResponseInfo)js.Deserialize(objText, typeof(ForumResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            forumTopicMsgBox.Text = "";
+                            SelectTopic(topicId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+
     }
+
 
     class SavedContent
     {
@@ -3328,6 +3633,58 @@ namespace GamaManager
             Open = open;
             Close = close;
         }
+
+    }
+
+    public class ForumsListResponseInfo
+    {
+        public List<Forum> forums;
+        public string status;
+    }
+
+    public class Forum
+    {
+        public string _id;
+        public string title;
+    }
+
+    public class ForumResponseInfo
+    {
+        public Forum forum;
+        public string status;
+    }
+
+    public class ForumTopicsResponseInfo
+    {
+        public List<Topic> topics;
+        public string status;
+    }
+
+    public class Topic
+    {
+        public string _id;
+        public string title;
+        public string forum;
+    }
+
+    class ForumTopicResponseInfo
+    {
+        public Topic topic;
+        public string status;
+    }
+
+    class ForumTopicMsgsResponseInfo
+    {
+        public List<ForumTopicMsg> msgs;
+        public string status;
+
+    }
+
+    class ForumTopicMsg
+    {
+        public string _id;
+        public string content;
+        public string topic;
     }
 
 }

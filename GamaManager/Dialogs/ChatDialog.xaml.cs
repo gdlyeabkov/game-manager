@@ -67,10 +67,10 @@ namespace GamaManager.Dialogs
             InitializeComponent();
             this.currentUserId = currentUserId;
             this.friendId = friendId;
-            this.isStartBlink = isStartBlink; 
+            this.isStartBlink = isStartBlink;
         }
 
-        async public void ReceiveMessages ()
+        async public void ReceiveMessages()
         {
             try
             {
@@ -83,6 +83,9 @@ namespace GamaManager.Dialogs
                     string[] result = rawResult.Split(new char[] { '|' });
                     string userId = result[0];
                     string msg = result[1];
+                    string cachedFriendId = result[2];
+                    string msgType = result[3];
+                    string cachedId = result[4];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
@@ -176,15 +179,45 @@ namespace GamaManager.Dialogs
                                                                 newMsgDateLabel.Text = rawCurrentDate;
                                                                 newMsgHeader.Children.Add(newMsgDateLabel);
                                                                 newMsg.Children.Add(newMsgHeader);
-                                                                TextBlock newMsgLabel = new TextBlock();
-                                                                string newMsgContent = msg;
-                                                                newMsgLabel.Text = newMsgContent;
-                                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                inputChatMsgBox.Text = "";
-                                                                newMsg.Children.Add(newMsgLabel);
-
-                                                                activeChatContent.Children.Add(newMsg);
-
+                                                                if (msgType == "text")
+                                                                {
+                                                                    TextBlock newMsgLabel = new TextBlock();
+                                                                    string newMsgContent = msg;
+                                                                    newMsgLabel.Text = newMsgContent;
+                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                    inputChatMsgBox.Text = "";
+                                                                    newMsg.Children.Add(newMsgLabel);
+                                                                    activeChatContent.Children.Add(newMsg);
+                                                                }
+                                                                else if (msgType == "emoji")
+                                                                {
+                                                                    Image newMsgLabel = new Image();
+                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                    newMsgLabel.Width = 35;
+                                                                    newMsgLabel.Height = 35;
+                                                                    newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                    newMsgLabel.BeginInit();
+                                                                    newMsgLabel.Source = new BitmapImage(new Uri(msg));
+                                                                    newMsgLabel.EndInit();
+                                                                    inputChatMsgBox.Text = "";
+                                                                    newMsg.Children.Add(newMsgLabel);
+                                                                    activeChatContent.Children.Add(newMsg);
+                                                                }
+                                                                else if (msgType == "file")
+                                                                {
+                                                                    Image newMsgLabel = new Image();
+                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                    newMsgLabel.Width = 35;
+                                                                    newMsgLabel.Height = 35;
+                                                                    newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                    newMsgLabel.BeginInit();
+                                                                    Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                                    newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
+                                                                    newMsgLabel.EndInit();
+                                                                    inputChatMsgBox.Text = "";
+                                                                    newMsg.Children.Add(newMsgLabel);
+                                                                    activeChatContent.Children.Add(newMsg);
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -282,7 +315,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void InitializeHandler (object sender, RoutedEventArgs e)
+        public void InitializeHandler(object sender, RoutedEventArgs e)
         {
             Initialize();
         }
@@ -348,13 +381,13 @@ namespace GamaManager.Dialogs
             chatControl.SelectedIndex = activeChatIndex;
         }
 
-        private void SendMsgHandler (object sender, RoutedEventArgs e)
+        private void SendMsgHandler(object sender, RoutedEventArgs e)
         {
             string newMsgContent = inputChatMsgBox.Text;
             SendMsg(newMsgContent);
         }
 
-        public void GetMsgs ()
+        public void GetMsgs()
         {
             try
             {
@@ -593,7 +626,7 @@ namespace GamaManager.Dialogs
             return image;
         }
 
-        async public void SendMsg (string newMsgContent)
+        async public void SendMsg(string newMsgContent)
         {
             try
             {
@@ -670,7 +703,9 @@ namespace GamaManager.Dialogs
             }
             try
             {
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId);
+                string newMsgType = "text";
+                string newMsgId = "mock";
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
 
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -743,7 +778,7 @@ namespace GamaManager.Dialogs
             FlashWindowEx(ref info);
         }
 
-        private void StopBlinkWindowHandler (object sender, RoutedEventArgs e)
+        private void StopBlinkWindowHandler(object sender, RoutedEventArgs e)
         {
             StopBlinkWindow();
         }
@@ -753,12 +788,12 @@ namespace GamaManager.Dialogs
             StopFlashingWindow(this);
         }
 
-        private void InputToChatFieldHandler (object sender, TextChangedEventArgs e)
+        private void InputToChatFieldHandler(object sender, TextChangedEventArgs e)
         {
             InputToChatField();
         }
 
-        public void InputToChatField ()
+        public void InputToChatField()
         {
             DateTime currentDateTime = DateTime.Now;
             TimeSpan diff = currentDateTime.Subtract(lastInputTimeStamp);
@@ -772,13 +807,13 @@ namespace GamaManager.Dialogs
             lastInputTimeStamp = currentDateTime;
         }
 
-        private void ToggleRingHandler (object sender, RoutedEventArgs e)
+        private void ToggleRingHandler(object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             ToggleRing(btn);
         }
 
-        async public void ToggleRing (Button btn)
+        async public void ToggleRing(Button btn)
         {
             isStartRing = !isStartRing;
             if (isStartRing)
@@ -802,20 +837,20 @@ namespace GamaManager.Dialogs
             {
 
                 waveSource.StopRecording();
-            
+
                 btn.Content = "Начать голосовой чат";
-            
+
             }
         }
 
-        public void MicroDataAvailableHandler (object sender, WaveInEventArgs e)
+        public void MicroDataAvailableHandler(object sender, WaveInEventArgs e)
         {
             byte[] buffer = e.Buffer;
             int recordedBytes = e.BytesRecorded;
             MicroDataAvailable(buffer, recordedBytes);
         }
 
-        public void MicroDataAvailable (byte[] buffer, int recordedBytes)
+        public void MicroDataAvailable(byte[] buffer, int recordedBytes)
         {
             if (waveFile != null)
             {
@@ -834,12 +869,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void MicroRecordingStoppedHandler (object sender, StoppedEventArgs e)
+        public void MicroRecordingStoppedHandler(object sender, StoppedEventArgs e)
         {
             MicroRecordingStopped();
         }
 
-        public void MicroRecordingStopped ()
+        public void MicroRecordingStopped()
         {
             if (waveSource != null)
             {
@@ -874,12 +909,12 @@ namespace GamaManager.Dialogs
 
         }
 
-        private void AttachFileHandler (object sender, RoutedEventArgs e)
+        private void AttachFileHandler(object sender, RoutedEventArgs e)
         {
             AttachFile();
         }
 
-        public void AttachFile ()
+        public void AttachFile()
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.Title = "Выберите изображение";
@@ -893,7 +928,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        async public void SendFileMsg (string filePath)
+        async public void SendFileMsg(string filePath)
         {
             byte[] rawImage = ImageFileToByteArray(filePath);
             string newMsgContent = "";
@@ -986,18 +1021,6 @@ namespace GamaManager.Dialogs
             }
             try
             {
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId);
-            }
-            catch (System.Net.WebSockets.WebSocketException)
-            {
-                Debugger.Log(0, "debug", "Ошибка сокетов");
-            }
-            catch (InvalidOperationException)
-            {
-                Debugger.Log(0, "debug", "Нельзя отправить повторно");
-            }
-            try
-            {
                 string newMsgType = "file";
                 HttpClient httpClient = new HttpClient();
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -1007,6 +1030,25 @@ namespace GamaManager.Dialogs
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
                 string sd = response.Content.ReadAsStringAsync().Result;
+                try
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    MsgResponseInfo myobj = (MsgResponseInfo)js.Deserialize(sd, typeof(MsgResponseInfo));
+                    string newMsgId = myobj.id;
+                    string ext = myobj.content;
+                    Debugger.Log(0, "debug", Environment.NewLine + "id: " + newMsgId + ", ext: " + ext + ", sd: " + sd + Environment.NewLine);
+                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
+                    // await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId);
+                }
+                catch (System.Net.WebSockets.WebSocketException)
+                {
+                    Debugger.Log(0, "debug", "Ошибка сокетов");
+                }
+                catch (InvalidOperationException)
+                {
+                    Debugger.Log(0, "debug", "Нельзя отправить повторно");
+                }
+
             }
             catch (System.Net.WebException)
             {
@@ -1015,12 +1057,13 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void OpenEmojiPopupHandler (object sender, RoutedEventArgs e)
+        private void OpenEmojiPopupHandler(object sender, RoutedEventArgs e)
         {
             OpenEmojiPopup();
         }
 
-        public void OpenEmojiPopup () {
+        public void OpenEmojiPopup()
+        {
             emojiPopup.IsOpen = true;
         }
 
@@ -1032,7 +1075,7 @@ namespace GamaManager.Dialogs
             AddEmojiMsg(emojiData);
         }
 
-        async public void AddEmojiMsg (string emojiData)
+        async public void AddEmojiMsg(string emojiData)
         {
             try
             {
@@ -1114,7 +1157,10 @@ namespace GamaManager.Dialogs
             }
             try
             {
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId);
+                string newMsgType = "emoji";
+                string newMsgId = "mock";
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
+                // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId);
             }
             catch (System.Net.WebSockets.WebSocketException)
             {
@@ -1181,6 +1227,12 @@ namespace GamaManager.Dialogs
         public string friend;
         public string content;
         public string type;
+    }
+
+    class MsgResponseInfo
+    {
+        public string id;
+        public string content;
     }
 
 }

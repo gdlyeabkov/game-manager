@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
         Title="Настройки"
-        Height="650"
-        Width="650"
+        Height="750"
+        Width="700"
         WindowStartupLocation="CenterScreen"
     >
     <DockPanel
@@ -272,25 +272,175 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel
-                        Margin="10"
-                        HorizontalAlignment="Left"    
+                        Orientation="Horizontal"    
                     >
-                        <TextBlock
-                            Text="Оверлей Office ware game manager"    
-                            Margin="0 5"
-                        />
-                        <TextBlock
-                            Text="Сочетание клавиш для открытия оверлея"    
-                            Margin="0 5"
-                        />
-                        <TextBox
-                            x:Name="overlayHotKeyBox"
-                            IsReadOnly="True"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"
-                            KeyDown="OverlayHotKeyHandler"
-                        />
+                        <StackPanel
+                            Margin="10"
+                            HorizontalAlignment="Left"    
+                        >
+                            <TextBlock
+                                Text="Оверлей Office ware game manager"    
+                                Margin="0 5"
+                            />
+                            <TextBlock
+                                Text="Сочетание клавиш для открытия оверлея"    
+                                Margin="0 5"
+                            />
+                            <TextBox
+                                x:Name="overlayHotKeyBox"
+                                IsReadOnly="True"
+                                Width="175"
+                                Margin="0 5"
+                                HorizontalAlignment="Left"
+                                KeyDown="OverlayHotKeyHandler"
+                            />
+                            <TextBlock
+                                Text="Отображение частоты кадров"    
+                            />
+                            <ComboBox
+                                SelectedIndex="0"
+                            >
+                                <ComboBoxItem
+                                    Content="Отключено"    
+                                />
+                                <ComboBoxItem
+                                    Content="В левом верхнем углу"    
+                                />
+                                <ComboBoxItem
+                                    Content="В правом верхнем углу"    
+                                />
+                                <ComboBoxItem
+                                    Content="В правом нижнем углу"    
+                                />
+                                <ComboBoxItem
+                                    Content="В левом нижнем углу"    
+                                />
+                            </ComboBox>
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <CheckBox />
+                                <TextBlock
+                                    Text="Высокий контраст счетчика кадров"    
+                                />
+                            </StackPanel>
+                            <Separator />
+                            <TextBlock
+                                Text="Отображение частоты кадров"    
+                            />
+                        </StackPanel>
+                        <StackPanel
+                            Margin="10"
+                            HorizontalAlignment="Left"    
+                        >
+                            <TextBlock
+                                Text="Оверлей Office ware game manager"    
+                                Margin="0 5"
+                            />
+                            <TextBlock
+                                Text="Сочетание клавиш для скриншота"    
+                                Margin="0 5"
+                            />
+                            <TextBox
+                                x:Name="screenShotsHotKeyBox"
+                                IsReadOnly="True"
+                                Width="175"
+                                Margin="0 5"
+                                HorizontalAlignment="Left"
+                                KeyDown="ScreenShotsHotKeyHandler"
+                            />
+                            <Button
+                                Content="Папка скриншотов"
+                                Width="125"
+                                Height="35"
+                                Click="OpenScreenShotsFolderHandler"
+                            />
+                            <TextBlock
+                                Text="Когда скриншот сделан"    
+                                Margin="0 5"
+                            />
+                            <StackPanel
+                                Margin="0 10"
+                                Orientation="Horizontal"    
+                            >
+                                <CheckBox />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Показывать уведомление"    
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                Margin="0 10"
+                                Orientation="Horizontal"    
+                            >
+                                <CheckBox />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Воспроизводить звук"    
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                Margin="0 10"
+                                Orientation="Horizontal"    
+                            >
+                                <CheckBox />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Сохранять несжатую копию"    
+                                />
+                            </StackPanel>
+                            <Separator />
+                            <TextBlock
+                                Text="Запрос браузера серверов в минуту"    
+                            />
+                            <TextBlock
+                                Text="Возникли проблемы с соединением при&#10;просмотре игровых серверов?&#10;Попробуйте уменьшить это значение."    
+                            />
+                            <ComboBox
+                                SelectedIndex="0"
+                                Margin="0 10"
+                            >
+                                <ComboBoxItem
+                                    Content="Автоматически (5000)"    
+                                />
+                                <ComboBoxItem
+                                    Content="5000"    
+                                />
+                                <ComboBoxItem
+                                    Content="3000"    
+                                />
+                                <ComboBoxItem
+                                    Content="1500"    
+                                />
+                                <ComboBoxItem
+                                    Content="1000"    
+                                />
+                                <ComboBoxItem
+                                    Content="500"    
+                                />
+                                <ComboBoxItem
+                                    Content="250"    
+                                />
+                            </ComboBox>
+
+
+                            <ComboBox
+                                SelectedIndex="0"
+                            >
+                                <ComboBoxItem
+                                    Content="По умолчанию"    
+                                />
+                                <ComboBoxItem
+                                    Content="Никогда"    
+                                />
+                                <ComboBoxItem
+                                    Content="Только для друзей"    
+                                />
+                                <ComboBoxItem
+                                    Content="Всегда"    
+                                />
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">

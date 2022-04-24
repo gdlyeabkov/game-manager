@@ -52,6 +52,7 @@ namespace GamaManager.Dialogs
             string currentLang = currentSettings.language;
             int currentStartWindow = currentSettings.startWindow;
             string currentOverlayHotKey = currentSettings.overlayHotKey;
+            string currentScreenShotsHotKey = currentSettings.screenShotsHotKey;
             MusicSettings currentMusicSettings = currentSettings.music;
             List<string> currentMusicSettingsPaths = currentMusicSettings.paths;
             double currentMusicSettingsVolume = currentMusicSettings.volume;
@@ -77,6 +78,7 @@ namespace GamaManager.Dialogs
             }
             startWindowSelector.SelectedIndex = currentStartWindow;
             overlayHotKeyBox.Text = currentOverlayHotKey;
+            screenShotsHotKeyBox.Text = currentScreenShotsHotKey;
         }
 
         public void InitConstants (string currentUserId)
@@ -147,7 +149,6 @@ namespace GamaManager.Dialogs
                     {
                         lineContent = lineContent.Trim();
                         int lineContentLength = lineContent.Length;
-                        // bool isPath = lineContentLength >= 1;
                         bool isNotFirstCaretBreak = lineContent != @"\r\n";
                         bool isNotSecondCaretBreak = lineContent != @"\n";
                         bool isNotThirdCaretBreak = lineContent != @"\r";
@@ -175,6 +176,8 @@ namespace GamaManager.Dialogs
             double musicSettingsVolume = musicSettingsVolumeSlider.Value;
             musicSettings.volume = musicSettingsVolume;
             updatedSettings.music = musicSettings;
+            string screenShotsHotKey = screenShotsHotKeyBox.Text;
+            updatedSettings.screenShotsHotKey = screenShotsHotKey;
             string savedContent = js.Serialize(new SavedContent
             {
                 games = currentGames,
@@ -284,6 +287,55 @@ namespace GamaManager.Dialogs
                 musicLibraryListBox.Text = musicLibraryListBox.Text.Replace(selectedText, "");
             }
         }
+
+        private void ScreenShotsHotKeyHandler (object sender, KeyEventArgs e)
+        {
+            TextBox input = ((TextBox)(sender));
+            Key currentKey = e.Key;
+            ScreenShotsHotKey(input, currentKey);
+        }
+
+        public void ScreenShotsHotKey (TextBox input, Key key)
+        {
+            Key leftShiftKey = Key.LeftShift;
+            Key rightShiftKey = Key.RightShift;
+            Key leftCtrlKey = Key.LeftCtrl;
+            Key rightCtrlKey = Key.RightCtrl;
+            bool isNotLeftShiftKey = key != leftShiftKey;
+            bool isNotRightShiftKey = key != rightShiftKey;
+            bool isNotShiftKey = isNotLeftShiftKey && isNotRightShiftKey;
+            bool isNotLeftCtrlKey = key != leftCtrlKey;
+            bool isNotRightCtrlKey = key != rightCtrlKey;
+            bool isNotCtrlKey = isNotLeftCtrlKey && isNotRightCtrlKey;
+            bool isNotKeyModifier = isNotShiftKey && isNotCtrlKey;
+            if (isNotKeyModifier)
+            {
+                bool isCtrlEnabled = (Keyboard.Modifiers & ModifierKeys.Control) > 0;
+                bool isShiftEnabled = (Keyboard.Modifiers & ModifierKeys.Shift) > 0;
+                string rawHotKey = key.ToString();
+                if (isShiftEnabled)
+                {
+                    rawHotKey = "Shift + " + rawHotKey;
+                }
+
+                if (isCtrlEnabled)
+                {
+                    rawHotKey = "Ctrl + " + rawHotKey;
+                }
+                input.Text = rawHotKey;
+            }
+        }
+
+        private void OpenScreenShotsFolderHandler (object sender, RoutedEventArgs e)
+        {
+            OpenScreenShotsFolder();
+        }
+
+        public void OpenScreenShotsFolder ()
+        {
+
+        }
+
 
     }
 }

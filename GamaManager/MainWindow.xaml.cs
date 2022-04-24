@@ -1815,7 +1815,8 @@ namespace GamaManager
                             paths = new List<string>(),
                             volume = 100
                         },
-                        profileTheme = "Default"
+                        profileTheme = "Default",
+                        screenShotsHotKey = "Shift + S"
                     }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
@@ -2803,7 +2804,8 @@ namespace GamaManager
             BitmapImage bitmapImage = ((BitmapImage)(source));
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
             string sd = response.Content.ReadAsStringAsync().Result;
@@ -4296,6 +4298,7 @@ namespace GamaManager
         public string overlayHotKey;
         public MusicSettings music;
         public string profileTheme;
+        public string screenShotsHotKey;
     }
 
     public class MusicSettings

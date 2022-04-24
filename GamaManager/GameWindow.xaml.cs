@@ -160,12 +160,22 @@ namespace GamaManager
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             Settings currentSettings = loadedContent.settings;
             string overlayHotKey = currentSettings.overlayHotKey;
+            string screenShotsHotKey = currentSettings.screenShotsHotKey;
             bool isModifiersApplied = overlayHotKey.Contains("+");
+            
             bool isNeedShiftModifier = false;
             bool isNeedCtrlModifier = false;
+
+            bool isScreenShotsNeedShiftModifier = false;
+            bool isScreenShotsNeedCtrlModifier = false;
+
             Key currentKey = e.Key;
             string rawCurrentKey = currentKey.ToString();
+            
             string overlayKey = rawCurrentKey;
+            
+            string screenShotsKey = rawCurrentKey;
+            
             if (isModifiersApplied)
             {
                 string[] overlayHotKeyParts = overlayHotKey.Split(new Char[] { '+' });
@@ -175,20 +185,38 @@ namespace GamaManager
                 isNeedCtrlModifier = overlayModifier == "Ctrl";
                 overlayKey = overlayHotKeyParts[1];
                 overlayKey = overlayKey.Trim();
+
+                
+                string[] screenShotsHotKeyParts = screenShotsHotKey.Split(new Char[] { '+' });
+                string screenShotsModifier = screenShotsHotKeyParts[0];
+                screenShotsModifier = screenShotsModifier.Trim();
+                isScreenShotsNeedShiftModifier = screenShotsModifier == "Shift";
+                isScreenShotsNeedCtrlModifier = screenShotsModifier == "Ctrl";
+                screenShotsKey = screenShotsHotKeyParts[1];
+                screenShotsKey = screenShotsKey.Trim();
+
             }
             else
             {
                 overlayKey = overlayHotKey;
+
+                screenShotsKey = screenShotsHotKey;
             }
             var shiftModifier = Keyboard.Modifiers & ModifierKeys.Shift;
             bool isShiftModifierEnabled = shiftModifier > 0;
             var ctrlModifier = Keyboard.Modifiers & ModifierKeys.Control;
             bool isCtrlModifierEnabled = ctrlModifier > 0;
+            
             bool isOverlayKey = rawCurrentKey == overlayKey;
             bool isToggleAside = isOverlayKey && ((isShiftModifierEnabled && isNeedShiftModifier) || !isNeedShiftModifier) && ((isCtrlModifierEnabled && isNeedCtrlModifier) || !isNeedCtrlModifier);
-            Key sKey = Key.S;
+            /*Key sKey = Key.S;
             bool isSKey = currentKey == sKey;
-            bool isTakeScreenShot = isShiftModifierEnabled && isSKey;
+            bool isTakeScreenShot = isShiftModifierEnabled && isSKey;*/
+
+            bool isScreenShotsKey = rawCurrentKey == screenShotsKey;
+            bool isTakeScreenShot = isScreenShotsKey && ((isShiftModifierEnabled && isScreenShotsNeedShiftModifier) || !isScreenShotsNeedShiftModifier) && ((isCtrlModifierEnabled && isScreenShotsNeedCtrlModifier) || !isScreenShotsNeedCtrlModifier);
+            // bool isTakeScreenShot = isShiftModifierEnabled && isSKey;
+
             if (isToggleAside)
             {
                 Visibility currentVisibility = gameManagerAside.Visibility;

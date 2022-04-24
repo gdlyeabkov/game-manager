@@ -39,7 +39,7 @@ namespace GamaManager.Dialogs
         public bool isStartRing = false;
         public WaveIn waveSource;
         public WaveFileWriter waveFile;
-        // public RTCControl rtcControl = null;
+        public Brush msgsSeparatorBrush = null;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -74,7 +74,6 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
@@ -320,12 +319,23 @@ namespace GamaManager.Dialogs
             Initialize();
         }
 
-        public void Initialize()
+        public void InitConstants ()
         {
+            msgsSeparatorBrush = System.Windows.Media.Brushes.LightGray;
             lastInputTimeStamp = DateTime.Now;
+        }
+
+        public void Initialize ()
+        {
+            InitConstants();
             AddChat();
             ReceiveMessages();
             GetMsgs();
+            InitFlash();
+        }
+
+        public void InitFlash ()
+        {
             if (isStartBlink)
             {
                 FlashWindow(this);
@@ -335,7 +345,6 @@ namespace GamaManager.Dialogs
         public void AddChat()
         {
             TabItem newChat = new TabItem();
-
             newChat.Header = friendId;
             try
             {
@@ -348,9 +357,7 @@ namespace GamaManager.Dialogs
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         string objText = innerReader.ReadToEnd();
-
                         var myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -371,7 +378,6 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-
             chatControl.Items.Add(newChat);
             ScrollViewer newChatScrollContent = new ScrollViewer();
             StackPanel newChatContent = new StackPanel();
@@ -427,6 +433,7 @@ namespace GamaManager.Dialogs
                                             if (isOkStatus)
                                             {
                                                 List<Msg> msgs = myInnerObj.msgs;
+                                                int msgsCursor = -1;
                                                 foreach (Msg msg in msgs)
                                                 {
                                                     string newMsgUserId = msg.user;
@@ -434,6 +441,60 @@ namespace GamaManager.Dialogs
                                                     bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == friendId) || (newMsgUserId == friendId && newMsgFriendId == currentUserId);
                                                     if (isCurrentChatMsg)
                                                     {
+                                                        User friend = myobj.user;
+                                                        string friendName = friend.name;
+                                                        ItemCollection chatControlItems = chatControl.Items;
+                                                        object rawActiveChat = chatControlItems[activeChatIndex];
+                                                        TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                        object rawActiveChatScrollContent = activeChat.Content;
+                                                        ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                        object rawActiveChatContent = activeChatScrollContent.Content;
+                                                        StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                                                        DateTime msgDate = msg.date;
+                                                        string rawMsgDate = msgDate.ToLongDateString();
+                                                        msgsCursor++;
+                                                        int countMsgs = msgs.Count;
+                                                        bool isManyMsgs = countMsgs >= 2;
+                                                        if (isManyMsgs)
+                                                        {
+                                                            bool isNotFirstMsg = msgsCursor >= 1;
+                                                            if (isNotFirstMsg)
+                                                            {
+                                                                int previousMsgIndex = msgsCursor - 1;
+                                                                Msg previousMsg = msgs[previousMsgIndex];
+                                                                DateTime previousMsgDate = previousMsg.date;
+                                                                int previousMsgDateDay = previousMsgDate.DayOfYear;
+                                                                int msgDateDay = msgDate.DayOfYear;
+                                                                bool isDaysNotCompared = msgDateDay != previousMsgDateDay;
+                                                                // bool isMock = true;
+                                                                bool isAddMsgSeparator = isDaysNotCompared;
+                                                                if (isAddMsgSeparator)
+                                                                {
+                                                                    StackPanel msgsSeparator = new StackPanel();
+                                                                    msgsSeparator.Orientation = Orientation.Horizontal;
+                                                                    msgsSeparator.Margin = new Thickness(10, 25, 10, 25);
+                                                                    msgsSeparator.HorizontalAlignment = HorizontalAlignment.Center;
+                                                                    Separator leftSeparator = new Separator();
+                                                                    leftSeparator.Width = 350;
+                                                                    leftSeparator.Margin = new Thickness(25, 0, 25, 0);
+                                                                    leftSeparator.BorderBrush = msgsSeparatorBrush;
+                                                                    leftSeparator.BorderThickness = new Thickness(2);
+                                                                    msgsSeparator.Children.Add(leftSeparator);
+                                                                    TextBlock msgsSeparatorDateLabel = new TextBlock();
+                                                                    msgsSeparatorDateLabel.Text = rawMsgDate;
+                                                                    msgsSeparator.Children.Add(msgsSeparatorDateLabel);
+                                                                    Separator rightSeparator = new Separator();
+                                                                    rightSeparator.Width = 350;
+                                                                    rightSeparator.Margin = new Thickness(25, 0, 25, 0);
+                                                                    rightSeparator.BorderBrush = msgsSeparatorBrush;
+                                                                    rightSeparator.BorderThickness = new Thickness(2);
+                                                                    msgsSeparator.Children.Add(rightSeparator);
+                                                                    activeChatContent.Children.Add(msgsSeparator);
+                                                                }
+                                                            }
+                                                        }
+
                                                         string newMsgType = msg.type;
                                                         string newMsgContent = msg.content;
                                                         string newMsgId = msg._id;
@@ -442,15 +503,6 @@ namespace GamaManager.Dialogs
                                                         bool isFileMsg = newMsgType == "file";
                                                         if (isTextMsg)
                                                         {
-                                                            User friend = myobj.user;
-                                                            string friendName = friend.name;
-                                                            ItemCollection chatControlItems = chatControl.Items;
-                                                            object rawActiveChat = chatControlItems[activeChatIndex];
-                                                            TabItem activeChat = ((TabItem)(rawActiveChat));
-                                                            object rawActiveChatScrollContent = activeChat.Content;
-                                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                            object rawActiveChatContent = activeChatScrollContent.Content;
-                                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
                                                             StackPanel newMsg = new StackPanel();
                                                             StackPanel newMsgHeader = new StackPanel();
                                                             newMsgHeader.Orientation = Orientation.Horizontal;
@@ -469,9 +521,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            DateTime currentDate = DateTime.Now;
-                                                            string rawCurrentDate = currentDate.ToLongTimeString();
-                                                            newMsgDateLabel.Text = rawCurrentDate;
+                                                            newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             TextBlock newMsgLabel = new TextBlock();
@@ -484,15 +534,6 @@ namespace GamaManager.Dialogs
                                                         }
                                                         else if (isEmojiMsg)
                                                         {
-                                                            User friend = myobj.user;
-                                                            string friendName = friend.name;
-                                                            ItemCollection chatControlItems = chatControl.Items;
-                                                            object rawActiveChat = chatControlItems[activeChatIndex];
-                                                            TabItem activeChat = ((TabItem)(rawActiveChat));
-                                                            object rawActiveChatScrollContent = activeChat.Content;
-                                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                            object rawActiveChatContent = activeChatScrollContent.Content;
-                                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
                                                             StackPanel newMsg = new StackPanel();
                                                             StackPanel newMsgHeader = new StackPanel();
                                                             newMsgHeader.Orientation = Orientation.Horizontal;
@@ -511,9 +552,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            DateTime currentDate = DateTime.Now;
-                                                            string rawCurrentDate = currentDate.ToLongTimeString();
-                                                            newMsgDateLabel.Text = rawCurrentDate;
+                                                            newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -530,15 +569,6 @@ namespace GamaManager.Dialogs
                                                         }
                                                         else if (isFileMsg)
                                                         {
-                                                            User friend = myobj.user;
-                                                            string friendName = friend.name;
-                                                            ItemCollection chatControlItems = chatControl.Items;
-                                                            object rawActiveChat = chatControlItems[activeChatIndex];
-                                                            TabItem activeChat = ((TabItem)(rawActiveChat));
-                                                            object rawActiveChatScrollContent = activeChat.Content;
-                                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                            object rawActiveChatContent = activeChatScrollContent.Content;
-                                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
                                                             StackPanel newMsg = new StackPanel();
                                                             StackPanel newMsgHeader = new StackPanel();
                                                             newMsgHeader.Orientation = Orientation.Horizontal;
@@ -557,9 +587,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            DateTime currentDate = DateTime.Now;
-                                                            string rawCurrentDate = currentDate.ToLongTimeString();
-                                                            newMsgDateLabel.Text = rawCurrentDate;
+                                                            newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -617,7 +645,7 @@ namespace GamaManager.Dialogs
             return image;
         }
 
-        async public void SendMsg(string newMsgContent)
+        async public void SendMsg (string newMsgContent)
         {
             try
             {
@@ -676,7 +704,6 @@ namespace GamaManager.Dialogs
                                 newMsgLabel.Text = newMsgContent;
                                 inputChatMsgBox.Text = "";
                                 newMsg.Children.Add(newMsgLabel);
-
                                 activeChatContent.Children.Add(newMsg);
                             }
                         }
@@ -1208,6 +1235,7 @@ namespace GamaManager.Dialogs
         public string friend;
         public string content;
         public string type;
+        public DateTime date;
     }
 
     class MsgResponseInfo

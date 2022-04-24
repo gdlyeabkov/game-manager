@@ -1218,7 +1218,45 @@
                                 Margin="50 25 0 25"
                                 HorizontalAlignment="Left"
                                 Width="250"
-                            />
+                                TextChanged="FilterForumsHandler"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Width="250"
+                                                    Text="Поиск по обсуждениям"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                             <TabControl
                                 Margin="50 0"    
                             >
@@ -1305,17 +1343,20 @@
                                     Text="Обсуждения Office ware game manager"
                                 />
                                 <DockPanel
-                                    Height="350"    
+                                    
                                 >
                                     <StackPanel
                                         Width="350"
-                                        Background="Red"
+                                        Background="DarkSlateGray"
                                         DockPanel.Dock="Right"    
                                     >
                                         <Button
+                                            FontWeight="Bold"
+                                            Foreground="Cyan"
+                                            Background="DarkCyan"
                                             Margin="5"
                                             HorizontalAlignment="Left"
-                                            Width="125"
+                                            Width="175"
                                             Height="35"
                                             Content="Новое обсуждение"
                                             Click="OpenAddDiscussionDialogHandler"
@@ -1327,33 +1368,135 @@
                                             Visibility="Collapsed"
                                             Background="LightGray"    
                                         >
-                                            <TextBox
-                                                x:Name="discussionTitleBox"    
-                                                Margin="10"
-                                                Height="35"
+                                            <TextBlock
+                                                Margin="25 15"
+                                                Text="Новое обсуждение"    
                                             />
-                                            <TextBox
-                                                x:Name="discussionQuestionBox"    
-                                                Margin="10"
-                                                Height="75"
-                                            />
+                                            <StackPanel
+                                                Orientation="Horizontal"    
+                                            >
+                                                <Image
+                                                    VerticalAlignment="Top"
+                                                    Width="25"
+                                                    Height="25"
+                                                    Margin="10"    
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                    />
+                                                    </Image.Source>
+                                                </Image>
+                                                <StackPanel>
+                                                    <TextBox
+                                                        x:Name="discussionTitleBox"    
+                                                        Margin="10"
+                                                        Height="35"
+                                                        Width="685"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <TextBlock
+                                                                        Text="Введите заголовок"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                        Height="35"
+                                                                        Width="685"
+                                                                    />
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <TextBox
+                                                        x:Name="discussionQuestionBox"    
+                                                        Margin="10"
+                                                        Height="75"
+                                                        Width="685"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <TextBlock
+                                                                        Text="Ваше сообщение"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                        Height="75"
+                                                                        Width="685"
+                                                                    />
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </StackPanel>
+                                            </StackPanel>
                                             <Button
                                                 x:Name="addDiscussionBtn"
                                                 Margin="5"
                                                 HorizontalAlignment="Right"
                                                 Width="125"
                                                 Height="35"
-                                                Content="Опубликовать"   
+                                                Content="Опубликовать"
+                                                FontWeight="Bold"
+                                                Foreground="Gray"
+                                                Background="GreenYellow"
                                                 Click="AddDiscussionHandler"
                                             />
                                         </StackPanel>
                                         <Grid
                                             x:Name="forumTopics"
+                                            Margin="0 10"
                                         >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
+                                                <ColumnDefinition
+                                                    Width="150"    
+                                                />
+                                                <ColumnDefinition
+                                                    Width="150"
+                                                />
                                             </Grid.ColumnDefinitions>
                                         </Grid>
                                     </StackPanel>
@@ -1387,18 +1530,19 @@
                             <StackPanel
                                 Margin="25"    
                             >
-                                <DockPanel
-                                    Height="350"    
-                                >
+                                <DockPanel>
                                     <StackPanel
                                         Width="350"
-                                        Background="Red"
+                                        Background="DarkSlateGray"
                                         DockPanel.Dock="Right"    
                                     >
                                         <Button
+                                            FontWeight="Bold"
+                                            Foreground="Cyan"
+                                            Background="DarkCyan"
                                             Margin="5"
                                             HorizontalAlignment="Left"
-                                            Width="125"
+                                            Width="175"
                                             Height="35"
                                             Content="Новое обсуждение"
                                             Click="OpenAddDiscussionDialogHandler"
@@ -1410,8 +1554,9 @@
                                         />
                                         <DockPanel>
                                             <TextBlock
+                                                x:Name="forumTopicMsgsCountLabel"
                                                 DockPanel.Dock="Left"
-                                                Text="Сообщения 0 из 0"
+                                                Text="Сообщения 0-0 из 0"
                                                 Margin="10 0"
                                             />
                                             <StackPanel
@@ -1422,52 +1567,76 @@
                                             >
                                                 <materialDesign:PackIcon
                                                     Kind="ArrowBack"    
+                                                    MouseLeftButtonUp="GoToPrevForumTopicPageHandler"
                                                 />
-                                                <TextBlock
-                                                    Text="1"
-                                                    Margin="10 0"
-                                                />
-                                                <TextBlock
-                                                    Text="2"
-                                                    Margin="10 0"
-                                                />
-                                                <TextBlock
-                                                    Text="3"
-                                                    Margin="10 0"
-                                                />
-                                                <TextBlock
-                                                    Text="4"
-                                                    Margin="10 0"
-                                                />
-                                                <TextBlock
-                                                    Text="5"
-                                                    Margin="10 0"
-                                                />
+                                                <StackPanel
+                                                    x:Name="forumTopicPages"
+                                                    DataContext="1"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <!--
+                                                    <TextBlock
+                                                        Text="1"
+                                                        Margin="10 0"
+                                                    />
+                                                    <TextBlock
+                                                        Text="2"
+                                                        Margin="10 0"
+                                                    />
+                                                    <TextBlock
+                                                        Text="3"
+                                                        Margin="10 0"
+                                                    />
+                                                    <TextBlock
+                                                        Text="4"
+                                                        Margin="10 0"
+                                                    />
+                                                    <TextBlock
+                                                        Text="5"
+                                                        Margin="10 0"
+                                                    />
+                                                    -->
+                                                </StackPanel>
                                                 <materialDesign:PackIcon
-                                                    Kind="ArrowForward"    
+                                                    Kind="ArrowForward"
+                                                    MouseLeftButtonUp="GoToNextForumTopicPageHandler"
                                                 />
                                             </StackPanel>
                                         </DockPanel>
                                         <StackPanel
+                                            x:Name="forumTopicCountMsgs"
+                                            DataContext="{x:Null}"
                                             Margin="0 15"
                                             HorizontalAlignment="Right"
-                                            Orientation="Horizontal"    
+                                            Orientation="Horizontal"
                                         >
                                             <TextBlock
                                                 Text="Показывать на странице"
                                                 Margin="10 0"
                                             />
                                             <TextBlock
+                                                x:Name="forumTopic15CountMsgs"
                                                 Text="15"
+                                                Foreground="LightGray"
                                                 Margin="10 0"
+                                                DataContext="15"
+                                                MouseLeftButtonUp="SetCountMsgsOnForumTopicPageHandler"
                                             />
                                             <TextBlock
+                                                x:Name="forumTopic30CountMsgs"
                                                 Text="30"
+                                                Foreground="White"
                                                 Margin="10 0"
+                                                DataContext="30"
+                                                MouseLeftButtonUp="SetCountMsgsOnForumTopicPageHandler"
                                             />
                                             <TextBlock
+                                                x:Name="forumTopic50CountMsgs"
                                                 Text="50"
+                                                Foreground="White"
                                                 Margin="10 0"
+                                                DataContext="50"
+                                                MouseLeftButtonUp="SetCountMsgsOnForumTopicPageHandler"
                                             />
                                         </StackPanel>
                                         <StackPanel
@@ -1480,7 +1649,44 @@
                                                     Margin="5"
                                                     Height="50"
                                                     Width="650"
-                                                />
+                                                >
+                                                    <TextBox.Resources>
+                                                        <VisualBrush
+                                                            x:Key="hinttext"
+                                                            AlignmentX="Left"
+                                                            Stretch="None"
+                                                            TileMode="None"
+                                                        >
+                                                            <VisualBrush.Visual>
+                                                                <DockPanel>
+                                                                    <TextBlock
+                                                                        Height="50"
+                                                                        Width="650"
+                                                                        Text="Ваше сообщение"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                    />
+                                                                </DockPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </TextBox.Resources>
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="FontSize" Value="12" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
                                                 <Image
                                                     DockPanel.Dock="Left"
                                                     Margin="15"

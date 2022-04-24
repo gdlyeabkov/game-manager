@@ -415,6 +415,7 @@ namespace GamaManager
                                                 bool isMsgForCurrentPage = msgsCursor < countResultPerPage * currentPage && (msgsCursor >= countResultPerPage * currentPage - countResultPerPage);
                                                 if (isMsgForCurrentPage)
                                                 {
+                                                    string msgUserId = msg.user;
                                                     DateTime msgDate = msg.date;
                                                     string rawMsgDate = msgDate.ToLongDateString();
                                                     StackPanel forumTopicMsg = new StackPanel();
@@ -463,7 +464,7 @@ namespace GamaManager
                                                     forumTopicMsg.Children.Add(msgFooter);
                                                     forumTopicMsgs.Children.Add(forumTopicMsg);
 
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + msgUserId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -491,8 +492,12 @@ namespace GamaManager
                                             int firstMsgIndex = countResultPerPage * currentPage - countResultPerPage;
                                             int firstMsgNumber = firstMsgIndex + 1;
                                             int rawFirstMsgNumber = firstMsgNumber;
-                                            int lastMsgIndex = countResultPerPage * currentPage;
-                                            int lastMsgNumber = lastMsgIndex + 1;
+
+                                            // int lastMsgIndex = countResultPerPage * currentPage;
+                                            // int lastMsgNumber = lastMsgIndex + 1;
+
+                                            int lastMsgNumber = countResultPerPage * currentPage;
+
                                             int rawLastMsgNumber = lastMsgNumber;
                                             string forumTopicMsgsCountLabelContent = "Сообщения " + rawFirstMsgNumber + " - " + rawLastMsgNumber + " из " + rawMsgsCount;
                                             forumTopicMsgsCountLabel.Text = forumTopicMsgsCountLabelContent;
@@ -961,7 +966,7 @@ namespace GamaManager
             }
         }
 
-        public void ResetEditInfoHandler(object sender, RoutedEventArgs e)
+        public void ResetEditInfoHandler (object sender, RoutedEventArgs e)
         {
             GetEditInfo();
         }
@@ -1189,6 +1194,8 @@ namespace GamaManager
             editProfileAvatarImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
             editProfileAvatarImg.EndInit();
 
+            JavaScriptSerializer js = new JavaScriptSerializer();
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
@@ -1198,7 +1205,7 @@ namespace GamaManager
                 {
                     using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        // js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
 
                         FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
@@ -1242,6 +1249,29 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            string themeName = currentSettings.profileTheme;
+            foreach (StackPanel profileTheme in profileThemes.Children)
+            {
+                object rawProfileThemeName = profileTheme.DataContext;
+                string profileThemeName = rawProfileThemeName.ToString();
+                bool isThemeFound = profileThemeName == themeName;
+                if (isThemeFound)
+                {
+                    SelectProfileTheme(themeName, profileTheme);
+                    break;
+                }
+            }
+
         }
 
         public void GetGamesInfo()
@@ -1304,6 +1334,40 @@ namespace GamaManager
                 string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                 SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                 List<Game> myGames = loadedContent.games;
+
+                Settings mySettings = loadedContent.settings;
+                string profileTheme = mySettings.profileTheme;
+                bool isDefaultTheme = profileTheme == "Default";
+                bool isSummerTheme = profileTheme == "Summer";
+                bool isMidnightTheme = profileTheme == "Midnight";
+                bool isSteelTheme = profileTheme == "Steel";
+                bool isSpaceTheme = profileTheme == "Space";
+                bool isDarkTheme = profileTheme == "Dark";
+                if (isDefaultTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.Blue.Color;
+                }
+                else if (isSummerTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.SandyBrown.Color;
+                }
+                else if (isMidnightTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.LightGray.Color;
+                }
+                else if (isSteelTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.DarkGray.Color;
+                }
+                else if (isSpaceTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.Violet.Color;
+                }
+                else if (isDarkTheme)
+                {
+                    profileThemeAside.Color = System.Windows.Media.Brushes.Black.Color;
+                }
+
                 int countGames = myGames.Count;
                 string rawCountGames = countGames.ToString();
                 countGamesLabel.Text = rawCountGames;
@@ -1750,7 +1814,8 @@ namespace GamaManager
                         {
                             paths = new List<string>(),
                             volume = 100
-                        }
+                        },
+                        profileTheme = "Default"
                     }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
@@ -2742,15 +2807,16 @@ namespace GamaManager
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
             string sd = response.Content.ReadAsStringAsync().Result;
-            JavaScriptSerializer js = new JavaScriptSerializer();
+            /*JavaScriptSerializer js = new JavaScriptSerializer();
             RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(sd, typeof(RegisterResponseInfo));
             string status = myobj.status;
-            bool isOkStatus = status == "OK";
+            bool isOkStatus = status == "OK";*/
+            bool isOkStatus = true;
             if (isOkStatus)
             {
-                GetUser(currentUserId);
+                /*GetUser(currentUserId);
                 GetUserInfo(currentUserId, true);
-                GetEditInfo();
+                GetEditInfo();*/
                 MessageBox.Show("Профиль был обновлен", "Внимание");
             }
             else
@@ -2786,6 +2852,43 @@ namespace GamaManager
                     }
                 }
             }*/
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings updatedSettings = loadedContent.settings;
+            foreach (StackPanel profileTheme in profileThemes.Children) {
+                bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
+                if (isSelectedTheme)
+                {
+
+                    /*object rawThemeName = editProfileThemeName.DataContext;
+                    string themeName = rawThemeName.ToString();*/
+
+                    object rawThemeName = profileTheme.DataContext;
+                    string themeName = rawThemeName.ToString();
+
+                    updatedSettings.profileTheme = themeName;
+                    string savedContent = js.Serialize(new SavedContent
+                    {
+                        games = currentGames,
+                        friends = currentFriends,
+                        settings = updatedSettings
+                    });
+                    File.WriteAllText(saveDataFilePath, savedContent);
+                    break;
+                }
+            }
+
+            GetUser(currentUserId);
+            GetUserInfo(currentUserId, true);
+            GetEditInfo();
+
         }
 
         public byte[] getPngFromImageControl(BitmapImage imageC)
@@ -3295,34 +3398,37 @@ namespace GamaManager
                         Application.Current.Dispatcher.Invoke(() => GetFriendRequests());
                     }
                 });
-                client.On("user_send_msg_to_forum", async response =>
+                client.On("user_send_msg_to_my_topic", async response =>
                 {
-                    var rawResult = response.GetValue<string>();
-                    string[] result = rawResult.Split(new char[] { '|' });
-                    string forumId = result[0];
-                    string topicId = result[1];
-                    string userId = result[2];
-                    bool isOtherSender = userId != currentUserId;
-                    if (isOtherSender)
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        int selectedWindowIndex = mainControl.SelectedIndex;
-                        bool isForumsWindow = selectedWindowIndex == 6;
-                        bool isForumTopicsWindow = selectedWindowIndex == 7;
-                        bool isForumTopicMsgsWindow = selectedWindowIndex == 8;
-                        if (isForumsWindow)
+                        var rawResult = response.GetValue<string>();
+                        string[] result = rawResult.Split(new char[] { '|' });
+                        string forumId = result[0];
+                        string topicId = result[1];
+                        string userId = result[2];
+                        bool isOtherSender = userId != currentUserId;
+                        if (isOtherSender)
                         {
-                            string keywords = forumsKeywordsBox.Text;
-                            GetForums(keywords);
+                            int selectedWindowIndex = mainControl.SelectedIndex;
+                            bool isForumsWindow = selectedWindowIndex == 6;
+                            bool isForumTopicsWindow = selectedWindowIndex == 7;
+                            bool isForumTopicMsgsWindow = selectedWindowIndex == 8;
+                            if (isForumsWindow)
+                            {
+                                string keywords = forumsKeywordsBox.Text;
+                                GetForums(keywords);
+                            }
+                            else if (isForumTopicsWindow)
+                            {
+                                SelectForum(forumId);
+                            }
+                            else if (isForumTopicMsgsWindow)
+                            {
+                                SelectTopic(topicId);
+                            }
                         }
-                        else if (isForumTopicsWindow)
-                        {
-                            SelectForum(forumId);
-                        }
-                        else if (isForumTopicMsgsWindow)
-                        {
-                            SelectTopic(topicId);
-                        }
-                    }
+                    });
                 });
                 await client.ConnectAsync();
             }
@@ -3870,6 +3976,10 @@ namespace GamaManager
                             discussionTitleBox.Text = "";
                             discussionQuestionBox.Text = "";
                             SelectForum(forumId);
+
+                            string eventData = forumId + "|" + "mockTopicId" + "|" + currentUserId;
+                            client.EmitAsync("user_send_msg_to_forum", eventData);
+
                         }
                     }
                 }
@@ -4070,6 +4180,29 @@ namespace GamaManager
             }
         }
 
+        private void SelectProfileThemeHandler (object sender, MouseButtonEventArgs e)
+        {
+            StackPanel theme = ((StackPanel)(sender));
+            object themeData = theme.DataContext;
+            string themeName = themeData.ToString();
+            SelectProfileTheme(themeName, theme);
+        }
+
+        public void SelectProfileTheme (string themeName, StackPanel theme)
+        {
+            
+            foreach (StackPanel profileTheme in profileThemes.Children)
+            {
+                UIElement rawProfileThemeNameLabel = profileTheme.Children[1];
+                TextBlock profileThemeNameLabel = ((TextBlock)(rawProfileThemeNameLabel));
+                profileThemeNameLabel.Foreground = System.Windows.Media.Brushes.LightGray;
+            }
+            UIElement rawThemeNameLabel = theme.Children[1];
+            TextBlock themeNameLabel = ((TextBlock)(rawThemeNameLabel));
+            themeNameLabel.Foreground = System.Windows.Media.Brushes.Blue;
+            editProfileThemeName.DataContext = themeName;
+        
+        }
 
     }
 
@@ -4162,6 +4295,7 @@ namespace GamaManager
         public int startWindow;
         public string overlayHotKey;
         public MusicSettings music;
+        public string profileTheme;
     }
 
     public class MusicSettings
@@ -4287,6 +4421,7 @@ namespace GamaManager
         public string content;
         public string topic;
         public DateTime date;
+        public string user;
     }
 
 }

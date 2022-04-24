@@ -415,8 +415,34 @@
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
                         >
+                            <StackPanel.Background>
+                                <LinearGradientBrush>
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop
+                                                x:Name="profileThemeAside"
+                                                Color="Blue"
+                                            />
+                                            <GradientStop
+                                                Color="Blue"
+                                            />
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                    <LinearGradientBrush.StartPoint>
+                                        <Point
+                                            X="0"
+                                            Y="0"
+                                        />
+                                    </LinearGradientBrush.StartPoint>
+                                    <LinearGradientBrush.EndPoint>
+                                        <Point
+                                            X="350"
+                                            Y="0"
+                                        />
+                                    </LinearGradientBrush.EndPoint>
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
                             <DockPanel>
                                 <Image
                                     Margin="15"
@@ -645,43 +671,13 @@
                                         >
                                             <TextBlock
                                                 FontSize="20"
-                                                Text="Фон профиля"    
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Orientation="Horizontal"    
-                                            DataContext="3"
-                                            MouseLeftButtonUp="SetEditProfileTabHandler"
-                                        >
-                                            <TextBlock
-                                                FontSize="20"
-                                                Text="Мини-профиль"    
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Orientation="Horizontal"    
-                                            DataContext="4"
-                                            MouseLeftButtonUp="SetEditProfileTabHandler"
-                                        >
-                                            <TextBlock
-                                                FontSize="20"
                                                 Text="Тема"    
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Orientation="Horizontal"    
-                                            DataContext="5"
-                                            MouseLeftButtonUp="SetEditProfileTabHandler"
-                                        >
-                                            <TextBlock
-                                                FontSize="20"
-                                                Text="Значок напоказ"    
                                             />
                                         </StackPanel>
                                         <Separator />
                                         <StackPanel
                                             Orientation="Horizontal"    
-                                            DataContext="6"
+                                            DataContext="3"
                                             MouseLeftButtonUp="SetEditProfileTabHandler"
                                         >
                                             <TextBlock
@@ -804,8 +800,8 @@
                                                             />
                                                         </StackPanel>
                                                         <Image
-                                                            HorizontalAlignment="Left"
                                                             x:Name="editProfileAvatarImg"
+                                                            HorizontalAlignment="Left"
                                                             Width="100"    
                                                             Height="100"
                                                             ImageFailed="SetDefautAvatarHandler"
@@ -820,6 +816,163 @@
                                                     </DockPanel>
                                                 </StackPanel>
                                             </StackPanel>                                            
+                                        </TabItem>
+                                        <TabItem
+                                            x:Name="editProfileThemeName"
+                                            DataContext="Default"
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel
+                                                Margin="25"
+                                            >
+                                                <TextBlock
+                                                    Text="Тема"    
+                                                    FontSize="18"
+                                                />
+                                                <StackPanel
+                                                    Margin="15 0 0 0"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Выберите цветовую палитру для страницы своего профиля"    
+                                                        Margin="0 5"
+                                                        FontSize="16"
+                                                    />
+                                                    <StackPanel>
+                                                        <StackPanel
+                                                            Height="250"
+                                                            Margin="0 25"
+                                                            Background="DarkSlateGray"
+                                                        >
+                                                            
+                                                        </StackPanel>
+                                                        <Grid
+                                                            x:Name="profileThemes"
+                                                            Height="350"
+                                                            Margin="0 25"
+                                                            Background="DarkSlateGray"
+                                                        >
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition />
+                                                                <RowDefinition />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition />
+                                                                <ColumnDefinition />
+                                                                <ColumnDefinition />
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel
+                                                                Grid.Row="0"
+                                                                Grid.Column="0"
+                                                                DataContext="Default"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"    
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="SlateGray"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="По умолчанию"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Row="0"
+                                                                Grid.Column="1"
+                                                                DataContext="Summer"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="SandyBrown"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="Лето"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Row="0"
+                                                                Grid.Column="2"
+                                                                DataContext="Midnight"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="Black"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="Полночь"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Row="1"
+                                                                Grid.Column="0"
+                                                                DataContext="Steel"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="DarkGray"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="Сталь"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Row="1"
+                                                                Grid.Column="1"
+                                                                DataContext="Space"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="Violet"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="Космос"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Grid.Row="1"
+                                                                Grid.Column="2"
+                                                                DataContext="Dark"
+                                                                MouseLeftButtonUp="SelectProfileThemeHandler"
+                                                            >
+                                                                <Ellipse
+                                                                    Fill="Black"
+                                                                    Width="100"
+                                                                    Height="100"
+                                                                    Margin="0 15"
+                                                                />
+                                                                <TextBlock
+                                                                    Text="Тьма"
+                                                                    Foreground="LightGray"
+                                                                    TextAlignment="Center"
+                                                                />
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
                                         </TabItem>
                                     </TabControl>
                                 </DockPanel>

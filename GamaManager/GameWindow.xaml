@@ -39,6 +39,11 @@
                 Margin="10"
                 Text="Текущая игра"
             />
+            <TextBlock
+                x:Name="fpsLabel"
+                Margin="10"
+                Text="0"
+            />
         </StackPanel>
 
     </DockPanel>

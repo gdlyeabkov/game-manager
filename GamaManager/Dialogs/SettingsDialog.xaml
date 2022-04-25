@@ -295,37 +295,48 @@
                                 KeyDown="OverlayHotKeyHandler"
                             />
                             <TextBlock
+                                Margin="0 10"
                                 Text="Отображение частоты кадров"    
                             />
                             <ComboBox
+                                x:Name="framesBox"
+                                Margin="0 10"
                                 SelectedIndex="0"
                             >
                                 <ComboBoxItem
+                                    DataContext="Disabled"
                                     Content="Отключено"    
                                 />
                                 <ComboBoxItem
+                                    DataContext="Left top"
                                     Content="В левом верхнем углу"    
                                 />
                                 <ComboBoxItem
+                                    DataContext="Right top"
                                     Content="В правом верхнем углу"    
                                 />
                                 <ComboBoxItem
+                                    DataContext="Right bottom"
                                     Content="В правом нижнем углу"    
                                 />
                                 <ComboBoxItem
+                                    DataContext="Left bottom"
                                     Content="В левом нижнем углу"    
                                 />
                             </ComboBox>
                             <StackPanel
+                                Margin="0 10"
                                 Orientation="Horizontal"    
                             >
                                 <CheckBox />
                                 <TextBlock
+                                    Margin="15 0 0 0"
                                     Text="Высокий контраст счетчика кадров"    
                                 />
                             </StackPanel>
                             <Separator />
                             <TextBlock
+                                Margin="0 10"
                                 Text="Отображение частоты кадров"    
                             />
                         </StackPanel>
@@ -363,9 +374,11 @@
                                 Margin="0 10"
                                 Orientation="Horizontal"    
                             >
-                                <CheckBox />
+                                <CheckBox
+                                    x:Name="showScreenShotsNotificationCheckBox"    
+                                />
                                 <TextBlock
-                                    Margin="15 0"
+                                    Margin="15 0 0 0"
                                     Text="Показывать уведомление"    
                                 />
                             </StackPanel>
@@ -373,9 +386,11 @@
                                 Margin="0 10"
                                 Orientation="Horizontal"    
                             >
-                                <CheckBox />
+                                <CheckBox
+                                    x:Name="playScreenShotsNotificationCheckBox"    
+                                />
                                 <TextBlock
-                                    Margin="15 0"
+                                    Margin="15 0 0 0"
                                     Text="Воспроизводить звук"    
                                 />
                             </StackPanel>
@@ -383,9 +398,11 @@
                                 Margin="0 10"
                                 Orientation="Horizontal"    
                             >
-                                <CheckBox />
+                                <CheckBox
+                                    x:Name="saveScreenShotsCopyCheckBox"    
+                                />
                                 <TextBlock
-                                    Margin="15 0"
+                                    Margin="15 0 0 0"
                                     Text="Сохранять несжатую копию"    
                                 />
                             </StackPanel>

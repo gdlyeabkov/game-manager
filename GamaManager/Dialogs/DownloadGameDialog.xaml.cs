@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Aspose.Zip;
+using Aspose.Zip.Saving;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -52,9 +54,16 @@ namespace GamaManager.Dialogs
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string cachePath = appFolder + gameName;
+            // string cachePath = appFolder + gameName;
+            string cachePath = appFolder + @"games\" + gameName;
             Directory.CreateDirectory(cachePath);
+            
+            string screenShotsPath = appFolder + @"screenshots\" + gameName;
+            Directory.CreateDirectory(screenShotsPath);
+
             string filename = cachePath + @"\game.exe";
+            // string filename = cachePath + @"\game.zip";
+
             wc.Headers.Add("User-Agent: Other");   //that is the simple line!
             // await wc.DownloadFileTaskAsync(uri, filename);
             wc.DownloadFileAsync(uri, filename);
@@ -62,7 +71,7 @@ namespace GamaManager.Dialogs
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
         }
 
-        private void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void wc_DownloadProgressChanged (object sender, DownloadProgressChangedEventArgs e)
         {
             gameInstalledProgress.Value = e.ProgressPercentage;
             double progress = gameInstalledProgress.Value;
@@ -80,6 +89,7 @@ namespace GamaManager.Dialogs
             if (isErrorsNotFound)
             {
                 Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                dialogData = new Dictionary<String, Object>();
                 dialogData.Add("id", downloadedGameId);
                 dialogData.Add("status", "OK");
                 this.DataContext = dialogData;

@@ -118,7 +118,7 @@ namespace GamaManager
             string ignoreCaseKeywords = keywords.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -191,7 +191,7 @@ namespace GamaManager
                                     forumLastMsgDateLabel.Text = "00/00/00";
 
                                     List<ForumTopicMsg> totalForumMsgs = new List<ForumTopicMsg>();
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -209,7 +209,7 @@ namespace GamaManager
                                                 foreach (Topic topic in topics)
                                                 {
                                                     string topicId = topic._id;
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -272,7 +272,7 @@ namespace GamaManager
                                     TextBlock forumDiscussionsCountLabel = new TextBlock();
                                     forumDiscussionsCountLabel.Foreground = System.Windows.Media.Brushes.White;
                                     forumDiscussionsCountLabel.Margin = new Thickness(10, 15, 10, 15);
-                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -335,7 +335,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 8;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -353,7 +353,7 @@ namespace GamaManager
                             string userId = topic.user;
                             string title = topic.title;
                             activeTopicNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -563,7 +563,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 7;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -580,7 +580,7 @@ namespace GamaManager
                             Forum currentForum = myobj.forum;
                             string title = currentForum.title;
                             activeForumNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -696,7 +696,7 @@ namespace GamaManager
                                             forumMsgsCountLabel.Margin = new Thickness(10, 0, 10, 0);
                                             forumMsgsCountLabel.Foreground = System.Windows.Media.Brushes.White;
                                             
-                                            nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                            nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -1788,6 +1788,10 @@ namespace GamaManager
             }
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + userFolder + "save-data.txt";
             string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id;
+            
+            string cacheGamesPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\games";
+            string cacheScreenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\screenshots"; ;
+
             bool isCacheFolderExists = Directory.Exists(cachePath);
             bool isCacheFolderNotExists = !isCacheFolderExists;
             if (isCacheFolderNotExists)
@@ -1816,10 +1820,18 @@ namespace GamaManager
                             volume = 100
                         },
                         profileTheme = "Default",
-                        screenShotsHotKey = "Shift + S"
+                        screenShotsHotKey = "Shift + S",
+                        frames = "Disabled",
+                        showScreenShotsNotification = true,
+                        playScreenShotsNotification = true,
+                        saveScreenShotsCopy = false
                     }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
+            
+                Directory.CreateDirectory(cacheGamesPath);
+                Directory.CreateDirectory(cacheScreenShotsPath);
+
             }
         }
 
@@ -1870,7 +1882,8 @@ namespace GamaManager
                 currentGameName = gameNameLabel.Text;
             }
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string cachePath = appPath + currentGameName;
+            // string cachePath = appPath + currentGameName;
+            string cachePath = appPath + @"games\" + currentGameName;
             string filename = cachePath + @"\game.exe";
             JavaScriptSerializer js = new JavaScriptSerializer();
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
@@ -1960,7 +1973,8 @@ namespace GamaManager
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
             string gameName = gameNameLabel.Text;
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string cachePath = appPath + gameName;
+            // string cachePath = appPath + gameName;
+            string cachePath = appPath + @"games\" + gameName;
             string filename = cachePath + @"\game.exe";
             JavaScriptSerializer js = new JavaScriptSerializer();
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
@@ -2020,6 +2034,8 @@ namespace GamaManager
 
             client.EmitAsync("user_is_toggle_status", "online");
 
+            GetScreenShots("", false);
+
         }
 
         public void DecreaseUserToGameStats(string gameId)
@@ -2078,7 +2094,8 @@ namespace GamaManager
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string cachePath = appFolder + gameName;
+            string cachePath = appFolder + @"games\" + gameName;
+            // string cachePath = appFolder + gameName;
             string filename = cachePath + @"\game.exe";
             gameNameLabel.DataContext = ((string)(filename));
             gameActionLabel.IsEnabled = false;
@@ -2093,7 +2110,8 @@ namespace GamaManager
             string gameId = id;
             string gameName = gameNameLabel.Text;
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string cachePath = appPath + gameName;
+            string cachePath = appPath + @"games\" + gameName;
+            // string cachePath = appPath + gameName;
             Directory.CreateDirectory(cachePath);
             string filename = cachePath + @"\game.exe";
             JavaScriptSerializer js = new JavaScriptSerializer();
@@ -2136,6 +2154,8 @@ namespace GamaManager
             startInfo.FileName = filename;
             startInfo.Arguments = "/D=" + cachePath + " /VERYSILENT";
             Process.Start(startInfo);*/
+
+            GetScreenShots("", false);
 
             MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }
@@ -2274,9 +2294,15 @@ namespace GamaManager
                 {
                     FileInfo fileInfo = new FileInfo(someGamePath);
                     string gameFolder = fileInfo.DirectoryName;
+
+                    string gameScreenShotsFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\" + gameName;
+
                     try
                     {
                         Directory.Delete(gameFolder, true);
+
+                        Directory.Delete(gameScreenShotsFolder, true);
+
                     }
                     catch (Exception)
                     {
@@ -2805,15 +2831,17 @@ namespace GamaManager
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
             // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
             string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
             string sd = response.Content.ReadAsStringAsync().Result;
-            /*JavaScriptSerializer js = new JavaScriptSerializer();
+            /**/
+            JavaScriptSerializer js = new JavaScriptSerializer();
             RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(sd, typeof(RegisterResponseInfo));
             string status = myobj.status;
-            bool isOkStatus = status == "OK";*/
-            bool isOkStatus = true;
+            bool isOkStatus = status == "OK";
+            // bool isOkStatus = true;
             if (isOkStatus)
             {
                 /*GetUser(currentUserId);
@@ -2858,7 +2886,7 @@ namespace GamaManager
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            JavaScriptSerializer js = new JavaScriptSerializer();
+            js = new JavaScriptSerializer();
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> currentGames = loadedContent.games;
@@ -3747,12 +3775,15 @@ namespace GamaManager
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            // string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            // string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\";
+            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
             string[] games = Directory.GetDirectories(appPath);
             screenShots.Children.Clear();
             foreach (string game in games)
             {
-                FileInfo gameInfo = new FileInfo(game);
+                // FileInfo gameInfo = new FileInfo(game);
+                DirectoryInfo gameInfo = new DirectoryInfo(game);
                 string gameName = gameInfo.Name;
                 if (isInit)
                 {
@@ -3960,7 +3991,7 @@ namespace GamaManager
             try
             {
                 string title = discussionTitleBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4016,7 +4047,7 @@ namespace GamaManager
             string newMsgContent = forumTopicMsgBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4299,6 +4330,10 @@ namespace GamaManager
         public MusicSettings music;
         public string profileTheme;
         public string screenShotsHotKey;
+        public string frames;
+        public bool showScreenShotsNotification;
+        public bool playScreenShotsNotification;
+        public bool saveScreenShotsCopy;
     }
 
     public class MusicSettings

@@ -141,3 +141,9 @@ C:\wpf_projects\GamaManager\GamaManager\bin\Debug\FM.IceLink.WebRTC.dll
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.xml
 C:\wpf_projects\GamaManager\GamaManager\bin\Debug\AForge.Video.DirectShow.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Reactive.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Reactive.xml
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Aspose.Zip.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Drawing.Common.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\System.Text.Encoding.CodePages.dll
+C:\wpf_projects\GamaManager\GamaManager\bin\Debug\Aspose.Zip.xml

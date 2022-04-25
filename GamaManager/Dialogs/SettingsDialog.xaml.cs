@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -53,6 +54,10 @@ namespace GamaManager.Dialogs
             int currentStartWindow = currentSettings.startWindow;
             string currentOverlayHotKey = currentSettings.overlayHotKey;
             string currentScreenShotsHotKey = currentSettings.screenShotsHotKey;
+            string currentFrames = currentSettings.frames;
+            bool currentShowScreenShotsNotification = currentSettings.showScreenShotsNotification;
+            bool currentPlayScreenShotsNotification = currentSettings.playScreenShotsNotification;
+            bool currentSaveScreenShotsCopy = currentSettings.saveScreenShotsCopy;
             MusicSettings currentMusicSettings = currentSettings.music;
             List<string> currentMusicSettingsPaths = currentMusicSettings.paths;
             double currentMusicSettingsVolume = currentMusicSettings.volume;
@@ -79,6 +84,22 @@ namespace GamaManager.Dialogs
             startWindowSelector.SelectedIndex = currentStartWindow;
             overlayHotKeyBox.Text = currentOverlayHotKey;
             screenShotsHotKeyBox.Text = currentScreenShotsHotKey;
+            ItemCollection framesBoxItems = framesBox.Items;
+            foreach (ComboBoxItem framesBoxItem in framesBoxItems)
+            {
+                object rawSelectedframesData = framesBoxItem.DataContext;
+                string selectedFramesData = ((string)(rawSelectedframesData));
+                bool isFramesFound = selectedFramesData == currentFrames;
+                if (isFramesFound)
+                {
+                    int currentFramesIndex = framesBoxItems.IndexOf(framesBoxItem);
+                    framesBox.SelectedIndex = currentFramesIndex;
+                    break;
+                }
+            }
+            showScreenShotsNotificationCheckBox.IsChecked = currentShowScreenShotsNotification;
+            playScreenShotsNotificationCheckBox.IsChecked = currentPlayScreenShotsNotification;
+            saveScreenShotsCopyCheckBox.IsChecked = currentSaveScreenShotsCopy;
         }
 
         public void InitConstants (string currentUserId)
@@ -178,6 +199,23 @@ namespace GamaManager.Dialogs
             updatedSettings.music = musicSettings;
             string screenShotsHotKey = screenShotsHotKeyBox.Text;
             updatedSettings.screenShotsHotKey = screenShotsHotKey;
+            int selectedFramesBoxItemIndex = framesBox.SelectedIndex;
+            ItemCollection framesBoxItems = framesBox.Items;
+            object rawSelectedFramesBoxItem = framesBoxItems[selectedFramesBoxItemIndex];
+            ComboBoxItem selectedFramesBoxItem = ((ComboBoxItem)(rawSelectedFramesBoxItem));
+            object rawFrames = selectedFramesBoxItem.DataContext;
+            string frames = ((string)(rawFrames));
+            updatedSettings.frames = frames;
+            object rawIsShowScreenShotsNotification = showScreenShotsNotificationCheckBox.IsChecked;
+            bool isShowScreenShotsNotification = ((bool)(rawIsShowScreenShotsNotification));
+            updatedSettings.showScreenShotsNotification = isShowScreenShotsNotification;
+            object rawIsPlayScreenShotsNotification = playScreenShotsNotificationCheckBox.IsChecked;
+            bool isPlayScreenShotsNotification = ((bool)(rawIsPlayScreenShotsNotification));
+            updatedSettings.playScreenShotsNotification = isPlayScreenShotsNotification;
+            object rawIsSaveScreenShotsCopy = saveScreenShotsCopyCheckBox.IsChecked;
+            bool isSaveScreenShotsCopy = ((bool)(rawIsSaveScreenShotsCopy));
+            updatedSettings.saveScreenShotsCopy = isSaveScreenShotsCopy;
+
             string savedContent = js.Serialize(new SavedContent
             {
                 games = currentGames,
@@ -333,9 +371,17 @@ namespace GamaManager.Dialogs
 
         public void OpenScreenShotsFolder ()
         {
-
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            // string screenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId;
+            string screenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots";
+            System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer",
+                Arguments = screenShotsPath,
+                UseShellExecute = true
+            });
         }
-
 
     }
 }

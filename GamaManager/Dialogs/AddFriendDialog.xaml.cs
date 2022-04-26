@@ -38,7 +38,7 @@ namespace GamaManager.Dialogs
 
         }
 
-        public void Initialize (string currentUserId, SocketIO client)
+        public void Initialize(string currentUserId, SocketIO client)
         {
             InitializeConstants(currentUserId, client);
             GetUser();
@@ -52,7 +52,7 @@ namespace GamaManager.Dialogs
             this.client = client;
         }
 
-        public void GetUser ()
+        public void GetUser()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void GetUsers ()
+        public void GetUsers()
         {
             try
             {
@@ -117,7 +117,10 @@ namespace GamaManager.Dialogs
                                     usersItem.Height = 35;
                                     usersItem.Margin = new Thickness(0, 5, 0, 5);
                                     string userLogin = user.login;
-                                    Uri userAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                    // Uri userAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                    Uri userAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
+
                                     Image userAvatar = new Image();
                                     userAvatar.Width = 25;
                                     userAvatar.Height = 25;
@@ -132,7 +135,7 @@ namespace GamaManager.Dialogs
                                     usersItem.Children.Add(usersItemLoginLabel);
                                     users.Children.Add(usersItem);
                                     usersItem.DataContext = userId;
-                                    
+
                                     webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                     webRequest.Method = "GET";
                                     webRequest.UserAgent = ".NET Framework Test Client";
@@ -188,15 +191,16 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void SendFriendRequestHandler (object sender, RoutedEventArgs e)
+        private void SendFriendRequestHandler(object sender, RoutedEventArgs e)
         {
             string userId = friendCodeLabel.Text;
             SendFriendRequest(userId);
         }
 
-        private void SendFriendRequest (string friendId)
+        private void SendFriendRequest(string friendId)
         {
-            try {
+            try
+            {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/add/?id=" + currentUserId + @"&friend=" + friendId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -282,7 +286,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void ShowFriendCodeHandler (object sender, RoutedEventArgs e)
+        public void ShowFriendCodeHandler(object sender, RoutedEventArgs e)
         {
             StackPanel user = ((StackPanel)(sender));
             object rawUserId = user.DataContext;
@@ -290,12 +294,12 @@ namespace GamaManager.Dialogs
             ShowFriendCode(userId);
         }
 
-        public void ShowFriendCode (string userId)
+        public void ShowFriendCode(string userId)
         {
             friendCodeLabel.Text = userId;
         }
 
-        private void DetectFriendCodeContentHandler (object sender, TextChangedEventArgs e)
+        private void DetectFriendCodeContentHandler(object sender, TextChangedEventArgs e)
         {
             DetectFriendCodeContent();
         }

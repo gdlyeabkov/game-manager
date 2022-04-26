@@ -27,21 +27,21 @@ namespace GamaManager.Dialogs
         public Brush transparentBrush;
         public Brush selectedBrush;
 
-        public SettingsDialog (string currentUserId)
+        public SettingsDialog(string currentUserId)
         {
             InitializeComponent();
 
             Initialize(currentUserId);
-        
+
         }
 
-        public void Initialize (string currentUserId)
+        public void Initialize(string currentUserId)
         {
             InitConstants(currentUserId);
             LoadSettings();
         }
 
-        public void LoadSettings ()
+        public void LoadSettings()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -58,6 +58,7 @@ namespace GamaManager.Dialogs
             bool currentShowScreenShotsNotification = currentSettings.showScreenShotsNotification;
             bool currentPlayScreenShotsNotification = currentSettings.playScreenShotsNotification;
             bool currentSaveScreenShotsCopy = currentSettings.saveScreenShotsCopy;
+            bool currentIsShowOverlay = currentSettings.showOverlay;
             MusicSettings currentMusicSettings = currentSettings.music;
             List<string> currentMusicSettingsPaths = currentMusicSettings.paths;
             double currentMusicSettingsVolume = currentMusicSettings.volume;
@@ -100,9 +101,10 @@ namespace GamaManager.Dialogs
             showScreenShotsNotificationCheckBox.IsChecked = currentShowScreenShotsNotification;
             playScreenShotsNotificationCheckBox.IsChecked = currentPlayScreenShotsNotification;
             saveScreenShotsCopyCheckBox.IsChecked = currentSaveScreenShotsCopy;
+            showOverlayCheckBox.IsChecked = currentIsShowOverlay;
         }
 
-        public void InitConstants (string currentUserId)
+        public void InitConstants(string currentUserId)
         {
             this.currentUserId = currentUserId;
             transparentBrush = System.Windows.Media.Brushes.Transparent;
@@ -110,7 +112,7 @@ namespace GamaManager.Dialogs
         }
 
 
-        public void SelectSettingsTabHandler (object sender, MouseEventArgs e)
+        public void SelectSettingsTabHandler(object sender, MouseEventArgs e)
         {
             StackPanel tab = ((StackPanel)(sender));
             object tabData = tab.DataContext;
@@ -119,7 +121,7 @@ namespace GamaManager.Dialogs
             SelectSettingsTab(tabIndex, tab);
         }
 
-        public void SelectSettingsTab (int tabIndex, StackPanel selectedTab)
+        public void SelectSettingsTab(int tabIndex, StackPanel selectedTab)
         {
             settingsControl.SelectedIndex = tabIndex;
             foreach (StackPanel tab in tabs.Children)
@@ -134,7 +136,7 @@ namespace GamaManager.Dialogs
             SaveSettings();
         }
 
-        public void SaveSettings ()
+        public void SaveSettings()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -215,6 +217,9 @@ namespace GamaManager.Dialogs
             object rawIsSaveScreenShotsCopy = saveScreenShotsCopyCheckBox.IsChecked;
             bool isSaveScreenShotsCopy = ((bool)(rawIsSaveScreenShotsCopy));
             updatedSettings.saveScreenShotsCopy = isSaveScreenShotsCopy;
+            object rawIsShowOverlay = showOverlayCheckBox.IsChecked;
+            bool isShowOverlay = ((bool)(rawIsShowOverlay));
+            updatedSettings.showOverlay = isShowOverlay;
 
             string savedContent = js.Serialize(new SavedContent
             {
@@ -226,17 +231,17 @@ namespace GamaManager.Dialogs
             this.Close();
         }
 
-        private void CancelHandler (object sender, RoutedEventArgs e)
+        private void CancelHandler(object sender, RoutedEventArgs e)
         {
             Cancel();
         }
 
-        public void Cancel ()
+        public void Cancel()
         {
             this.Close();
         }
 
-        private void OverlayHotKeyHandler (object sender, KeyEventArgs e)
+        private void OverlayHotKeyHandler(object sender, KeyEventArgs e)
         {
             TextBox input = ((TextBox)(sender));
             Key currentKey = e.Key;
@@ -265,7 +270,7 @@ namespace GamaManager.Dialogs
                 {
                     rawHotKey = "Shift + " + rawHotKey;
                 }
-            
+
                 if (isCtrlEnabled)
                 {
                     rawHotKey = "Ctrl + " + rawHotKey;
@@ -274,12 +279,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void AddPathToMusicSettingsHandler (object sender, RoutedEventArgs e)
+        private void AddPathToMusicSettingsHandler(object sender, RoutedEventArgs e)
         {
             AddPathToMusicSettings();
         }
 
-        public void AddPathToMusicSettings ()
+        public void AddPathToMusicSettings()
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.Description = "Выберите музыкальную библиотеку";
@@ -295,13 +300,13 @@ namespace GamaManager.Dialogs
             }
         }
 
-        
-        private void SelectMusicLibraryHandler (object sender, RoutedEventArgs e)
+
+        private void SelectMusicLibraryHandler(object sender, RoutedEventArgs e)
         {
             SelectMusicLibrary();
         }
 
-        public void SelectMusicLibrary ()
+        public void SelectMusicLibrary()
         {
             int caretIndex = musicLibraryListBox.CaretIndex;
             int lineIndex = musicLibraryListBox.GetLineIndexFromCharacterIndex(caretIndex);
@@ -310,12 +315,12 @@ namespace GamaManager.Dialogs
             musicLibraryListBox.Select(startSelectionIndex, endSelectionIndex);
         }
 
-        private void RemoveMusicLibraryHandler (object sender, RoutedEventArgs e)
+        private void RemoveMusicLibraryHandler(object sender, RoutedEventArgs e)
         {
             RemoveMusicLibrary();
         }
 
-        public void RemoveMusicLibrary ()
+        public void RemoveMusicLibrary()
         {
             int selectionLength = musicLibraryListBox.SelectionLength;
             bool isLibrarySelected = selectionLength >= 1;
@@ -326,14 +331,14 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void ScreenShotsHotKeyHandler (object sender, KeyEventArgs e)
+        private void ScreenShotsHotKeyHandler(object sender, KeyEventArgs e)
         {
             TextBox input = ((TextBox)(sender));
             Key currentKey = e.Key;
             ScreenShotsHotKey(input, currentKey);
         }
 
-        public void ScreenShotsHotKey (TextBox input, Key key)
+        public void ScreenShotsHotKey(TextBox input, Key key)
         {
             Key leftShiftKey = Key.LeftShift;
             Key rightShiftKey = Key.RightShift;
@@ -364,12 +369,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void OpenScreenShotsFolderHandler (object sender, RoutedEventArgs e)
+        private void OpenScreenShotsFolderHandler(object sender, RoutedEventArgs e)
         {
             OpenScreenShotsFolder();
         }
 
-        public void OpenScreenShotsFolder ()
+        public void OpenScreenShotsFolder()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);

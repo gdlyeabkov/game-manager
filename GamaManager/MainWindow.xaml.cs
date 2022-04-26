@@ -31,8 +31,8 @@ using SocketIOClient;
 using Debugger = System.Diagnostics.Debugger;
 using System.Windows.Media.Animation;
 using System.Collections;
-using OxyPlot;
-using OxyPlot.Series;
+/*using OxyPlot;
+using OxyPlot.Series;*/
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Specialized;
@@ -110,10 +110,10 @@ namespace GamaManager
             GetOnlineFriends();
             GetDownloads();
             GetScreenShots("", true);
-            GetForums("");
+            GetForums("");/**/
         }
 
-        public void GetForums (string keywords)
+        public void GetForums(string keywords)
         {
             string ignoreCaseKeywords = keywords.ToLower();
             try
@@ -134,7 +134,8 @@ namespace GamaManager
                         {
                             UIElementCollection forumsChildren = forums.Children;
                             int countForumsChildren = forumsChildren.Count;
-                            for (int i = countForumsChildren - 1; i > 0;  i--) {
+                            for (int i = countForumsChildren - 1; i > 0; i--)
+                            {
                                 UIElement element = forums.Children[i];
                                 int row = Grid.GetRow(element);
                                 bool isForumItemElement = row >= 1;
@@ -227,7 +228,7 @@ namespace GamaManager
                                                                 foreach (ForumTopicMsg msg in msgs)
                                                                 {
                                                                     totalForumMsgs.Add(msg);
-                                                                }        
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -310,7 +311,7 @@ namespace GamaManager
             }
         }
 
-        public void SelectTopicHandler (object sender, RoutedEventArgs e)
+        public void SelectTopicHandler(object sender, RoutedEventArgs e)
         {
             TextBlock topicNameLabel = ((TextBlock)(sender));
             object topicData = topicNameLabel.DataContext;
@@ -318,7 +319,7 @@ namespace GamaManager
             SelectTopic(topicId);
         }
 
-        public void SelectTopic (string id)
+        public void SelectTopic(string id)
         {
 
             int countResultPerPage = 15;
@@ -371,9 +372,9 @@ namespace GamaManager
                                         List<ForumTopicMsg> msgs = myInnerObj.msgs;
                                         int msgsCount = msgs.Count;
                                         string rawMsgsCount = msgsCount.ToString();
-                                        
+
                                         // string forumTopicMsgsCountLabelContent = "Сообщения 0 - 0 из " + rawMsgsCount;
-                                        
+
                                         int msgsCursor = -1;
 
                                         object currentPageNumber = forumTopicPages.DataContext;
@@ -429,7 +430,10 @@ namespace GamaManager
                                                     msgHeaderUserAvatar.Width = 25;
                                                     msgHeaderUserAvatar.Height = 25;
                                                     msgHeaderUserAvatar.BeginInit();
-                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+
+                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + msgUserId));
+                                                    // msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+
                                                     msgHeaderUserAvatar.EndInit();
                                                     msgHeader.Children.Add(msgHeaderUserAvatar);
                                                     TextBlock msgHeaderUserNameLabel = new TextBlock();
@@ -501,9 +505,9 @@ namespace GamaManager
                                             int rawLastMsgNumber = lastMsgNumber;
                                             string forumTopicMsgsCountLabelContent = "Сообщения " + rawFirstMsgNumber + " - " + rawLastMsgNumber + " из " + rawMsgsCount;
                                             forumTopicMsgsCountLabel.Text = forumTopicMsgsCountLabelContent;
-                                            
+
                                             UpdatePaginationPointers(currentPage);
-                                        
+
                                         }
                                         else
                                         {
@@ -546,9 +550,12 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            addDiscussionMsgUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+
         }
 
-        public void SelectForumHandler (object sender, RoutedEventArgs e)
+        public void SelectForumHandler(object sender, RoutedEventArgs e)
         {
             TextBlock forumNameLabel = ((TextBlock)(sender));
             object forumData = forumNameLabel.DataContext;
@@ -556,7 +563,7 @@ namespace GamaManager
             SelectForum(forumId);
         }
 
-        public void SelectForum (string id)
+        public void SelectForum(string id)
         {
             addDiscussionDialog.Visibility = invisible;
             addDiscussionBtn.DataContext = id;
@@ -695,7 +702,7 @@ namespace GamaManager
                                             forumMsgsCountLabel.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                                             forumMsgsCountLabel.Margin = new Thickness(10, 0, 10, 0);
                                             forumMsgsCountLabel.Foreground = System.Windows.Media.Brushes.White;
-                                            
+
                                             nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
@@ -742,7 +749,7 @@ namespace GamaManager
                                                     }
                                                 }
                                             }
-                                            
+
                                             forumMsgsCount.Children.Add(forumMsgsCountLabel);
                                             forumTopics.Children.Add(forumMsgsCount);
                                             Grid.SetRow(forumMsgsCount, topicsCursor);
@@ -966,7 +973,7 @@ namespace GamaManager
             }
         }
 
-        public void ResetEditInfoHandler (object sender, RoutedEventArgs e)
+        public void ResetEditInfoHandler(object sender, RoutedEventArgs e)
         {
             GetEditInfo();
         }
@@ -1240,6 +1247,9 @@ namespace GamaManager
                                 }
                             }
                             userAboutBox.Text = currentUserAbout;
+
+                            userProfileEditAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+
                         }
                     }
                 }
@@ -1420,6 +1430,9 @@ namespace GamaManager
                                         userProfileNameLabel.Text = currentUserName;
                                         string currentUserCountry = user.country;
                                         userProfileCountryLabel.Text = currentUserCountry;
+
+                                        userProfileAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+
                                     }
                                 }
                             }
@@ -1480,8 +1493,8 @@ namespace GamaManager
                             {
                                 string senderId = myRequest.user;
                                 HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + senderId);
-                                webRequest.Method = "GET";
-                                webRequest.UserAgent = ".NET Framework Test Client";
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                 {
                                     using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
@@ -1515,10 +1528,16 @@ namespace GamaManager
                                             friendRequestBodySenderAvatar.Width = 100;
                                             friendRequestBodySenderAvatar.Height = 100;
                                             friendRequestBodySenderAvatar.BeginInit();
-                                            Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                            // Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                            Uri friendRequestBodySenderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + senderId);
+
                                             BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
                                             friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
                                             friendRequestBodySenderAvatar.EndInit();
+
+                                            friendRequestBodySenderAvatar.ImageFailed += SetDefautAvatarHandler;
+
                                             friendRequestBody.Children.Add(friendRequestBodySenderAvatar);
                                             TextBlock friendRequestBodySenderLoginLabel = new TextBlock();
                                             friendRequestBodySenderLoginLabel.Margin = new Thickness(10);
@@ -1569,8 +1588,9 @@ namespace GamaManager
                     }
                 }
             }
-            catch (System.Net.WebException)
+            catch (System.Net.WebException exception)
             {
+                Debugger.Log(0, "debug", "friend requests: " + exception.Message);
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
@@ -1788,7 +1808,7 @@ namespace GamaManager
             }
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + userFolder + "save-data.txt";
             string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id;
-            
+
             string cacheGamesPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\games";
             string cacheScreenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\screenshots"; ;
 
@@ -1824,11 +1844,12 @@ namespace GamaManager
                         frames = "Disabled",
                         showScreenShotsNotification = true,
                         playScreenShotsNotification = true,
-                        saveScreenShotsCopy = false
+                        saveScreenShotsCopy = false,
+                        showOverlay = true
                     }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
-            
+
                 Directory.CreateDirectory(cacheGamesPath);
                 Directory.CreateDirectory(cacheScreenShotsPath);
 
@@ -2102,7 +2123,7 @@ namespace GamaManager
         }
 
 
-        public void GameSuccessDownloaded (string id)
+        public void GameSuccessDownloaded(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -2824,6 +2845,7 @@ namespace GamaManager
             string userAboutBoxContent = userAboutBox.Text;
 
             HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
             MultipartFormDataContent form = new MultipartFormDataContent();
             // byte[] imagebytearraystring = ImageFileToByteArray(@"C:\Users\ПК\Downloads\a.jpg");
             ImageSource source = editProfileAvatarImg.Source;
@@ -2831,8 +2853,8 @@ namespace GamaManager
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
             // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
-            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
-            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
             string sd = response.Content.ReadAsStringAsync().Result;
@@ -2892,7 +2914,8 @@ namespace GamaManager
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
-            foreach (StackPanel profileTheme in profileThemes.Children) {
+            foreach (StackPanel profileTheme in profileThemes.Children)
+            {
                 bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
                 if (isSelectedTheme)
                 {
@@ -3970,7 +3993,7 @@ namespace GamaManager
             return bytes;
         }
 
-        private void GenerateDatas ()
+        private void GenerateDatas()
         {
             this.Collection = new ObservableCollection<Model>();
             this.Collection.Add(new Model(10, 1, 5, 4));
@@ -3979,7 +4002,7 @@ namespace GamaManager
             this.Collection.Add(new Model(10, 1, 5, 4));
         }
 
-        private void AddDiscussionHandler (object sender, RoutedEventArgs e)
+        private void AddDiscussionHandler(object sender, RoutedEventArgs e)
         {
             object btnData = addDiscussionBtn.DataContext;
             string forumId = ((string)(btnData));
@@ -4024,25 +4047,28 @@ namespace GamaManager
             }
         }
 
-        public void OpenAddDiscussionDialogHandler (object sender, RoutedEventArgs e)
+        public void OpenAddDiscussionDialogHandler(object sender, RoutedEventArgs e)
         {
             OpenAddDiscussionDialog();
         }
 
-        public void OpenAddDiscussionDialog ()
+        public void OpenAddDiscussionDialog()
         {
             mainControl.SelectedIndex = 7;
             addDiscussionDialog.Visibility = visible;
+
+            addDiscussionUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+
         }
 
-        private void SendMsgToTopicHandler (object sender, RoutedEventArgs e)
+        private void SendMsgToTopicHandler(object sender, RoutedEventArgs e)
         {
             object topicData = addDiscussionMsgBtn.DataContext;
             string topicId = ((string)(topicData));
             SendMsgToTopic(topicId);
         }
 
-        public void SendMsgToTopic (string topicId)
+        public void SendMsgToTopic(string topicId)
         {
             string newMsgContent = forumTopicMsgBox.Text;
             try
@@ -4078,7 +4104,6 @@ namespace GamaManager
                             string forumId = ((string)(btnData));
                             string eventData = forumId + "|" + topicId + "|" + currentUserId;
                             client.EmitAsync("user_send_msg_to_forum", eventData);
-
                         }
                     }
                 }
@@ -4090,19 +4115,19 @@ namespace GamaManager
             }
         }
 
-        private void FilterForumsHandler (object sender, TextChangedEventArgs e)
+        private void FilterForumsHandler(object sender, TextChangedEventArgs e)
         {
             TextBox box = ((TextBox)(sender));
             FilterForums(box);
         }
 
-        public void FilterForums (TextBox box)
+        public void FilterForums(TextBox box)
         {
             string keywords = box.Text;
             GetForums(keywords);
         }
 
-        private void SetCountMsgsOnForumTopicPageHandler (object sender, MouseButtonEventArgs e)
+        private void SetCountMsgsOnForumTopicPageHandler(object sender, MouseButtonEventArgs e)
         {
             TextBlock countLabel = ((TextBlock)(sender));
             object countLabelData = countLabel.DataContext;
@@ -4118,7 +4143,7 @@ namespace GamaManager
             SetCountMsgsOnForumTopicPage(topicId, countMsgs, countLabel);
         }
 
-        public void SetCountMsgsOnForumTopicPage (string topicId, int countMsgs, TextBlock label)
+        public void SetCountMsgsOnForumTopicPage(string topicId, int countMsgs, TextBlock label)
         {
             forumTopicCountMsgs.DataContext = countMsgs;
             forumTopic15CountMsgs.Foreground = System.Windows.Media.Brushes.White;
@@ -4128,7 +4153,7 @@ namespace GamaManager
             SelectTopic(topicId);
         }
 
-        public void SelectForumTopicPageHandler (object sender, RoutedEventArgs e)
+        public void SelectForumTopicPageHandler(object sender, RoutedEventArgs e)
         {
             TextBlock pageLabel = ((TextBlock)(sender));
             object pageLabelData = pageLabel.DataContext;
@@ -4141,7 +4166,7 @@ namespace GamaManager
             SelectForumTopicPage(pageNumber, topicId, pageLabel);
         }
 
-        public void UpdatePaginationPointers (int pageNumber)
+        public void UpdatePaginationPointers(int pageNumber)
         {
             forumTopicPrevPaginationBtn.Foreground = System.Windows.Media.Brushes.Black;
             forumTopicNextPaginationBtn.Foreground = System.Windows.Media.Brushes.Black;
@@ -4158,23 +4183,24 @@ namespace GamaManager
             }
         }
 
-        public void SelectForumTopicPage (int pageNumber, string topicId, TextBlock pageLabel)
+        public void SelectForumTopicPage(int pageNumber, string topicId, TextBlock pageLabel)
         {
             string rawPageNumber = pageNumber.ToString();
             forumTopicPages.DataContext = rawPageNumber;
-            foreach (TextBlock somePageLabel in forumTopicPages.Children) {
+            foreach (TextBlock somePageLabel in forumTopicPages.Children)
+            {
                 somePageLabel.Foreground = System.Windows.Media.Brushes.White;
             }
             pageLabel.Foreground = System.Windows.Media.Brushes.DarkCyan;
             SelectTopic(topicId);
         }
 
-        private void GoToPrevForumTopicPageHandler (object sender, MouseButtonEventArgs e)
+        private void GoToPrevForumTopicPageHandler(object sender, MouseButtonEventArgs e)
         {
             GoToPrevForumTopicPage();
         }
 
-        public void GoToPrevForumTopicPage ()
+        public void GoToPrevForumTopicPage()
         {
             object topicData = addDiscussionMsgBtn.DataContext;
             string topicId = ((string)(topicData));
@@ -4213,7 +4239,7 @@ namespace GamaManager
             }
         }
 
-        private void SelectProfileThemeHandler (object sender, MouseButtonEventArgs e)
+        private void SelectProfileThemeHandler(object sender, MouseButtonEventArgs e)
         {
             StackPanel theme = ((StackPanel)(sender));
             object themeData = theme.DataContext;
@@ -4221,9 +4247,9 @@ namespace GamaManager
             SelectProfileTheme(themeName, theme);
         }
 
-        public void SelectProfileTheme (string themeName, StackPanel theme)
+        public void SelectProfileTheme(string themeName, StackPanel theme)
         {
-            
+
             foreach (StackPanel profileTheme in profileThemes.Children)
             {
                 UIElement rawProfileThemeNameLabel = profileTheme.Children[1];
@@ -4234,7 +4260,7 @@ namespace GamaManager
             TextBlock themeNameLabel = ((TextBlock)(rawThemeNameLabel));
             themeNameLabel.Foreground = System.Windows.Media.Brushes.Blue;
             editProfileThemeName.DataContext = themeName;
-        
+
         }
 
     }
@@ -4334,6 +4360,7 @@ namespace GamaManager
         public bool showScreenShotsNotification;
         public bool playScreenShotsNotification;
         public bool saveScreenShotsCopy;
+        public bool showOverlay;
     }
 
     public class MusicSettings

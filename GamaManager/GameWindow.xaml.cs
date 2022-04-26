@@ -50,13 +50,13 @@ namespace GamaManager
 
         }
 
-        public void Initialize (string userId)
+        public void Initialize(string userId)
         {
             InitConstants(userId);
             GetUser(userId);
         }
 
-        public void InitConstants (string userId)
+        public void InitConstants(string userId)
         {
             currentUserId = userId;
             notificationBackground = System.Windows.Media.Brushes.AliceBlue;
@@ -128,9 +128,9 @@ namespace GamaManager
                 control.DataContext = gameName;
                 control.Loaded += GameLoadedHandler;
                 control.Unloaded += GameUnloadedHandler;
-                
+
                 currentGameName = gameName;
-            
+
             }
             catch (Exception)
             {
@@ -139,12 +139,12 @@ namespace GamaManager
             }
         }
 
-        public void GameUnloadedHandler (object sender, EventArgs e)
+        public void GameUnloadedHandler(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        public void GameLoadedHandler (object sender, EventArgs e)
+        public void GameLoadedHandler(object sender, EventArgs e)
         {
             isAppInit = true;
             GameIntegrationManager manager = ((GameIntegrationManager)(sender));
@@ -156,7 +156,7 @@ namespace GamaManager
 
         }
 
-        public void UpdateFps ()
+        public void UpdateFps()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -188,7 +188,7 @@ namespace GamaManager
 
         }
 
-        private void GlobalHotKeyHandler (object sender, KeyEventArgs e)
+        private void GlobalHotKeyHandler(object sender, KeyEventArgs e)
         {
 
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -219,7 +219,7 @@ namespace GamaManager
                 overlayKey = overlayHotKeyParts[1];
                 overlayKey = overlayKey.Trim();
 
-                
+
                 string[] screenShotsHotKeyParts = screenShotsHotKey.Split(new Char[] { '+' });
                 string screenShotsModifier = screenShotsHotKeyParts[0];
                 screenShotsModifier = screenShotsModifier.Trim();
@@ -245,15 +245,19 @@ namespace GamaManager
             bool isTakeScreenShot = isScreenShotsKey && ((isShiftModifierEnabled && isScreenShotsNeedShiftModifier) || !isScreenShotsNeedShiftModifier) && ((isCtrlModifierEnabled && isScreenShotsNeedCtrlModifier) || !isScreenShotsNeedCtrlModifier);
             if (isToggleAside)
             {
-                Visibility currentVisibility = gameManagerAside.Visibility;
-                bool isVisible = currentVisibility == visible;
-                if (isVisible)
+                bool isShowOverlay = currentSettings.showOverlay;
+                if (isShowOverlay)
                 {
-                    gameManagerAside.Visibility = invisible;
-                }
-                else
-                {
-                    gameManagerAside.Visibility = visible;
+                    Visibility currentVisibility = gameManagerAside.Visibility;
+                    bool isVisible = currentVisibility == visible;
+                    if (isVisible)
+                    {
+                        gameManagerAside.Visibility = invisible;
+                    }
+                    else
+                    {
+                        gameManagerAside.Visibility = visible;
+                    }
                 }
             }
             else if (isTakeScreenShot)
@@ -282,7 +286,7 @@ namespace GamaManager
                     long unixTimeMilliseconds = currentDateTime.ToUnixTimeMilliseconds();
                     string rawMillis = unixTimeMilliseconds.ToString();
                     string generatedScreenShotName = rawMillis + @".jpg";
-                    
+
                     // string bitmapPath = cachePath + @"\" + generatedScreenShotName;
                     string bitmapPath = appPath + @"screenshots\" + currentGameName + @"\" + generatedScreenShotName;
 
@@ -339,7 +343,7 @@ namespace GamaManager
         {
             if (isAppInit)
             {
-                
+
             }
         }
 
@@ -348,7 +352,7 @@ namespace GamaManager
             this.Close();
         }
 
-        public CustomPopupPlacement[] NotificationPlacementHandler (System.Windows.Size popupSize, System.Windows.Size targetSize, System.Windows.Point offset)
+        public CustomPopupPlacement[] NotificationPlacementHandler(System.Windows.Size popupSize, System.Windows.Size targetSize, System.Windows.Point offset)
         {
             return new CustomPopupPlacement[]
             {

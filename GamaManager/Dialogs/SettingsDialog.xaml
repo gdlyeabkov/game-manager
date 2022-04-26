@@ -271,192 +271,206 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
-                    <StackPanel
-                        Orientation="Horizontal"    
-                    >
+                    <StackPanel>
                         <StackPanel
+                            Orientation="Horizontal"    
                             Margin="10"
-                            HorizontalAlignment="Left"    
                         >
-                            <TextBlock
-                                Text="Оверлей Office ware game manager"    
-                                Margin="0 5"
+                            <CheckBox
+                                x:Name="showOverlayCheckBox"    
                             />
                             <TextBlock
-                                Text="Сочетание клавиш для открытия оверлея"    
-                                Margin="0 5"
-                            />
-                            <TextBox
-                                x:Name="overlayHotKeyBox"
-                                IsReadOnly="True"
-                                Width="175"
-                                Margin="0 5"
-                                HorizontalAlignment="Left"
-                                KeyDown="OverlayHotKeyHandler"
-                            />
-                            <TextBlock
-                                Margin="0 10"
-                                Text="Отображение частоты кадров"    
-                            />
-                            <ComboBox
-                                x:Name="framesBox"
-                                Margin="0 10"
-                                SelectedIndex="0"
-                            >
-                                <ComboBoxItem
-                                    DataContext="Disabled"
-                                    Content="Отключено"    
-                                />
-                                <ComboBoxItem
-                                    DataContext="Left top"
-                                    Content="В левом верхнем углу"    
-                                />
-                                <ComboBoxItem
-                                    DataContext="Right top"
-                                    Content="В правом верхнем углу"    
-                                />
-                                <ComboBoxItem
-                                    DataContext="Right bottom"
-                                    Content="В правом нижнем углу"    
-                                />
-                                <ComboBoxItem
-                                    DataContext="Left bottom"
-                                    Content="В левом нижнем углу"    
-                                />
-                            </ComboBox>
-                            <StackPanel
-                                Margin="0 10"
-                                Orientation="Horizontal"    
-                            >
-                                <CheckBox />
-                                <TextBlock
-                                    Margin="15 0 0 0"
-                                    Text="Высокий контраст счетчика кадров"    
-                                />
-                            </StackPanel>
-                            <Separator />
-                            <TextBlock
-                                Margin="0 10"
-                                Text="Отображение частоты кадров"    
+                                Margin="15 0 0 0"
+                                Text="Включить оверлей Office ware game manager в игре"    
                             />
                         </StackPanel>
                         <StackPanel
-                            Margin="10"
-                            HorizontalAlignment="Left"    
+                            Orientation="Horizontal"    
                         >
-                            <TextBlock
-                                Text="Оверлей Office ware game manager"    
-                                Margin="0 5"
-                            />
-                            <TextBlock
-                                Text="Сочетание клавиш для скриншота"    
-                                Margin="0 5"
-                            />
-                            <TextBox
-                                x:Name="screenShotsHotKeyBox"
-                                IsReadOnly="True"
-                                Width="175"
-                                Margin="0 5"
-                                HorizontalAlignment="Left"
-                                KeyDown="ScreenShotsHotKeyHandler"
-                            />
-                            <Button
-                                Content="Папка скриншотов"
-                                Width="125"
-                                Height="35"
-                                Click="OpenScreenShotsFolderHandler"
-                            />
-                            <TextBlock
-                                Text="Когда скриншот сделан"    
-                                Margin="0 5"
-                            />
                             <StackPanel
-                                Margin="0 10"
-                                Orientation="Horizontal"    
+                                Margin="10"
+                                HorizontalAlignment="Left"    
                             >
-                                <CheckBox
-                                    x:Name="showScreenShotsNotificationCheckBox"    
+                                <TextBlock
+                                    Text="Оверлей Office ware game manager"    
+                                    Margin="0 5"
                                 />
                                 <TextBlock
-                                    Margin="15 0 0 0"
-                                    Text="Показывать уведомление"    
+                                    Text="Сочетание клавиш для открытия оверлея"    
+                                    Margin="0 5"
+                                />
+                                <TextBox
+                                    x:Name="overlayHotKeyBox"
+                                    IsReadOnly="True"
+                                    Width="175"
+                                    Margin="0 5"
+                                    HorizontalAlignment="Left"
+                                    KeyDown="OverlayHotKeyHandler"
+                                />
+                                <TextBlock
+                                    Margin="0 10"
+                                    Text="Отображение частоты кадров"    
+                                />
+                                <ComboBox
+                                    x:Name="framesBox"
+                                    Margin="0 10"
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        DataContext="Disabled"
+                                        Content="Отключено"    
+                                    />
+                                    <ComboBoxItem
+                                        DataContext="Left top"
+                                        Content="В левом верхнем углу"    
+                                    />
+                                    <ComboBoxItem
+                                        DataContext="Right top"
+                                        Content="В правом верхнем углу"    
+                                    />
+                                    <ComboBoxItem
+                                        DataContext="Right bottom"
+                                        Content="В правом нижнем углу"    
+                                    />
+                                    <ComboBoxItem
+                                        DataContext="Left bottom"
+                                        Content="В левом нижнем углу"    
+                                    />
+                                </ComboBox>
+                                <StackPanel
+                                    Margin="0 10"
+                                    Orientation="Horizontal"    
+                                >
+                                    <CheckBox />
+                                    <TextBlock
+                                        Margin="15 0 0 0"
+                                        Text="Высокий контраст счетчика кадров"    
+                                    />
+                                </StackPanel>
+                                <Separator />
+                                <TextBlock
+                                    Margin="0 10"
+                                    Text="Отображение частоты кадров"    
                                 />
                             </StackPanel>
                             <StackPanel
-                                Margin="0 10"
-                                Orientation="Horizontal"    
+                                Margin="10"
+                                HorizontalAlignment="Left"    
                             >
-                                <CheckBox
-                                    x:Name="playScreenShotsNotificationCheckBox"    
+                                <TextBlock
+                                    Text="Оверлей Office ware game manager"    
+                                    Margin="0 5"
                                 />
                                 <TextBlock
-                                    Margin="15 0 0 0"
-                                    Text="Воспроизводить звук"    
+                                    Text="Сочетание клавиш для скриншота"    
+                                    Margin="0 5"
                                 />
-                            </StackPanel>
-                            <StackPanel
-                                Margin="0 10"
-                                Orientation="Horizontal"    
-                            >
-                                <CheckBox
-                                    x:Name="saveScreenShotsCopyCheckBox"    
+                                <TextBox
+                                    x:Name="screenShotsHotKeyBox"
+                                    IsReadOnly="True"
+                                    Width="175"
+                                    Margin="0 5"
+                                    HorizontalAlignment="Left"
+                                    KeyDown="ScreenShotsHotKeyHandler"
+                                />
+                                <Button
+                                    Content="Папка скриншотов"
+                                    Width="125"
+                                    Height="35"
+                                    Click="OpenScreenShotsFolderHandler"
                                 />
                                 <TextBlock
-                                    Margin="15 0 0 0"
-                                    Text="Сохранять несжатую копию"    
+                                    Text="Когда скриншот сделан"    
+                                    Margin="0 5"
                                 />
-                            </StackPanel>
-                            <Separator />
-                            <TextBlock
-                                Text="Запрос браузера серверов в минуту"    
-                            />
-                            <TextBlock
-                                Text="Возникли проблемы с соединением при&#10;просмотре игровых серверов?&#10;Попробуйте уменьшить это значение."    
-                            />
-                            <ComboBox
-                                SelectedIndex="0"
-                                Margin="0 10"
-                            >
-                                <ComboBoxItem
-                                    Content="Автоматически (5000)"    
+                                <StackPanel
+                                    Margin="0 10"
+                                    Orientation="Horizontal"    
+                                >
+                                    <CheckBox
+                                        x:Name="showScreenShotsNotificationCheckBox"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0 0 0"
+                                        Text="Показывать уведомление"    
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="0 10"
+                                    Orientation="Horizontal"    
+                                >
+                                    <CheckBox
+                                        x:Name="playScreenShotsNotificationCheckBox"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0 0 0"
+                                        Text="Воспроизводить звук"    
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="0 10"
+                                    Orientation="Horizontal"    
+                                >
+                                    <CheckBox
+                                        x:Name="saveScreenShotsCopyCheckBox"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0 0 0"
+                                        Text="Сохранять несжатую копию"    
+                                    />
+                                </StackPanel>
+                                <Separator />
+                                <TextBlock
+                                    Text="Запрос браузера серверов в минуту"    
                                 />
-                                <ComboBoxItem
-                                    Content="5000"    
+                                <TextBlock
+                                    Text="Возникли проблемы с соединением при&#10;просмотре игровых серверов?&#10;Попробуйте уменьшить это значение."    
                                 />
-                                <ComboBoxItem
-                                    Content="3000"    
-                                />
-                                <ComboBoxItem
-                                    Content="1500"    
-                                />
-                                <ComboBoxItem
-                                    Content="1000"    
-                                />
-                                <ComboBoxItem
-                                    Content="500"    
-                                />
-                                <ComboBoxItem
-                                    Content="250"    
-                                />
-                            </ComboBox>
+                                <ComboBox
+                                    SelectedIndex="0"
+                                    Margin="0 10"
+                                >
+                                    <ComboBoxItem
+                                        Content="Автоматически (5000)"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="5000"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="3000"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="1500"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="1000"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="500"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="250"    
+                                    />
+                                </ComboBox>
 
 
-                            <ComboBox
-                                SelectedIndex="0"
-                            >
-                                <ComboBoxItem
-                                    Content="По умолчанию"    
-                                />
-                                <ComboBoxItem
-                                    Content="Никогда"    
-                                />
-                                <ComboBoxItem
-                                    Content="Только для друзей"    
-                                />
-                                <ComboBoxItem
-                                    Content="Всегда"    
-                                />
-                            </ComboBox>
+                                <ComboBox
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        Content="По умолчанию"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="Никогда"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="Только для друзей"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="Всегда"    
+                                    />
+                                </ComboBox>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>

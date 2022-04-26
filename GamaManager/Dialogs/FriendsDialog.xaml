@@ -24,7 +24,7 @@
                 x:Name="favoriteFriends"    
                 Orientation="Horizontal"    
             >
-                
+
             </StackPanel>
         </ScrollViewer>
         <StackPanel>
@@ -56,7 +56,7 @@
                 <StackPanel
                     x:Name="friends"    
                 >
-                
+
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>

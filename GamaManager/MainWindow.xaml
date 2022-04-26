@@ -445,6 +445,7 @@
                             </StackPanel.Background>
                             <DockPanel>
                                 <Image
+                                    x:Name="userProfileAvatar"
                                     Margin="15"
                                     Width="200"    
                                     Height="200"    
@@ -587,6 +588,7 @@
                         >
                             <DockPanel>
                                 <Image
+                                    x:Name="userProfileEditAvatar"
                                     Margin="15"
                                     Width="100"    
                                     Height="100"    
@@ -815,7 +817,7 @@
 
                                                     </DockPanel>
                                                 </StackPanel>
-                                            </StackPanel>                                            
+                                            </StackPanel>
                                         </TabItem>
                                         <TabItem
                                             x:Name="editProfileThemeName"
@@ -843,7 +845,7 @@
                                                             Margin="0 25"
                                                             Background="DarkSlateGray"
                                                         >
-                                                            
+
                                                         </StackPanel>
                                                         <Grid
                                                             x:Name="profileThemes"
@@ -1211,7 +1213,7 @@
                                     Text="Загрузки(0)"    
                                     Margin="15"
                                 />
-                                    <Separator
+                                <Separator
                                     Margin="50 0"
                                     BorderBrush="Black" 
                                     BorderThickness="1"
@@ -1564,6 +1566,7 @@
                                                 Orientation="Horizontal"    
                                             >
                                                 <Image
+                                                    x:Name="addDiscussionUserAvatar"
                                                     VerticalAlignment="Top"
                                                     Width="25"
                                                     Height="25"
@@ -1878,6 +1881,7 @@
                                                     </TextBox.Style>
                                                 </TextBox>
                                                 <Image
+                                                    x:Name="addDiscussionMsgUserAvatar"
                                                     DockPanel.Dock="Left"
                                                     Margin="15"
                                                     Width="35"    

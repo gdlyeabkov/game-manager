@@ -32,13 +32,13 @@ namespace GamaManager.Dialogs
         public Brush playedBrush;
         public Brush offlineBrush;
         public TabControl mainControl;
-        
+
         public FriendsDialog(string currentUserId, SocketIO client, TabControl mainControl)
         {
             InitializeComponent();
 
             Initialize(currentUserId, client, mainControl);
-        
+
         }
 
         public void Initialize(string currentUserId, SocketIO client, TabControl mainControl)
@@ -57,7 +57,7 @@ namespace GamaManager.Dialogs
             this.mainControl = mainControl;
         }
 
-        public void GetFriends (string currentUserId, string keywords)
+        public void GetFriends(string currentUserId, string keywords)
         {
             this.currentUserId = currentUserId;
             try
@@ -361,7 +361,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void RemoveFriendHandler (object sender, RoutedEventArgs e)
+        public void RemoveFriendHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -369,7 +369,7 @@ namespace GamaManager.Dialogs
             RemoveFriend(friendId);
         }
 
-        public void RemoveFriend (string friendId)
+        public void RemoveFriend(string friendId)
         {
             try
             {
@@ -435,7 +435,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void FilterFriendsHandler (object sender, TextChangedEventArgs e)
+        private void FilterFriendsHandler(object sender, TextChangedEventArgs e)
         {
             FilterFriends();
         }
@@ -457,7 +457,7 @@ namespace GamaManager.Dialogs
             dialog.Show();
         }
 
-        public void OpenChatHandler (object sender, RoutedEventArgs e)
+        public void OpenChatHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -465,7 +465,7 @@ namespace GamaManager.Dialogs
             OpenChat(friend);
         }
 
-        async public void OpenChat (string friend)
+        async public void OpenChat(string friend)
         {
             Application app = Application.Current;
             WindowCollection windows = app.Windows;
@@ -499,12 +499,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void InitSocketsHandler (object sender, RoutedEventArgs e)
+        public void InitSocketsHandler(object sender, RoutedEventArgs e)
         {
             InitSockets();
         }
 
-        public void OpenFriendNotificationsDialogHandler (object sender, RoutedEventArgs e)
+        public void OpenFriendNotificationsDialogHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -512,14 +512,14 @@ namespace GamaManager.Dialogs
             OpenFriendNotificationsDialog(friendId);
         }
 
-        public void OpenFriendNotificationsDialog (string friendId)
+        public void OpenFriendNotificationsDialog(string friendId)
         {
             Dialogs.FriendNotificationsDialog dialog = new Dialogs.FriendNotificationsDialog(currentUserId);
             dialog.DataContext = friendId;
             dialog.Show();
         }
 
-        async public void InitSockets ()
+        async public void InitSockets()
         {
             try
             {
@@ -557,7 +557,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void AddFriendToFavoriteHandler (object sender, RoutedEventArgs e)
+        public void AddFriendToFavoriteHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -565,7 +565,7 @@ namespace GamaManager.Dialogs
             AddFriendToFavorite(friend);
         }
 
-        public void AddFriendToFavorite (string currentFriendId)
+        public void AddFriendToFavorite(string currentFriendId)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -598,15 +598,15 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void RemoveFriendFromFavoriteHandler (object sender, RoutedEventArgs e)
+        public void RemoveFriendFromFavoriteHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
             string friend = ((string)(menuItemData));
-            RemoveFriendFromFavorite (friend);
+            RemoveFriendFromFavorite(friend);
         }
 
-        public void RemoveFriendFromFavorite (string currentFriendId)
+        public void RemoveFriendFromFavorite(string currentFriendId)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -616,7 +616,7 @@ namespace GamaManager.Dialogs
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
-            Settings currentSettings = loadedContent.settings; 
+            Settings currentSettings = loadedContent.settings;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -639,7 +639,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void OpenFriendProfileHandler (object sender, RoutedEventArgs e)
+        public void OpenFriendProfileHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -647,7 +647,7 @@ namespace GamaManager.Dialogs
             OpenFriendProfile(friend);
         }
 
-        async public void OpenFriendProfile (string friendId)
+        async public void OpenFriendProfile(string friendId)
         {
             mainControl.DataContext = friendId;
             mainControl.SelectedIndex = 1;

@@ -195,6 +195,7 @@
                     <ComboBoxItem
                         Content="Коллекции"    
                     />
+                    <Separator />
                     <ComboBoxItem
                         Content="Загрузки"    
                     />
@@ -2255,6 +2256,7 @@
                                     Orientation="Horizontal"    
                                 >
                                     <TextBlock
+                                        x:Name="gameCollectionNameLabel"
                                         Margin="15"
                                         FontSize="24"
                                         Text="Имя коллекции"    
@@ -2266,6 +2268,7 @@
                                     VerticalAlignment="Center"
                                 />
                                 <TextBlock
+                                    x:Name="countGameCollectionGamesLabel"
                                     Text="(0)"
                                     Margin="15 0"
                                     VerticalAlignment="Center"
@@ -2293,6 +2296,30 @@
                                     >
                                         <ComboBoxItem
                                             Content="По алфавиту"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По играющим друзьям"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По проценту достижений"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По времени в игре"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По дате запуска"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По дате выхода"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По размеру на диске"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По оценке на Metacritic"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По обзорам в Steam"    
                                         />
                                     </ComboBox>
                                 </StackPanel>

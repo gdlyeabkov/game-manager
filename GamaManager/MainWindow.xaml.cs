@@ -177,6 +177,23 @@ namespace GamaManager
         {
             mainControl.SelectedIndex = 10;
             GetGameCollectionItems(name);
+            gameCollectionNameLabel.Text = name;
+                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<Game> gamesForCollection = currentGames.Where<Game>((Game game) =>
+            {
+                List<string> gameCollections = game.collections;
+                bool isGameForCollection = gameCollections.Contains(name);
+                return isGameForCollection;
+            }).ToList<Game>();
+            int countGamesForCollection = gamesForCollection.Count;
+            string rawCountGamesForCollection = countGamesForCollection.ToString();
+            countGameCollectionGamesLabel.Text = "(" + rawCountGamesForCollection + ")";
         }
 
         public void GetGameCollectionItems (string name)
@@ -199,6 +216,7 @@ namespace GamaManager
             gameCollectionItems.HorizontalAlignment = HorizontalAlignment.Left;
             if (isHaveGames)
             {
+                gameCollectionItems.Children.Clear();
                 foreach (Game currentGame in currentGames)
                 {
                     List<string> currentGameCollections = currentGame.collections;
@@ -209,8 +227,9 @@ namespace GamaManager
                         Image gameCollectionItem = new Image();
                         gameCollectionItem.Width = 100;
                         gameCollectionItem.Height = 100;
+                        gameCollectionItem.Margin = new Thickness(25);
                         gameCollectionItem.BeginInit();
-                        gameCollectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/games/thumbnail/?name=" + currentGameName));
+                        gameCollectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName));
                         gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
                         gameCollectionItem.EndInit();
                         gameCollectionItems.Children.Add(gameCollectionItem);
@@ -239,6 +258,23 @@ namespace GamaManager
         public void SelectGameCollectionItem (string name)
         {
             // SelectGame();
+            Dictionary<String, Object>  myGameData = null;
+            foreach (StackPanel game in games.Children)
+            {
+                object rawGameData = game.DataContext;
+                Dictionary<String, Object> gameData = ((Dictionary<String, Object>)(rawGameData));
+                bool isGameDataFound = name == ((string)(gameData["name"]));
+                if (isGameDataFound)
+                {
+                    myGameData = gameData;
+                    break;
+                }
+            }
+            if (myGameData != null)
+            {
+                mainControl.SelectedIndex = 0;
+                SelectGame(myGameData);
+            }
         }
 
         public void GetForums(string keywords)
@@ -2468,7 +2504,7 @@ namespace GamaManager
         }
 
 
-        public void GameSuccessDownloaded(string id)
+        public void GameSuccessDownloaded (string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -2525,6 +2561,8 @@ namespace GamaManager
             Process.Start(startInfo);*/
 
             GetScreenShots("", false);
+
+            GetGamesList("");
 
             MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
         }

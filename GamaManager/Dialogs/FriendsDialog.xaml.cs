@@ -453,7 +453,7 @@ namespace GamaManager.Dialogs
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client);
+            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client, mainControl);
             dialog.Show();
         }
 

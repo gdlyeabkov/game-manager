@@ -154,7 +154,9 @@ namespace GamaManager.Dialogs
         public async void ListenSockets()
         {
 
-            var client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+            // var client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+            var client = new SocketIO("https://digitaldistributtionservice.herokuapp.com /");
+
             client.OnConnected += async (sender, e) =>
             {
                 Debugger.Log(0, "debug", "client socket conntected");

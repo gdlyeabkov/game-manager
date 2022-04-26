@@ -74,6 +74,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
+                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
@@ -163,7 +164,10 @@ namespace GamaManager.Dialogs
                                                                 newMsgHeaderAvatar.Width = 25;
                                                                 newMsgHeaderAvatar.Height = 25;
                                                                 newMsgHeaderAvatar.BeginInit();
-                                                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                
+                                                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
+
                                                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                                 newMsgHeaderAvatar.EndInit();
                                                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -210,7 +214,7 @@ namespace GamaManager.Dialogs
                                                                     newMsgLabel.Height = 35;
                                                                     newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                                     newMsgLabel.BeginInit();
-                                                                    Uri newMsgLabelUri = new Uri("https://digitaldistributtionservice.herokuapp.com/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                                    Uri newMsgLabelUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
                                                                     newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                                     newMsgLabel.EndInit();
                                                                     inputChatMsgBox.Text = "";
@@ -441,6 +445,32 @@ namespace GamaManager.Dialogs
                                                     bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == friendId) || (newMsgUserId == friendId && newMsgFriendId == currentUserId);
                                                     if (isCurrentChatMsg)
                                                     {
+
+                                                        string senderName = "";
+                                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + newMsgUserId);
+                                                        nestedWebRequest.Method = "GET";
+                                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                        {
+                                                            using (StreamReader nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                            {
+                                                                js = new JavaScriptSerializer();
+                                                                objText = nestedReader.ReadToEnd();
+
+                                                                UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                                                status = myNestedObj.status;
+                                                                isOkStatus = status == "OK";
+                                                                {
+                                                                    if (isOkStatus)
+                                                                    {
+                                                                        User sender = myNestedObj.user;
+                                                                        senderName = sender.name;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
                                                         User friend = myobj.user;
                                                         string friendName = friend.name;
                                                         ItemCollection chatControlItems = chatControl.Items;
@@ -511,13 +541,19 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            
+                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
+
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
                                                             TextBlock newMsgFriendNameLabel = new TextBlock();
                                                             newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgFriendNameLabel.Text = friendName;
+                                                            
+                                                            // newMsgFriendNameLabel.Text = friendName;
+                                                            newMsgFriendNameLabel.Text = senderName;
+                                                            
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
@@ -542,7 +578,10 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
+
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -577,7 +616,10 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
+
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -596,7 +638,7 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.Height = 35;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.BeginInit();
-                                                            Uri newMsgLabelUri = new Uri("https://digitaldistributtionservice.herokuapp.com/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
+                                                            Uri newMsgLabelUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
                                                             newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                             newMsgLabel.EndInit();
                                                             inputChatMsgBox.Text = "";
@@ -684,7 +726,10 @@ namespace GamaManager.Dialogs
                                 newMsgHeaderAvatar.Width = 25;
                                 newMsgHeaderAvatar.Height = 25;
                                 newMsgHeaderAvatar.BeginInit();
-                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
+
                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                 newMsgHeaderAvatar.EndInit();
                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -987,7 +1032,10 @@ namespace GamaManager.Dialogs
                                 newMsgHeaderAvatar.Width = 25;
                                 newMsgHeaderAvatar.Height = 25;
                                 newMsgHeaderAvatar.BeginInit();
-                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
+
                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                 newMsgHeaderAvatar.EndInit();
                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1034,7 +1082,7 @@ namespace GamaManager.Dialogs
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 byte[] imagebytearraystring = ImageFileToByteArray(filePath);
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock" + System.IO.Path.GetExtension(filePath));
-                string url = @"https://digitaldistributtionservice.herokuapp.com/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath);
+                string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath);
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
                 string sd = response.Content.ReadAsStringAsync().Result;
@@ -1122,7 +1170,10 @@ namespace GamaManager.Dialogs
                                 newMsgHeaderAvatar.Width = 25;
                                 newMsgHeaderAvatar.Height = 25;
                                 newMsgHeaderAvatar.BeginInit();
-                                Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+
+                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
+
                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                 newMsgHeaderAvatar.EndInit();
                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1167,8 +1218,7 @@ namespace GamaManager.Dialogs
             {
                 string newMsgType = "emoji";
                 string newMsgId = "mock";
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
-                // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId);
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);                
             }
             catch (System.Net.WebSockets.WebSocketException)
             {

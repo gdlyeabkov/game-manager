@@ -1197,6 +1197,7 @@ namespace GamaManager
 
         public void GetEditInfo()
         {
+
             editProfileAvatarImg.BeginInit();
             editProfileAvatarImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
             editProfileAvatarImg.EndInit();
@@ -1282,6 +1283,100 @@ namespace GamaManager
                 }
             }
 
+            try
+            {
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string friendsListSettings = user.friendsListSettings;
+                            string gamesSettings = user.gamesSettings;
+                            string equipmentSettings = user.equipmentSettings;
+                            string commentsSettings = user.commentsSettings;
+                            bool isPublic = friendsListSettings == "public";
+                            bool isFriends = friendsListSettings == "friends";
+                            bool isHidden = friendsListSettings == "hidden";
+                            if (isPublic)
+                            {
+                                userFriendsSettingsSelector.SelectedIndex = 0;
+                            }
+                            else if (isFriends)
+                            {
+                                userFriendsSettingsSelector.SelectedIndex = 1;
+                            }
+                            else if (isHidden)
+                            {
+                                userFriendsSettingsSelector.SelectedIndex = 2;
+                            }
+                            isPublic = gamesSettings == "public";
+                            isFriends = gamesSettings == "friends";
+                            isHidden = gamesSettings == "hidden";
+                            if (isPublic)
+                            {
+                                userGamesSettingsSelector.SelectedIndex = 0;
+                            }
+                            else if (isFriends)
+                            {
+                                userGamesSettingsSelector.SelectedIndex = 1;
+                            }
+                            else if (isHidden)
+                            {
+                                userGamesSettingsSelector.SelectedIndex = 2;
+                            }
+                            isPublic = equipmentSettings == "public";
+                            isFriends = equipmentSettings == "friends";
+                            isHidden = equipmentSettings == "hidden";
+                            if (isPublic)
+                            {
+                                userEquipmentSettingsSelector.SelectedIndex = 0;
+                            }
+                            else if (isFriends)
+                            {
+                                userEquipmentSettingsSelector.SelectedIndex = 1;
+                            }
+                            else if (isHidden)
+                            {
+                                userEquipmentSettingsSelector.SelectedIndex = 2;
+                            }
+                            isPublic = commentsSettings == "public";
+                            isFriends = commentsSettings == "friends";
+                            isHidden = commentsSettings == "hidden";
+                            if (isPublic)
+                            {
+                                userCommentsSettingsSelector.SelectedIndex = 0;
+                            }
+                            else if (isFriends)
+                            {
+                                userCommentsSettingsSelector.SelectedIndex = 1;
+                            }
+                            else if (isHidden)
+                            {
+                                userCommentsSettingsSelector.SelectedIndex = 2;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         public void GetGamesInfo()
@@ -1307,7 +1402,10 @@ namespace GamaManager
                 gameStatsImg.Width = 125;
                 gameStatsImg.Height = 125;
                 gameStatsImg.Margin = new Thickness(10);
+                
                 gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                // gameStatsImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + myGameName));
+
                 gameStats.Children.Add(gameStatsImg);
                 TextBlock gameStatsNameLabel = new TextBlock();
                 gameStatsNameLabel.Margin = new Thickness(10);
@@ -1333,8 +1431,12 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo(string id, bool isLocalUser)
+        public void GetUserInfo (string id, bool isLocalUser)
         {
+
+            string gamesSettings = "public";
+            string friendsSettings = "public";
+
             JavaScriptSerializer js = new JavaScriptSerializer();
             if (isLocalUser)
             {
@@ -1384,6 +1486,7 @@ namespace GamaManager
             }
             try
             {
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -1432,6 +1535,10 @@ namespace GamaManager
                                         userProfileCountryLabel.Text = currentUserCountry;
 
                                         userProfileAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+                                        // userProfileAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + id));
+
+                                        gamesSettings = user.gamesSettings;
+                                        friendsSettings = user.friendsListSettings;
 
                                     }
                                 }
@@ -1446,7 +1553,8 @@ namespace GamaManager
                 this.Close();
             }
             editProfileBtn.IsEnabled = isLocalUser;
-            Visibility visibility = Visibility.Collapsed;
+
+            /*Visibility visibility = Visibility.Collapsed;
             if (isLocalUser)
             {
                 visibility = Visibility.Visible;
@@ -1455,7 +1563,36 @@ namespace GamaManager
             {
                 visibility = Visibility.Collapsed;
             }
-            userProfileDetails.Visibility = visibility;
+            userProfileDetails.Visibility = visibility;*/
+            Visibility gamesVisibility = Visibility.Collapsed;
+            bool isHiddenAccess = gamesSettings == "hidden";
+            bool isNotHiddenAccess = !isHiddenAccess;
+            bool isShowGames = isLocalUser || isNotHiddenAccess;
+            if (isShowGames)
+            {
+                gamesVisibility = Visibility.Visible;
+            }
+            else
+            {
+                gamesVisibility = Visibility.Collapsed;
+            }
+            userProfileDetailsGames.Visibility = gamesVisibility;
+            Visibility friendsVisibility = Visibility.Collapsed;
+            isHiddenAccess = friendsSettings == "hidden";
+            isNotHiddenAccess = !isHiddenAccess;
+            bool isShowFriends = isLocalUser || isNotHiddenAccess;
+            if (isShowGames)
+            {
+                friendsVisibility = Visibility.Visible;
+            }
+            else
+            {
+                friendsVisibility = Visibility.Collapsed;
+            }
+            userProfileDetailsFriends.Visibility = friendsVisibility;
+
+            mainControl.DataContext = currentUserId;
+
         }
 
         public void GetFriendRequests()
@@ -2389,11 +2526,11 @@ namespace GamaManager
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client);
+            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client, mainControl);
             dialog.Show();
         }
 
-        private void OpenFriendsDialogHandler(object sender, RoutedEventArgs e)
+        private void OpenFriendsDialogHandler (object sender, RoutedEventArgs e)
         {
             OpenFriendsDialog();
         }
@@ -2414,6 +2551,12 @@ namespace GamaManager
             {
                 string friend = ((string)(dialogData));
                 RunGame();
+            }
+            else
+            {
+                /*string userId = ((string)(mainControl.DataContext));
+                GetUserInfo(userId, userId == currentUserId);*/
+                ToggleWindow();
             }
         }
 
@@ -2635,10 +2778,11 @@ namespace GamaManager
                 if (isProfile)
                 {
                     object mainControlData = mainControl.DataContext;
-                    string userId = currentUserId;
+                    string userId = ((string)(mainControlData));
+                    // string userId = currentUserId;
                     bool isLocalUser = userId == currentUserId;
-                    GetUserInfo(userId, isLocalUser);
                     mainControl.SelectedIndex = 1;
+                    GetUserInfo(userId, isLocalUser);
                     AddHistoryRecord();
                 }
                 else if (isContent)
@@ -2844,17 +2988,42 @@ namespace GamaManager
             string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
             string userAboutBoxContent = userAboutBox.Text;
 
+            int userFriendsSettingsIndex = userFriendsSettingsSelector.SelectedIndex;
+            ItemCollection userFriendsSettingsSelectorItems = userFriendsSettingsSelector.Items;
+            object rawSelectedUserFriendsSettingsItem = userFriendsSettingsSelectorItems[userFriendsSettingsIndex];
+            ComboBoxItem selectedUserFriendsSettingsItem = ((ComboBoxItem)(rawSelectedUserFriendsSettingsItem));
+            object selectedUserFriendsSettingsItemData = selectedUserFriendsSettingsItem.DataContext;
+            string userFriendsSettings = ((string)(selectedUserFriendsSettingsItemData));
+            int userGamesSettingsIndex = userGamesSettingsSelector.SelectedIndex;
+            ItemCollection userGamesSettingsSelectorItems = userGamesSettingsSelector.Items;
+            object rawSelectedUserGamesSettingsItem = userGamesSettingsSelectorItems[userGamesSettingsIndex];
+            ComboBoxItem selectedUserGamesSettingsItem = ((ComboBoxItem)(rawSelectedUserGamesSettingsItem));
+            object selectedUserGamesSettingsItemData = selectedUserGamesSettingsItem.DataContext;
+            string userGamesSettings = ((string)(selectedUserGamesSettingsItemData));
+            int userEquipmentSettingsIndex = userEquipmentSettingsSelector.SelectedIndex;
+            ItemCollection userEquipmentSettingsSelectorItems = userEquipmentSettingsSelector.Items;
+            object rawSelectedUserEquipmentSettingsItem = userEquipmentSettingsSelectorItems[userEquipmentSettingsIndex];
+            ComboBoxItem selectedUserEquipmentSettingsItem = ((ComboBoxItem)(rawSelectedUserEquipmentSettingsItem));
+            object selectedUserEquipmentSettingsItemData = selectedUserEquipmentSettingsItem.DataContext;
+            string userEquipmentSettings = ((string)(selectedUserEquipmentSettingsItemData));
+            int userCommentsSettingsIndex = userCommentsSettingsSelector.SelectedIndex;
+            ItemCollection userCommentsSettingsSelectorItems = userCommentsSettingsSelector.Items;
+            object rawSelectedUserCommentsSettingsItem = userCommentsSettingsSelectorItems[userCommentsSettingsIndex];
+            ComboBoxItem selectedUserCommentsSettingsItem = ((ComboBoxItem)(rawSelectedUserCommentsSettingsItem));
+            object selectedUserCommentsSettingsItemData = selectedUserCommentsSettingsItem.DataContext;
+            string userCommentsSettings = ((string)(selectedUserCommentsSettingsItemData));
+
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
             MultipartFormDataContent form = new MultipartFormDataContent();
-            // byte[] imagebytearraystring = ImageFileToByteArray(@"C:\Users\ПК\Downloads\a.jpg");
             ImageSource source = editProfileAvatarImg.Source;
             BitmapImage bitmapImage = ((BitmapImage)(source));
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
-            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
-            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent;
+            
+            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
             string sd = response.Content.ReadAsStringAsync().Result;
@@ -2961,7 +3130,10 @@ namespace GamaManager
                  * glitch выдает ошибку с сокетами
                  * client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 */
+
+                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
+
                 client.OnConnected += async (sender, e) =>
                 {
                     Debugger.Log(0, "debug", "client socket conntected");
@@ -3547,19 +3719,19 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void ToggleWindowHandler(object sender, SelectionChangedEventArgs e)
+        private void ToggleWindowHandler (object sender, SelectionChangedEventArgs e)
         {
             ToggleWindow();
         }
 
-        public void ToggleWindow()
+        public void ToggleWindow ()
         {
             if (isAppInit)
             {
                 int selectedWindowIndex = mainControl.SelectedIndex;
 
                 bool isProfileWindow = selectedWindowIndex == 1;
-                if (isProfileWindow)
+                if (isProfileWindow || true)
                 {
                     object mainControlData = mainControl.DataContext;
                     string userId = ((string)(mainControlData));
@@ -4263,6 +4435,23 @@ namespace GamaManager
 
         }
 
+        private void SetAllAccessSettingsHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            int index = selector.SelectedIndex;
+            SetAllAccessSettings(index);
+        }
+
+        private void SetAllAccessSettings (int index)
+        {
+            if (isAppInit)
+            {
+                userFriendsSettingsSelector.SelectedIndex = index;
+                userGamesSettingsSelector.SelectedIndex = index;
+                userEquipmentSettingsSelector.SelectedIndex = index;
+                userCommentsSettingsSelector.SelectedIndex = index;
+            }
+        }
     }
 
 
@@ -4326,6 +4515,10 @@ namespace GamaManager
         public string country;
         public string about;
         public string status;
+        public string friendsListSettings;
+        public string gamesSettings;
+        public string equipmentSettings;
+        public string commentsSettings;
     }
 
     class FriendRequestsResponseInfo

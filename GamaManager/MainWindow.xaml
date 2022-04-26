@@ -491,6 +491,7 @@
                                         Width="350"
                                     >
                                         <StackPanel
+                                            x:Name="userProfileDetailsGames"
                                             Margin="0 10"
                                             Orientation="Horizontal"    
                                         >
@@ -509,6 +510,7 @@
                                             />
                                         </StackPanel>
                                         <StackPanel
+                                            x:Name="userProfileDetailsFriends"
                                             Margin="0 10"
                                             Orientation="Horizontal"    
                                         >
@@ -971,8 +973,261 @@
                                                                 />
                                                             </StackPanel>
                                                         </Grid>
-
                                                     </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        FontSize="20"
+                                                        Text="Доступ к основным данным:"
+                                                    />
+                                                    <TextBlock
+                                                        Foreground="DarkCyan"
+                                                        Margin="10 0"
+                                                        FontSize="20"
+                                                        Text="Открытый"    
+                                                    />
+                                                </StackPanel>
+                                                <Separator
+                                                    Margin="15"    
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        FontSize="20"
+                                                        Text="Мой профиль:"
+                                                    />
+                                                    <ComboBox
+                                                        Foreground="DarkCyan"
+                                                        Margin="10 0"
+                                                        FontSize="16"
+                                                        SelectedIndex="0"
+                                                        SelectionChanged="SetAllAccessSettingsHandler"
+                                                    >
+                                                        <ComboBoxItem
+                                                            Content="Открытый"    
+                                                        />
+                                                        <ComboBoxItem
+                                                            Content="Только для друзей"    
+                                                        />
+                                                        <ComboBoxItem
+                                                            Content="Скрытый"    
+                                                        />
+                                                    </ComboBox>
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="10 0"
+                                                    Text="В вашем профиле отображаются описание, список друзей, значки, уровень Office ware game manager, витрины, комментарии и группы."    
+                                                />
+                                                <TextBlock
+                                                    Margin="10 0"
+                                                    Text="Следующие элементы профиля можно настроить отдельно:"    
+                                                />
+                                                <StackPanel
+                                                    Margin="50 0"    
+                                                >
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 10"
+                                                    >
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Доступ к игровой информации:"
+                                                        />
+                                                        <ComboBox
+                                                            x:Name="userGamesSettingsSelector"
+                                                            Foreground="DarkCyan"
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            SelectedIndex="1"    
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Открытый"    
+                                                                DataContext="public"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Только для друзей"    
+                                                                DataContext="friends"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Скрытый"    
+                                                                DataContext="hidden"
+                                                            />
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        Text="В эту категорию входят список всех игр на вашем аккаунте Office ware game manager, список желаемого, достижения и&#10;время в игре. Также эта настройка влияет на то, видны ли другим ваш статус «В игре» и название&#10;запущенной игры."    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 15"
+                                                    >
+                                                        <CheckBox
+                                                            Margin="10 0"        
+                                                            VerticalAlignment="Center"
+                                                        />
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Text="Скрывать общее время в игре, даже если видны другие данные об играх."    
+                                                        />
+                                                    </StackPanel>
+                                                    <Separator
+                                                        Margin="15"    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 10"
+                                                    >
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Список друзей:"
+                                                        />
+                                                        <ComboBox
+                                                            x:Name="userFriendsSettingsSelector"
+                                                            Foreground="DarkCyan"
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            SelectedIndex="0"    
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Открытый"    
+                                                                DataContext="public"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Только для друзей"    
+                                                                DataContext="friends"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Скрытый"    
+                                                                DataContext="hidden"
+                                                            />
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        Text="Укажите, кому в сообществе Office ware game manager будет виден список друзей в вашем профиле."    
+                                                    />
+                                                    <Separator
+                                                        Margin="15"    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 10"
+                                                    >
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Инвентарь:"
+                                                        />
+                                                        <ComboBox
+                                                            x:Name="userEquipmentSettingsSelector"
+                                                            Foreground="DarkCyan"
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            SelectedIndex="1"    
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Открытый"    
+                                                                DataContext="public"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Только для друзей"    
+                                                                DataContext="friends"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Скрытый"    
+                                                                DataContext="hidden"
+                                                            />
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        Text="Инвентарь содержит предметы, полученные в играх с функцией обмена Office ware game manager. Также в нём находятся коллекционные карточки Office ware game manager и подарочные копии продуктов из Office ware game manager."    
+                                                    />
+                                                    <StackPanel
+                                                        Margin="0 15"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <CheckBox
+                                                            VerticalAlignment="Center"
+                                                            Margin="10 0"    
+                                                        />
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Text="Скрывать подарки Office ware game manager, даже если видны другие элементы инвентаря."    
+                                                        />
+                                                    </StackPanel>
+                                                    <Separator
+                                                        Margin="15"    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 10"
+                                                    >
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Раздел комментариев:"
+                                                        />
+                                                        <ComboBox
+                                                            x:Name="userCommentsSettingsSelector"
+                                                            Foreground="DarkCyan"
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            SelectedIndex="1"    
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Открытый"    
+                                                                DataContext="public"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Только для друзей"    
+                                                                DataContext="friends"
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Скрытый"    
+                                                                DataContext="hidden"
+                                                            />
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                    <Separator
+                                                        Margin="15"    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"
+                                                        Margin="0 10"
+                                                    >
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Скриншоты и работы в мастерской:"
+                                                        />
+                                                        <TextBlock
+                                                            Foreground="DarkCyan"
+                                                            Margin="10 0"
+                                                            FontSize="16"
+                                                            Text="Индивидуально"    
+                                                        />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="10 0"
+                                                        Text="Работы в Мастерской и изображения в разделе «Скриншоты» имеют отдельные настройки&#10;приватности для каждого предмета. Изменить их можно на его странице."    
+                                                    />
                                                 </StackPanel>
                                             </StackPanel>
                                         </TabItem>

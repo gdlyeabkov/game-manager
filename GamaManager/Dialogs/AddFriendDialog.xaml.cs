@@ -1,6 +1,7 @@
 ﻿using SocketIOClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -29,33 +30,36 @@ namespace GamaManager.Dialogs
         private User currentUser = null;
         public Brush disabledColor;
         public SocketIO client;
+        public TabControl mainControl;
 
-        public AddFriendDialog(string currentUserId, SocketIO client)
+        public AddFriendDialog(string currentUserId, SocketIO client, TabControl mainControl)
         {
             InitializeComponent();
 
-            Initialize(currentUserId, client);
+            Initialize(currentUserId, client, mainControl);
 
         }
 
-        public void Initialize(string currentUserId, SocketIO client)
+        public void Initialize(string currentUserId, SocketIO client, TabControl mainControl)
         {
-            InitializeConstants(currentUserId, client);
+            InitializeConstants(currentUserId, client, mainControl);
             GetUser();
             GetUsers();
         }
 
-        public void InitializeConstants(string currentUserId, SocketIO client)
+        public void InitializeConstants (string currentUserId, SocketIO client, TabControl mainControl)
         {
             this.currentUserId = currentUserId;
             disabledColor = System.Windows.Media.Brushes.LightGray;
             this.client = client;
+            this.mainControl = mainControl;
         }
 
         public void GetUser()
         {
             try
             {
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -79,6 +83,7 @@ namespace GamaManager.Dialogs
             }
             catch (System.Net.WebException)
             {
+                Debugger.Log(0, "debug", "ошибка сервера 1");
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
@@ -88,6 +93,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/all");
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -118,8 +124,8 @@ namespace GamaManager.Dialogs
                                     usersItem.Margin = new Thickness(0, 5, 0, 5);
                                     string userLogin = user.login;
 
-                                    // Uri userAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                    Uri userAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
+                                    Uri userAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                    // Uri userAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
 
                                     Image userAvatar = new Image();
                                     userAvatar.Width = 25;
@@ -135,11 +141,18 @@ namespace GamaManager.Dialogs
                                     usersItem.Children.Add(usersItemLoginLabel);
                                     users.Children.Add(usersItem);
                                     usersItem.DataContext = userId;
+                                    ContextMenu usersItemContextMenu = new ContextMenu();
+                                    MenuItem usersItemContextMenuItem = new MenuItem();
+                                    usersItemContextMenuItem.Header = "Открыть профиль";
+                                    usersItemContextMenuItem.DataContext = userId;
+                                    usersItemContextMenuItem.Click += OpenUserProfileHandler;
+                                    usersItemContextMenu.Items.Add(usersItemContextMenuItem);
+                                    usersItem.ContextMenu = usersItemContextMenu;
 
-                                    webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
-                                    webRequest.Method = "GET";
-                                    webRequest.UserAgent = ".NET Framework Test Client";
-                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                     {
                                         using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                         {
@@ -186,6 +199,7 @@ namespace GamaManager.Dialogs
             }
             catch (System.Net.WebException)
             {
+                Debugger.Log(0, "debug", "ошибка сервера 2");
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
@@ -217,6 +231,7 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            // webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
@@ -319,6 +334,21 @@ namespace GamaManager.Dialogs
             {
                 sendFriendRequestBtn.IsEnabled = false;
             }
+        }
+
+        public void OpenUserProfileHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string user = ((string)(menuItemData));
+            OpenUserProfile(user);
+        }
+
+        async public void OpenUserProfile(string userId)
+        {
+            mainControl.DataContext = userId;
+            mainControl.SelectedIndex = 1;
+            this.Close();
         }
 
     }

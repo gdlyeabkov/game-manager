@@ -1,0 +1,83 @@
+﻿<Window x:Class="GamaManager.Dialogs.AddCollectiionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager.Dialogs"
+        mc:Ignorable="d"
+        Title="Создать коллецию"
+        Height="450"
+        Width="800"
+        Background="LightGray"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+    >
+    <StackPanel
+        Margin="25"    
+    >
+        <TextBlock
+            FontSize="24"
+            Margin="0 15"
+            Text="Создать коллекцию"    
+        />
+        <TextBlock
+            Margin="0 15"
+            Text="Введите название коллекции (обязательно)"    
+        />
+        <TextBox
+            x:Name="collectionNameBox"
+            Height="35"    
+        />
+        <TextBlock
+            Text="Выберите тип коллекции"
+            Margin="0 15"
+        />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="0"    
+                MouseLeftButtonUp="CreateSimpleCollectionHandler"
+            >
+                <DockPanel
+                    Height="65"
+                    Background="AliceBlue"
+                >
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        TextAlignment="Center"
+                        Text="Обычная"    
+                    />
+                </DockPanel>
+                <TextBlock
+                    Text="Коллекция - это простой способ навести&#10;порядок в библиотеке. Перетащите&#10;продукты в коллецию или щелкните правой&#10;кнопкой мыши по продукту, чтобы добавить&#10;его в существующую коллекцию."    
+                />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"    
+                MouseLeftButtonUp="CreateDynamicCollectionHandler"
+            >
+                <DockPanel
+                    Height="65"
+                    Background="AliceBlue"
+                >
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        TextAlignment="Center"
+                        Text="Динамическая"    
+                    />
+                </DockPanel>
+                <TextBlock
+                    Text="Динамические коллекции создаются с&#10;помощью и обновляются по мере&#10;роста вашей библиотеки."    
+                />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>

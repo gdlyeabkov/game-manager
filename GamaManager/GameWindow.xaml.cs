@@ -66,7 +66,7 @@ namespace GamaManager
         {
             currentUserId = userId;
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())

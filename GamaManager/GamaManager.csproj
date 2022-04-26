@@ -235,6 +235,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddCollectiionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddFriendDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -293,6 +297,9 @@
     </Compile>
     <Compile Include="Dialogs\AcceptExitDialog.xaml.cs">
       <DependentUpon>AcceptExitDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddCollectiionDialog.xaml.cs">
+      <DependentUpon>AddCollectiionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\AddFriendDialog.xaml.cs">
       <DependentUpon>AddFriendDialog.xaml</DependentUpon>

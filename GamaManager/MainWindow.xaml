@@ -449,6 +449,7 @@
                                     Margin="15"
                                     Width="200"    
                                     Height="200"    
+                                    ImageFailed="SetDefautAvatarHandler"
                                 >
                                     <Image.Source>
                                         <BitmapImage
@@ -2161,6 +2162,164 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </DockPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="24"
+                                        Text="Ваши коллекции"    
+                                    />
+                                </StackPanel>
+                                <materialDesign:PackIcon
+                                    Margin="10 0"
+                                    Kind="HelpCircle"    
+                                    VerticalAlignment="Center"
+                                />
+                                <Separator
+                                    Width="750"
+                                    Height="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                />
+                            </DockPanel>
+                            <WrapPanel
+                                x:Name="gameCollections"
+                                Margin="25"    
+                            >
+                                <Border
+                                    BorderThickness="2"
+                                    BorderBrush="Black"
+                                    CornerRadius="5"
+                                    ClipToBounds="True"
+                                    Padding="1.5"
+                                    Margin="25"
+                                    MouseLeftButtonUp="CreateCollectionHandler"
+                                >
+                                    <Border.Child>
+                                        <StackPanel
+                                            Width="175"
+                                            Height="175"
+                                            Background="LightGray"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Kind="Add"
+                                                Width="32"
+                                                Height="32"
+                                                HorizontalAlignment="Center"
+                                                Margin="0 10"
+                                            />
+                                            <TextBlock
+                                                Text="Создать коллекцию"    
+                                                HorizontalAlignment="Center"
+                                                Margin="0 10"
+                                            />
+                                        </StackPanel>
+                                    </Border.Child>
+                                </Border>
+                            </WrapPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="24"
+                                        Text="Имя коллекции"    
+                                    />
+                                </StackPanel>
+                                <materialDesign:PackIcon
+                                    Margin="10 0"
+                                    Kind="Edit"    
+                                    VerticalAlignment="Center"
+                                />
+                                <TextBlock
+                                    Text="(0)"
+                                    Margin="15 0"
+                                    VerticalAlignment="Center"
+                                />
+                                <Separator
+                                    Width="750"
+                                    Height="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                />
+                            </DockPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Text="Сортировка"
+                                        Margin="25 0"    
+                                    />
+                                    <ComboBox
+                                        Width="175"
+                                        SelectedIndex="0"
+                                    >
+                                        <ComboBoxItem
+                                            Content="По алфавиту"    
+                                        />
+                                    </ComboBox>
+                                </StackPanel>
+                                <Separator
+                                    HorizontalAlignment="Left"
+                                    Width="750"
+                                    Height="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                    Margin="0 25"
+                                />
+                                <WrapPanel
+                                    x:Name="gameCollectionItems"
+                                >
+                                    <!--
+                                    <Image
+                                        Width="100"    
+                                        Height="100"    
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                        </Image.Source>
+                                    </Image>
+                                    -->
+                                </WrapPanel>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>

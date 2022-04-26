@@ -110,7 +110,135 @@ namespace GamaManager
             GetOnlineFriends();
             GetDownloads();
             GetScreenShots("", true);
-            GetForums("");/**/
+            GetForums("");
+            GetGameCollections();/**/
+        }
+
+        public void GetGameCollections ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<string> currentCollections = loadedContent.collections;
+            gameCollections.Children.RemoveRange(1, gameCollections.Children.Count - 1);
+            foreach (string currentCollection in currentCollections)
+            {
+                Border gameCollection = new Border();
+                gameCollection.Margin = new Thickness(25);
+                gameCollection.Padding = new Thickness(1.5);
+                gameCollection.BorderBrush = System.Windows.Media.Brushes.Black;
+                gameCollection.BorderThickness = new Thickness(2);
+                gameCollection.CornerRadius = new CornerRadius(5);
+                StackPanel gameCollectionBody = new StackPanel();
+                gameCollectionBody.Width = 175;
+                gameCollectionBody.Height = 175;
+                gameCollectionBody.Background = System.Windows.Media.Brushes.LightGray;
+                gameCollection.Child = gameCollectionBody;
+                TextBlock gameCollectionBodyNameLabel = new TextBlock();
+                gameCollectionBodyNameLabel.TextAlignment = TextAlignment.Center;
+                gameCollectionBodyNameLabel.Margin = new Thickness(0, 125, 0, 0);
+                gameCollectionBodyNameLabel.Text = currentCollection;
+                gameCollectionBody.Children.Add(gameCollectionBodyNameLabel);
+                TextBlock gameCollectionBodyCountGamesLabel = new TextBlock();
+                gameCollectionBodyCountGamesLabel.TextAlignment = TextAlignment.Center;
+                gameCollectionBodyCountGamesLabel.Margin = new Thickness(0, 15, 0, 0);
+
+                List<Game> gamesForCollection = currentGames.Where<Game>((Game game) =>
+                {
+                    List<string> gameCollections = game.collections;
+                    bool isGameForCollection = gameCollections.Contains(currentCollection);
+                    return isGameForCollection;
+                }).ToList<Game>();
+                int countGamesForCollection = gamesForCollection.Count;
+                string rawCountGamesForCollection = countGamesForCollection.ToString();
+                //gameCollectionBodyCountGamesLabel.Text = "0";
+                gameCollectionBodyCountGamesLabel.Text = rawCountGamesForCollection;
+
+                gameCollectionBody.Children.Add(gameCollectionBodyCountGamesLabel);
+                gameCollections.Children.Add(gameCollection);
+                gameCollection.DataContext = currentCollection;
+                gameCollection.MouseLeftButtonUp += SelectGameCollectionHandler;
+            }
+        }
+
+        public void SelectGameCollectionHandler(object sender, RoutedEventArgs e)
+        {
+            Border collection = ((Border)(sender));
+            object collectionData = collection.DataContext;
+            string collectionName = ((string)(collectionData));
+            SelectGameCollection(collectionName);
+        }
+
+        public void SelectGameCollection (string name)
+        {
+            mainControl.SelectedIndex = 10;
+            GetGameCollectionItems(name);
+        }
+
+        public void GetGameCollectionItems (string name)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<Game> collectionGames = currentGames.Where<Game>((Game game) =>
+            {
+                List<string> gameCollections = game.collections;
+                bool isGameForCollection = gameCollections.Contains(name);
+                return isGameForCollection;
+            }).ToList();
+            int collectionGamesCount = collectionGames.Count;
+            bool isHaveGames = collectionGamesCount >= 1;
+            gameCollectionItems.HorizontalAlignment = HorizontalAlignment.Left;
+            if (isHaveGames)
+            {
+                foreach (Game currentGame in currentGames)
+                {
+                    List<string> currentGameCollections = currentGame.collections;
+                    bool isGameForCurrentCollection = currentGameCollections.Contains(name);
+                    if (isGameForCurrentCollection)
+                    {
+                        string currentGameName = currentGame.name;
+                        Image gameCollectionItem = new Image();
+                        gameCollectionItem.Width = 100;
+                        gameCollectionItem.Height = 100;
+                        gameCollectionItem.BeginInit();
+                        gameCollectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/games/thumbnail/?name=" + currentGameName));
+                        gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
+                        gameCollectionItem.EndInit();
+                        gameCollectionItems.Children.Add(gameCollectionItem);
+                        gameCollectionItem.DataContext = currentGameName;
+                        gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
+                    }
+                }
+            }
+            else
+            {
+                gameCollectionItems.HorizontalAlignment = HorizontalAlignment.Center;
+                TextBlock gameCollectionsNotFoundLabel = new TextBlock();
+                gameCollectionsNotFoundLabel.Text = "Перетащите сюда игры чтобы создать коллекцию.";
+                gameCollectionItems.Children.Add(gameCollectionsNotFoundLabel);
+            }
+        }
+
+        public void SelectGameCollectionItemHandler (object sender, RoutedEventArgs e)  
+        {
+            Image thumbnail = ((Image)(sender));
+            object thumbnailData = thumbnail.DataContext;
+            string name = ((string)(thumbnailData));
+            SelectGameCollectionItem(name);
+        }
+
+        public void SelectGameCollectionItem (string name)
+        {
+            // SelectGame();
         }
 
         public void GetForums(string keywords)
@@ -118,7 +246,7 @@ namespace GamaManager
             string ignoreCaseKeywords = keywords.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -192,7 +320,7 @@ namespace GamaManager
                                     forumLastMsgDateLabel.Text = "00/00/00";
 
                                     List<ForumTopicMsg> totalForumMsgs = new List<ForumTopicMsg>();
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -210,7 +338,7 @@ namespace GamaManager
                                                 foreach (Topic topic in topics)
                                                 {
                                                     string topicId = topic._id;
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -273,7 +401,7 @@ namespace GamaManager
                                     TextBlock forumDiscussionsCountLabel = new TextBlock();
                                     forumDiscussionsCountLabel.Foreground = System.Windows.Media.Brushes.White;
                                     forumDiscussionsCountLabel.Margin = new Thickness(10, 15, 10, 15);
-                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
+                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -336,7 +464,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 8;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -354,7 +482,7 @@ namespace GamaManager
                             string userId = topic.user;
                             string title = topic.title;
                             activeTopicNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -431,7 +559,7 @@ namespace GamaManager
                                                     msgHeaderUserAvatar.Height = 25;
                                                     msgHeaderUserAvatar.BeginInit();
 
-                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + msgUserId));
+                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + msgUserId));
                                                     // msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
 
                                                     msgHeaderUserAvatar.EndInit();
@@ -468,7 +596,7 @@ namespace GamaManager
                                                     forumTopicMsg.Children.Add(msgFooter);
                                                     forumTopicMsgs.Children.Add(forumTopicMsg);
 
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + msgUserId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + msgUserId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -551,7 +679,7 @@ namespace GamaManager
                 this.Close();
             }
 
-            addDiscussionMsgUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+            addDiscussionMsgUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
 
         }
 
@@ -570,7 +698,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 7;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -587,7 +715,7 @@ namespace GamaManager
                             Forum currentForum = myobj.forum;
                             string title = currentForum.title;
                             activeForumNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -645,7 +773,7 @@ namespace GamaManager
                                             topicAuthorLabel.Foreground = System.Windows.Media.Brushes.SkyBlue;
                                             topicAuthorLabel.Text = "Пользователь";
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + userId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -703,7 +831,7 @@ namespace GamaManager
                                             forumMsgsCountLabel.Margin = new Thickness(10, 0, 10, 0);
                                             forumMsgsCountLabel.Foreground = System.Windows.Media.Brushes.White;
 
-                                            nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
+                                            nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -820,7 +948,7 @@ namespace GamaManager
                 string currentGameInstallDate = currentGame.installDate;
                 try
                 {
-                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
+                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                     innerWebRequest.Method = "GET";
                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -864,7 +992,7 @@ namespace GamaManager
                                     Image downloadImg = new Image();
                                     downloadImg.BeginInit();
                                     // downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
-                                    Uri source = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
+                                    Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
                                     downloadImg.Source = new BitmapImage();
                                     downloadImg.EndInit();
                                     downloadImg.Margin = new Thickness(15, 0, 15, 0);
@@ -912,7 +1040,7 @@ namespace GamaManager
             friendsListLabel.Header = friendsListLabelHeaderContent;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -936,7 +1064,7 @@ namespace GamaManager
                             {
                                 string friendId = friend.friend;
                                 bool isUserOnline = false;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + friendId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + friendId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -982,7 +1110,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1018,6 +1146,7 @@ namespace GamaManager
                             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                             List<Game> currentGames = loadedContent.games;
                             Settings currentSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = 0; i < updatedFriendsCount; i++)
@@ -1035,7 +1164,8 @@ namespace GamaManager
                             {
                                 games = currentGames,
                                 friends = updatedFriends,
-                                settings = currentSettings
+                                settings = currentSettings,
+                                collections = currentCollections
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -1091,7 +1221,7 @@ namespace GamaManager
             string rawYear = year.ToString();
             string date = rawDay + " " + rawMonthLabel + " " + rawYear;
             statsHeaderLabel.Text = "СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: " + date + " В " + time;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/get");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/get");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1119,7 +1249,7 @@ namespace GamaManager
 
             try
             {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
+                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1199,14 +1329,14 @@ namespace GamaManager
         {
 
             editProfileAvatarImg.BeginInit();
-            editProfileAvatarImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+            editProfileAvatarImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId));
             editProfileAvatarImg.EndInit();
 
             JavaScriptSerializer js = new JavaScriptSerializer();
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1249,7 +1379,7 @@ namespace GamaManager
                             }
                             userAboutBox.Text = currentUserAbout;
 
-                            userProfileEditAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+                            userProfileEditAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
 
                         }
                     }
@@ -1285,8 +1415,8 @@ namespace GamaManager
 
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1404,7 +1534,7 @@ namespace GamaManager
                 gameStatsImg.Margin = new Thickness(10);
                 
                 gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
-                // gameStatsImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + myGameName));
+                // gameStatsImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/game/thumbnail/?name=" + myGameName));
 
                 gameStats.Children.Add(gameStatsImg);
                 TextBlock gameStatsNameLabel = new TextBlock();
@@ -1486,8 +1616,8 @@ namespace GamaManager
             }
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1504,7 +1634,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             User user = myobj.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -1534,8 +1664,11 @@ namespace GamaManager
                                         string currentUserCountry = user.country;
                                         userProfileCountryLabel.Text = currentUserCountry;
 
-                                        userProfileAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
-                                        // userProfileAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + id));
+                                        userProfileAvatar.BeginInit();
+                                        Uri avatar = new Uri(@"http://localhost:4000/api/user/avatar/?id=" + id);
+                                        userProfileAvatar.Source = new BitmapImage(avatar);
+                                        userProfileAvatar.EndInit();
+
 
                                         gamesSettings = user.gamesSettings;
                                         friendsSettings = user.friendsListSettings;
@@ -1599,7 +1732,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1629,7 +1762,7 @@ namespace GamaManager
                             foreach (FriendRequest myRequest in myRequests)
                             {
                                 string senderId = myRequest.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + senderId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -1667,7 +1800,7 @@ namespace GamaManager
                                             friendRequestBodySenderAvatar.BeginInit();
 
                                             // Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                            Uri friendRequestBodySenderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + senderId);
+                                            Uri friendRequestBodySenderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + senderId);
 
                                             BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
                                             friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
@@ -1739,7 +1872,7 @@ namespace GamaManager
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1827,7 +1960,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1873,9 +2006,9 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", Environment.NewLine + "gamesListItemId: " + gamesListItemId + Environment.NewLine);
                                     string gamesListItemName = gamesListItem.name;
                                     // string gamesListItemUrl = gamesListItem.url;
-                                    string gamesListItemUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gamesListItemName;
+                                    string gamesListItemUrl = @"http://localhost:4000/api/game/distributive/?name=" + gamesListItemName;
                                     // string gamesListItemImage = gamesListItem.image;
-                                    string gamesListItemImage = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + gamesListItemName;
+                                    string gamesListItemImage = @"http://localhost:4000/api/game/thumbnail/?name=" + gamesListItemName;
                                     Dictionary<String, Object> newGameData = new Dictionary<String, Object>();
                                     newGameData.Add("id", gamesListItemId);
                                     newGameData.Add("name", gamesListItemName);
@@ -1899,6 +2032,31 @@ namespace GamaManager
                                     newGameLabel.Text = gamesListItem.name;
                                     newGame.Children.Add(newGameLabel);
                                     games.Children.Add(newGame);
+
+                                    Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                    string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                    string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                    js = new JavaScriptSerializer();
+                                    string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                    SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                    List<string> currentCollections = loadedContent.collections;
+                                    ContextMenu newGameContextMenu = new ContextMenu();
+                                    MenuItem newGameContextMenuItem = new MenuItem();
+                                    newGameContextMenuItem.Header = "Добавить в коллекцию";
+                                    newGameContextMenu.Items.Add(newGameContextMenuItem);
+                                    foreach (string collectionName in currentCollections)
+                                    {
+                                        MenuItem newGameInnerContextMenuItem = new MenuItem();
+                                        newGameInnerContextMenuItem.Header = collectionName;
+                                        Dictionary<String, Object>  newGameInnerContextMenuItemData = new Dictionary<String, Object>();
+                                        newGameInnerContextMenuItemData.Add("collection", collectionName);
+                                        newGameInnerContextMenuItemData.Add("name", gamesListItemName);
+                                        newGameInnerContextMenuItem.DataContext = newGameInnerContextMenuItemData;
+                                        newGameInnerContextMenuItem.Click += AddGameToCollectionHandler;
+                                        newGameContextMenuItem.Items.Add(newGameInnerContextMenuItem);
+                                    }
+                                    newGame.ContextMenu = newGameContextMenu;
+
                                 }
                                 // GameResponseInfo firstGame = loadedGames[0];
                                 GameResponseInfo firstGame = myobj.games[0];
@@ -1907,8 +2065,8 @@ namespace GamaManager
                                 string firstGameName = firstGame.name;
                                 /*string firstGameUrl = firstGame.url;
                                 string firstGameImage = firstGame.image;*/
-                                string firstGameUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + firstGameName;
-                                string firstGameImage = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + firstGameName;
+                                string firstGameUrl = @"http://localhost:4000/api/game/distributive/?name=" + firstGameName;
+                                string firstGameImage = @"http://localhost:4000/api/game/thumbnail/?name=" + firstGameName;
 
 
                                 Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
@@ -1931,6 +2089,52 @@ namespace GamaManager
 
             }
         }
+
+        public void AddGameToCollectionHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            AddGameToCollection(menuItemData);
+        }
+
+        public void AddGameToCollection (Dictionary<String, Object> data)
+        {
+            string collection = ((string)(data["collection"]));
+            string name = ((string)(data["name"]));
+            Debugger.Log(0, "debug", Environment.NewLine + "collection: " + collection + ", name: " + name + Environment.NewLine);
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            List<Game> results = updatedGames.Where<Game>((Game game) =>
+            {
+                return game.name == name;
+            }).ToList<Game>();
+            int resultsCount = results.Count;
+            bool isFound = resultsCount >= 1;
+            if (isFound)
+            {
+                Game result = results[0];
+                result.collections.Add(collection);
+                saveDataFileContent = js.Serialize(new SavedContent()
+                {
+                    games = updatedGames,
+                    friends = currentFriends,
+                    settings = currentSettings,
+                    collections = currentCollections
+                });
+                File.WriteAllText(saveDataFilePath, saveDataFileContent);
+                GetGameCollections();
+            }
+        }
+
 
         public void InitCache(string id)
         {
@@ -1983,7 +2187,8 @@ namespace GamaManager
                         playScreenShotsNotification = true,
                         saveScreenShotsCopy = false,
                         showOverlay = true
-                    }
+                    },
+                    collections = new List<string>() { }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -2071,7 +2276,7 @@ namespace GamaManager
             }
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/increase/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/increase/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2140,6 +2345,7 @@ namespace GamaManager
             List<Game> updatedGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -2172,12 +2378,14 @@ namespace GamaManager
                     hours = rawTimerHours,
                     date = gameLastLaunchDate,
                     installDate = currentInstallDate,
+                    collections = new List<string>()
                 };
                 string savedContent = js.Serialize(new SavedContent
                 {
                     games = updatedGames,
                     friends = currentFriends,
-                    settings = currentSettings
+                    settings = currentSettings,
+                    collections = currentCollections
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -2200,7 +2408,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/decrease/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/decrease/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2242,8 +2450,8 @@ namespace GamaManager
             string gameName = ((string)(dataParts["name"]));
             /*string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));*/
-            string gameUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gameName; ;
-            string gameImg = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + gameName;
+            string gameUrl = @"http://localhost:4000/api/game/distributive/?name=" + gameName; ;
+            string gameImg = @"http://localhost:4000/api/game/thumbnail/?name=" + gameName;
 
             Dialogs.DownloadGameDialog dialog = new Dialogs.DownloadGameDialog(currentUserId);
             dialog.DataContext = dataParts;
@@ -2278,6 +2486,7 @@ namespace GamaManager
             List<Game> updatedGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -2290,13 +2499,15 @@ namespace GamaManager
                 path = gameUploadedPath,
                 hours = gameHours,
                 date = gameLastLaunchDate,
-                installDate = gameLastLaunchDate
+                installDate = gameLastLaunchDate,
+                collections = new List<string>()
             });
             string savedContent = js.Serialize(new SavedContent
             {
                 games = updatedGames,
                 friends = currentFriends,
-                settings = currentSettings
+                settings = currentSettings,
+                collections = currentCollections
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
@@ -2380,7 +2591,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/increase/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/increase/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2589,7 +2800,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2605,7 +2816,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2659,7 +2870,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2675,7 +2886,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2813,6 +3024,7 @@ namespace GamaManager
         private void LibraryItemSelected(int index)
         {
             bool isHome = index == 1;
+            bool isCollections = index == 2;
             bool isDownloads = index == 3;
             if (isHome)
             {
@@ -2820,6 +3032,11 @@ namespace GamaManager
 
                 AddHistoryRecord();
 
+            }
+            else if (isCollections)
+            {
+                mainControl.SelectedIndex = 9;
+                AddHistoryRecord();
             }
             else if (isDownloads)
             {
@@ -2863,7 +3080,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2897,7 +3114,7 @@ namespace GamaManager
 
         public void IncreaseUserToStats()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/increase");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3021,8 +3238,8 @@ namespace GamaManager
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
             
-            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
-            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
 
             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
             httpClient.Dispose();
@@ -3045,7 +3262,7 @@ namespace GamaManager
                 MessageBox.Show("Не удается обновить профиль", "Ошибка");
             }
 
-            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
             webRequest.Method = "POST";
             webRequest.ContentType = "multipart/form-data";
             webRequest.UserAgent = ".NET Framework Test Client";
@@ -3128,10 +3345,10 @@ namespace GamaManager
             {
                 /*
                  * glitch выдает ошибку с сокетами
-                 * client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                 * client = new SocketIO("http://localhost:4000/");
                 */
 
-                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                // client = new SocketIO("http://localhost:4000/");
                 client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
 
                 client.OnConnected += async (sender, e) =>
@@ -3147,7 +3364,7 @@ namespace GamaManager
                     string gameName = result[1];
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3180,7 +3397,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3289,7 +3506,7 @@ namespace GamaManager
                     Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3324,7 +3541,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + result);
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3439,7 +3656,7 @@ namespace GamaManager
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3482,7 +3699,7 @@ namespace GamaManager
                                             {
                                                 try
                                                 {
-                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                                                     innerWebRequest.Method = "GET";
                                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3686,7 +3903,7 @@ namespace GamaManager
 
         public void DecreaseUserToStats()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/decrease");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4186,7 +4403,7 @@ namespace GamaManager
             try
             {
                 string title = discussionTitleBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4229,7 +4446,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 7;
             addDiscussionDialog.Visibility = visible;
 
-            addDiscussionUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
+            addDiscussionUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
 
         }
 
@@ -4245,7 +4462,7 @@ namespace GamaManager
             string newMsgContent = forumTopicMsgBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4452,6 +4669,31 @@ namespace GamaManager
                 userCommentsSettingsSelector.SelectedIndex = index;
             }
         }
+
+        private void CreateCollectionHandler (object sender, MouseButtonEventArgs e)
+        {
+            CreateCollection();
+        }
+
+        public void CreateCollection ()
+        {
+            Dialogs.AddCollectiionDialog dialog = new Dialogs.AddCollectiionDialog(currentUserId);
+            dialog.Closed += RefreshGameCollectionsHandler;
+            dialog.Show();
+        }
+
+        public void RefreshGameCollectionsHandler (object sender, EventArgs e)
+        {
+            RefreshGameCollections();
+        }
+
+        public void RefreshGameCollections ()
+        {
+            GetGameCollections();
+        }
+
+
+
     }
 
 
@@ -4460,6 +4702,7 @@ namespace GamaManager
         public List<Game> games;
         public List<FriendSettings> friends;
         public Settings settings;
+        public List<String> collections;
     }
 
     class FriendSettings
@@ -4482,6 +4725,7 @@ namespace GamaManager
         public string hours;
         public string date;
         public string installDate;
+        public List<string> collections;
     }
 
     class GamesListResponseInfo

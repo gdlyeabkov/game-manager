@@ -4730,7 +4730,15 @@ namespace GamaManager
             GetGameCollections();
         }
 
+        private void ReturnToProfileHandler (object sender, MouseButtonEventArgs e)
+        {
+            ReturnToProfile();
+        }
 
+        public void ReturnToProfile ()
+        {
+            mainControl.SelectedIndex = 1;
+        }
 
     }
 

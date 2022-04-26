@@ -298,3 +298,11 @@ C:\wpf_projects\GameManager\GamaManager\obj\Debug\GamaManager.exe
 C:\wpf_projects\GameManager\GamaManager\obj\Debug\GamaManager.pdb
 C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\AddCollectiionDialog.g.cs
 C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\AddCollectiionDialog.baml
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\FriendsSettingsDialog.g.cs
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\PlayersDialog.g.cs
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\ScreenShotsUploaderDialog.g.cs
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\ServersDialog.g.cs
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\FriendsSettingsDialog.baml
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\PlayersDialog.baml
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\ScreenShotsUploaderDialog.baml
+C:\wpf_projects\GameManager\GamaManager\obj\Debug\Dialogs\ServersDialog.baml

@@ -321,6 +321,10 @@ namespace GamaManager.Dialogs
         public void InitializeHandler(object sender, RoutedEventArgs e)
         {
             Initialize();
+
+            /*int waveindevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("WaveIn", 0);
+            int waveoutdevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("Waveout", 0);*/
+
         }
 
         public void InitConstants ()

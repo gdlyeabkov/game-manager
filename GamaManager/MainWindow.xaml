@@ -621,6 +621,12 @@
                                     />
                                 </StackPanel>
                             </DockPanel>
+                            <TextBlock
+                                Text="Вернуться в профиль"
+                                Margin="75 10"
+                                HorizontalAlignment="Right"
+                                MouseLeftButtonUp="ReturnToProfileHandler"
+                            />
                             <DockPanel>
                                 <DockPanel
                                     Margin="25"

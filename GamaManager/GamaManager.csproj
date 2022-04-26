@@ -259,6 +259,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\FriendsSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -268,6 +272,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\PlayerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PlayersDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ScreenShotsUploaderDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ServersDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -316,6 +332,9 @@
     <Compile Include="Dialogs\FriendsDialog.xaml.cs">
       <DependentUpon>FriendsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\FriendsSettingsDialog.xaml.cs">
+      <DependentUpon>FriendsSettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
@@ -324,6 +343,15 @@
     </Compile>
     <Compile Include="Dialogs\PlayerDialog.xaml.cs">
       <DependentUpon>PlayerDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PlayersDialog.xaml.cs">
+      <DependentUpon>PlayersDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ScreenShotsUploaderDialog.xaml.cs">
+      <DependentUpon>ScreenShotsUploaderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ServersDialog.xaml.cs">
+      <DependentUpon>ServersDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>

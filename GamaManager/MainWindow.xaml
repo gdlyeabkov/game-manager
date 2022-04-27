@@ -63,6 +63,10 @@
                     Header="{x:Static p:Resources.viewMenuItemPlayerLabelContent}"
                     Click="OpenPlayerHandler"
                 />
+                <MenuItem
+                    Header="Новости обновлений"
+                    Click="ShowOffersHandler"
+                />
             </MenuItem>
             <MenuItem
                 Header="{x:Static p:Resources.friendsMenuItemLabelContent}"    
@@ -331,14 +335,14 @@
                         Background="Green"
                     >
                         <StackPanel
-                        DockPanel.Dock="Top"    
-                        Height="30"
-                    >
+                            DockPanel.Dock="Top"    
+                            Height="30"
+                        >
                             <TextBox
-                            x:Name="keywordsLabel"
-                            Margin="5"
-                            TextChanged="FilterGamesHandler"
-                        />
+                                x:Name="keywordsLabel"
+                                Margin="5"
+                                TextChanged="FilterGamesHandler"
+                            />
                         </StackPanel>
                         <ScrollViewer>
                             <StackPanel
@@ -2261,17 +2265,23 @@
                                 <StackPanel
                                     Orientation="Horizontal"    
                                 >
-                                    <TextBlock
+                                    <TextBox
                                         x:Name="gameCollectionNameLabel"
+                                        Background="Transparent"
+                                        IsEnabled="False"
+                                        BorderThickness="0"
                                         Margin="15"
-                                        FontSize="24"
+                                        FontSize="20"
                                         Text="Имя коллекции"    
+                                        LostKeyboardFocus="SaveGameCollectionNameHandler"    
                                     />
                                 </StackPanel>
                                 <materialDesign:PackIcon
+                                    x:Name="renameIcon"
                                     Margin="10 0"
                                     Kind="Edit"    
                                     VerticalAlignment="Center"
+                                    MouseLeftButtonUp="ToggleRenameBtnHandler"
                                 />
                                 <TextBlock
                                     x:Name="countGameCollectionGamesLabel"
@@ -2325,7 +2335,7 @@
                                             Content="По оценке на Metacritic"    
                                         />
                                         <ComboBoxItem
-                                            Content="По обзорам в Steam"    
+                                            Content="По обзорам в Office ware game manager"    
                                         />
                                     </ComboBox>
                                 </StackPanel>

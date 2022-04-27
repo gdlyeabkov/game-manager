@@ -65,7 +65,6 @@ namespace GamaManager
         public MainWindow(string id)
         {
 
-
             PreInit(id);
 
             InitializeComponent();
@@ -114,7 +113,12 @@ namespace GamaManager
             GetGameCollections();/**/
         }
 
-        public void GetGameCollections ()
+        public void ShowOffersHandler(object sender, RoutedEventArgs e)
+        {
+            ShowOffers();
+        }
+
+        public void GetGameCollections()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -146,7 +150,6 @@ namespace GamaManager
                 TextBlock gameCollectionBodyCountGamesLabel = new TextBlock();
                 gameCollectionBodyCountGamesLabel.TextAlignment = TextAlignment.Center;
                 gameCollectionBodyCountGamesLabel.Margin = new Thickness(0, 15, 0, 0);
-
                 List<Game> gamesForCollection = currentGames.Where<Game>((Game game) =>
                 {
                     List<string> gameCollections = game.collections;
@@ -155,14 +158,93 @@ namespace GamaManager
                 }).ToList<Game>();
                 int countGamesForCollection = gamesForCollection.Count;
                 string rawCountGamesForCollection = countGamesForCollection.ToString();
-                //gameCollectionBodyCountGamesLabel.Text = "0";
                 gameCollectionBodyCountGamesLabel.Text = rawCountGamesForCollection;
-
                 gameCollectionBody.Children.Add(gameCollectionBodyCountGamesLabel);
                 gameCollections.Children.Add(gameCollection);
                 gameCollection.DataContext = currentCollection;
                 gameCollection.MouseLeftButtonUp += SelectGameCollectionHandler;
+                ContextMenu gameCollectionContextMenu = new ContextMenu();
+                MenuItem gameCollectionContextMenuItem = new MenuItem();
+                gameCollectionContextMenuItem.Header = "Переименовать коллекцию";
+                gameCollectionContextMenuItem.Click += RenameGameCollectionHandler;
+                gameCollectionContextMenu.Items.Add(gameCollectionContextMenuItem);
+                gameCollectionContextMenuItem = new MenuItem();
+                gameCollectionContextMenuItem.Header = "Удалить коллекцию";
+                gameCollectionContextMenuItem.DataContext = currentCollection;
+                gameCollectionContextMenuItem.Click += RemoveGameCollectionHandler;
+                gameCollectionContextMenu.Items.Add(gameCollectionContextMenuItem);
+                gameCollection.ContextMenu = gameCollectionContextMenu;
             }
+        }
+
+        public void RenameGameCollectionHandler(object sender, RoutedEventArgs e)
+        {
+            RenameGameCollection();
+        }
+
+        public void RenameGameCollection()
+        {
+
+        }
+
+        public void RemoveGameCollectionHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string name = ((string)(menuItemData));
+            RemoveGameCollection(name);
+        }
+
+        public void RemoveGameCollection(string name)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> updatedCollections = loadedContent.collections;
+            string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
+            object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
+            string currentGameCollection = ((string)(rawCurrentGameCollection));
+            updatedCollections = updatedCollections.Where<string>((string collection) =>
+            {
+                bool isRemoveCollection = name == collection;
+                bool isSkipCollection = !isRemoveCollection;
+                return isSkipCollection;
+            }).ToList<string>();
+            foreach (Game updatedGame in updatedGames)
+            {
+                List<string> updatedGameCollections = updatedGame.collections;
+                int collectionIndex = -1;
+                List<int> updatedGameCollectionsIndexes = new List<int>();
+                foreach (string updatedGameCollection in updatedGameCollections)
+                {
+                    collectionIndex++;
+                    bool isRemove = updatedGameCollection == name;
+                    if (isRemove)
+                    {
+                        updatedGameCollectionsIndexes.Add(collectionIndex);
+                    }
+                }
+                for (int i = 0; i < updatedGameCollectionsIndexes.Count; i++)
+                {
+                    updatedGameCollections.RemoveAt(updatedGameCollectionsIndexes[i]);
+                }
+            }
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = updatedGames,
+                friends = currentFriends,
+                settings = currentSettings,
+                collections = updatedCollections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            GetGamesList("");
+            GetGameCollections();
         }
 
         public void SelectGameCollectionHandler(object sender, RoutedEventArgs e)
@@ -173,12 +255,26 @@ namespace GamaManager
             SelectGameCollection(collectionName);
         }
 
-        public void SelectGameCollection (string name)
+        public void SelectGameCollection(string name)
         {
+
+            /*AdornerLayer layer = AdornerLayer.GetAdornerLayer(adornerWrap);
+            StackPanel toAdorn = new StackPanel();
+            toAdorn.Width = 100;
+            toAdorn.Height = 100;
+            toAdorn.Background = System.Windows.Media.Brushes.Red;
+            layer.Add(new Helpers.SimpleCircleAdorner(toAdorn));*/
+
+            gameCollectionNameLabel.DataContext = name;
+
             mainControl.SelectedIndex = 10;
+
+            /*mainControl.SelectedIndex = 0;
+            gamesLibraryControl.SelectedIndex = 2;*/
+
             GetGameCollectionItems(name);
             gameCollectionNameLabel.Text = name;
-                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
             JavaScriptSerializer js = new JavaScriptSerializer();
@@ -194,9 +290,10 @@ namespace GamaManager
             int countGamesForCollection = gamesForCollection.Count;
             string rawCountGamesForCollection = countGamesForCollection.ToString();
             countGameCollectionGamesLabel.Text = "(" + rawCountGamesForCollection + ")";
+
         }
 
-        public void GetGameCollectionItems (string name)
+        public void GetGameCollectionItems(string name)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -214,9 +311,9 @@ namespace GamaManager
             int collectionGamesCount = collectionGames.Count;
             bool isHaveGames = collectionGamesCount >= 1;
             gameCollectionItems.HorizontalAlignment = HorizontalAlignment.Left;
+            gameCollectionItems.Children.Clear();
             if (isHaveGames)
             {
-                gameCollectionItems.Children.Clear();
                 foreach (Game currentGame in currentGames)
                 {
                     List<string> currentGameCollections = currentGame.collections;
@@ -235,6 +332,17 @@ namespace GamaManager
                         gameCollectionItems.Children.Add(gameCollectionItem);
                         gameCollectionItem.DataContext = currentGameName;
                         gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
+                        ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+                        MenuItem gameCollectionItemContextMenuItem = new MenuItem();
+                        string gameCollectionItemContextMenuItemHeaderContent = "Убрать из " + name;
+                        gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                        Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                        gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                        gameCollectionItemContextMenuItemData.Add("collection", name);
+                        gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                        gameCollectionItemContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                        gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
                     }
                 }
             }
@@ -247,7 +355,62 @@ namespace GamaManager
             }
         }
 
-        public void SelectGameCollectionItemHandler (object sender, RoutedEventArgs e)  
+        public void RemoveGameFromCollectionHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            RemoveGameFromCollection(menuItemData);
+        }
+
+        public void RemoveGameFromCollection(Dictionary<String, Object> menuItemData)
+        {
+            string game = ((string)(menuItemData["game"]));
+            string collection = ((string)(menuItemData["collection"]));
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            foreach (Game updatedGame in updatedGames)
+            {
+                string updatedGameName = updatedGame.name;
+                List<string> updatedGameCollections = updatedGame.collections;
+                int collectionIndex = -1;
+                List<int> updatedGameCollectionsIndexes = new List<int>();
+                foreach (string updatedGameCollection in updatedGameCollections)
+                {
+                    collectionIndex++;
+                    bool isRemove = updatedGameCollection == collection && updatedGameName == game;
+                    if (isRemove)
+                    {
+                        updatedGameCollectionsIndexes.Add(collectionIndex);
+                    }
+                }
+                for (int i = 0; i < updatedGameCollectionsIndexes.Count; i++)
+                {
+                    updatedGameCollections.RemoveAt(updatedGameCollectionsIndexes[i]);
+                }
+            }
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = updatedGames,
+                friends = currentFriends,
+                settings = currentSettings,
+                collections = currentCollections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            GetGamesList("");
+            GetGameCollections();
+            GetGameCollectionItems(collection);
+        }
+
+        public void SelectGameCollectionItemHandler(object sender, RoutedEventArgs e)
         {
             Image thumbnail = ((Image)(sender));
             object thumbnailData = thumbnail.DataContext;
@@ -255,10 +418,9 @@ namespace GamaManager
             SelectGameCollectionItem(name);
         }
 
-        public void SelectGameCollectionItem (string name)
+        public void SelectGameCollectionItem(string name)
         {
-            // SelectGame();
-            Dictionary<String, Object>  myGameData = null;
+            Dictionary<String, Object> myGameData = null;
             foreach (StackPanel game in games.Children)
             {
                 object rawGameData = game.DataContext;
@@ -270,7 +432,8 @@ namespace GamaManager
                     break;
                 }
             }
-            if (myGameData != null)
+            bool isMyGameDataExists = myGameData != null;
+            if (isMyGameDataExists)
             {
                 mainControl.SelectedIndex = 0;
                 SelectGame(myGameData);
@@ -1562,13 +1725,14 @@ namespace GamaManager
                 string myGameHours = myGame.hours;
                 string myGameLastLaunchDate = myGame.date;
                 DockPanel gameStats = new DockPanel();
+                gameStats.Margin = new Thickness(0, 25, 0, 25);
                 gameStats.Height = 150;
                 gameStats.Background = System.Windows.Media.Brushes.DarkGray;
                 Image gameStatsImg = new Image();
                 gameStatsImg.Width = 125;
                 gameStatsImg.Height = 125;
                 gameStatsImg.Margin = new Thickness(10);
-                
+
                 gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
                 // gameStatsImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/game/thumbnail/?name=" + myGameName));
 
@@ -1597,7 +1761,7 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo (string id, bool isLocalUser)
+        public void GetUserInfo(string id, bool isLocalUser)
         {
 
             string gamesSettings = "public";
@@ -2076,6 +2240,7 @@ namespace GamaManager
                                     string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                                     SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                     List<string> currentCollections = loadedContent.collections;
+                                    List<Game> currentGames = loadedContent.games;
                                     ContextMenu newGameContextMenu = new ContextMenu();
                                     MenuItem newGameContextMenuItem = new MenuItem();
                                     newGameContextMenuItem.Header = "Добавить в коллекцию";
@@ -2083,8 +2248,26 @@ namespace GamaManager
                                     foreach (string collectionName in currentCollections)
                                     {
                                         MenuItem newGameInnerContextMenuItem = new MenuItem();
+
+                                        List<Game> results = currentGames.Where<Game>((Game game) =>
+                                        {
+                                            return game.name == gamesListItemName;
+                                        }).ToList<Game>();
+                                        int countResults = results.Count;
+                                        bool isHaveResults = countResults >= 1;
+                                        if (isHaveResults)
+                                        {
+                                            Game result = results[0];
+                                            List<string> resultCollections = result.collections;
+                                            bool isAlreadyInCollection = resultCollections.Contains(collectionName);
+                                            if (isAlreadyInCollection)
+                                            {
+                                                newGameInnerContextMenuItem.IsEnabled = false;
+                                            }
+                                        }
+
                                         newGameInnerContextMenuItem.Header = collectionName;
-                                        Dictionary<String, Object>  newGameInnerContextMenuItemData = new Dictionary<String, Object>();
+                                        Dictionary<String, Object> newGameInnerContextMenuItemData = new Dictionary<String, Object>();
                                         newGameInnerContextMenuItemData.Add("collection", collectionName);
                                         newGameInnerContextMenuItemData.Add("name", gamesListItemName);
                                         newGameInnerContextMenuItem.DataContext = newGameInnerContextMenuItemData;
@@ -2126,7 +2309,17 @@ namespace GamaManager
             }
         }
 
-        public void AddGameToCollectionHandler (object sender, RoutedEventArgs e)
+        public void DragGameToCollectionHandler(object sender, MouseEventArgs e)
+        {
+            StackPanel someGame = ((StackPanel)(sender));
+            bool isLeftMouseBtnPressed = e.LeftButton == MouseButtonState.Pressed;
+            if (isLeftMouseBtnPressed)
+            {
+
+            }
+        }
+
+        public void AddGameToCollectionHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object rawMenuItemData = menuItem.DataContext;
@@ -2134,7 +2327,7 @@ namespace GamaManager
             AddGameToCollection(menuItemData);
         }
 
-        public void AddGameToCollection (Dictionary<String, Object> data)
+        public void AddGameToCollection(Dictionary<String, Object> data)
         {
             string collection = ((string)(data["collection"]));
             string name = ((string)(data["name"]));
@@ -2168,6 +2361,7 @@ namespace GamaManager
                 });
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
+                GetGamesList("");
             }
         }
 
@@ -2504,7 +2698,7 @@ namespace GamaManager
         }
 
 
-        public void GameSuccessDownloaded (string id)
+        public void GameSuccessDownloaded(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -2779,7 +2973,7 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void OpenFriendsDialogHandler (object sender, RoutedEventArgs e)
+        private void OpenFriendsDialogHandler(object sender, RoutedEventArgs e)
         {
             OpenFriendsDialog();
         }
@@ -3073,7 +3267,12 @@ namespace GamaManager
             }
             else if (isCollections)
             {
+
                 mainControl.SelectedIndex = 9;
+
+                /*mainControl.SelectedIndex = 0;
+                gamesLibraryControl.SelectedIndex = 1;*/
+
                 AddHistoryRecord();
             }
             else if (isDownloads)
@@ -3275,7 +3474,7 @@ namespace GamaManager
             BitmapImage bitmapImage = ((BitmapImage)(source));
             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-            
+
             // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
             string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
 
@@ -3974,12 +4173,12 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void ToggleWindowHandler (object sender, SelectionChangedEventArgs e)
+        private void ToggleWindowHandler(object sender, SelectionChangedEventArgs e)
         {
             ToggleWindow();
         }
 
-        public void ToggleWindow ()
+        public void ToggleWindow()
         {
             if (isAppInit)
             {
@@ -4690,14 +4889,14 @@ namespace GamaManager
 
         }
 
-        private void SetAllAccessSettingsHandler (object sender, SelectionChangedEventArgs e)
+        private void SetAllAccessSettingsHandler(object sender, SelectionChangedEventArgs e)
         {
             ComboBox selector = ((ComboBox)(sender));
             int index = selector.SelectedIndex;
             SetAllAccessSettings(index);
         }
 
-        private void SetAllAccessSettings (int index)
+        private void SetAllAccessSettings(int index)
         {
             if (isAppInit)
             {
@@ -4708,36 +4907,122 @@ namespace GamaManager
             }
         }
 
-        private void CreateCollectionHandler (object sender, MouseButtonEventArgs e)
+        private void CreateCollectionHandler(object sender, MouseButtonEventArgs e)
         {
             CreateCollection();
         }
 
-        public void CreateCollection ()
+        public void CreateCollection()
         {
             Dialogs.AddCollectiionDialog dialog = new Dialogs.AddCollectiionDialog(currentUserId);
             dialog.Closed += RefreshGameCollectionsHandler;
             dialog.Show();
         }
 
-        public void RefreshGameCollectionsHandler (object sender, EventArgs e)
+        public void RefreshGameCollectionsHandler(object sender, EventArgs e)
         {
             RefreshGameCollections();
         }
 
-        public void RefreshGameCollections ()
+        public void RefreshGameCollections()
         {
             GetGameCollections();
         }
 
-        private void ReturnToProfileHandler (object sender, MouseButtonEventArgs e)
+        private void ReturnToProfileHandler(object sender, MouseButtonEventArgs e)
         {
             ReturnToProfile();
         }
 
-        public void ReturnToProfile ()
+        public void ReturnToProfile()
         {
             mainControl.SelectedIndex = 1;
+        }
+
+        private void ToggleRenameBtnHandler(object sender, MouseButtonEventArgs e)
+        {
+            PackIcon icon = ((PackIcon)(sender));
+            ToggleRenameBtn(icon);
+        }
+
+        public void ToggleRenameBtn(PackIcon icon)
+        {
+            bool isEdit = gameCollectionNameLabel.IsEnabled;
+            bool toggleMode = !isEdit;
+            if (isEdit)
+            {
+                gameCollectionNameLabel.Background = System.Windows.Media.Brushes.Transparent;
+                gameCollectionNameLabel.BorderThickness = new Thickness(0);
+                icon.Kind = PackIconKind.Edit;
+            }
+            else
+            {
+                gameCollectionNameLabel.Background = System.Windows.Media.Brushes.White;
+                gameCollectionNameLabel.BorderThickness = new Thickness(1);
+                icon.Kind = PackIconKind.Close;
+            }
+            gameCollectionNameLabel.IsEnabled = toggleMode;
+        }
+
+        private void SaveGameCollectionNameHandler(object sender, KeyboardFocusChangedEventArgs e)
+        {
+
+            SaveGameCollectionName();
+        }
+
+        public void SaveGameCollectionName()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> updatedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> updatedCollections = loadedContent.collections;
+            string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
+            object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
+            string currentGameCollection = ((string)(rawCurrentGameCollection));
+            int collectionIndex = -1;
+            foreach (string updatedCollection in updatedCollections)
+            {
+                collectionIndex++;
+                bool isCollectionFound = currentGameCollection == updatedCollection;
+                if (isCollectionFound)
+                {
+                    updatedCollections[collectionIndex] = gameCollectionNameLabelContent;
+                    break;
+                }
+            }
+            foreach (Game updatedGame in updatedGames)
+            {
+                List<string> updatedGameCollections = updatedGame.collections;
+                collectionIndex = -1;
+                foreach (string updatedGameCollection in updatedGameCollections)
+                {
+                    collectionIndex++;
+                    bool isCollectionFound = currentGameCollection == updatedGameCollection;
+                    if (isCollectionFound)
+                    {
+                        updatedGame.collections[collectionIndex] = gameCollectionNameLabelContent;
+                        break;
+                    }
+                }
+            }
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = updatedGames,
+                friends = currentFriends,
+                settings = currentSettings,
+                collections = updatedCollections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            GetGamesList("");
+            gameCollectionNameLabel.DataContext = gameCollectionNameLabelContent;
+            ToggleRenameBtn(renameIcon);
+            GetGameCollections();
         }
 
     }

@@ -118,7 +118,7 @@ namespace GamaManager
             ShowOffers();
         }
 
-        public void GetGameCollections()
+        public void GetGameCollections ()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -140,7 +140,6 @@ namespace GamaManager
                 StackPanel gameCollectionBody = new StackPanel();
                 gameCollectionBody.Width = 175;
                 gameCollectionBody.Height = 175;
-                gameCollectionBody.Background = System.Windows.Media.Brushes.LightGray;
                 gameCollection.Child = gameCollectionBody;
                 TextBlock gameCollectionBodyNameLabel = new TextBlock();
                 gameCollectionBodyNameLabel.TextAlignment = TextAlignment.Center;
@@ -174,6 +173,33 @@ namespace GamaManager
                 gameCollectionContextMenuItem.Click += RemoveGameCollectionHandler;
                 gameCollectionContextMenu.Items.Add(gameCollectionContextMenuItem);
                 gameCollection.ContextMenu = gameCollectionContextMenu;
+
+                int imageWidth = 100;
+                int imageHeight = 100;
+                DrawingVisual drawingVisual = new DrawingVisual();
+                using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+                {
+                    foreach (Game gameForCollection in gamesForCollection)
+                    {
+                        bool isFirstFrame = gamesForCollection.IndexOf(gameForCollection) == 1;
+                        if (isFirstFrame)
+                        {
+                            imageWidth = 100;
+                            imageHeight = 100;
+                        }
+                        string currentGameName = gameForCollection.name;
+                        // Loads the images to tile (no need to specify PngBitmapDecoder, the correct decoder is automatically selected)
+                        BitmapFrame frame = BitmapDecoder.Create(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName), BitmapCreateOptions.None, BitmapCacheOption.OnLoad).Frames.First();
+                        // Gets the size of the images (I assume each image has the same size)
+                        // Draws the images into a DrawingVisual component
+                        drawingContext.DrawImage(frame, new Rect(0, 0, imageWidth, imageHeight));
+                    }
+                }
+                // Converts the Visual (DrawingVisual) into a BitmapSource
+                RenderTargetBitmap bmp = new RenderTargetBitmap(imageWidth * 2, imageHeight * 2, 96, 96, PixelFormats.Pbgra32);
+                bmp.Render(drawingVisual);
+                gameCollectionBody.Background = new VisualBrush(drawingVisual);
+            
             }
         }
 
@@ -342,6 +368,13 @@ namespace GamaManager
                         gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
                         gameCollectionItemContextMenuItem.Click += RemoveGameFromCollectionHandler;
                         gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                        gameCollectionItemContextMenuItem = new MenuItem();
+                        gameCollectionItemContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                        gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                        gameCollectionItemContextMenuItem.Click += CreateShortcutHandler;
+                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
                         gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
                     }
                 }
@@ -5023,6 +5056,44 @@ namespace GamaManager
             gameCollectionNameLabel.DataContext = gameCollectionNameLabelContent;
             ToggleRenameBtn(renameIcon);
             GetGameCollections();
+        }
+
+        public void CreateShortcutHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string name = ((string)(menuItemData));
+            CreateShortcut(name);
+        }
+
+        private void CreateShortcut (string name)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<Game> results = currentGames.Where<Game>((Game game) =>
+            {
+                string gameName = game.name;
+                bool isFound = gameName == name;
+                return isFound;
+            }).ToList();
+            int countResults = results.Count;
+            bool isHaveResults = countResults >= 1;
+            if (isHaveResults)
+            {
+                Game result = results[0];
+                string gamePath = result.path;
+                string link = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + System.IO.Path.DirectorySeparatorChar + name + ".lnk";
+                var shell = new IWshRuntimeLibrary.WshShell();
+                var shortcut = shell.CreateShortcut(link) as IWshRuntimeLibrary.IWshShortcut;
+                shortcut.TargetPath = gamePath;
+                shortcut.WorkingDirectory = System.Windows.Forms.Application.StartupPath;
+                shortcut.Save();
+            }
         }
 
     }

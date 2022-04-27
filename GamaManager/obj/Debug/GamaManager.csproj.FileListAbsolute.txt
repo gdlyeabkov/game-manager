@@ -465,3 +465,5 @@ C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\GamaManager.csproj.CoreCo
 C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\en-US\GamaManager.resources.dll
 C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\ru-RU\GamaManager.resources.dll
 C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\GamaManager.csproj.CopyComplete
+C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\Interop.IWshRuntimeLibrary.dll
+C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\GamaManager.csproj.ResolveComReference.cache

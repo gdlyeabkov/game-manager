@@ -1,7 +1,22 @@
-﻿
+﻿C:\wpf_projects\FixedGameManager\GamaManager\obj\Debug\GeneratedInternalTypeHelper.g.i.cs
 
-FC:\wpf_projects\GameManager\GamaManager\Dialogs\FriendsSettingsDialog.xaml;;
-FC:\wpf_projects\GameManager\GamaManager\Dialogs\PlayersDialog.xaml;;
-FC:\wpf_projects\GameManager\GamaManager\Dialogs\ServersDialog.xaml;;
-FC:\wpf_projects\GameManager\GamaManager\MainWindow.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\AcceptExitDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\AddCollectiionDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\AddFriendDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\ChatDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\DownloadGameDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\FriendNotificationsDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\FriendsDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\FriendsSettingsDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\LoginDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\OffersDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\PlayerDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\PlayersDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\ScreenShotsUploaderDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\ServersDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\SettingsDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\Dialogs\SystemInfoDialog.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\GamePage.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\GameWindow.xaml;;
+FC:\wpf_projects\FixedGameManager\GamaManager\MainWindow.xaml;;
 

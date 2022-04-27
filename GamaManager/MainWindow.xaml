@@ -60,6 +60,10 @@
                 Header="{x:Static p:Resources.viewMenuItemLabelContent}"    
             >
                 <MenuItem
+                    Header="Скрытые игры"
+                    Click="OpenHiddenGamesHandler"
+                />
+                <MenuItem
                     Header="{x:Static p:Resources.viewMenuItemPlayerLabelContent}"
                     Click="OpenPlayerHandler"
                 />
@@ -2363,6 +2367,104 @@
                                     </Image>
                                     -->
                                 </WrapPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBox
+                                        x:Name="hiddenGamesTitleLabel"
+                                        Background="Transparent"
+                                        IsEnabled="False"
+                                        BorderThickness="0"
+                                        Margin="15"
+                                        FontSize="20"
+                                        Text="Скрыто"    
+                                        LostKeyboardFocus="SaveGameCollectionNameHandler"    
+                                    />
+                                </StackPanel>
+                                <TextBlock
+                                    x:Name="countHiddenGamesLabel"
+                                    Text="(0)"
+                                    Margin="15 0"
+                                    VerticalAlignment="Center"
+                                />
+                                <Separator
+                                    Width="750"
+                                    Height="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                />
+                            </DockPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Text="Сортировка"
+                                        Margin="25 0"    
+                                    />
+                                    <ComboBox
+                                        Width="175"
+                                        SelectedIndex="0"
+                                    >
+                                        <ComboBoxItem
+                                            Content="По алфавиту"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По играющим друзьям"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По проценту достижений"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По времени в игре"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По дате запуска"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По дате выхода"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По размеру на диске"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По оценке на Metacritic"    
+                                        />
+                                        <ComboBoxItem
+                                            Content="По обзорам в Office ware game manager"    
+                                        />
+                                    </ComboBox>
+                                </StackPanel>
+                                <Separator
+                                    HorizontalAlignment="Left"
+                                    Width="750"
+                                    Height="1"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                    Margin="0 25"
+                                />
+                                <WrapPanel
+                                    x:Name="hiddenGames"
+                                />
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>

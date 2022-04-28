@@ -118,6 +118,23 @@
                 />
             </MenuItem>
             <MenuItem
+                Header="Игры"    
+            >
+                <MenuItem
+                    Header="Библиотека игр"
+                    Click="OpenGamesLibraryHandler"
+                />
+                <Separator />
+                <MenuItem
+                    Header="Активировать"
+                    Click="OpenGameActivationHandler"
+                />
+                <MenuItem
+                    Header="Добавить сторонюю игру в мою библиотеку"
+                    Click="AddExternalGameHandler"
+                />
+            </MenuItem>
+            <MenuItem
                 Header="{x:Static p:Resources.helpMenuItemLabelContent}"    
             >
                 <MenuItem
@@ -2227,12 +2244,12 @@
                                     Padding="1.5"
                                     Margin="25"
                                     MouseLeftButtonUp="CreateCollectionHandler"
+                                    Background="LightGray"
                                 >
                                     <Border.Child>
                                         <StackPanel
                                             Width="175"
                                             Height="175"
-                                            Background="LightGray"
                                         >
                                             <materialDesign:PackIcon
                                                 Kind="Add"

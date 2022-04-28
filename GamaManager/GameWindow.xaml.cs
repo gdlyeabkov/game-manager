@@ -41,6 +41,7 @@ namespace GamaManager
         private User currentUser;
         public string currentGameName = "";
         public System.Windows.Media.Brush notificationBackground;
+        bool isOverlayEnabled = true;
 
         public GameWindow(string userId)
         {
@@ -130,6 +131,27 @@ namespace GamaManager
                 control.Unloaded += GameUnloadedHandler;
 
                 currentGameName = gameName;
+
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                List<Game> currentGames = loadedContent.games;
+                List<Game> results = currentGames.Where<Game>((Game game) =>
+                {
+                    string localGameName = game.name;
+                    bool isFound = localGameName == currentGameName;
+                    return isFound;
+                }).ToList();
+                int countResults = results.Count;
+                bool isHaveResults = countResults >= 1;
+                if (isHaveResults)
+                {
+                    Game result = results[0];
+                    isOverlayEnabled = result.overlay;
+                }
 
             }
             catch (Exception)
@@ -246,7 +268,8 @@ namespace GamaManager
             if (isToggleAside)
             {
                 bool isShowOverlay = currentSettings.showOverlay;
-                if (isShowOverlay)
+                bool isCanToggleAside = isShowOverlay && isOverlayEnabled;
+                if (isCanToggleAside)
                 {
                     Visibility currentVisibility = gameManagerAside.Visibility;
                     bool isVisible = currentVisibility == visible;

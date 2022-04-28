@@ -1,0 +1,78 @@
+﻿<Window x:Class="GamaManager.Dialogs.AddExternalGameDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager.Dialogs"
+        mc:Ignorable="d"
+        Title="Добавление игры"
+        Height="450"
+        Width="800"
+    >
+    <StackPanel>
+        <TextBlock
+            Margin="25 10"
+            Text="Выберите программу, которую хотите добавить в свою библиотеку игр."    
+        />
+        <ScrollViewer>
+            <Grid
+                x:Name="apps"
+                Height="325"
+            >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="25"    
+                    />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <CheckBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="Программы"
+                />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Text="Расположение"
+                />
+            </Grid>
+        </ScrollViewer>
+        <StackPanel
+            Margin="0 25"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+        >
+            <Button
+                Margin="25 0"
+                Width="75"
+                Height="25"
+                Click="BrowseHandler"
+                Content="Обзор"    
+            />
+            <Button
+                x:Name="addSelectedAppsBtn"
+                Margin="25 0"
+                Width="175"
+                Height="25"
+                Click="AddSelectedAppsHandler"
+                Content="Добавить выбранные"
+                IsEnabled="False"
+            />
+            <Button
+                Margin="25 0"
+                Width="75"
+                Height="25"
+                Click="CancelHandler"
+                Content="Отмена"    
+            />
+        </StackPanel>
+    </StackPanel>
+</Window>

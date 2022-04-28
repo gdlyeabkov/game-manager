@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\wpf_projects\NewGameManager\GamaManager\obj\Debug\
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\
 GamaManager
 none
 false
 DEBUG;TRACE
-C:\wpf_projects\NewGameManager\GamaManager\App.xaml
+C:\wpf_projects\LastGameManager\GamaManager\App.xaml
 19-1497195094
 2-41794771
-27461918649
-78431923332
+28-1620169969
+78-504137370
 Dialogs\AcceptExitDialog.xaml;Dialogs\AddCollectiionDialog.xaml;Dialogs\AddFriendDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendNotificationsDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\FriendsSettingsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;Dialogs\PlayerDialog.xaml;Dialogs\PlayersDialog.xaml;Dialogs\ScreenShotsUploaderDialog.xaml;Dialogs\ServersDialog.xaml;Dialogs\SettingsDialog.xaml;Dialogs\SystemInfoDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
 
-False
+True
 

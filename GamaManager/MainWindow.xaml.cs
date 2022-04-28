@@ -203,6 +203,7 @@ namespace GamaManager
                     foreach (Game gameForCollection in gamesForCollection)
                     {
                         int frameIndex = gamesForCollection.IndexOf(gameForCollection);
+                        string currentGameId = gameForCollection.id;
                         string currentGameName = gameForCollection.name;
                         string currentGameCover = gameForCollection.cover;
                         // Loads the images to tile (no need to specify PngBitmapDecoder, the correct decoder is automatically selected)
@@ -210,13 +211,19 @@ namespace GamaManager
                         bool isCoverFound = File.Exists(currentGameCover);
                         bool isCoverExists = isCoverSet && isCoverFound;
                         Uri coverUri = null;
+                        bool isCustomGame = currentGameId == "mockId";
+                        bool isNotCustomGame = !isCustomGame;
                         if (isCoverExists)
                         {
                             coverUri = new Uri(currentGameCover);
                         }
-                        else
+                        else if (isNotCustomGame)
                         {
                             coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                        }
+                        else
+                        {
+                            coverUri = new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png");
                         }
                         BitmapFrame frame = BitmapDecoder.Create(coverUri, BitmapCreateOptions.None, BitmapCacheOption.OnLoad).Frames.First();
                         // Gets the size of the images (I assume each image has the same size)
@@ -321,14 +328,8 @@ namespace GamaManager
             toAdorn.Height = 100;
             toAdorn.Background = System.Windows.Media.Brushes.Red;
             layer.Add(new Helpers.SimpleCircleAdorner(toAdorn));*/
-
             gameCollectionNameLabel.DataContext = name;
-
             mainControl.SelectedIndex = 10;
-
-            /*mainControl.SelectedIndex = 0;
-            gamesLibraryControl.SelectedIndex = 2;*/
-
             GetGameCollectionItems(name);
             gameCollectionNameLabel.Text = name;
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -359,11 +360,15 @@ namespace GamaManager
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> currentGames = loadedContent.games;
+            List<string> currentCollections = loadedContent.collections;
             List<Game> collectionGames = currentGames.Where<Game>((Game game) =>
             {
                 List<string> gameCollections = game.collections;
                 bool isGameForCollection = gameCollections.Contains(name);
-                return isGameForCollection;
+                bool isHiddenGame = game.isHidden;
+                bool isDisplayedGame = !isHiddenGame;
+                bool isShowGame = isGameForCollection && isDisplayedGame;
+                return isShowGame;
             }).ToList();
             int collectionGamesCount = collectionGames.Count;
             bool isHaveGames = collectionGamesCount >= 1;
@@ -375,8 +380,12 @@ namespace GamaManager
                 {
                     List<string> currentGameCollections = currentGame.collections;
                     bool isGameForCurrentCollection = currentGameCollections.Contains(name);
-                    if (isGameForCurrentCollection)
+                    bool isHiddenGame = currentGame.isHidden;
+                    bool isDisplayedGame = !isHiddenGame;
+                    bool isShowGame = isGameForCurrentCollection && isDisplayedGame;
+                    if (isShowGame)
                     {
+                        string currentGameId = currentGame.id;
                         string currentGameName = currentGame.name;
                         string currentGameCover = currentGame.cover;
                         bool isCoverSet = currentGameCover != "";
@@ -403,7 +412,44 @@ namespace GamaManager
                         gameCollectionItem.DataContext = currentGameName;
                         gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
                         ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+
                         MenuItem gameCollectionItemContextMenuItem = new MenuItem();
+                        gameCollectionItemContextMenuItem.Header = "Играть";
+                        gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                        gameCollectionItemContextMenuItem.Click += RunGameHandler;
+                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                        gameCollectionItemContextMenuItem = new MenuItem();
+                        gameCollectionItemContextMenuItem.Header = "Добавить в";
+                        MenuItem gameCollectionItemNestedContextMenuItem;
+                        Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData;
+                        foreach (string currentCollection in currentCollections)
+                        {
+                            gameCollectionItemNestedContextMenuItem = new MenuItem();
+                            gameCollectionItemNestedContextMenuItem.Header = currentCollection;
+                            gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                            gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                            gameCollectionItemNestedContextMenuItemData.Add("collection", currentCollection);
+                            gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                            gameCollectionItemNestedContextMenuItem.Click += AddGameToCollectionHandler;
+                            gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                            bool isDisabledCollection = currentGameCollections.Contains(currentCollection);
+                            if (isDisabledCollection)
+                            {
+                                gameCollectionItemNestedContextMenuItem.IsEnabled = false;
+                            }
+                        }
+                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                        gameCollectionItemNestedContextMenuItem.Header = "Создать коллекцию";
+                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                        gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                        gameCollectionItemNestedContextMenuItemData.Add("collection", name);
+                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                        gameCollectionItemNestedContextMenuItem.Click += CreateCollectionFromMenuHandler;
+                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                        gameCollectionItemContextMenuItem = new MenuItem();
                         string gameCollectionItemContextMenuItemHeaderContent = "Убрать из " + name;
                         gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
                         Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
@@ -416,7 +462,7 @@ namespace GamaManager
                         gameCollectionItemContextMenuItem = new MenuItem();
                         gameCollectionItemContextMenuItem.Header = "Управление";
 
-                        MenuItem gameCollectionItemNestedContextMenuItem = new MenuItem();
+                        gameCollectionItemNestedContextMenuItem = new MenuItem();
                         gameCollectionItemNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
                         gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
                         gameCollectionItemNestedContextMenuItem.Click += CreateShortcutHandler;
@@ -432,7 +478,7 @@ namespace GamaManager
                         {
                             gameCollectionItemNestedContextMenuItem.Header = "Задать свою обложку";
                         }
-                        Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
                         gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
                         gameCollectionItemNestedContextMenuItemData.Add("collection", name);
                         gameCollectionItemNestedContextMenuItemData.Add("cover", currentGameCover);
@@ -447,7 +493,7 @@ namespace GamaManager
                         gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
 
                         gameCollectionItemNestedContextMenuItem = new MenuItem();
-                        bool isHiddenGame = currentGame.isHidden;
+                        isHiddenGame = currentGame.isHidden;
                         if (isHiddenGame)
                         {
                             gameCollectionItemNestedContextMenuItem.Header = "Убрать из скрытого";
@@ -474,6 +520,17 @@ namespace GamaManager
 
                         gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
 
+                        gameCollectionItemContextMenuItem = new MenuItem();
+                        gameCollectionItemContextMenuItem.Header = "Свойства";
+                        // gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                        gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                        gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                        bool isCustomGame = currentGameId == "mockId";
+                        gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                        gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                        gameCollectionItemContextMenuItem.Click += OpenGameSettingsHandler;
+                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
                         gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
                     }
                 }
@@ -485,6 +542,37 @@ namespace GamaManager
                 gameCollectionsNotFoundLabel.Text = "Перетащите сюда игры чтобы создать коллекцию.";
                 gameCollectionItems.Children.Add(gameCollectionsNotFoundLabel);
             }
+        }
+
+        public void InsertGameToCollectionHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            Dictionary<String, Object> data = ((Dictionary<String, Object>)(menuItemData));
+            InsertGameToCollection(data);
+        }
+
+        public void InsertGameToCollection(Dictionary<String, Object> data)
+        {
+            string game = ((string)(data["game"]));
+            string collection = ((string)(data["collection"]));
+        }
+
+
+        public void OpenGameSettingsHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            Dictionary<String, Object> data = ((Dictionary<String, Object>)(menuItemData));
+            OpenGameSettings(data);
+        }
+
+        public void OpenGameSettings(Dictionary<String, Object> data)
+        {
+            string name = ((string)(data["game"]));
+            bool isCustomGame = ((bool)(data["isCustomGame"]));
+            Dialogs.GameSettingsDialog dialog = new Dialogs.GameSettingsDialog(currentUserId, name, isCustomGame);
+            dialog.Show();
         }
 
         public void ToggleGameCoverHandler(object sender, RoutedEventArgs e)
@@ -547,6 +635,7 @@ namespace GamaManager
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetGameCollections();
                 GetGameCollectionItems(collection);
+                GetHiddenGames();
             }
         }
 
@@ -651,8 +740,287 @@ namespace GamaManager
             bool isMyGameDataExists = myGameData != null;
             if (isMyGameDataExists)
             {
-                mainControl.SelectedIndex = 0;
+                OpenGamesLibrary();
                 SelectGame(myGameData);
+            }
+        }
+
+        public void GetLocalGames(string keywords)
+        {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<string> currentCollections = loadedContent.collections;
+            List<Game> currentGames = loadedContent.games;
+            List<Game> loadedGames = currentGames;
+            loadedGames = loadedGames.Where<Game>((Game gameInfo) =>
+            {
+                int keywordsLength = keywords.Length;
+                bool isKeywordsSetted = keywordsLength >= 1;
+                bool isKeywordsNotSetted = !isKeywordsSetted;
+                string gameId = gameInfo.id;
+                string gameName = gameInfo.name;
+                string ignoreCaseKeywords = keywords.ToLower();
+                string ignoreCaseGameName = gameName.ToLower();
+                bool isGameNameMatch = ignoreCaseGameName.Contains(ignoreCaseKeywords);
+                bool isSearchEnabled = isKeywordsSetted && isGameNameMatch;
+                bool isGameMatch = isSearchEnabled || isKeywordsNotSetted;
+                bool isCustomGame = gameId == "mockId";
+                bool isCustomGameMatch = isGameMatch && isCustomGame;
+                return isCustomGameMatch;
+            }).ToList<Game>();
+            int countLoadedGames = loadedGames.Count;
+            // bool isGamesExists = countLoadedGames >= 1;
+            bool isGamesExists = countLoadedGames >= 1;
+            if (isGamesExists)
+            {
+                activeGame.Visibility = visible;
+                foreach (Game gamesListItem in loadedGames)
+                {
+
+                    string gamesListItemName = gamesListItem.name;
+
+                    List<Game> results = currentGames.Where<Game>((Game game) =>
+                    {
+                        return game.name == gamesListItemName;
+                    }).ToList<Game>();
+                    int countResults = results.Count;
+                    bool isHaveResults = countResults >= 1;
+                    bool isShowGame = true;
+                    Game result = null;
+                    if (isHaveResults)
+                    {
+                        result = results[0];
+                        bool isHidden = result.isHidden;
+                        isShowGame = !isHidden;
+                    }
+                    if (isShowGame)
+                    {
+                        StackPanel newGame = new StackPanel();
+                        newGame.MouseLeftButtonUp += SelectGameHandler;
+                        newGame.Orientation = Orientation.Horizontal;
+                        newGame.Height = 35;
+
+                        // string gamesListItemId = gamesListItem._id;
+
+                        Dictionary<String, Object> newGameData = new Dictionary<String, Object>();
+                        newGameData.Add("id", "mockId");
+                        newGameData.Add("name", gamesListItemName);
+                        newGameData.Add("url", "");
+                        newGameData.Add("image", "");
+                        newGame.DataContext = newGameData;
+                        Image newGamePhoto = new Image();
+                        newGamePhoto.Margin = new Thickness(5);
+                        newGamePhoto.Width = 25;
+                        newGamePhoto.Height = 25;
+                        newGamePhoto.BeginInit();
+                        // Uri newGamePhotoUri = new Uri(gamesListItemImage);
+                        // Uri newGamePhotoUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                        Uri newGamePhotoUri = new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png");
+                        newGamePhoto.Source = new BitmapImage(newGamePhotoUri);
+                        newGamePhoto.EndInit();
+                        newGame.Children.Add(newGamePhoto);
+                        newGamePhoto.ImageFailed += SetDefaultThumbnailHandler;
+                        TextBlock newGameLabel = new TextBlock();
+                        newGameLabel.Margin = new Thickness(5);
+                        newGameLabel.Text = gamesListItem.name;
+                        newGame.Children.Add(newGameLabel);
+                        games.Children.Add(newGame);
+
+                        List<Game> gameSearchResults = currentGames.Where<Game>((Game game) =>
+                        {
+                            string gameName = game.name;
+                            bool isGameFound = gameName == gamesListItemName;
+                            return isGameFound;
+                        }).ToList<Game>();
+                        int countGameSearchResults = gameSearchResults.Count;
+                        bool isGameInstalled = countGameSearchResults >= 1;
+                        bool isGameNotInstalled = !isGameInstalled;
+                        if (isGameInstalled)
+                        {
+
+                            ContextMenu newGameContextMenu = new ContextMenu();
+
+                            MenuItem newGameContextMenuItem = new MenuItem();
+                            newGameContextMenuItem.Header = "Играть";
+                            newGameContextMenuItem.DataContext = gamesListItemName;
+                            newGameContextMenuItem.Click += RunGameHandler;
+                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                            newGameContextMenuItem = new MenuItem();
+                            newGameContextMenuItem.Header = "Добавить в коллекцию";
+                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                            foreach (string collectionName in currentCollections)
+                            {
+                                MenuItem newGameInnerContextMenuItem = new MenuItem();
+                                List<string> resultCollections = new List<string>();
+                                if (isHaveResults)
+                                {
+                                    resultCollections = result.collections;
+                                }
+                                bool isAlreadyInCollection = resultCollections.Contains(collectionName);
+                                if (isAlreadyInCollection)
+                                {
+                                    newGameInnerContextMenuItem.IsEnabled = false;
+                                }
+
+                                newGameInnerContextMenuItem.Header = collectionName;
+                                Dictionary<String, Object> newGameInnerContextMenuItemData = new Dictionary<String, Object>();
+                                newGameInnerContextMenuItemData.Add("collection", collectionName);
+                                newGameInnerContextMenuItemData.Add("name", gamesListItemName);
+                                newGameInnerContextMenuItem.DataContext = newGameInnerContextMenuItemData;
+                                newGameInnerContextMenuItem.Click += AddGameToCollectionHandler;
+                                newGameContextMenuItem.Items.Add(newGameInnerContextMenuItem);
+                            }
+
+                            newGameContextMenuItem = new MenuItem();
+                            string gameCollectionItemContextMenuItemHeaderContent = "Убрать из ";
+                            newGameContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                            MenuItem newGameNestedContextMenuItem;
+                            Dictionary<String, Object> newGameNestedContextMenuItemData;
+                            foreach (string hiddenGameCollection in result.collections)
+                            {
+                                newGameNestedContextMenuItem = new MenuItem();
+                                newGameNestedContextMenuItem.Header = hiddenGameCollection;
+                                newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                                newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                                newGameNestedContextMenuItemData.Add("collection", hiddenGameCollection);
+                                newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                                newGameNestedContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                                newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+                            }
+                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                            newGameContextMenuItem = new MenuItem();
+                            newGameContextMenuItem.Header = "Управление";
+
+                            newGameNestedContextMenuItem = new MenuItem();
+                            newGameNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                            newGameNestedContextMenuItem.DataContext = gamesListItemName;
+                            newGameNestedContextMenuItem.Click += CreateShortcutHandler;
+                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                            newGameNestedContextMenuItem = new MenuItem();
+                            bool IsCoverSet = result.cover != "";
+                            if (IsCoverSet)
+                            {
+                                newGameNestedContextMenuItem.Header = "Удалить свою обложку";
+                            }
+                            else
+                            {
+                                newGameNestedContextMenuItem.Header = "Задать свою обложку";
+                            }
+                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                            newGameNestedContextMenuItemData.Add("collection", "");
+                            newGameNestedContextMenuItemData.Add("cover", result.cover);
+                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                            newGameNestedContextMenuItem.Click += ToggleGameCoverHandler;
+                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                            newGameNestedContextMenuItem = new MenuItem();
+                            newGameNestedContextMenuItem.Header = "Просмотреть локальные файлы";
+                            newGameNestedContextMenuItem.DataContext = gamesListItemName;
+                            newGameNestedContextMenuItem.Click += ShowGamesLocalFilesHandler;
+                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                            newGameNestedContextMenuItem = new MenuItem();
+                            bool isHiddenGame = result.isHidden;
+                            if (isHiddenGame)
+                            {
+                                newGameNestedContextMenuItem.Header = "Убрать из скрытого";
+                            }
+                            else
+                            {
+                                newGameNestedContextMenuItem.Header = "Скрыть игру";
+                            }
+
+                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                            newGameNestedContextMenuItemData.Add("collection", "");
+                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                            newGameNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
+                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                            newGameNestedContextMenuItem = new MenuItem();
+                            newGameNestedContextMenuItem.Header = "Удалить с утройства";
+                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                            newGameNestedContextMenuItemData.Add("collection", "");
+                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                            newGameNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                            string currentGameId = result.id;
+                            newGameContextMenuItem = new MenuItem();
+                            newGameContextMenuItem.Header = "Свойства";
+                            Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                            gameCollectionItemContextMenuItemData.Add("game", gamesListItemName);
+                            bool isCustomGame = currentGameId == "mockId";
+                            gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                            newGameContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                            newGameContextMenuItem.Click += OpenGameSettingsHandler;
+                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                            newGame.ContextMenu = newGameContextMenu;
+                        }
+                    }
+                }
+                List<Game> displayedGames = currentGames.Where<Game>((Game game) =>
+                {
+                    bool isHidden = game.isHidden;
+                    bool isDisplayed = !isHidden;
+                    return isDisplayed;
+                }).ToList<Game>();
+                int countdisplayedGames = displayedGames.Count;
+                bool isHaveDisplayedGames = countdisplayedGames >= 1;
+                if (isHaveDisplayedGames)
+                {
+
+                    Game displayedGame = displayedGames[0];
+                    string displayedGameName = displayedGame.name;
+                    int index = loadedGames.FindIndex((Game game) =>
+                    {
+                        string gameName = game.name;
+                        bool isGameFound = gameName == displayedGameName;
+                        return isGameFound;
+                    });
+                    bool isFound = index >= 0;
+                    if (isFound)
+                    {
+                        Game crossGame = loadedGames[index];
+                        Game firstGame = crossGame;
+                        Dictionary<String, Object> firstGameData = new Dictionary<String, Object>();
+                        string firstGameId = firstGame.id;
+                        string firstGameName = firstGame.name;
+                        string firstGameUrl = @"";
+                        string firstGameImage = @"";
+                        Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
+                        firstGameData.Add("id", firstGameId);
+                        firstGameData.Add("name", firstGameName);
+                        firstGameData.Add("url", firstGameUrl);
+                        firstGameData.Add("image", firstGameImage);
+                        SelectGame(firstGameData);
+                    }
+                    else
+                    {
+                        activeGame.Visibility = invisible;
+                    }
+                }
+                else
+                {
+                    activeGame.Visibility = invisible;
+                }
+            }
+            else
+            {
+                activeGame.Visibility = invisible;
             }
         }
 
@@ -1358,6 +1726,7 @@ namespace GamaManager
             downloads.RowDefinitions.Clear();
             foreach (Game currentGame in currentGames)
             {
+                string currentGameId = currentGame.id;
                 string currentGameName = currentGame.name;
                 string currentGamePath = currentGame.path;
                 string currentGameInstallDate = currentGame.installDate;
@@ -1394,45 +1763,52 @@ namespace GamaManager
                                     string currentGameImg = foundedGame.image;
                                     // string gameName = foundedGame.name;
                                     dowloadsCursor++;
-                                    FileInfo currentGameInfo = new FileInfo(currentGamePath);
-                                    long currentGameSize = currentGameInfo.Length;
-                                    double currentGameSizeInGb = currentGameSize / 1024 / 1024 / 1024;
-                                    string rawCurrentGameSize = currentGameSizeInGb + " Гб";
-                                    RowDefinition download = new RowDefinition();
-                                    download.Height = new GridLength(275);
-                                    downloads.RowDefinitions.Add(download);
-                                    RowDefinitionCollection rows = downloads.RowDefinitions;
-                                    int rowsCount = rows.Count;
-                                    int lastRowIndex = rowsCount - 1;
-                                    Image downloadImg = new Image();
-                                    downloadImg.BeginInit();
-                                    // downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
-                                    Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
-                                    downloadImg.Source = new BitmapImage();
-                                    downloadImg.EndInit();
-                                    downloadImg.Margin = new Thickness(15, 0, 15, 0);
-                                    downloads.Children.Add(downloadImg);
-                                    Grid.SetRow(downloadImg, lastRowIndex);
-                                    Grid.SetColumn(downloadImg, 0);
-                                    StackPanel downloadInfo = new StackPanel();
-                                    TextBlock downloadNameLabel = new TextBlock();
-                                    downloadNameLabel.Text = currentGameName;
-                                    downloadNameLabel.FontSize = 24;
-                                    downloadNameLabel.Margin = new Thickness(15, 0, 15, 0);
-                                    downloadInfo.Children.Add(downloadNameLabel);
-                                    TextBlock downloadSizeLabel = new TextBlock();
-                                    downloadSizeLabel.Text = rawCurrentGameSize;
-                                    downloadSizeLabel.Margin = new Thickness(15, 0, 15, 0);
-                                    downloadInfo.Children.Add(downloadSizeLabel);
-                                    downloads.Children.Add(downloadInfo);
-                                    Grid.SetRow(downloadInfo, lastRowIndex);
-                                    Grid.SetColumn(downloadInfo, 1);
-                                    TextBlock downloadDateLabel = new TextBlock();
-                                    downloadDateLabel.Text = currentGameInstallDate;
-                                    downloadDateLabel.Margin = new Thickness(15, 0, 15, 0);
-                                    downloads.Children.Add(downloadDateLabel);
-                                    Grid.SetRow(downloadDateLabel, lastRowIndex);
-                                    Grid.SetColumn(downloadDateLabel, 2);
+                                    try
+                                    {
+                                        FileInfo currentGameInfo = new FileInfo(currentGamePath);
+                                        long currentGameSize = currentGameInfo.Length;
+                                        double currentGameSizeInGb = currentGameSize / 1024 / 1024 / 1024;
+                                        string rawCurrentGameSize = currentGameSizeInGb + " Гб";
+                                        RowDefinition download = new RowDefinition();
+                                        download.Height = new GridLength(275);
+                                        downloads.RowDefinitions.Add(download);
+                                        RowDefinitionCollection rows = downloads.RowDefinitions;
+                                        int rowsCount = rows.Count;
+                                        int lastRowIndex = rowsCount - 1;
+                                        Image downloadImg = new Image();
+                                        downloadImg.BeginInit();
+                                        // downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
+                                        Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                        downloadImg.Source = new BitmapImage();
+                                        downloadImg.EndInit();
+                                        downloadImg.Margin = new Thickness(15, 0, 15, 0);
+                                        downloads.Children.Add(downloadImg);
+                                        Grid.SetRow(downloadImg, lastRowIndex);
+                                        Grid.SetColumn(downloadImg, 0);
+                                        StackPanel downloadInfo = new StackPanel();
+                                        TextBlock downloadNameLabel = new TextBlock();
+                                        downloadNameLabel.Text = currentGameName;
+                                        downloadNameLabel.FontSize = 24;
+                                        downloadNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                        downloadInfo.Children.Add(downloadNameLabel);
+                                        TextBlock downloadSizeLabel = new TextBlock();
+                                        downloadSizeLabel.Text = rawCurrentGameSize;
+                                        downloadSizeLabel.Margin = new Thickness(15, 0, 15, 0);
+                                        downloadInfo.Children.Add(downloadSizeLabel);
+                                        downloads.Children.Add(downloadInfo);
+                                        Grid.SetRow(downloadInfo, lastRowIndex);
+                                        Grid.SetColumn(downloadInfo, 1);
+                                        TextBlock downloadDateLabel = new TextBlock();
+                                        downloadDateLabel.Text = currentGameInstallDate;
+                                        downloadDateLabel.Margin = new Thickness(15, 0, 15, 0);
+                                        downloads.Children.Add(downloadDateLabel);
+                                        Grid.SetRow(downloadDateLabel, lastRowIndex);
+                                        Grid.SetColumn(downloadDateLabel, 2);
+                                    }
+                                    catch (FileNotFoundException e)
+                                    {
+
+                                    }
                                 }
                             }
                         }
@@ -2478,9 +2854,6 @@ namespace GamaManager
                                         newGame.Children.Add(newGameLabel);
                                         games.Children.Add(newGame);
 
-                                        ContextMenu newGameContextMenu = new ContextMenu();
-                                        MenuItem newGameContextMenuItem = new MenuItem();
-                                        newGameContextMenuItem.Header = "Добавить в коллекцию";
                                         List<Game> gameSearchResults = currentGames.Where<Game>((Game game) =>
                                         {
                                             string gameName = game.name;
@@ -2490,34 +2863,145 @@ namespace GamaManager
                                         int countGameSearchResults = gameSearchResults.Count;
                                         bool isGameInstalled = countGameSearchResults >= 1;
                                         bool isGameNotInstalled = !isGameInstalled;
-                                        if (isGameNotInstalled)
+
+                                        if (isGameInstalled)
                                         {
-                                            newGameContextMenuItem.IsEnabled = false;
-                                        }
-                                        newGameContextMenu.Items.Add(newGameContextMenuItem);
-                                        foreach (string collectionName in currentCollections)
-                                        {
-                                            MenuItem newGameInnerContextMenuItem = new MenuItem();
-                                            List<string> resultCollections = new List<string>();
-                                            if (isHaveResults)
+                                            ContextMenu newGameContextMenu = new ContextMenu();
+
+                                            MenuItem newGameContextMenuItem = new MenuItem();
+                                            newGameContextMenuItem.Header = "Играть";
+                                            newGameContextMenuItem.DataContext = gamesListItemName;
+                                            newGameContextMenuItem.Click += RunGameHandler;
+                                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                                            newGameContextMenuItem = new MenuItem();
+                                            newGameContextMenuItem.Header = "Добавить в коллекцию";
+
+                                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+                                            foreach (string collectionName in currentCollections)
                                             {
-                                                resultCollections = result.collections;
-                                            }
-                                            bool isAlreadyInCollection = resultCollections.Contains(collectionName);
-                                            if (isAlreadyInCollection)
-                                            {
-                                                newGameInnerContextMenuItem.IsEnabled = false;
+                                                MenuItem newGameInnerContextMenuItem = new MenuItem();
+                                                List<string> resultCollections = new List<string>();
+                                                if (isHaveResults)
+                                                {
+                                                    resultCollections = result.collections;
+                                                }
+                                                bool isAlreadyInCollection = resultCollections.Contains(collectionName);
+                                                if (isAlreadyInCollection)
+                                                {
+                                                    newGameInnerContextMenuItem.IsEnabled = false;
+                                                }
+
+                                                newGameInnerContextMenuItem.Header = collectionName;
+                                                Dictionary<String, Object> newGameInnerContextMenuItemData = new Dictionary<String, Object>();
+                                                newGameInnerContextMenuItemData.Add("collection", collectionName);
+                                                newGameInnerContextMenuItemData.Add("name", gamesListItemName);
+                                                newGameInnerContextMenuItem.DataContext = newGameInnerContextMenuItemData;
+                                                newGameInnerContextMenuItem.Click += AddGameToCollectionHandler;
+                                                newGameContextMenuItem.Items.Add(newGameInnerContextMenuItem);
                                             }
 
-                                            newGameInnerContextMenuItem.Header = collectionName;
-                                            Dictionary<String, Object> newGameInnerContextMenuItemData = new Dictionary<String, Object>();
-                                            newGameInnerContextMenuItemData.Add("collection", collectionName);
-                                            newGameInnerContextMenuItemData.Add("name", gamesListItemName);
-                                            newGameInnerContextMenuItem.DataContext = newGameInnerContextMenuItemData;
-                                            newGameInnerContextMenuItem.Click += AddGameToCollectionHandler;
-                                            newGameContextMenuItem.Items.Add(newGameInnerContextMenuItem);
+                                            /*MenuItem gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                            gameCollectionItemNestedContextMenuItem.Header = "Удалить с утройства";
+                                            Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                            gameCollectionItemNestedContextMenuItemData.Add("game", gamesListItemName);
+                                            gameCollectionItemNestedContextMenuItemData.Add("collection", "");
+                                            gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                            gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                                            newGameContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);*/
+
+                                            newGameContextMenuItem = new MenuItem();
+                                            string gameCollectionItemContextMenuItemHeaderContent = "Убрать из ";
+                                            newGameContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                                            MenuItem newGameNestedContextMenuItem;
+                                            Dictionary<String, Object> newGameNestedContextMenuItemData;
+                                            foreach (string hiddenGameCollection in result.collections)
+                                            {
+                                                newGameNestedContextMenuItem = new MenuItem();
+                                                newGameNestedContextMenuItem.Header = hiddenGameCollection;
+                                                newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                                                newGameNestedContextMenuItemData.Add("collection", hiddenGameCollection);
+                                                newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                                                newGameNestedContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                                                newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+                                            }
+                                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                                            newGameContextMenuItem = new MenuItem();
+                                            newGameContextMenuItem.Header = "Управление";
+
+                                            newGameNestedContextMenuItem = new MenuItem();
+                                            newGameNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                                            newGameNestedContextMenuItem.DataContext = gamesListItemName;
+                                            newGameNestedContextMenuItem.Click += CreateShortcutHandler;
+                                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                                            newGameNestedContextMenuItem = new MenuItem();
+                                            bool IsCoverSet = result.cover != "";
+                                            if (IsCoverSet)
+                                            {
+                                                newGameNestedContextMenuItem.Header = "Удалить свою обложку";
+                                            }
+                                            else
+                                            {
+                                                newGameNestedContextMenuItem.Header = "Задать свою обложку";
+                                            }
+                                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                                            newGameNestedContextMenuItemData.Add("collection", "");
+                                            newGameNestedContextMenuItemData.Add("cover", result.cover);
+                                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                                            newGameNestedContextMenuItem.Click += ToggleGameCoverHandler;
+                                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                                            newGameNestedContextMenuItem = new MenuItem();
+                                            newGameNestedContextMenuItem.Header = "Просмотреть локальные файлы";
+                                            newGameNestedContextMenuItem.DataContext = gamesListItemName;
+                                            newGameNestedContextMenuItem.Click += ShowGamesLocalFilesHandler;
+                                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                                            newGameNestedContextMenuItem = new MenuItem();
+                                            bool isHiddenGame = result.isHidden;
+                                            if (isHiddenGame)
+                                            {
+                                                newGameNestedContextMenuItem.Header = "Убрать из скрытого";
+                                            }
+                                            else
+                                            {
+                                                newGameNestedContextMenuItem.Header = "Скрыть игру";
+                                            }
+
+                                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                                            newGameNestedContextMenuItemData.Add("collection", "");
+                                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                                            newGameNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
+                                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+
+                                            newGameNestedContextMenuItem = new MenuItem();
+                                            newGameNestedContextMenuItem.Header = "Удалить с утройства";
+                                            newGameNestedContextMenuItemData = new Dictionary<String, Object>();
+                                            newGameNestedContextMenuItemData.Add("game", gamesListItemName);
+                                            newGameNestedContextMenuItemData.Add("collection", "");
+                                            newGameNestedContextMenuItem.DataContext = newGameNestedContextMenuItemData;
+                                            newGameNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                                            newGameContextMenuItem.Items.Add(newGameNestedContextMenuItem);
+                                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                                            string currentGameId = result.id;
+                                            newGameContextMenuItem = new MenuItem();
+                                            newGameContextMenuItem.Header = "Свойства";
+                                            Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                            gameCollectionItemContextMenuItemData.Add("game", gamesListItemName);
+                                            bool isCustomGame = currentGameId == "mockId";
+                                            gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                                            newGameContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                            newGameContextMenuItem.Click += OpenGameSettingsHandler;
+                                            newGameContextMenu.Items.Add(newGameContextMenuItem);
+
+                                            newGame.ContextMenu = newGameContextMenu;
                                         }
-                                        newGame.ContextMenu = newGameContextMenu;
                                     }
                                 }
                                 List<Game> displayedGames = currentGames.Where<Game>((Game game) =>
@@ -2584,6 +3068,8 @@ namespace GamaManager
             {
 
             }
+            GetLocalGames(keywords);
+
         }
 
         public void DragGameToCollectionHandler(object sender, MouseEventArgs e)
@@ -2639,6 +3125,8 @@ namespace GamaManager
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
                 GetGamesList("");
+                GetGameCollectionItems(collection);
+                GetHiddenGames();
             }
         }
 
@@ -2722,14 +3210,22 @@ namespace GamaManager
             dialog.Show();
         }
 
-        async public void RunGame(string joinedGameName = "")
+        async public void RunGame(string gameName, string joinedGameName = "")
         {
+
             StartDetectGameHours();
             GameWindow window = new GameWindow(currentUserId);
-            window.DataContext = gameActionLabel.DataContext;
+
+            // window.DataContext = gameActionLabel.DataContext;
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string userPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId;
+            string gamePath = userPath + @"\games\" + gameName + @"\game.exe";
+            window.DataContext = gamePath;
+
             window.Closed += ComputeGameHoursHandler;
             window.Show();
-            string gameName = gameNameLabel.Text;
+            // string gameName = gameNameLabel.Text;
             try
             {
                 // await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
@@ -2741,15 +3237,13 @@ namespace GamaManager
             }
 
             string gameId = "1";
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            string saveDataFilePath = userPath + @"\save-data.txt";
             string currentGameName = joinedGameName;
             int joinedGameNameLength = joinedGameName.Length;
             bool isNotJoinedGame = joinedGameNameLength <= 0;
             if (isNotJoinedGame)
             {
-                currentGameName = gameNameLabel.Text;
+                currentGameName = gameName;
             }
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             // string cachePath = appPath + currentGameName;
@@ -2887,7 +3381,8 @@ namespace GamaManager
                     installDate = currentInstallDate,
                     collections = new List<string>(),
                     isHidden = false,
-                    cover = ""
+                    cover = "",
+                    overlay = true
                 };
                 string savedContent = js.Serialize(new SavedContent
                 {
@@ -3011,7 +3506,8 @@ namespace GamaManager
                 installDate = gameLastLaunchDate,
                 collections = new List<string>(),
                 isHidden = false,
-                cover = ""
+                cover = "",
+                overlay = true
             });
             string savedContent = js.Serialize(new SavedContent
             {
@@ -3071,10 +3567,20 @@ namespace GamaManager
             string gameName = ((string)(dataParts["name"]));
             string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));
+            bool isCustomGame = gameId == "mockId";
+            bool isNotCustomGame = !isCustomGame;
             Application.Current.Dispatcher.Invoke(() =>
             {
                 // gamePhoto.BeginInit();
-                Uri gameImageUri = new Uri(gameImg);
+                Uri gameImageUri = null;
+                if (isNotCustomGame)
+                {
+                    gameImageUri = new Uri(gameImg);
+                }
+                else
+                {
+                    gameImageUri = new Uri("https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png");
+                }
                 gamePhoto.Source = new BitmapImage(gameImageUri);
                 // gamePhoto.EndInit();
             });
@@ -3146,7 +3652,7 @@ namespace GamaManager
             bool isInstallAction = gameActionLabelContent == Properties.Resources.installBtnLabelContent;
             if (isPlayAction)
             {
-                RunGame();
+                RunGame(gameNameLabel.Text);
             }
             else if (isInstallAction)
             {
@@ -3175,6 +3681,8 @@ namespace GamaManager
             string game = ((string)(menuItemData["game"]));
             string collection = ((string)(menuItemData["collection"]));
             RemoveGame(game);
+            /*GetGameCollections();
+            GetHiddenGames();*/
             GetGameCollectionItems(collection);
         }
 
@@ -3193,6 +3701,9 @@ namespace GamaManager
             List<string> currentCollections = loadedContent.collections;
             updatedGames = updatedGames.Where((Game someGame) =>
             {
+
+                string someGameId = someGame.id;
+
                 // string gameName = gameNameLabel.Text;
                 string gameName = name;
                 string someGameName = someGame.name;
@@ -3208,7 +3719,16 @@ namespace GamaManager
 
                     try
                     {
-                        Directory.Delete(gameFolder, true);
+                        bool isCustomGame = someGameId == "mockId";
+                        if (isCustomGame)
+                        {
+                            string gameCache = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\" + gameName;
+                            Directory.Delete(gameCache, true);
+                        }
+                        else
+                        {
+                            Directory.Delete(gameFolder, true);
+                        }
 
                         Directory.Delete(gameScreenShotsFolder, true);
 
@@ -3231,8 +3751,23 @@ namespace GamaManager
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;
             GetGamesList(keywords);
+            // GetGameCollections()
+
             GetGameCollections();
+            GetHiddenGames();
+
         }
+
+        public void OpenGamesLibraryHandler(object sender, RoutedEventArgs e)
+        {
+            OpenGamesLibrary();
+        }
+
+        public void OpenGamesLibrary()
+        {
+            mainControl.SelectedIndex = 0;
+        }
+
 
         public void GameDownloadedHandler(object sender, EventArgs e)
         {
@@ -3303,7 +3838,7 @@ namespace GamaManager
             if (isDialogDataExists)
             {
                 string friend = ((string)(dialogData));
-                RunGame();
+                RunGame(gameNameLabel.Text);
             }
             else
             {
@@ -3457,6 +3992,7 @@ namespace GamaManager
                                         List<Game> currentGames = loadedContent.games;
                                         Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
+                                        List<string> currentCollections = loadedContent.collections;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -3473,7 +4009,8 @@ namespace GamaManager
                                         {
                                             games = currentGames,
                                             friends = updatedFriends,
-                                            settings = currentSettings
+                                            settings = currentSettings,
+                                            collections = currentCollections
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -3567,22 +4104,15 @@ namespace GamaManager
         {
             bool isHome = index == 1;
             bool isCollections = index == 2;
-            bool isDownloads = index == 3;
+            bool isDownloads = index == 4;
             if (isHome)
             {
-                mainControl.SelectedIndex = 0;
-
+                OpenGamesLibrary();
                 AddHistoryRecord();
-
             }
             else if (isCollections)
             {
-
                 mainControl.SelectedIndex = 9;
-
-                /*mainControl.SelectedIndex = 0;
-                gamesLibraryControl.SelectedIndex = 1;*/
-
                 AddHistoryRecord();
             }
             else if (isDownloads)
@@ -3895,8 +4425,8 @@ namespace GamaManager
                  * client = new SocketIO("http://localhost:4000/");
                 */
 
-                // client = new SocketIO("http://localhost:4000/");
-                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
+                client = new SocketIO("http://localhost:4000/");
+                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
 
                 client.OnConnected += async (sender, e) =>
                 {
@@ -5217,20 +5747,44 @@ namespace GamaManager
             }
         }
 
-        private void CreateCollectionHandler(object sender, MouseButtonEventArgs e)
+        private void CreateCollectionHandler(object sender, RoutedEventArgs e)
         {
-            CreateCollection();
+            Dictionary<String, Object> mockData = new Dictionary<String, Object>();
+            mockData.Add("name", "");
+            mockData.Add("collection", "");
+            CreateCollection(mockData);
         }
 
-        public void CreateCollection()
+        private void CreateCollectionFromMenuHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            Dictionary<String, Object> data = ((Dictionary<String, Object>)(menuItemData));
+            CreateCollection(data);
+        }
+
+        public void CreateCollection(Dictionary<String, Object> data)
         {
             Dialogs.AddCollectiionDialog dialog = new Dialogs.AddCollectiionDialog(currentUserId);
+            dialog.DataContext = data;
             dialog.Closed += RefreshGameCollectionsHandler;
             dialog.Show();
         }
 
         public void RefreshGameCollectionsHandler(object sender, EventArgs e)
         {
+            Dialogs.AddCollectiionDialog dialog = ((Dialogs.AddCollectiionDialog)(sender));
+            object rawData = dialog.DataContext;
+            Dictionary<String, Object> data = ((Dictionary<String, Object>)(rawData));
+            string name = ((string)(data["name"]));
+            string collection = ((string)(data["collection"]));
+            int nameLength = name.Length;
+            bool isAddToNewCollection = nameLength >= 1;
+            if (isAddToNewCollection)
+            {
+                AddGameToCollection(data);
+                SelectGameCollection(collection);
+            }
             RefreshGameCollections();
         }
 
@@ -5400,6 +5954,14 @@ namespace GamaManager
             countHiddenGamesLabel.Text = "(" + rawCountHiddenGames + ")";
         }
 
+        public void RunGameHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string name = ((string)(menuItemData));
+            RunGame(name);
+        }
+
         public void GetHiddenGames()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -5409,6 +5971,7 @@ namespace GamaManager
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             List<Game> currentGames = loadedContent.games;
+            List<string> currentCollections = loadedContent.collections;
             List<Game> shadowGames = currentGames.Where<Game>((Game game) =>
             {
                 bool isHidden = game.isHidden;
@@ -5422,33 +5985,86 @@ namespace GamaManager
             {
                 foreach (Game hiddenGame in shadowGames)
                 {
+                    string currentGameId = hiddenGame.id;
                     string currentGameName = hiddenGame.name;
+                    List<string> currentGameCollections = hiddenGame.collections;
+                    string currentGameCover = hiddenGame.cover;
+
                     Image gameCollectionItem = new Image();
                     gameCollectionItem.Width = 100;
                     gameCollectionItem.Height = 100;
                     gameCollectionItem.Margin = new Thickness(25);
                     gameCollectionItem.BeginInit();
-                    gameCollectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName));
+                    bool IsCoverSet = currentGameCover != "";
+                    bool isCoverFound = File.Exists(currentGameCover);
+                    bool isCoverExists = IsCoverSet && isCoverFound;
+                    Uri coverUri = null;
+                    if (isCoverExists)
+                    {
+                        coverUri = new Uri(currentGameCover);
+                    }
+                    else
+                    {
+                        coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                    }
+                    gameCollectionItem.Source = new BitmapImage(coverUri);
                     gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
                     gameCollectionItem.EndInit();
                     hiddenGames.Children.Add(gameCollectionItem);
                     gameCollectionItem.DataContext = currentGameName;
                     gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
                     ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+
                     MenuItem gameCollectionItemContextMenuItem = new MenuItem();
-                    string gameCollectionItemContextMenuItemHeaderContent = "Убрать из ";
-                    gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                    gameCollectionItemContextMenuItem.Header = "Играть";
+                    gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                    gameCollectionItemContextMenuItem.Click += RunGameHandler;
+                    gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                    gameCollectionItemContextMenuItem = new MenuItem();
+                    gameCollectionItemContextMenuItem.Header = "Добавить в";
                     MenuItem gameCollectionItemNestedContextMenuItem;
                     Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData;
+                    foreach (string currentCollection in currentCollections)
+                    {
+                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                        gameCollectionItemNestedContextMenuItem.Header = currentCollection;
+                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                        gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                        gameCollectionItemNestedContextMenuItemData.Add("collection", currentCollection);
+                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                        gameCollectionItemNestedContextMenuItem.Click += AddGameToCollectionHandler;
+                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                        bool isDisabledCollection = currentGameCollections.Contains(currentCollection);
+                        if (isDisabledCollection)
+                        {
+                            gameCollectionItemNestedContextMenuItem.IsEnabled = false;
+                        }
+                    }
+                    gameCollectionItemNestedContextMenuItem = new MenuItem();
+                    gameCollectionItemNestedContextMenuItem.Header = "Создать коллекцию";
+                    gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                    gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                    gameCollectionItemNestedContextMenuItemData.Add("collection", "mockCollectionName");
+                    gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                    gameCollectionItemNestedContextMenuItem.Click += CreateCollectionFromMenuHandler;
+                    gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                    gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                    gameCollectionItemContextMenuItem = new MenuItem();
+                    string gameCollectionItemContextMenuItemHeaderContent = "Убрать из ";
+                    gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+
                     foreach (string hiddenGameCollection in hiddenGame.collections)
                     {
                         gameCollectionItemNestedContextMenuItem = new MenuItem();
+                        gameCollectionItemNestedContextMenuItem.Header = hiddenGameCollection;
                         gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
                         gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
                         gameCollectionItemNestedContextMenuItemData.Add("collection", hiddenGameCollection);
                         gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
                         gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionHandler;
-                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemNestedContextMenuItem);
+                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
                     }
                     gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
 
@@ -5459,6 +6075,23 @@ namespace GamaManager
                     gameCollectionItemNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
                     gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
                     gameCollectionItemNestedContextMenuItem.Click += CreateShortcutHandler;
+                    gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+
+                    gameCollectionItemNestedContextMenuItem = new MenuItem();
+                    if (IsCoverSet)
+                    {
+                        gameCollectionItemNestedContextMenuItem.Header = "Удалить свою обложку";
+                    }
+                    else
+                    {
+                        gameCollectionItemNestedContextMenuItem.Header = "Задать свою обложку";
+                    }
+                    gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                    gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                    gameCollectionItemNestedContextMenuItemData.Add("collection", "");
+                    gameCollectionItemNestedContextMenuItemData.Add("cover", currentGameCover);
+                    gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                    gameCollectionItemNestedContextMenuItem.Click += ToggleGameCoverHandler;
                     gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
 
                     gameCollectionItemNestedContextMenuItem = new MenuItem();
@@ -5485,6 +6118,25 @@ namespace GamaManager
                     gameCollectionItemNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
                     gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
 
+                    gameCollectionItemNestedContextMenuItem = new MenuItem();
+                    gameCollectionItemNestedContextMenuItem.Header = "Удалить с утройства";
+                    gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                    gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                    gameCollectionItemNestedContextMenuItemData.Add("collection", "");
+                    gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                    gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                    gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+
+                    gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+
+                    gameCollectionItemContextMenuItem = new MenuItem();
+                    gameCollectionItemContextMenuItem.Header = "Свойства";
+                    Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                    gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                    bool isCustomGame = currentGameId == "mockId";
+                    gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                    gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                    gameCollectionItemContextMenuItem.Click += OpenGameSettingsHandler;
                     gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
 
                     gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
@@ -5492,7 +6144,7 @@ namespace GamaManager
             }
             else
             {
-                gameCollectionItems.HorizontalAlignment = HorizontalAlignment.Center;
+                hiddenGames.HorizontalAlignment = HorizontalAlignment.Center;
                 TextBlock gameCollectionsNotFoundLabel = new TextBlock();
                 gameCollectionsNotFoundLabel.Text = "Срытых игр не обнаружено.";
                 hiddenGames.Children.Add(gameCollectionsNotFoundLabel);
@@ -5548,7 +6200,39 @@ namespace GamaManager
 
             GetGameCollectionItems(collection);
             GetGamesList("");
+            GetHiddenGames();
 
+        }
+
+        public void AddExternalGameHandler(object sender, RoutedEventArgs e)
+        {
+            AddExternalGame();
+        }
+
+        public void AddExternalGame()
+        {
+            Dialogs.AddExternalGameDialog dialog = new Dialogs.AddExternalGameDialog(currentUserId);
+            dialog.Closed += GetGamesListHandler;
+            dialog.Show();
+        }
+
+        public void GetGamesListHandler(object sender, EventArgs e)
+        {
+            GetGamesList("");
+            GetDownloads();
+            GetScreenShots("", false);
+
+        }
+
+        private void OpenGameActivationHandler(object sender, RoutedEventArgs e)
+        {
+            OpenGameActivation();
+        }
+
+        public void OpenGameActivation()
+        {
+            Dialogs.ActivationGameDialog dialog = new Dialogs.ActivationGameDialog();
+            dialog.Show();
         }
 
     }
@@ -5584,6 +6268,7 @@ namespace GamaManager
         public List<string> collections;
         public bool isHidden;
         public string cover;
+        public bool overlay;
     }
 
     class GamesListResponseInfo

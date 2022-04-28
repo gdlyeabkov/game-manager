@@ -235,7 +235,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ActivationGameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddCollectiionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AddExternalGameDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -260,6 +268,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\FriendsSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GameSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,8 +326,14 @@
     <Compile Include="Dialogs\AcceptExitDialog.xaml.cs">
       <DependentUpon>AcceptExitDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ActivationGameDialog.xaml.cs">
+      <DependentUpon>ActivationGameDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AddCollectiionDialog.xaml.cs">
       <DependentUpon>AddCollectiionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddExternalGameDialog.xaml.cs">
+      <DependentUpon>AddExternalGameDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\AddFriendDialog.xaml.cs">
       <DependentUpon>AddFriendDialog.xaml</DependentUpon>
@@ -334,6 +352,9 @@
     </Compile>
     <Compile Include="Dialogs\FriendsSettingsDialog.xaml.cs">
       <DependentUpon>FriendsSettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GameSettingsDialog.xaml.cs">
+      <DependentUpon>GameSettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>

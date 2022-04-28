@@ -1,0 +1,228 @@
+﻿<Window x:Class="GamaManager.Dialogs.GameSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GamaManager.Dialogs"
+        mc:Ignorable="d"
+        Title="Настройки"
+        Height="750"
+        Width="800"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+    >
+    <DockPanel>
+        <StackPanel
+            Width="250"
+            Background="Red"
+        >
+            <StackPanel>
+                <TextBlock
+                    x:Name="gameNameLabel"
+                    Margin="25 10"
+                    Text="Название игры"
+                    Foreground="SkyBlue"
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="0"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Общие"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="1"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Обновления"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="2"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Локальные файлы"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="3"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Язык"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="4"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Бета-версии"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="5"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Контроллер"    
+                />
+            </StackPanel>
+            <StackPanel
+                DataContext="6"
+                MouseLeftButtonUp="ToggleSettingsHandler"    
+            >
+                <TextBlock
+                    Margin="25 10"
+                    Text="Мастерская"    
+                />
+            </StackPanel>
+        </StackPanel>
+        <TabControl
+            x:Name="settingsControl"    
+            SelectedIndex="0"
+        >
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Общие"
+                    />
+
+                    <StackPanel
+                        Height="35"
+                        Orientation="Horizontal"   
+                        Background="Cyan"
+                    >
+                        <CheckBox
+                            x:Name="overlayCheckBox"
+                            VerticalAlignment="Center"
+                            Margin="25 0"
+                            IsChecked="True"
+                            Click="ToggleOverlayHandler"
+                        />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Text="Включить оверлей Office ware game manager в игре"    
+                        />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Обновления"
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Локальные файлы"
+                    />
+                    <StackPanel
+                        Orientation="Horizontal"    
+                    >
+                        <TextBlock
+                            Margin="20 0"
+                            VerticalAlignment="Center"
+                            Text="Размер локальных&#10;файлов:"    
+                            Foreground="SlateGray"
+                        />
+                        <TextBlock
+                            x:Name="gameFilesSizeLabel"
+                            Margin="20 0"
+                            VerticalAlignment="Center"
+                            Text="0,0 Гб на диске&#10;C:"
+                            Foreground="Blue"
+                        />
+                        <Button
+                            Margin="20 0"
+                            VerticalAlignment="Center"
+                            Width="125"
+                            Height="35"
+                            Content="Обзор"
+                            Click="ShowLocalFilesHandler"
+                        />
+                    </StackPanel>
+                    <Separator />
+                    <Button
+                        Height="35"
+                        Margin="15"
+                        Content="Создать резервную копию игровых файлов"
+                    />
+                    <Button
+                        Height="35"
+                        Margin="15"
+                        Content="Проверить целостность игровых файлов"    
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Язык"
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Бета-версии"
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Контроллер"
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="25"
+                        FontSize="24"
+                        Text="Мастерская"
+                    />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

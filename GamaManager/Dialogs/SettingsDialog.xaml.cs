@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -27,7 +28,7 @@ namespace GamaManager.Dialogs
         public Brush transparentBrush;
         public Brush selectedBrush;
 
-        public SettingsDialog(string currentUserId)
+        public SettingsDialog (string currentUserId)
         {
             InitializeComponent();
 
@@ -35,13 +36,13 @@ namespace GamaManager.Dialogs
 
         }
 
-        public void Initialize(string currentUserId)
+        public void Initialize (string currentUserId)
         {
             InitConstants(currentUserId);
             LoadSettings();
         }
 
-        public void LoadSettings()
+        public void LoadSettings ()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -102,6 +103,38 @@ namespace GamaManager.Dialogs
             playScreenShotsNotificationCheckBox.IsChecked = currentPlayScreenShotsNotification;
             saveScreenShotsCopyCheckBox.IsChecked = currentSaveScreenShotsCopy;
             showOverlayCheckBox.IsChecked = currentIsShowOverlay;
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myObj.user;
+                            string name = user.name;
+                            string login = user.login;
+                            accountLabel.Text = name;
+                            mailLabel.Text = login;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         public void InitConstants(string currentUserId)

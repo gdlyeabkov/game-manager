@@ -3148,7 +3148,7 @@ namespace GamaManager
             string cachePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id;
 
             string cacheGamesPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\games";
-            string cacheScreenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\screenshots"; ;
+            string cacheScreenShotsPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + id + @"\screenshots";
 
             bool isCacheFolderExists = Directory.Exists(cachePath);
             bool isCacheFolderNotExists = !isCacheFolderExists;
@@ -3688,7 +3688,7 @@ namespace GamaManager
             GetGameCollectionItems(collection);
         }
 
-        public void RemoveGame(string name)
+        public void RemoveGame (string name)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -3701,48 +3701,105 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
-            updatedGames = updatedGames.Where((Game someGame) =>
+
+            List<Game> results = updatedGames.Where((Game someGame) =>
             {
 
                 string someGameId = someGame.id;
 
-                // string gameName = gameNameLabel.Text;
                 string gameName = name;
                 string someGameName = someGame.name;
                 bool isCurrentGame = someGameName == gameName;
-                bool isOtherGame = !isCurrentGame;
-                string someGamePath = someGame.path;
-                if (isCurrentGame)
-                {
-                    FileInfo fileInfo = new FileInfo(someGamePath);
-                    string gameFolder = fileInfo.DirectoryName;
-
-                    string gameScreenShotsFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\" + gameName;
-
-                    try
-                    {
-                        bool isCustomGame = someGameId == "mockId";
-                        if (isCustomGame)
-                        {
-                            string gameCache = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\" + gameName;
-                            Directory.Delete(gameCache, true);
-                        }
-                        else
-                        {
-                            Directory.Delete(gameFolder, true);
-                        }
-
-                        Directory.Delete(gameScreenShotsFolder, true);
-
-                    }
-                    catch (Exception)
-                    {
-                        isOtherGame = true;
-                        MessageBox.Show("Игра запущена. Закройте ее и попробуйте удалить заново", "Ошибка");
-                    }
-                }
-                return isOtherGame;
+                return isCurrentGame;
             }).ToList();
+            int countResults = results.Count;
+            bool isHaveResults = countResults >= 1;
+            bool isGameWasRemoved = false;
+            if (isHaveResults)
+            {
+                Game result = results[0];
+                string resultId = result.id;
+                string resultName = result.name;
+                FileInfo fileInfo = new FileInfo(result.path);
+                string gameFolder = fileInfo.DirectoryName;
+                string gameScreenShotsFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\" + resultName;
+                try
+                {
+                    Debugger.Log(0, "debug", Environment.NewLine + "gameScreenShotsFolder " + gameScreenShotsFolder + Environment.NewLine);
+                    bool isCustomGame = resultId == "mockId";
+                    if (isCustomGame)
+                    {
+                        string gameCache = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\" + resultName;
+                        Directory.Delete(gameCache, true);
+                        Directory.Delete(gameScreenShotsFolder, true);
+                        Debugger.Log(0, "debug", Environment.NewLine + "удаляю локальную игру " + gameCache + Environment.NewLine);
+                    }
+                    else
+                    {
+                        Debugger.Log(0, "debug", Environment.NewLine + "удаляю магазинную игру " + gameFolder + Environment.NewLine);
+                        Directory.Delete(gameFolder, true);
+                        Directory.Delete(gameScreenShotsFolder, true);
+                    }
+                    isGameWasRemoved = true;
+                }
+                catch (Exception e)
+                {
+                    isGameWasRemoved = false;
+                    MessageBox.Show("Игра запущена. Закройте ее и попробуйте удалить заново", "Ошибка");
+                    Debugger.Log(0, "debug", Environment.NewLine + "Delete exception " + e + Environment.NewLine);
+                }
+
+            }
+            if (isGameWasRemoved)
+            {
+                updatedGames = updatedGames.Where((Game someGame) =>
+                {
+
+                    string someGameId = someGame.id;
+
+                    // string gameName = gameNameLabel.Text;
+                    string gameName = name;
+                    string someGameName = someGame.name;
+                    bool isCurrentGame = someGameName == gameName;
+                    bool isOtherGame = !isCurrentGame;
+                    string someGamePath = someGame.path;
+                    if (isCurrentGame)
+                    {
+                        FileInfo fileInfo = new FileInfo(someGamePath);
+                        string gameFolder = fileInfo.DirectoryName;
+
+                        string gameScreenShotsFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\" + gameName;
+
+                        /*
+                        try
+                        {
+                            bool isCustomGame = someGameId == "mockId";
+                            if (isCustomGame)
+                            {
+                                string gameCache = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\" + gameName;
+                                Directory.Delete(gameCache, true);
+                                Debugger.Log(0, "debug", Environment.NewLine + "удаляю локальную игру " + gameCache +  Environment.NewLine);
+                            }
+                            else
+                            {
+                                Debugger.Log(0, "debug", Environment.NewLine + "удаляю магазинную игру " + gameFolder + Environment.NewLine);
+                                Directory.Delete(gameFolder, true);
+                            }
+
+                            Directory.Delete(gameScreenShotsFolder, true);
+
+                        }
+                        catch (Exception)
+                        {
+                            isOtherGame = true;
+                            MessageBox.Show("Игра запущена. Закройте ее и попробуйте удалить заново", "Ошибка");
+                        }
+                        */
+                    }
+                    return isOtherGame;
+                }).ToList();
+            }
+
             string savedContent = js.Serialize(new SavedContent
             {
                 games = updatedGames,
@@ -3802,8 +3859,18 @@ namespace GamaManager
 
         public void UserMenuItemSelected(int index)
         {
-            bool isExit = index == 1;
-            if (isExit)
+            bool isMyProfile = index == 1;
+            bool isAboutAccount = index == 2;
+            bool isExit = index == 3;
+            if (isMyProfile)
+            {
+                ReturnToProfile();
+            }
+            else if (isAboutAccount)
+            {
+                mainControl.SelectedIndex = 15;
+            }
+            else if (isExit)
             {
                 Logout();
             }
@@ -4067,6 +4134,8 @@ namespace GamaManager
             {
                 bool isActivity = index == 1;
                 bool isProfile = index == 2;
+                bool isFriends = index == 3;
+                bool isGroups = index == 4;
                 bool isContent = index == 5;
                 bool isIcons = index == 6;
                 if (isActivity)
@@ -4076,13 +4145,15 @@ namespace GamaManager
                 }
                 else if (isProfile)
                 {
-                    object mainControlData = mainControl.DataContext;
-                    string userId = ((string)(mainControlData));
-                    // string userId = currentUserId;
-                    bool isLocalUser = userId == currentUserId;
-                    mainControl.SelectedIndex = 1;
-                    GetUserInfo(userId, isLocalUser);
-                    AddHistoryRecord();
+                    ReturnToProfile();
+                }
+                else if (isFriends)
+                {
+                    mainControl.SelectedIndex = 16;
+                }
+                else if (isGroups)
+                {
+                    mainControl.SelectedIndex = 16;
                 }
                 else if (isContent)
                 {
@@ -4254,7 +4325,7 @@ namespace GamaManager
             StoreItemSelected(selectedIndex);
         }
 
-        public void GetNews()
+        public void GetNews ()
         {
             try
             {
@@ -4278,7 +4349,39 @@ namespace GamaManager
                             {
                                 string title = newsListItem.title;
                                 string content = newsListItem.content;
+                                DateTime date = newsListItem.date;
                                 string game = newsListItem.game;
+                                string newsGameName = "";
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        GamesListResponseInfo myInnerObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                        status = myobj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameResponseInfo> games = myInnerObj.games;
+                                            int  gameIndex = games.FindIndex((GameResponseInfo localGame) =>
+                                            {
+                                                string localGameId = localGame._id;
+                                                bool isFound = localGameId == game;
+                                                return isFound;
+                                            });
+                                            bool isGameFound = gameIndex >= 0;
+                                            if (isGameFound)
+                                            {
+                                                GameResponseInfo myGame = games[gameIndex];
+                                                newsGameName = myGame.name;
+                                            }
+                                        }
+                                    }
+                                }
                                 StackPanel newsItem = new StackPanel();
                                 newsItem.Margin = new Thickness(50);
                                 Border newsItemBody = new Border();
@@ -4296,27 +4399,29 @@ namespace GamaManager
                                 newsItemBodyWrapAsideHeaderIcon.Width = 25;
                                 newsItemBodyWrapAsideHeaderIcon.Height = 25;
                                 newsItemBodyWrapAsideHeaderIcon.BeginInit();
-                                newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                // newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + newsGameName));
                                 newsItemBodyWrapAsideHeaderIcon.EndInit();
                                 newsItemBodyWrapAsideHeaderIcon.ImageFailed += SetDefaultThumbnailHandler;
                                 newsItemBodyWrapAsideHeader.Children.Add(newsItemBodyWrapAsideHeaderIcon);
                                 TextBlock newsItemBodyWrapAsideHeaderLabel = new TextBlock();
                                 newsItemBodyWrapAsideHeaderLabel.VerticalAlignment = VerticalAlignment.Center;
-                                newsItemBodyWrapAsideHeaderLabel.Text = "Название игры";
+                                newsItemBodyWrapAsideHeaderLabel.Text = newsGameName;
                                 newsItemBodyWrapAsideHeader.Children.Add(newsItemBodyWrapAsideHeaderLabel);
                                 newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideHeader);
                                 TextBlock newsItemBodyWrapAsideTitleLabel = new TextBlock();
                                 newsItemBodyWrapAsideTitleLabel.FontSize = 24;
                                 newsItemBodyWrapAsideTitleLabel.Foreground = System.Windows.Media.Brushes.White;
-                                newsItemBodyWrapAsideTitleLabel.Text = "Заголовок новости";
+                                newsItemBodyWrapAsideTitleLabel.Text = title;
                                 newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideTitleLabel);
                                 TextBlock newsItemBodyWrapAsideDateLabel = new TextBlock();
                                 newsItemBodyWrapAsideDateLabel.Foreground = System.Windows.Media.Brushes.White;
-                                newsItemBodyWrapAsideDateLabel.Text = "Дата публикации новости";
+                                string rawDate = date.ToLongDateString();
+                                newsItemBodyWrapAsideDateLabel.Text = rawDate;
                                 newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideDateLabel);
                                 TextBlock newsItemBodyWrapAsideContentLabel = new TextBlock();
                                 newsItemBodyWrapAsideContentLabel.Foreground = System.Windows.Media.Brushes.White;
-                                newsItemBodyWrapAsideContentLabel.Text = "Контент новости";
+                                newsItemBodyWrapAsideContentLabel.Text = content;
                                 newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideContentLabel);
                                 newsItemBodyWrap.Children.Add(newsItemBodyWrapAside);
                                 Image newsItemBodyWrapImg = new Image();
@@ -4326,7 +4431,8 @@ namespace GamaManager
                                 newsItemBodyWrapImg.Height = 200;
                                 newsItemBodyWrapImg.ImageFailed += SetDefaultThumbnailHandler;
                                 newsItemBodyWrapImg.BeginInit();
-                                newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                // newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + newsGameName));
                                 newsItemBodyWrapImg.EndInit();
                                 newsItemBodyWrap.Children.Add(newsItemBodyWrapImg);
                                 newsItemBody.Child = newsItemBodyWrap;
@@ -4369,9 +4475,7 @@ namespace GamaManager
             bool isGamesStats = index == 6;
             if (isNews)
             {
-                mainControl.SelectedIndex = 14;
-                GetNews();
-                AddHistoryRecord();
+                OpenNews();
             }
             else if (isGamesStats)
             {
@@ -5931,7 +6035,13 @@ namespace GamaManager
 
         public void ReturnToProfile()
         {
+            object mainControlData = mainControl.DataContext;
+            string userId = ((string)(mainControlData));
+            // string userId = currentUserId;
+            bool isLocalUser = userId == currentUserId;
             mainControl.SelectedIndex = 1;
+            GetUserInfo(userId, isLocalUser);
+            AddHistoryRecord();
         }
 
         private void ToggleRenameBtnHandler(object sender, MouseButtonEventArgs e)
@@ -6363,6 +6473,101 @@ namespace GamaManager
         {
             Dialogs.ActivationGameDialog dialog = new Dialogs.ActivationGameDialog();
             dialog.Show();
+        }
+
+        private void OpenNewsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenNews();
+        }
+
+        public void OpenNews ()
+        {
+            mainControl.SelectedIndex = 14;
+            GetNews();
+            AddHistoryRecord();
+        }
+
+        private void ToggleNotificationsPopupHandler (object sender, MouseButtonEventArgs e)
+        {
+            ToggleNotificationsPopup();
+        }
+
+        public void ToggleNotificationsPopup ()
+        {
+            /*bool isOpen = notificationsPopup.IsOpen;
+            bool toggleValue = !isOpen;
+            notificationsPopup.IsOpen = toggleValue;*/
+            notificationsPopup.IsOpen = true;
+        }
+
+        private void SelectAccountSettingsItemHandler (object sender, MouseButtonEventArgs e)
+        {
+            StackPanel item = ((StackPanel)(sender));
+            object data = item.DataContext;
+            string rawIndex = data.ToString();
+            int index = Int32.Parse(rawIndex);
+            SelectAccountSettingsItem(index);
+        }
+
+        public void SelectAccountSettingsItem (int index)
+        {
+            accountSettingsControl.SelectedIndex = index;
+        }
+
+        private void DeleteAccountHandler (object sender, MouseButtonEventArgs e)
+        {
+            DeleteAccount();
+        }
+
+        public void DeleteAccount ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/delete/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ForumsListResponseInfo myobj = (ForumsListResponseInfo)js.Deserialize(objText, typeof(ForumsListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string userPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId;
+                            try
+                            {
+                                Directory.Delete(userPath, true);
+                                Logout();
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается удалить каталог пользователя", "Ошибка");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удается удалить аккаунт", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetAccountSettings ()
+        {
+            string idLabelContent = @"Office ware game manager ID: " + currentUserId;
+            idLabel.Text = idLabelContent;
         }
 
     }

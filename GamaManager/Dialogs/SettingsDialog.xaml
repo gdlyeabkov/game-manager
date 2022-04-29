@@ -181,46 +181,96 @@
                         Margin="10"
                         HorizontalAlignment="Left"    
                     >
-                        <TextBlock
-                            Text="Выберите язык"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
+                        <DockPanel>
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >    
+                                <TextBlock
+                                    Text="Имя аккаунта"    
+                                    Margin="0 5"
+                                />
+                                <TextBlock
+                                    x:Name="accountLabel"
+                                    Text="логин"    
+                                    Margin="15 5"
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                DockPanel.Dock="Right"
+                                HorizontalAlignment="Right"
+                                Text="Подробнее об аккаунте"
+                                TextDecorations="Underline"
+                                Margin="50 5"
+                            />
+                        </DockPanel>
+                        <StackPanel
+                            Orientation="Horizontal"    
                         >
-                            <ComboBoxItem
-                                Content="Русский"    
+                            <TextBlock
+                                Text="Адресс эл. почты"    
+                                Margin="0 5"
                             />
-                            <ComboBoxItem
-                                Content="English"    
+                            <TextBlock
+                                x:Name="mailLabel"
+                                Text="логин@ящик.домен"    
+                                Margin="15 5"
                             />
-                        </ComboBox>
-                        <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
+                        </StackPanel>
+                        <Button
+                            Content="Управление настройками Office ware game manager"
                             Margin="0 5"
+                            Width="325"
+                            Height="25"
+                            Padding="15 4"
+                            HorizontalContentAlignment="Left"
+                            HorizontalAlignment="Left"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
+                        <Button
+                            Content="Изменить пароль"
                             Margin="0 5"
-                            HorizontalAlignment="Left"    
+                            Width="325"
+                            Height="25"
+                            Padding="15 4"
+                            HorizontalContentAlignment="Left"
+                            HorizontalAlignment="Left"
+                        />
+                        <Button
+                            Content="Изменить контактный адресс эл. почты"
+                            Margin="0 5"
+                            Width="325"
+                            Height="25"
+                            Padding="15 4"
+                            HorizontalContentAlignment="Left"
+                            HorizontalAlignment="Left"
+                        />
+                        <Separator />
+                        
+                        <Separator />
+                        <DockPanel
                         >
-                            <ComboBoxItem
-                                Content="Библиотека"    
+                            <TextBlock
+                                Text="Бета-тестирование"
                             />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                            <StackPanel
+                                HorizontalAlignment="Right"    
+                            >
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    Text="Вы не участвете в тестировании&#10;(1 доступно в настоящее время)"
+                                    Margin="5"
+                                />
+                                <Button
+                                    HorizontalAlignment="Right"
+                                    Width="125"
+                                    Height="25"
+                                    Margin="5"
+                                    Content="Сменить"    
+                                />
+                            </StackPanel>
+                        </DockPanel>
+                        <TextBlock
+                            Text="Данная функция рекомендуется для компьютеров,&#10;находящихся в общем пользовании. Учтите что при этом Office ware game manager&#10;не сможет работать в Автономном режиме"
+                        />
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -229,45 +279,48 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="язык"    
+                            Text="Семейный просмотр"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
+                            Text="Семейный просмотр можно использовать для ограниченного доступа к контенту и&#10;возможностям если аккаунт защищен специальным ПИН-кодом."    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
+                        <TextBlock
+                            Margin="0 25"    
+                            Text="Управление семейным просмотром"
+                            TextDecorations="Underline"
+                        />
+                        <Separator />
+                        <TextBlock
+                            Text="Family library sharing"    
+                        />
+                        <TextBlock
+                            Margin="0 25"    
+                            Text="Family library sharing позволяет вам поделиться своей библиотекой Office ware game manager с этим&#10;компьютером. Пользователи Office ware game manager на авторизованных компьютерах могут загружать и&#10;запускать игры из вашей библиотеки Office ware game manager пока не играете вы."    
+                        />
+                        <DockPanel
+                            Margin="0 25"    
                         >
-                            <ComboBoxItem
-                                Content="Библиотека"    
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <CheckBox
+                                    VerticalAlignment="Center"
+                                />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="Поделиться библиотекой с этим компьютером"    
+                                    Margin="15 0"
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextDecorations="Underline"
+                                HorizontalAlignment="Right"
+                                Text="Другие компьютеры"    
+                                VerticalAlignment="Center"
                             />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                        </DockPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -531,45 +584,69 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Настройки библиотеки"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
+                            Text="Размер элементов в интерфейсе управления"    
+                            Margin="10"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
+                        <RadioButton
+                            Content="Автоматический&#10;(размер зависит от ширины экрана)"    
+                            Margin="0 10"
+                        />
+                        <RadioButton
+                            Content="Маленький"    
+                            Margin="0 10"
+                        />
+                        <RadioButton
+                            Content="Средний"    
+                            Margin="0 10"
+                        />
+                        <RadioButton
+                            Content="Большой"    
+                            Margin="0 10"
+                        />
+                        <WrapPanel
+                            Margin="0 15"    
                         >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                            <StackPanel>
+                                <CheckBox
+                                    HorizontalContentAlignment="Center"
+                                    Content="Скрыть контент от сообщества"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Предотвращает автозагрузку&#10;контента сообщества при&#10;просмотре информации об игре."    
+                                />
+                            </StackPanel>
+                            <StackPanel>
+                                <CheckBox
+                                    HorizontalContentAlignment="Center"
+                                    Content="Упрощенный режим"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Улучшает производительность&#10;библиотеки, отключая некоторые&#10;графические улучшения и&#10;переходы."    
+                                />
+                            </StackPanel>
+                            <StackPanel>
+                                <CheckBox
+                                    HorizontalContentAlignment="Center"
+                                    Content="Низкая нагрзука на сеть"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Уменьшает использование&#10;интернета, выключая такие&#10;функции как автозагрузка контента&#10;сообщества"    
+                                />
+                            </StackPanel>
+                            <StackPanel>
+                                <CheckBox
+                                    HorizontalContentAlignment="Center"
+                                    Content="Иконки игр в левой колонке"    
+                                />
+                            </StackPanel>
+                        </WrapPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -578,7 +655,21 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Библиотеки"    
+                            Margin="0 5"
+                        />
+                        <Button
+                            Width="125"
+                            Height="25"
+                            Content="Папки библиотеки Office ware game manager"
+                        />
+                        <TextBlock
+                            Text="Распределить места хранения контента"    
+                            Margin="0 5"
+                        />
+                        <Separator />
+                        <TextBlock
+                            Text="Регион для загрузки контента"    
                             Margin="0 5"
                         />
                         <ComboBox
@@ -588,35 +679,34 @@
                             HorizontalAlignment="Left"    
                         >
                             <ComboBoxItem
-                                Content="Русский"    
+                                Content="Россия - Москва"    
                             />
                             <ComboBoxItem
-                                Content="English"    
+                                Content="Россия - Новосибирск"
                             />
                         </ComboBox>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
+                            Text="Office ware game manager автоматически соединяется с ближайшим сервером загрузок, но его можно изменить вручную."    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
+                        <Separator />
+                        <TextBlock
+                            Text="Ограничения на загрузку"    
                             Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                        />
+                        <Separator
+                            Margin="5 15"    
+                        />
+                        <Button
+                            HorizontalAlignment="Left"
+                            Width="175"
+                            Height="25"
+                            Content="Очистить кеш загрузки"
+                        />
+                        <TextBlock
+                            Text="Очистив кеш загрузки, вы можете решить проблемы при загрузке или запуске приложений"    
+                            Margin="0 5"
+                        />
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -703,45 +793,87 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
-                            Margin="0 5"
+                            Text="Транслируйте игру со своего компьютера на другие устройства. Чтобы подключиться,&#10;просто войдите в этот же аккаунт Office ware game manager с другого устройства или выберите Другой&#10;компьютер в Office game manager Link."    
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
+                        <CheckBox
+                            Margin="0 10"
+                            Content="Включить Remote Pay"    
+                        />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Text="Имя устройства"    
+                                Grid.Row="0"
+                                Grid.Column="0"
                             />
-                            <ComboBoxItem
-                                Content="English"    
+                            <TextBlock
+                                Text="Состояние"    
+                                Grid.Row="0"
+                                Grid.Column="1"
                             />
-                        </ComboBox>
+                        </Grid>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
+                            Text="Прямое соединение (Общий IP-адрес)"    
                         />
                         <ComboBox
+                            Margin="0 10"
+                            HorizontalAlignment="Left"
                             SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
+                            Width="275"
                         >
                             <ComboBoxItem
-                                Content="Библиотека"    
+                                Content="Автоматически (включено)"    
                             />
                             <ComboBoxItem
-                                Content="Профиль"  
+                                Content="Выключено"    
                             />
                             <ComboBoxItem
-                                Content="Редактирование профиля"  
+                                Content="Мои устройства"    
                             />
                             <ComboBoxItem
-                                Content="Статистика"  
+                                Content="Все устройства"    
                             />
                         </ComboBox>
+                        <Separator />
+                        <TextBlock
+                            Margin="0 10"
+                            HorizontalAlignment="Right"
+                            Text="Настройки компьютера для трансляции на этот компьютер:"    
+                        />
+                        <StackPanel
+                            Margin="0 15"
+                            Orientation="Horizontal"    
+                        >
+                            <RadioButton
+                                Margin="25 0"
+                                Content="Скорость"    
+                            />
+                            <RadioButton
+                                Margin="25 0"
+                                Content="Баланс"    
+                            />
+                            <RadioButton
+                                Margin="25 0"
+                                Content="Красиво"    
+                            />
+                        </StackPanel>
+                        <Button
+                            HorizontalAlignment="Left"
+                            Width="275"
+                            Height="25"
+                            Content="Расширенные настройки клиента"    
+                        />
+                        <TextBlock
+                            Margin="0 10"
+                            HorizontalAlignment="Right"
+                            Text="Посмотреть информацию о поддержке"    
+                        />
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -750,45 +882,9 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Эти настройки относятся к браузеру в клиенте и внутриигровом оверлее Office ware game manager."    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
-                        <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
-                        />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -797,45 +893,58 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
+                            Text="Настройки контроллера"    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
+                            Text="Основные настройки контроллера позволяют включить или выключить поддержку&#10;одного из типов контроллера, настроить его и не только."    
                             Margin="0 5"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
+                        <Button
+                            Width="275"
+                            Height="25"
+                            Content="Основные настройки контроллера"
+                            HorizontalAlignment="Left"
+                            Margin="0 10"
+                            HorizontalContentAlignment="Left"
+                            Padding="4"
+                        />
+                        <Separator />
+                        <TextBlock
+                            Text="Здесь можно выбрать набор настроек управления, предназначенных для&#10;опредления внеигровых ситуаций."    
                             Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                        />
+                        <Button
+                            Width="275"
+                            Height="25"
+                            Content="Настройки для режима Big picture"
+                            HorizontalAlignment="Left"
+                            Margin="0 10"
+                            HorizontalContentAlignment="Left"
+                            Padding="4"
+                        />
+                        <Button
+                            Width="275"
+                            Height="25"
+                            Content="Настройки для ПК"
+                            HorizontalAlignment="Left"
+                            Margin="0 10"
+                            HorizontalContentAlignment="Left"
+                            Padding="4"
+                        />
+                        <Button
+                            Width="275"
+                            Height="25"
+                            Content="Настройки при зажатой кнопке"
+                            HorizontalAlignment="Left"
+                            Margin="0 10"
+                            HorizontalContentAlignment="Left"
+                            Padding="4"
+                        />
+                        <Separator />
+                        <CheckBox
+                            Content="Не отображать в клиенте уведомления о подключении контроллера."    
+                        />
                     </StackPanel>
                 </TabItem>
                 <TabItem Visibility="Collapsed">
@@ -844,45 +953,21 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="Выберите язык"    
-                            Margin="0 5"
+                            Text="Предварителное кеширование позволяет Office ware game manager загружать заранее скомпилированные&#10;графические шейдеры для вашего компьютера. Благодаря этому игры, использующие&#10;Vulcan или OpenGL, будут загружаться быстрее, а стабильность частоты кадров&#10;возрастет"    
+                            Margin="0 15"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Русский"    
-                            />
-                            <ComboBoxItem
-                                Content="English"    
-                            />
-                        </ComboBox>
                         <TextBlock
-                            Text="Выберите окно Office ware game manager, которое будет&#10;появляться при запуске"    
-                            Margin="0 5"
+                            Text="Если включить эту настройку, Office ware game manager при необходимости собирать информацию о&#10;шейдерах в вашей системе, а нагрузка на сеть и дисковое пространство может&#10;незначительно возрасти."    
+                            Margin="0 15"
                         />
-                        <ComboBox
-                            SelectedIndex="0"
-                            Width="125"
-                            Margin="0 5"
-                            HorizontalAlignment="Left"    
-                        >
-                            <ComboBoxItem
-                                Content="Библиотека"    
-                            />
-                            <ComboBoxItem
-                                Content="Профиль"  
-                            />
-                            <ComboBoxItem
-                                Content="Редактирование профиля"  
-                            />
-                            <ComboBoxItem
-                                Content="Статистика"  
-                            />
-                        </ComboBox>
+                        <CheckBox
+                            Margin="0 15"
+                            Content="Включить кеш шейдеров (используется 0 Мбайт)"
+                        />
+                        <CheckBox
+                            Margin="0 15"
+                            Content="Разрешить фоновую обработку шейдеров Vulcan"
+                        />
                     </StackPanel>
                 </TabItem>
             </TabControl>

@@ -289,9 +289,90 @@
                         Content="Инвернтарь"    
                     />
                 </ComboBox>
+                <materialDesign:PackIcon
+                    Margin="175 10 10 10"
+                    Kind="Megaphone"
+                    VerticalAlignment="Center"
+                    Width="24"
+                    Height="24"
+                    MouseLeftButtonUp="OpenNewsHandler"
+                />
+                <materialDesign:PackIcon
+                    Margin="10 0"
+                    Kind="Email"
+                    VerticalAlignment="Center"
+                    Width="24"
+                    Height="24"
+                    MouseLeftButtonUp="ToggleNotificationsPopupHandler"
+                />
+                <Popup
+                    x:Name="notificationsPopup"
+                    Placement="Mouse"
+                    StaysOpen="False"
+                    Width="350"
+                    Height="165"
+                >
+                    <Popup.Child>
+                        <StackPanel
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Margin="10"
+                                Orientation="Horizontal"
+                            >
+                                <materialDesign:PackIcon
+                                    Kind="Chat"    
+                                />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Новых комментариев: 0"    
+                                />
+                            </StackPanel>    
+                            <Separator />
+                            <StackPanel
+                                Margin="10"
+                                Orientation="Horizontal"
+                            >
+                                <materialDesign:PackIcon
+                                    Kind="Storage"    
+                                />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Новых предметов: 0"    
+                                />
+                            </StackPanel>                            
+                            <Separator />
+                            <StackPanel
+                                Margin="10"
+                                Orientation="Horizontal"
+                            >
+                                <materialDesign:PackIcon
+                                    Kind="Add"    
+                                />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Новых приглашений: 0"    
+                                />
+                            </StackPanel>
+                            <Separator />
+                            <StackPanel
+                                Margin="10"
+                                Orientation="Horizontal"
+                            >
+                                <materialDesign:PackIcon
+                                    Kind="Present"    
+                                />
+                                <TextBlock
+                                    Margin="15 0"
+                                    Text="Новых подарков: 0"    
+                                />
+                            </StackPanel>
+                        </StackPanel>
+                    </Popup.Child>
+                </Popup>
                 <ComboBox
                     x:Name="userMenu"
-                    Margin="175 10 10 10"
+                    Margin="10"
                     Width="175"
                     SelectedIndex="0"
                     SelectionChanged="UserMenuItemSelectedHandler"
@@ -299,6 +380,12 @@
                     <ComboBoxItem
                         Visibility="Collapsed"
                         Content="Имя пользователя"    
+                    />
+                    <ComboBoxItem
+                        Content="Мой профиль"    
+                    />
+                    <ComboBoxItem
+                        Content="Об аккаунте"    
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.logoutLabelContent}"    
@@ -2987,98 +3074,542 @@
                                 <StackPanel
                                     x:Name="news"    
                                 >
-                                    <StackPanel
-                                        Margin="50"    
-                                    >
-                                        <Border
-                                            Margin="0 15"
-                                            Background="DarkCyan"
-                                            CornerRadius="5"
-                                        >
-                                            <Border.Child>
-                                                <DockPanel>
-                                                    <StackPanel
-                                                        Margin="25"    
-                                                    >
-                                                        <StackPanel
-                                                            Orientation="Horizontal"    
-                                                        >
-                                                            <Image
-                                                                HorizontalAlignment="Right"
-                                                                Margin="15"
-                                                                Width="25"    
-                                                                Height="25"    
-                                                                ImageFailed="SetDefaultThumbnailHandler"
-                                                            >
-                                                                <Image.Source>
-                                                                    <BitmapImage
-                                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                                    />
-                                                                </Image.Source>
-                                                            </Image>
-                                                            <TextBlock
-                                                                VerticalAlignment="Center"
-                                                                Text="Название игры"    
-                                                            />
-                                                        </StackPanel>
-                                                        <TextBlock
-                                                            FontSize="24"
-                                                            Foreground="White"
-                                                            Text="asdcvw"
-                                                        />
-                                                        <TextBlock
-                                                            Text="asdcvw"  
-                                                            Foreground="White"    
-                                                        />
-                                                        <TextBlock
-                                                            Text="asdcvw"  
-                                                            Foreground="White"
-                                                        />
-                                                    </StackPanel>
-                                                    <Image
-                                                        HorizontalAlignment="Right"
-                                                        Margin="15"
-                                                        Width="200"    
-                                                        Height="200"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                </DockPanel>
-                                            </Border.Child>
-                                        </Border>
-                                        <StackPanel
-                                            HorizontalAlignment="Right"
-                                            Orientation="Horizontal"    
-                                        >
-                                            <materialDesign:PackIcon
-                                                Kind="ThumbUp"    
-                                                Margin="5 0"
-                                            />
-                                            <TextBlock
-                                                Text="0"    
-                                                Margin="5 0"
-                                            />
-                                            <materialDesign:PackIcon
-                                                Kind="Chat"    
-                                                Margin="15 0"
-                                            />
-                                            <TextBlock
-                                                Text="0"    
-                                                Margin="5 0"
-                                            />
-                                            <materialDesign:PackIcon
-                                                Kind="MoreHoriz"    
-                                                Margin="15 0"
-                                            />
-                                        </StackPanel>
-                                    </StackPanel>
+                                    
                                 </StackPanel>
                             </DockPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel>
+                                <StackPanel
+                                    Margin="25 15"    
+                                >
+                                    <TextBlock
+                                        Text="Главная > Аккаунт"    
+                                        Margin="0 5"
+                                    />
+                                    <TextBlock
+                                        FontSize="48"
+                                        Text="Аккаунт "    
+                                        Margin="0 5"
+                                    />
+                                    <TextBlock
+                                        x:Name="idLabel"
+                                        Text="Office ware game manager ID: "    
+                                        Margin="0 5"
+                                    />
+                                </StackPanel>
+                                <DockPanel>
+                                    <ScrollViewer>
+                                        <StackPanel
+                                            Background="DarkCyan"
+                                            Width="250"
+                                            DockPanel.Dock="Left"    
+                                        >
+                                            <StackPanel
+                                                Height="35"    
+                                                DataContext="0"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Об аккаунте"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Height="35"    
+                                                DataContext="1"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Настройки"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Height="35"    
+                                                DataContext="2"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Настройки языка"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Height="35"
+                                                DataContext="3"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Файлы cookie"    
+                                                />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                    <TabControl
+                                        x:Name="accountSettingsControl"    
+                                    >
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Height="50"
+                                                    Background="DarkCyan"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Удалить мой аккаунт Office ware game manager"
+                                                        Foreground="Cyan"
+                                                        Margin="10 15"
+                                                        MouseLeftButtonUp="DeleteAccountHandler"
+                                                    />
+                                                    <TextBlock
+                                                        Text=" - Больше об удалении аккаунта и связанных с ним данных."    
+                                                        Foreground="LightGray"
+                                                        Margin="5 15"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                    </TabControl>
+                                </DockPanel>
+                            </StackPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    Margin="25 15"    
+                                >
+                                    <Image
+                                        VerticalAlignment="Center"
+                                        Margin="15"
+                                        Width="75"    
+                                        Height="75"    
+                                        ImageFailed="SetDefautAvatarHandler"
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="36"
+                                        Text="Аккаунт "    
+                                        Margin="0 5"
+                                    />
+                                </StackPanel>
+                                <DockPanel>
+                                    <ScrollViewer>
+                                        <StackPanel
+                                            Background="DarkCyan"
+                                            Width="250"
+                                            DockPanel.Dock="Left"    
+                                        >
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Text="Друзья"
+                                                Margin="15 5"
+                                            />
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="0"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="UserOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Ваши друзья"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="1"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="UserAddOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Добавить в друзья"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="2"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="EmailOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Приглашения"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"
+                                                DataContext="3"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="Block"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Черный список"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="0"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="ClockOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Недавно играли вместе"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="1"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="UserOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Модераторы трансляций"    
+                                                />
+                                            </StackPanel>
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Text="Подписки"
+                                                Margin="15 5"
+                                            />
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="0"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="UserOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Подписки на пользователей"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="1"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="MegaphoneOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Подписки на группы"    
+                                                />
+                                            </StackPanel>
+                                            <Separator />
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Text="Группы"
+                                                Margin="15 5"
+                                            />
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="0"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="PeopleOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Ваши группы"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="1"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="EmailOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Приглашения в группы"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"    
+                                                DataContext="2"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="Search"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Найти группу"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                Height="35"
+                                                DataContext="3"
+                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Foreground="White"
+                                                    Kind="AddCircleOutline"    
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 5"
+                                                    FontSize="18"
+                                                    Text="Создать группу"    
+                                                />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                    <TabControl
+                                        x:Name="friendsSettingsControl"
+                                    >
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Height="50"
+                                                    Background="DarkCyan"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Удалить мой аккаунт Office ware game manager"
+                                                        Foreground="Cyan"
+                                                        Margin="10 15"
+                                                        MouseLeftButtonUp="DeleteAccountHandler"
+                                                    />
+                                                    <TextBlock
+                                                        Text=" - Больше об удалении аккаунта и связанных с ним данных."    
+                                                        Foreground="LightGray"
+                                                        Margin="5 15"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+
+                                            </StackPanel>
+                                        </TabItem>
+                                    </TabControl>
+                                </DockPanel>
+                            </StackPanel>
                             <StackPanel
                                 Margin="25"    
                             >

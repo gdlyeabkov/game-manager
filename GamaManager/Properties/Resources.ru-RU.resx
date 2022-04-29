@@ -704,6 +704,9 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="steelThemeNameLabelContent" xml:space="preserve">
     <value>Сталь</value>
   </data>
+  <data name="storeMenuItemNewsLabelContent" xml:space="preserve">
+    <value>Новости</value>
+  </data>
   <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
     <value>Статистика</value>
   </data>

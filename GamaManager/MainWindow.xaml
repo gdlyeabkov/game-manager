@@ -195,7 +195,7 @@
                         Content="Магазин очков"    
                     />
                     <ComboBoxItem
-                        Content="Новости"    
+                        Content="{x:Static p:Resources.storeMenuItemNewsLabelContent}"
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.storeMenuItemStatsLabelContent}"
@@ -3512,22 +3512,200 @@
                                         >
                                             <StackPanel>
                                                 <StackPanel
-                                                    Height="50"
-                                                    Background="DarkCyan"
+                                                    Margin="0 15"
                                                     Orientation="Horizontal"    
                                                 >
                                                     <TextBlock
-                                                        Text="Удалить мой аккаунт Office ware game manager"
-                                                        Foreground="Cyan"
-                                                        Margin="10 15"
-                                                        MouseLeftButtonUp="DeleteAccountHandler"
+                                                        FontSize="16"
+                                                        Text="Ваши друзья 0/"    
+                                                        VerticalAlignment="Center"
                                                     />
                                                     <TextBlock
-                                                        Text=" - Больше об удалении аккаунта и связанных с ним данных."    
-                                                        Foreground="LightGray"
-                                                        Margin="5 15"
+                                                        Text="0"    
+                                                        VerticalAlignment="Center"
                                                     />
+                                                    <StackPanel
+                                                        Orientation="Horizontal" 
+                                                        Margin="275 0"
+                                                    >
+                                                        <Button
+                                                            Content="Управление списком друзей"
+                                                            Width="275"
+                                                            Height="25"
+                                                            Margin="10 0"
+                                                        />
+                                                        <Button
+                                                            Width="125"
+                                                            Height="25"
+                                                            Margin="10 0"
+                                                        >
+                                                            <Button.Content>
+                                                                <StackPanel
+                                                                    Orientation="Horizontal"    
+                                                                >
+                                                                    <materialDesign:PackIcon
+                                                                        Kind="UserAddOutline"    
+                                                                    />
+                                                                    <TextBlock
+                                                                        Text="Найти друзей"
+                                                                    />
+                                                                </StackPanel>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </StackPanel>
                                                 </StackPanel>
+                                                <TextBox
+                                                    Height="35"                                                    
+                                                >
+                                                    <TextBox.Resources>
+                                                        <VisualBrush
+                                                            x:Key="hinttext"
+                                                            AlignmentX="Left"
+                                                            Stretch="None"
+                                                            TileMode="None"
+                                                        >
+                                                            <VisualBrush.Visual>
+                                                                <DockPanel>
+                                                                    <TextBlock
+                                                                        Height="35"
+                                                                        Width="250"
+                                                                        Text="Поиск друзей по имени или игре"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                    />
+                                                                </DockPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </TextBox.Resources>
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="FontSize" Value="12" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="{x:Static p:Resources.onlineLabelContent}"
+                                                />
+                                                <WrapPanel
+                                                    x:Name="onlineFriendsList"    
+                                                >
+                                                    <StackPanel
+                                                        Margin="15"
+                                                        Width="250"
+                                                        Height="50"
+                                                        Orientation="Horizontal"
+                                                        Background="DarkCyan"    
+                                                    >
+                                                        <Image
+                                                            Width="50"    
+                                                            Height="50"    
+                                                            ImageFailed="SetDefautAvatarHandler"
+                                                        >
+                                                            <Image.Source>
+                                                                <BitmapImage
+                                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                                />
+                                                            </Image.Source>
+                                                        </Image>
+                                                        <Separator
+                                                            BorderThickness="5"
+                                                            BorderBrush="SkyBlue"
+                                                        >
+                                                            <Separator.Style>
+                                                                <Style
+                                                                   TargetType="{x:Type Separator}"
+                                                                   BasedOn="{StaticResource {x:Type Separator}}"
+                                                                >
+                                                                    <Setter Property="Margin" Value="6,0,6,0"/>
+                                                                    <Setter Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <TransformGroup>
+                                                                                <TransformGroup.Children>
+                                                                                    <TransformCollection>
+                                                                                        <RotateTransform Angle="90"/>
+                                                                                    </TransformCollection>
+                                                                                </TransformGroup.Children>
+                                                                            </TransformGroup>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </Separator.Style>
+                                                        </Separator>
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            VerticalAlignment="Center"
+                                                            Text="Пользователь"    
+                                                        />
+                                                    </StackPanel>
+                                                </WrapPanel>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="{x:Static p:Resources.offlineLabelContent}"
+                                                />
+                                                <WrapPanel
+                                                    x:Name="offlineFriendsList"    
+                                                >
+                                                    <StackPanel
+                                                        Margin="15"
+                                                        Width="250"
+                                                        Height="50"
+                                                        Orientation="Horizontal"
+                                                        Background="DarkCyan"    
+                                                    >
+                                                        <Image
+                                                            Width="50"    
+                                                            Height="50"    
+                                                            ImageFailed="SetDefautAvatarHandler"
+                                                        >
+                                                            <Image.Source>
+                                                                <BitmapImage
+                                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                                />
+                                                            </Image.Source>
+                                                        </Image>
+                                                        <Separator
+                                                            BorderBrush="LightGray"
+                                                            BorderThickness="75"
+                                                        >
+                                                            <Separator.Style>
+                                                                <Style
+                                                                   TargetType="{x:Type Separator}"
+                                                                   BasedOn="{StaticResource {x:Type Separator}}"
+                                                                >
+                                                                    <Setter Property="Margin" Value="6,0,6,0"/>
+                                                                    <Setter Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <TransformGroup>
+                                                                                <TransformGroup.Children>
+                                                                                    <TransformCollection>
+                                                                                        <RotateTransform Angle="90"/>
+                                                                                    </TransformCollection>
+                                                                                </TransformGroup.Children>
+                                                                            </TransformGroup>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </Separator.Style>
+                                                        </Separator>
+                                                        <TextBlock
+                                                            Margin="10 0"
+                                                            VerticalAlignment="Center"
+                                                            Text="Пользователь"    
+                                                        />
+                                                    </StackPanel>
+                                                </WrapPanel>
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem

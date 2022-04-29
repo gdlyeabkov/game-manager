@@ -875,6 +875,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на News.
+        /// </summary>
+        public static string storeMenuItemNewsLabelContent {
+            get {
+                return ResourceManager.GetString("storeMenuItemNewsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Stats.
         /// </summary>
         public static string storeMenuItemStatsLabelContent {

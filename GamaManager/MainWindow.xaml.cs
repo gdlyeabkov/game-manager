@@ -87,6 +87,234 @@ namespace GamaManager
 
         }
 
+        public void GetFriendsSettings ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = nestedReader.ReadToEnd();
+                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    onlineFriendsList.Children.Clear();
+                                    if (isOkStatus)
+                                    {
+                                        List<Friend> receivedFriends = myInnerObj.friends;
+                                        List<Friend> myFriends = receivedFriends.Where<Friend>((Friend friend) =>
+                                        {
+                                            return friend.user == currentUserId;
+                                        }).ToList<Friend>();
+                                        List<string> friendsIds = new List<string>();
+                                        foreach (Friend friendInfo in myFriends)
+                                        {
+                                            string friendId = friendInfo.friend;
+                                            friendsIds.Add(friendId);
+                                        }
+                                        foreach (Friend friendInfo in myFriends)
+                                        {
+                                            string friendId = friendInfo.friend;
+                                            if (friendsIds.Contains(friendId))
+                                            {
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            User myFriend = myobj.user;
+                                                            string name = myFriend.name;
+                                                            string userStatus = myFriend.status;
+                                                            bool isOnline = userStatus == "online";
+                                                            if (isOnline)
+                                                            {
+                                                                StackPanel friend = new StackPanel();
+                                                                friend.Margin = new Thickness(15);
+                                                                friend.Width = 250;
+                                                                friend.Height = 50;
+                                                                friend.Orientation = Orientation.Horizontal;
+                                                                friend.Background = System.Windows.Media.Brushes.DarkCyan;
+                                                                Image friendIcon = new Image();
+                                                                friendIcon.Width = 50;
+                                                                friendIcon.Height = 50;
+                                                                friendIcon.BeginInit();
+                                                                friendIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                                                friendIcon.EndInit();
+                                                                friendIcon.ImageFailed += SetDefautAvatarHandler;
+                                                                friend.Children.Add(friendIcon);
+                                                                Separator friendStatus = new Separator();
+                                                                friendStatus.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
+                                                                friendStatus.LayoutTransform = new RotateTransform(90);
+                                                                friend.Children.Add(friendStatus);
+                                                                TextBlock friendNameLabel = new TextBlock();
+                                                                friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                                                friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                friendNameLabel.Text = name;
+                                                                friend.Children.Add(friendNameLabel);
+                                                                onlineFriendsList.Children.Add(friend);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = nestedReader.ReadToEnd();
+                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    offlineFriendsList.Children.Clear();
+                                    if (isOkStatus)
+                                    {
+                                        List<Friend> receivedFriends = myInnerObj.friends;
+                                        List<Friend> myFriends = receivedFriends.Where<Friend>((Friend friend) =>
+                                        {
+                                            return friend.user == currentUserId;
+                                        }).ToList<Friend>();
+                                        List<string> friendsIds = new List<string>();
+                                        foreach (Friend friendInfo in myFriends)
+                                        {
+                                            string friendId = friendInfo.friend;
+                                            friendsIds.Add(friendId);
+                                        }
+                                        foreach (Friend friendInfo in myFriends)
+                                        {
+                                            string friendId = friendInfo.friend;
+                                            if (friendsIds.Contains(friendId))
+                                            {
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            User myFriend = myobj.user;
+                                                            string name = myFriend.name;
+                                                            string userStatus = myFriend.status;
+                                                            bool isOffline = userStatus == "offline";
+                                                            if (isOffline)
+                                                            {
+                                                                StackPanel friend = new StackPanel();
+                                                                friend.Margin = new Thickness(15);
+                                                                friend.Width = 250;
+                                                                friend.Height = 50;
+                                                                friend.Orientation = Orientation.Horizontal;
+                                                                friend.Background = System.Windows.Media.Brushes.DarkCyan;
+                                                                Image friendIcon = new Image();
+                                                                friendIcon.Width = 50;
+                                                                friendIcon.Height = 50;
+                                                                friendIcon.BeginInit();
+                                                                friendIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                                                friendIcon.EndInit();
+                                                                friendIcon.ImageFailed += SetDefautAvatarHandler;
+                                                                friend.Children.Add(friendIcon);
+                                                                Separator friendStatus = new Separator();
+                                                                friendStatus.BorderBrush = System.Windows.Media.Brushes.LightGray;
+                                                                friendStatus.LayoutTransform = new RotateTransform(90);
+                                                                friend.Children.Add(friendStatus);
+                                                                TextBlock friendNameLabel = new TextBlock();
+                                                                friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                                                friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                friendNameLabel.Text = name;
+                                                                friend.Children.Add(friendNameLabel);
+                                                                offlineFriendsList.Children.Add(friend);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+        }
+
         public void PreInit(string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -122,7 +350,8 @@ namespace GamaManager
             GetDownloads();
             GetScreenShots("", true);
             GetForums("");
-            GetGameCollections();/**/
+            GetGameCollections();
+            GetFriendsSettings();/**/
         }
 
         public void ShowOffersHandler(object sender, RoutedEventArgs e)

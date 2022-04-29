@@ -117,8 +117,349 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="acceptBtnContent" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="accessToGameInfoLabelContent" xml:space="preserve">
+    <value>Access to game info:</value>
+  </data>
+  <data name="accessToMainInfoLabelContent" xml:space="preserve">
+    <value>Access to main info:</value>
+  </data>
+  <data name="activateGameLabelContent" xml:space="preserve">
+    <value>Activate</value>
+  </data>
+  <data name="activationTitleContent" xml:space="preserve">
+    <value>Product activation</value>
+  </data>
+  <data name="addExternalGameToMyLibraryLabelContent" xml:space="preserve">
+    <value>Add external game to my library</value>
+  </data>
   <data name="addFriendDialogTitleContent" xml:space="preserve">
     <value>Add friend</value>
+  </data>
+  <data name="aggrementBoxContent" xml:space="preserve">
+    <value>Office ware game manager® SUBSCRIBER AGREEMENT
+
+Content:
+
+Registration as a subscriber; Terms of Use; your account
+Licenses
+Billing, payments and other subscriptions
+Online Code of Conduct, Game Cheating and Other Illegal Practices
+Third party content
+User Content
+Denial of responsibility; limitation of liability; lack of warranty obligations; limited warranty and agreement
+Making changes to the agreement
+Duration of the agreement and terms of termination
+Governing Law/Mediation/Jurisdiction/Counsel's Costs
+Dispute Resolution/Binding Arbitration/Class Action Waiver
+Miscellaneous
+This Office ware game manager Subscriber Agreement (the “Agreement”) is a legal document that sets forth your rights and obligations as a subscriber to the Office ware game manager service of Valve Corporation, a Washington State company with its registered office at 10400 NE 4th St., Bellevue, WA 98004, United States and registered with the Washington Secretary of State at 60 22 90 773; VAT identification number - EU 8260 00671 (hereinafter - "Valve"). Please read its contents carefully.
+
+PARAGRAPH 11 CONTAINS A BINDING ARBITRATION AGREEMENT AND CLASS ACTION WAIVER. HE AFFECTS THE RESOLUTION OF DISPUTES. PLEASE READ IT CAREFULLY. IF YOU ARE A SUBSCRIBER RESIDENT IN QUEBEC, CANADA OR THE EUROPEAN UNION, PARAGRAPH 11 DOES NOT APPLY TO YOU.
+
+1. REGISTER AS A SUBSCRIBER; TERMS OF USE; YOUR ACCOUNT ⏶
+
+Office ware game manager is an online service ("Office ware game manager") offered by Valve.
+
+Once you have completed registering for an Office ware game manager user account, you become a subscriber to the Office ware game manager service (“Subscriber”). This agreement comes into force after you accept its terms. You are not eligible to become a subscriber if you are under the age of 13. The Office ware game manager service is not intended for persons under the age of 13, and Valve will not knowingly collect personal information from persons under the age of 13.
+
+A. Party to the agreement
+
+In all cases, interaction with the Office ware game manager service is subject to a contractual relationship with Valve. Unless otherwise specified at the time of transaction (for example, if purchased from another Subscriber in the Subscription Marketplace), all transactions for Subscriptions (as defined below) in the Office ware game manager are made at Valve.
+
+B. Subscriptions; Content and Services
+
+As a Subscriber, you may be able to access certain services, software products and content available to Subscribers. The term “Content and Services” in this Agreement means the Office ware game manager software client and any other software products, content and updates that you download or access using Office ware game manager, including, but not limited to, video games, game content and software associated with Devices, Valve Corporation or third parties, and any virtual items traded, sold or purchased on the Office ware game manager Subscription Marketplace; "Subscriptions" in this Agreement means the rights to access and/or use the Content and Services accessed by you through the Office ware game manager.
+
+Each Subscription entitles you to access certain Content and Services. Some Subscriptions may include additional terms set out for that Subscription (“Subscription Terms”) (for example, an end user license agreement for a specific game or terms of use relating to a specific product or feature of the Office ware game manager service). In addition, additional terms (such as payment and billing procedures) may be posted at http://www.Office ware game managerpowered.com or the Office ware game manager service ("Terms of Use"). The Usage Rules include the Office ware game manager Online Conduct Rules http://Office ware game managerpowered.com/index.php?area=online_conduct and the Office ware game manager Service Refund Policy http://store.Office ware game managerpowered.com/Office ware game manager_refunds. The Subscription Terms, Terms of Use and Valve's Privacy Policy (which is available at http://www.valvesoftware.com/privacy.htm) become legally binding on you once you accept them or this Agreement or otherwise accept them as described in Section 8 (Additions to this Agreement).
+
+C. Your Account
+
+Once you have completed the Office ware game manager registration process, you will create your own Office ware game manager account (the “Account”). Your Account may also contain payment the details you provide to Valve in order to purchase Subscriptions, Content and Services, and any physical goods offered for purchase through the Office ware game manager (“Devices”). You may not disclose, transfer or otherwise grant to third parties the right to use your password or Account except as authorized by Valve. You are responsible for maintaining the confidentiality of your username and password and for the security of your computer system. Valve is not responsible for the use of your password and Account, or for any interaction or activity in the Office ware game manager that results from the use of your username and password by you or anyone to whom you may knowingly or recklessly disclose your username and/or password in violation of this privacy statement. Unless it is the result of Valve's negligence or misconduct, Valve is not responsible for the use of your Account by someone who fraudulently uses your username and password without your permission. If you believe that the confidentiality of your username and/or password has been violated, you must notify Valve immediately using the support form (https://support.Office ware game managerpowered.com/newticket.php).
+
+Your Account, including any information relating to it (for example, contact details, billing information, Account history, Subscriptions, etc.), is purely personal. You may not sell or trade your Account or otherwise transfer your Account, and you may not sell, trade or otherwise transfer your Subscriptions, except as expressly permitted by this Agreement (including any Subscription Terms or Terms of Use) or otherwise permitted by Valve.
+
+D. Payment Processing
+
+Payments relating to the purchase of Content, Services and/or Devices offered in the Office ware game manager are processed directly by Valve Corporation or by a wholly owned subsidiary of Valve GmbH on behalf of Valve Corporation, depending on the payment method used. If your bank card is issued outside the United States, your payment may be processed through a European acquiring bank by Valve GmbH on behalf of Valve Corporation. For any other payment methods, payment is processed directly by Valve Corporation. Regardless of the payment method, delivery of Content and Services and Devices is provided by Valve Corporation.
+
+2. LICENSES ⏶
+
+A. General License to Content and Services
+
+The use of Office ware game manager and your Subscriptions requires the download and installation of the Content and Services on your computer. Valve hereby grants to you, and you accept, the non-exclusive right to use the Content and Services for personal, non-commercial purposes (except as commercial use is expressly permitted herein or in the applicable Subscription Terms). The license terminates upon the expiration of (a) this Agreement or (b) the Subscription that includes the license. The right to use the Content and Services is hereby transferred, and not any other rights in rem. The right to be transferred does not give rise to any title or ownership of the Content and Services. To use the Content and Services, you must have an Office ware game manager Account, and you may also need to run the Office ware game manager client application and maintain an Internet connection.
+
+For various reasons, such as security, stability and proper functioning of the program in multi-user mode, it may be necessary to automatically update, preload, create new versions or make other improvements to the Content and Services, and, accordingly, the system requirements for using the Content and Services may change over time. You consent to automatic updates of this kind. You acknowledge that this Agreement (including the applicable Subscription Terms) does not entitle you to future updates, new versions, or other enhancements to the Content and Services provided under a particular Subscription, although Valve may, in its sole discretion, provide such updates, etc. .
+
+B. Beta Software License
+
+From time to time, Valve may make software available to you through the Office ware game manager service prior to commercial release (“Beta”). You are not required to use the Beta Versions, but you are entitled to use them subject to the following terms. The Beta Version shall be deemed to include the Content and Services, and each copy of the Beta Version provided to you shall be deemed a Subscription to the applicable Beta Version on the following special conditions:
+
+Your right to use the Beta Version may be for a limited period of time and may be subject to additional Subscription Terms;
+Valve or any Valve affiliate may ask or require you to provide suggestions, reviews, or other information about your use of the Beta; in accordance with Clause 6 of this Agreement (User Content), such information will be considered User Content; and
+In addition to the disclaimers and limitations of liability for all Software as set forth in Clause 7 of this Agreement (Disclaimer; Limitation of Liability; No Warranty; Limited Warranty and Agreement), as applicable, you acknowledge that the Beta- the version is released for testing and improvement purposes only, in particular to provide Valve with feedback on the quality and usability of the Beta version, and therefore contains errors, is not the final version, and may cause a software conflict or harm your computer, the information contained in it and/or the software installed on it. By installing and/or using the Beta Version, you agree to use it only for its intended purpose, i.e. for testing and improvement purposes, and in no case use it in a system or for purposes where a malfunction of the Beta Version could cause damage of any kind. In particular, you must maintain full backups of any system on which the Beta will be installed.
+C. License to Use Valve Developer Tools
+
+Your Subscriptions may include access to various Valve tools that are used to create content ("Developer Tools"). Examples of such tools include: the Software Development Kit (“SDK”) for the version of the game “engine” (“Source Engine”) and the corresponding Valve Hammer editor, Source® Filmmaker software, or other game tools with which you You can edit or create derivative works based on the Valve game. Some Developer Tools (such as Source® Filmmaker software) may be distributed under special Subscription Terms that differ from the rules set forth in this Clause. Unless otherwise stated in other specific Subscription Terms applicable to the use of a particular Developer Tools, you may use the Developer Tools, and you may use, reproduce, publish, perform, display and distribute any content created by you using the Developer Tools, but not in commercial purposes.
+
+If you would like to use the Source Engine SDK or any other Valve Developer Tools for commercial purposes, please contact Valve at sourceengine@valvesoftware.com.
+
+D. License to Use Valve Game Content in Fan Art.
+
+Valve values ​​the community of Subscribers who create art, literature, and audiovisual products based on the stories and characters of Valve games (“Fan Art”). You have the right to include the content of Valve games in the Fan Art theme. Except as specifically provided in this Clause or the Subscription Terms, you may use, reproduce, publish, perform, display and distribute any Fan Art Products containing content from Valve games, but only for non-commercial purposes.
+
+If you intend to include any third party content in a Fan Art product, you should be sure to obtain all necessary rights from the owner of that content.
+
+Commercial use of some Valve game content is permitted through features such as the Office ware game manager Workshops or the Office ware game manager Subscription Marketplace. The conditions applicable to such use are set out in Clauses 3.D. and 6.B. below and in the Subscription Terms provided for these features.
+
+To view Valve's Video Policy, which contains additional terms regarding the use of audiovisual products that include Valve's intellectual property or created using Source® Filmmaker software, click on the following link: http://www.valvesoftware.com/videopolicy.html
+
+E. License to Use Valve Dedicated Server Software
+
+Your Subscriptions may include access to the Valve Dedicated Server Software. In such event, you may use the Valve Dedicated Server Software on an unlimited number of computers for the purpose of creating servers for Valve's multiplayer games. If you use the Valve Dedicated Server Software, you are responsible for all costs associated with providing Internet access, bandwidth and other costs arising from such activities.
+
+F. Ownership of Content and Services
+
+All property rights and intellectual property rights All property rights associated with the Content and Services and copies thereof are owned by Valve and/or its licensors or licensors of affiliates. All rights reserved unless otherwise provided by this Agreement. Content and Services are protected by copyright law, international agreements and conventions in the field of intellectual property and other regulatory legal acts. The Content and Services contain certain licensed materials, and Valve's licensors and licensors of its affiliates may defend their rights in the event of a breach of this Agreement.
+
+G. Restrictions on Use of Content and Services
+
+You may not use the Content and Services for any purpose other than authorized access to Office ware game manager and your Subscriptions and use your Subscriptions for personal, non-commercial purposes, except as permitted by this Agreement or the applicable Subscription Terms. Except as otherwise provided in this Agreement (including any Subscription Terms or Terms of Use) or applicable law, you may not, in whole or in part, copy, photocopy, reproduce, publish, distribute, translate, reverse engineer, install source code, modify , disassemble, create derivative works from, or remove copyright notices from the Content and Services or any software obtained through the Office ware game manager without Valve's prior written consent.
+
+The Content and Services are for personal use only. You may not: (i) sell, mortgage or transfer copies of the Content and Services to third parties in any way, rent the Content and Services or transfer the right to use them to third parties without the prior written consent of Valve, unless otherwise expressly stated in this Agreement (including any Subscription Terms or Terms of Use); (ii) provide its matchmaking services, imitate or redirect the communication protocols used by Valve in the network settings of the Content and Services, through protocol emulation, tunneling, modification or addition of new components to the Content and Services, use of utilities and any other methods already available or developed in the future, for any purpose, including (but not limited to) network play over the Internet, network play using commercial and non-commercial gaming networks, or use the Content and Services as part of networks, websites or data collection services without prior written Valve permissions or (iii) use the Content and Services or components thereof for commercial purposes, except as expressly permitted elsewhere in this Agreement (including any Subscription Terms or Rules of Use).
+
+3. BILLING, PAYMENTS AND OTHER SUBSCRIPTIONS ⏶
+
+All fees for using the Office ware game manager service, and all purchases made using the Office ware game manager Wallet, are paid in full upfront and final, except as described in sections 3.I and 7 below.
+
+A. Authorization to pay
+
+By providing payment information to Valve or one of its payment processors, you warrant that you are the legal owner of the card, PIN, key, or account associated with that payment and authorize Valve to charge your credit card or process your payment through third party payment processor to pay for a Subscription, top up an Office ware game manager Wallet, purchase a Device, or pay any other expenses you may have. Valve may require you to provide your address or other information in order to comply with its obligations under applicable tax laws.
+
+For Subscriptions that are charged in the form of a subscription fee (“Subscriptions with Subscriptions”), by continuing to use such Subscription, you automatically confirm Valve's right to charge the amount of the subscription fee to your credit card (or Office Wallet). ware game manager if it has funds) or to process the payment with any other applicable payment processor. If you have purchased any Subscriptions with a subscription fee, you must notify Valve as soon as possible of changes to your credit card number, expiration date and/or billing address, or PayPal account or other means of payment, and you must notify Valve if, if your credit card, PayPal account or other means of payment has expired or been canceled for any reason.
+
+If your use of Office ware game manager is subject to any use or sales tax, then Valve may also charge you the amount of such taxes in addition to the Subscription or other fees set forth in the Terms of Use. European Union VAT amounts (“VAT”) charged by Va lve correspond to VAT charged on the cost of Content and Services, Devices or Subscriptions.
+
+You agree not to use IP proxies or other methods to hide your location in order to bypass geo-restrictions on game content, purchase a game at a price that does not correspond to your region, or for any other reason. Otherwise, Valve may block your access to the Account.
+
+B. Responsibility for charges related to your Account
+
+As an Account holder, you are responsible for all applicable costs, including taxes, and all purchases made by you or anyone through your Account, including your friends and family members. Valve reserves the right to charge subscription fees and other applicable fees accrued prior to Account closure or Subscription cancellation. Before registering again, you must pay off the debts on the previous Account.
+
+C. Office ware game manager wallet
+
+Office ware game manager may provide you with access to the account balance associated with your Account (“Office ware game manager Wallet”). The Office ware game manager wallet is neither a bank account nor any other payment instrument. It is intended for the purchase of Content and Services after its preliminary replenishment. You may fund your Office ware game manager Wallet up to the maximum amount determined by Valve using a credit card, prepaid card, promo code, or any other payment methods accepted by Office ware game manager. Within 24 (twenty-four) hours, the total amount of funds in your Office ware game manager Wallet plus the total amount of funds spent from the Office ware game manager Wallet together must not exceed $2,000 or the equivalent amount in your national currency - you will not be able to top up your Office ware game manager Wallet for an amount exceeding the specified limit. From time to time, Valve may change the balance limit values ​​and the Office ware game manager Wallet usage limits.
+
+You will receive email notifications of any changes to Office ware game manager Wallet balance and usage limits for sixty (60) days prior to the change becoming effective. If you continue to use your Office ware game manager Account for more than thirty (30) days after the changes become effective, this will mean that you accept these changes. If you do not accept the changes, your only remedy is to terminate your Office ware game manager Account or stop using your Office ware game manager Wallet. In this case, Valve will not be obligated to refund any funds remaining in your Office ware game manager Wallet.
+
+You may use Office ware game manager Wallet funds to purchase Subscriptions or pay for in-game purchases if the game supports Office ware game manager Wallet transactions, and to purchase Devices. Subject to Clause 3.1, funds transferred to the Office ware game manager Wallet are non-refundable or non-transferable. Funds held in the Office ware game manager Wallet are non-proprietary, have no value outside of Office ware game manager, and may only be used to purchase Subscriptions, eligible content through Office ware game manager (including, but not limited to, games and other applications in Office ware game manager store or the Office ware game manager Subscription Marketplace) and Devices. Funds held in the Office ware game manager Wallet cannot be exchanged for cash. Unclaimed funds held in the Office ware game manager Wallet may be transferred to the appropriate authorities.
+
+D. Exchange and sale of Subscriptions between Subscribers
+
+The Office ware game manager may include one or more features or marketplaces through which Subscribers can exchange, sell, or purchase certain types of Subscriptions (such as virtual item licensing rights) while interacting with other Subscribers (“Subscription Marketplaces”) . An example of a Subscription Marketplace is the Office ware game manager Community Marketplace. By using the Subscription Marketplace or participating in a trade, you authorize Valve, on your behalf or as an agent or licensee of any third party developer or publisher of the applicable Subscriptions in your Account, to move those Subscriptions out of your Account for the purpose of trade or sale.
+
+Valve may charge fees for trading or selling on the Subscription Market. You will be provided with information on all commission fees prior to the completion of the exchange or sale.
+
+When making an exchange, sale or purchase on the Subscription Marketplace, you acknowledge and agree that you are responsible for any taxes that may be associated with your transactions, including taxes on the sale or use, and for compliance with the current tax legislation. Revenue from sales made by you on the Subscription Marketplace may be treated as income for your income tax purposes. You should consult with a tax professional to determine your tax liability related to your activities on the Subscription Marketplace.
+
+You understand and acknowledge that Valve may decide to discontinue the Subscription Marketplace, change the fees charged, or change the terms or features of the Office ware game manager Subscription Marketplace. Valve will have no liability to you in the event of any failure to trade, sell, or purchase Subscriptions on the Office ware game manager Subscription Market, including due to termination of the Market or changes to the terms, features, or requirements for the Subscription Market.
+
+You also understand and acknowledge that the Subscriptions traded, sold or purchased in the Subscription Marketplace constitute license rights, that you have no ownership rights in such Subscriptions, and that Valve does not recognize any exchanges of Subscriptions (including trades by virtue of law) committed outside the Office ware game manager.
+
+E. Retail Purchase
+
+Valve may offer or require purchasers of retail packaging products or purchasers of OEM versions of its products to purchase a Subscription. To activate a Subscription, the supplied retail or OEM kit includes a "CD Key" or "Product Key".
+
+F. Office ware game manager authorized dealers
+
+You may purchase a Subscription through authorized Valve dealers. The "Product Key" included in the bundle is required to activate your Subscription. If you purchase a Subscription from an authorized Valve dealer, all questions related to the Product Key should be addressed to that dealer.
+
+G. Free Subscription
+
+In some cases, Valve may offer a free Subscription to certain services, software, and content. As with paid Subscriptions, you are responsible for all ISP, telephone and other charges incurred while connecting to the Office ware game manager service, even if Valve offers a free subscription.
+
+H. Third Party Sites
+
+Office ware game manager may provide links to third party websites. Some of them may incur additional usage fees that are not included in, and are not related to, the Subscription subscription fees or other fees charged for using Valve's services. Office ware game manager may also provide access to websites of merchants offering content, goods and/or services through Office ware game manager or the Internet. You bear all additional costs and liabilities arising from dealings with these sellers. Valve does not assume any liability, direct or indirect, in connection with third party sites. In particular, Valve makes no warranty, express or implied, that services or subscriptions offered by third party vendors will not be modified, suspended or terminated.
+
+I. Refunds and Right to Cancellation
+
+Without prejudice to any of your rights under law, you may request a refund for Office ware game manager purchases in accordance with Valve's Refund Policy http://store.Office ware game managerpowered.com/Office ware game manager_refunds/.
+
+For consumers in the European Union:
+
+European Union law provides the right to cancel certain contracts for physical goods and for the purchase of digital content. Detailed information about the right of cancellation granted to you by law and the possibilities for exercising this right can be found on this page: https://support.Office ware game managerpowered.com/kb_article.php?ref=8620-QYAL-4516.
+
+4. INTERNET CODE OF CONDUCT, GAME FRAUD AND PROCESS INTERFERENCE ⏶
+
+Your online behavior and relationships with other subscribers must comply with generally accepted standards of conduct. In particular, it must comply with the Office ware game manager Online Conduct Guidelines posted at http://Office ware game managerpowered.com/index.php?area=online_conduct. Subscription terms applicable to a particular Subscription may also contain additional requirements depending on the terms of use offered by third parties that host specific games or other services.
+
+The Office ware game manager and the Content and Services may use features designed to detect software or hardware processes or features that may give a player an unfair advantage when playing the multiplayer version of any Content and Services, or modifications to the Content and Services ("Cheat Codes"). "). You hereby agree not to create or promote to prevent the creation and use of Cheat codes by third parties. You also agree that you will not directly or indirectly disable or otherwise interfere with the operation of programs responsible for detecting and preventing the use of Cheat Codes.
+
+You agree that you will not interfere with the Office ware game manager or the Content and Services unless otherwise authorized by Valve. You agree that both Valve and other providers of online multiplayer games distributed in the Office ware game manager (the “External Provider”) may deny you participation in certain online multiplayer games if you are found to be using Cheat Codes or interfering with Office ware game manager or the Content and Services.
+
+In addition, you acknowledge and agree that External Providers may report your use of Cheat Codes or tampering with Valve's processes, and Valve may disclose your usage history of these tools to External Providers subject to the terms of the Office ware game manager Privacy Policy.
+
+Valve has the right to terminate your Account or a specific Subscription for any conduct or action that violates the law, constitutes the use of a Cheat Code, or otherwise adversely affects the use of the Office ware game manager by other Subscribers. You acknowledge that Valve is under no obligation to provide you with notice prior to terminating your Subscription and/or Account.
+
+You may not use Cheat Codes, software to automate actions or processes (bots), modifications, hacks or other unauthorized third party software to modify or automate any process in the Subscription Marketplace or the Office ware game manager account creation process.
+
+5. THIRD PARTY CONTENT ⏶
+
+Valve does not review third party content available through the Office ware game manager or elsewhere for all Subscriptions, Content and Services that are not a Valve product. Valve assumes no responsibility for third party content. Some third party software may be used by legal entities for commercial purposes, but you may obtain such software through Office ware game manager for private use only.
+
+6. USER CONTENT ⏶
+
+A. General provisions
+
+The Office ware game manager provides interfaces and tools to enable you to create content that is available to other users and/or Valve as you see fit. User Content means any information that you provide to other users of the Office ware game manager service through the Office ware game manager multi-user options, and that is made available to Valve or its affiliates through your use of the Content and Services.
+
+When you upload your content to the Office ware game manager, making it available to other users and/or Valve, you grant Valve and its affiliates a worldwide, non-exclusive right to use, reproduce, modify, create derivative works, distribute, transmit, transcode , translating, broadcasting and otherwise transmitting and publicly displaying and publicly performing your User Content and derivative works thereof for the purpose of using, distributing, promoting and including in Office ware game manager services, Office ware game manager games and other Office ware offerings game manager, including Subscriptions. This license is granted to Valve when content is uploaded to the Office ware game manager for the duration of the intellectual property rights. It may be terminated if Valve is in breach of a license agreement and fails to remedy such breach within fourteen (14) days of receipt of notice sent by you to Valve's Legal Department at Valve's valid address listed on this Privacy Policy page. Termination of this license does not affect the rights of any sublicensees under any sublicense granted by Valve prior to termination. Valve is the sole owner of derivative works created by Valve based on your User Content and therefore has the right to grant rights to those derivative works. If you use Valve's cloud storage service, you grant us the right to store your information as part of that service. Valve may set limits on the amount of storage available for use.
+
+If you provide any comments or suggestions to Valve regarding the operation of the Office ware game manager, the Content and Services, or Valve's products, Devices or services, Valve may use them in any way without liability to you. to you.
+
+B. Content Uploaded to Office ware game manager Workshop
+
+Certain games or applications on the Office ware game manager site (“Workshop Supported Applications”) allow you to create User Content based on or using Workshop Supported Applications and submit it (“Workshop Submitted Product”) to one or more Office ware game manager workshop web pages. Members of the Office ware game manager Community may view Workshop Submitted Products, and users may request, download, or purchase certain types of Workshop Submitted Products. In some cases, Workshop Contributed Products may be included by Valve or a third party developer in a game or used in the Subscription Marketplace.
+
+You understand and acknowledge that Valve is under no obligation to use, distribute, or support distribution of copies of any Workshop Submitted Products and reserves the right (but not the obligation) to restrict the use of Workshop Submitted Products or remove them for any reason. reason.
+
+Special Applications supporting the Workshop or the Workshop webpages may contain special terms ("Application Terms") that supplement or modify the terms set forth in this Clause. In particular, if the Products submitted to the Workshop are distributed for a fee, the Application Terms stipulate how the proceeds will be distributed. Unless otherwise stated in the Application Terms (if any), the following general rules apply to Products submitted to a Workshop.
+
+Products submitted to the Workshop are Subscriptions, and therefore you acknowledge that any Subscriber who receives a copy of your product from the Workshop will have the same rights to use the Products submitted to the Workshop (and the Subscriber will be subject to the same restrictions) as provided for any other Subscriptions in this Agreement.
+Notwithstanding the licenses described in Clause 6.A., Valve may only modify or perform derivative works based on your Workshop Submission Product in the following cases: (a) Valve may make changes necessary to maintain compatibility with your submitted Product with the functionality of the Office ware game manager or Workshop or user interface, and (b) Valve or the applicable developer may make changes to Workshop Contributed Products that have been approved for distribution as part of the Applications as deemed necessary or recommended to improve games.
+You have the discretion to remove a Workshop Submitted Product from the applicable Workshop pages. In such event, Valve will no longer have the rights to use, distribute, transmit, broadcast, or otherwise publicly use the Workshop Submission Product, unless (a) Valve may continue to exercise the rights to the Workshop Submission Product if it is approved for distribution as part of an application or is transferred in a manner that allows it to be used in games, and (b) the removal by you will not affect the rights of any Subscriber who already has access to a copy of the Product submitted to the Workshop.
+Unless otherwise stated in the Application Terms, you acknowledge that Valve's refund for your Product submitted to the Workshop is a full refund and you have no other rights or remedies in connection with the rights granted to Valve and other Subscribers.
+
+C. Promotion and advertising
+
+If you use Office ware game manager (for example, Office ware game manager lists of curators or Office ware game manager broadcasts) to promote or advertise a third party product, service or event for a fee (including non-monetary rewards such as free games), you must clearly indicate the source of this reward to your audience.
+
+D. Commitments and warranties
+
+You hereby represent and warrant to us that you have sufficient rights to all User Content to grant Valve and other interested parties the rights described in paragraphs A. and B. above, or to any rights grant conditions relating to the applicable Application supporting the Workshop , or on the Workshop page. These include, but are not limited to, any kind of intellectual property rights or other proprietary or personal rights in or in connection with the User Content. In particular, with respect to a Product submitted to a Workshop, you represent and warrant that the product was originally created by you (or in relation to a Product submitted to a Workshop in which developers other than you were involved in the creation, in which case, you may transfer such product on behalf of other members).
+
+In addition, you represent and warrantthat the User Content, its transmission and your grant of rights to such content does not violate the terms of contracts, legal or statutory provisions.
+
+7. DISCLAIMER; LIMITATION OF LIABILITY; NO WARRANTY; LIMITED WARRANTY AND AGREEMENT ⏶
+
+THIS SECTION 7 DOES NOT APPLY TO EU SUBSCRIBERS.
+
+For subscribers from Australia-this paragraph 7 does not exclude, does not limit and does not change the application of any guarantee, rights or means of legal protection, which cannot be excluded, limited or changed, including guarantees, rights and means of legal protection, provided AUSTRALIAN CONSUMER PROTECTION ACT (ACL). SUBJECT TO THE ACL, THE GOODS ARE COMING WITH WARRANTIES INCLUDING ACCEPTABLE QUALITY. IN THE EVENT OF FAILURE OF SUCH WARRANTY, YOU HAVE THE RIGHT TO A REMEDY (WHICH MAY INCLUDE REPAIR OR REPLACEMENT OF THE PRODUCTS OR REFUND). IF REPAIR OR REPLACEMENT IS IMPOSSIBLE OR THERE IS A SERIOUS DEFECT, YOU ARE ELIGIBLE FOR A REFUND.
+For subscribers from New Zealand-this paragraph 7 does not exclude, does not limit and does not change the application of any right or means of legal protection that cannot be excluded, limited or changed, including the rights and means of legal protection provided by the law on consumers of new ZEALAND FROM 1993. THE PROVISIONS OF THIS LAW ENSURE THAT THE GOODS AND SERVICES ARE OF ACCEPTABLE QUALITY. IF THIS WARRANTY IS NOT SATISFIED, THE LAW PROVIDES THE RIGHT TO TROUBLESHOOTING THE SOFTWARE (WHICH MAY INCLUDE CORRECTION, REPLACEMENT OR REFUND). IF THE DEFECT CANNOT BE REPAIRED OR IS MAJOR, THE LAW PROVIDES FOR A REFUND.
+Before purchasing a Subscription, you should review the product information available in the Office ware game manager, including the Subscription description, minimum technical requirements, and user reviews.
+
+A. DISCLAIMER
+
+In the maximum permissible Law of the degree of Valve, its branches and service providers clearly refuse to provide any guarantees for Office Ware Game Manager, content and services and subscriptions, as well as from 2) any obligations arising from the general law on Office Ware Game Manager , CONTENT AND SERVICES AND SUBSCRIPTIONS, INCLUDING WITHOUT LIABILITY FOR NEGLIGENCE AND LACK OF QUALIFIED EFFORT. The Office ware game manager, the CONTENT AND SERVICES, SUBSCRIPTIONS AND ANY INFORMATION MADE AVAILABLE THROUGH THEIR USE ARE PROVIDED "AS IS" AND "WITH ALL FAULTS" AND WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING INCLUDING WITHOUT LIMITATION WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE OR NON-IMPLIED WARRANTIES. VALVE IS DISCLAIMER OF ANY WARRANTIES REGARDING THE VIOLATIONS PROVIDED IN SECTION 2-312 OF THE Uniform Commercial Code And/or ANY OTHER APPLICABLE REGULATION. FURTHER, VALVE DISCLAIMS ALL WARRANTIES WITH RESPECT TO THE TITLE, CONFLICT TO YOUR RIGHTS OF USE, OR WARRANTIES OF AUTHORITY WITH RESPECT TO Office ware game manager, CONTENT AND SERVICES, SUBSCRIPTIONS, OR INFORMATION MADE AVAILABLE BY USING THESE.
+
+VALVE IS EXCLUDED FROM ANY WARRANTIES WITH RESPECT TO THE VIOLATIONS PROVIDED IN SECTION 2-312 OF THE UNIFORM COMMERCE CODE.
+
+B. LIMITATION OF LIABILITY
+
+In the maximum permissible law, neither Valve, nor its licensees, nor their affiliated persons, nor service providers are responsible for losses that have become the result of the use or impossibility of using the Office Ware Game Manager service, your account, your subscriptions and content and services, in INCLUDING INCLUDING LOSS OF INTANGIBLE ASSETS, STOPPING OF WORK PROCESS, DEFAULT OR MALFUNCTION OF COMPUTERS AND ANY OTHER COMMERCIAL DAMAGES. In no case, Valve is not responsible for direct, indirect, secondary, special, penalty and other losses that have become the result of using the Office Ware Game Manager service, the use of content and services, subscriptions and any information that has become available as a result of using the services of Office Ware Game Manager, as well as for the delay in use or the inability to use content and services, subscriptions or any information, even if it became the result of the guilty act, tort (including gross negligence), acts entailing direct liability, violations of the provisions of the agreement, or WARRANTY OF VALVE OR ITS AFFILIATES. THESE LIMITATIONS AND EXCLUSIONS OF LIABILITY SHALL APPLY EVEN IF OTHER LEGAL REMEDIES DO NOT APPLY.
+
+BECAUSE SOME COUNTRIES OR JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, IN SUCH COUNTRIES OR JURISDICTIONS THE LIABILITY OF VALVE, ITS LICENSORS OR ITS AFFILIATES SHALL BE LIMITED TOTO THE MAXIMUM EXTENT ALLOWED UNDER LAW.
+
+C. NO WARRANTY
+
+In the maximum permissible appropriate law, neither Valve nor its affiliated companies guarantee uninterrupted, unmistakable, free from viruses and safe operation of content and services, as well as uninterrupted, unmistakable, free access to Office Ware Game Manager, and your account and your account and your account. /OR SUBSCRIPTIONS OR ANY INFORMATION AVAILABLE IN CONNECTION WITH THE USE OF Office ware game manager.
+
+D. LIMITED WARRANTY AND AGREEMENT
+
+SOME DEVICES PURCHASED FROM VALVE ARE PROVIDED WITH A LIMITED WARRANTY AND AGREEMENT [OR, DEPENDING ON YOUR LOCATION, WARRANTY TO BE PROVIDED BY LOCAL LAW] WHICH ARE DETAILED HERE.
+
+8. AMENDING THE AGREEMENT ⏶
+
+NOTE. If you are a customer with permanent residence in Germany, a different version of Clause 8, which is available here, applies to you.
+
+A. Bilateral Amendment
+
+This Agreement may be amended bilaterally at any time with your express consent to the changes proposed by Valve.
+
+B. Unilateral Amendment
+
+In addition, Valve reserves the right to unilaterally amend this Agreement (including any Subscription Terms or Terms of Use) at any time and in its sole discretion. In this case, you will receive email notification of any changes made to this Agreement by Valve at least thirty (30) days prior to the change becoming effective. The text of the Agreement can be consulted at any time at http://www.Office ware game managerpowered.com/. If you do not terminate your Account before the changes become effective, this will mean that you accept the changes made to the Agreement. If you do not agree to the changes, your only remedy is to terminate your Account or cancel your Subscription. Valve will not be obligated to refund any fees charged to your Account prior to its termination or prior to your termination of any Subscription, and Valve is not obligated to recalculate any subscription fees paid in such circumstances.
+
+9. TERM AND TERMINATION ⏶
+
+A. Timing
+
+The Agreement is effective from the moment you click the "I agree" button and continues until terminated in accordance with the terms of this Agreement.
+
+B. Termination by You
+
+You may terminate your Account at any time. You may stop using the Subscription at any time, or if you wish, you may ask Valve to terminate your access to the Subscription. However, Subscriptions are non-transferable, and even if your access to a Subscription for a particular game or application is closed, the original activation key cannot be registered to another Account, even if the Subscription was purchased from a retail store. Access to Subscriptions purchased as part of a bundle cannot be terminated individually; termination of access to one game from the package will result in the termination of access to all games purchased as part of the package. In the event that your Account or Subscription is terminated on your initiative, you are not entitled to any refund, including a refund of the subscription fee. Valve reserves the right to demand payment of subscription fees, interest and other fees accrued prior to the termination of the Account or termination of the Subscription. In addition, you must pay the amounts due to third party producers and content providers before you terminate your Account.
+
+C. Valve Initiated Termination
+
+Valve may terminate your Account or any Subscription at any time if (a) Valve generally terminates such Subscriptions to similar subscribers or (b) you violate any of the terms of this Agreement (including the Subscription Terms or Terms of Use). In the event that your Account or Subscription is terminated at the initiative of Valve due to your violation of the terms of the Agreement or illegal activity, you are not entitled to any refund, including a refund of subscription fees or unused funds from your Office ware game manager Wallet.
+
+D. Survival
+
+Items 2.C., 2.D., 2.F., 2.G., 3.A., 3.B., 3.D., 3.H. and 5-12 will survive the expiration or termination of the Agreement.
+
+10. GOVERNING LAW / MEDIATION / JURISDICTION / LEGAL COSTS ⏶
+
+For customers outside the European Union:
+
+You and Valve hereby agree that this Agreement is made and entered into in the State of Washington, USA, and claims, excluding conflicts of law and the Convention on Contracts for the International Sale of Goods, shall be resolved in accordance with the laws of the State of Washington. This applies to all claims arising out of or in connection with the following items: (i) anyaspects of our interaction; (ii) this Agreement; (iii) your use of the Office ware game manager service, your Account or the Content and Services. The exceptions are situations to which the US Federal Arbitration Law applies, unless this is contrary to the laws of your country of residence. Subject to Clause 11 (Dispute Resolution/Binding Arbitration/Class Action Waiver) below, you and Valve agree that all claims will be heard in federal or state court located in King County, Washington, and that such courts will have exclusive jurisdiction. You and Valve hereby consent to the exclusive jurisdiction of such courts. Upon the termination of any legal proceedings arising out of this Agreement, your use of the Office ware game manager service, your Account, or the Content and Services, the prevailing party shall be entitled to recover legal costs (excluding arbitration - see Clause 11.C).
+
+For EU customers:
+
+If there is a dispute regarding the interpretation, effectiveness, or validity of the Subscriber Agreement, an amicable decision will be made before any legal action is taken. You can file a complaint at http://help.Office ware game managerpowered.com. In case of refusal, you have the right, within one year from the date of the denied request, to use the Alternative Dispute Resolution Procedure by filing a complaint online on the European Commission's Online Dispute Resolution website: https://webgate.ec.europa.eu/odr/ main/index.cfm?event=main.home.chooseLanguage.
+
+In the event that a dispute is not resolved out of court, the conflict may be brought before a competent court.
+
+11. DISPUTES RESOLUTION, BINDING ARBITRATION AND CLASS ACTION WAIVER ⏶
+
+This Clause 11 is mandatory to the maximum extent permitted by applicable law. IN PARTICULAR, IF YOU ARE A SUBSCRIBER RESIDING IN QUEBEC, CANADA OR THE EUROPEAN UNION, PARAGRAPH 11 DOES NOT APPLY TO YOU.
+
+Most user issues can be resolved using our Office ware game manager support site, available at https://support.Office ware game managerpowered.com/. If Valve is unable to resolve your issue and a disagreement remains between you and Valve, the parties should resolve such disagreement in accordance with the procedure described in this Clause.
+
+A. All claims must be resolved by arbitration except those related to intellectual property, illegal use, piracy or theft
+
+YOU AND VALVE AGREE TO RESOLVE ALL DISPUTES AND CLAIMS BY BINDING INDIVIDUAL AND BINDING ARBITRATION. THIS INCLUDES, BUT NOT LIMITED TO, ANY CLAIMS ARISING OUT OF OR RELATED TO: (i) ANY ASPECTS OF OUR INTERACTIONS, (ii) THIS AGREEMENT, OR (iii) YOUR USE OF THE Office ware game manager, YOUR ACCOUNT, OR DEVICE. This procedure for resolving disputes is applicable, regardless of whether these disputes of the contract, tort, legislative act, fraud, unfair competition, misleading or any other theory of law, and it also applies to all claims filed on behalf of the third party.
+
+However, Section 11 does not apply to the following types of claims or disputes that you and Valve may bring in any court of competent jurisdiction: (i) claims for infringement or other misuse of intellectual property rights, including claims seeking injunctive relief ; (ii) claims relating to or arising out of any alleged misuse, piracy or theft.
+
+Section 11 does not prevent you from bringing your dispute to any government agency, federal or local, that may, by law, exercise relief against you.
+
+Arbitration is the consideration of a case by a disinterested arbitrator instead of a judge or jury. Arbitration is less formal than litigation and provides less publicity. It follows different procedures than the court and is subject to very limited review by the courts. The arbitrator shall issue a written decision and, at the request of the parties, provide justification. YOU AND VALVE ACKNOWLEDGE THAT YOU WAIVE THE RIGHT TO BRING YOUR DISPUTE IN COURT BEFORE A JUDGE OR JURY.
+
+B. Try to resolve the dispute informally first
+
+You and Valve agree to use reasonable, good faith efforts to informally resolve any dispute prior to arbitration. A party that intends to submit a case to arbitration must first send a written notice to the other party describing the nature and basis of the claim or dispute, and the resolution sought. If you and Valve cannot reach an agreement to resolve the claimor dispute within 30 days of receipt of the notice, you and Valve may submit the matter to arbitration. Written notice to Valve must be sent to: ATTN: Arbitration Notice, Valve Corporation, P.O. Box 1688, Bellevue, WA 98004.
+
+C. Arbitration Rules and Fees
+
+U.S. Federal Arbitration Law applies to Section 11 to the extent not inconsistent with the laws of your country of residence. Arbitration will be conducted in accordance with the Consumer Arbitration Rules (or in accordance with the Commercial Arbitration Rules, if the Consumer Arbitration Rules do not apply) of the American Arbitration Association (“AAA”), as set forth in this Agreement. The rules are available at: http://www.adr.org. The arbitrator must take into account the terms of this Agreement.
+
+The AAA will manage the arbitration. Outside the United States, Valve will select a neutral organization that provides arbitration services using these or similar rules. Arbitration may be conducted by presenting documents, by telephone, or in person in your country of residence or other place agreed upon by both parties.
+
+If your claim is $10,000 or less, Valve agrees to refund your filing fee and your share of the costs of the AAA arbitration, including your share of the arbitrator's compensation, unless the arbitrator determines that your claims are unfounded or abusive . Valve agrees not to recover its attorney's fees or other legal costs unless an arbitrator determines that your claims are unfounded or abusive. If your claim is in excess of $10,000 and the AAA Consumer Arbitration Rules do not apply, the costs of the AAA arbitration, including compensation to the arbitrator, will be shared between you and Valve in accordance with the AAA Commercial Arbitration Rules.
+
+D. Binding Individual Arbitration Only
+
+You and Valve agree not to put forward and not participate in collective or representative claims, common claims put forward by private duties, lawsuits related to informational activities, or in collective or representative arbitrations, even if the AAA procedures allow this. THE ARBITRATOR CAN ONLY RULE IN FAVOR OF A PRIVATE PARTY AND ONLY TO THE EXTENT OF THAT PARTY'S INDIVIDUAL ACTION. You and Valve also agree not to combine any action or arbitration with any other action or arbitration without the consent of all parties to this Agreement and the parties to any other action or arbitration.
+
+This Agreement prohibits collective or representative arbitrations. The Court has the exclusive right to decide on any application.
+
+E. What happens if the provision of Clause 11 is found to be illegal or unenforceable
+
+If any provision of Clause 11 (Dispute Resolution/Binding Arbitration/Class Action Waiver) is found to be illegal or unenforceable, the remaining provisions will remain in effect (provided that the arbitration award is made prior to commencement of any litigation), unless the recognition provisions unlawful or unenforceable would permit collective or representative arbitration. In such a situation, Clause 11 will be deemed completely unenforceable and the claim or dispute will be resolved in court.
+
+12. MISCELLANEOUS ⏶
+
+Except as otherwise expressly provided in this Agreement, if any provision of this Agreement is found by an arbitrator or in court to be illegal or unenforceable, it shall be enforced to the fullest extent possible and the remaining provisions of this Agreement shall remain in full force and effect. . Clause 11.E. governs cases where certain provisions of Clause 11 (Dispute Resolution/Binding Arbitration/Class Action Waiver) are found to be illegal or unenforceable. This Agreement, including any Subscription Terms, Terms of Use, Valve Privacy Policy, and Valve Limited Device Warranty Policy, constitutes the entire Agreement between the parties with respect to the matters set forth in this Agreement and supersedes all prior oral and written agreements. You agree that this Agreement, the rights under it and the remedies guaranteed by it apply only to the parties to the Agreement.
+
+Valve's obligations are governed by applicable applicable law, and Valve must act in accordance with the orders of the authorities, the judiciary and other authoritative orders, even if it is contrary to the terms of the agreement.
+
+You hereby agree to act in accordance with applicable import/export laws. You agree not to export the Contentand the Services and Devices, and prevent the use of your Account by persons residing in states that support terrorist organizations, in accordance with the prohibitions established by the US Export Regulatory Bureau. You hereby represent and warrant that you do not reside in the territory and are not a citizen of such state.
+
+This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were a Subscriber before the Revision Date, this version replaces the existing Agreement with Valve or Valve SARL on the effective date in accordance with Clause 8 above.</value>
   </data>
   <data name="attentionLabelContent" xml:space="preserve">
     <value>Attention</value>
@@ -135,8 +476,26 @@
   <data name="cancelBtnContent" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="commentsSectionLabelContent" xml:space="preserve">
+    <value>Comments section</value>
+  </data>
+  <data name="communityMenuItemDiscussionsLabelContent" xml:space="preserve">
+    <value>Discussions</value>
+  </data>
+  <data name="communityMenuLabelContent" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="darkThemeNameLabelContent" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="defaultThemeNameLabelContent" xml:space="preserve">
+    <value>Default</value>
+  </data>
   <data name="editProfileAboutLabelContent" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="editProfileAvatarInfoLabelContent" xml:space="preserve">
+    <value>Avatar</value>
   </data>
   <data name="editProfileBtnContent" xml:space="preserve">
     <value>Edit profile</value>
@@ -156,6 +515,18 @@
   <data name="editProfileNameLabelContent" xml:space="preserve">
     <value>Profile name</value>
   </data>
+  <data name="editProfilePrivacyInfoLabelContent" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="editProfileThemeInfoLabelContent" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="equipmentInfoDescLabelContent" xml:space="preserve">
+    <value>The inventory contains items received in games with the Office ware game manager exchange function. It also contains collectible Office ware game manager cards and gift copies of Office ware game manager products.</value>
+  </data>
+  <data name="equipmentLabelContent" xml:space="preserve">
+    <value>Equipment</value>
+  </data>
   <data name="errorLabelContent" xml:space="preserve">
     <value>Error</value>
   </data>
@@ -168,11 +539,17 @@
   <data name="exitLabelContent" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="friendsAccessLabelContent" xml:space="preserve">
+    <value>Friends only</value>
+  </data>
   <data name="friendsAndChatLabelContent" xml:space="preserve">
     <value>Friends and chat</value>
   </data>
   <data name="friendsLabelContent" xml:space="preserve">
     <value>Friends</value>
+  </data>
+  <data name="friendsListVisibleLabelContent" xml:space="preserve">
+    <value>Specify who in the Office ware game manager community can see your friends list on your profile.</value>
   </data>
   <data name="friendsMenuItemAddFriendLabelContent" xml:space="preserve">
     <value>Add friend</value>
@@ -182,7 +559,9 @@
   </data>
   <data name="fromLabelContent" xml:space="preserve">
     <value> from </value>
-    <comment> </comment>
+  </data>
+  <data name="gameInfoDescLabelContent" xml:space="preserve">
+    <value>This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and&amp;#10;play time. This setting also affects whether others can see your "In Game" status and the name&amp;#10;of the running game.</value>
   </data>
   <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
     <value>Login to another account</value>
@@ -191,6 +570,12 @@
     <value>Settings</value>
   </data>
   <data name="gamesLabelContent" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="gamesLibraryLabelContent" xml:space="preserve">
+    <value>Games library</value>
+  </data>
+  <data name="gamesMenuItemContent" xml:space="preserve">
     <value>Games</value>
   </data>
   <data name="gameUploadedLabelContent" xml:space="preserve">
@@ -202,8 +587,29 @@
   <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
     <value>About system</value>
   </data>
+  <data name="hiddenAccessLabelContent" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="hideGameTotalTimeLabelContent" xml:space="preserve">
+    <value>Hide total game time even when other game data is visible.</value>
+  </data>
+  <data name="hidePresentsLabelContent" xml:space="preserve">
+    <value>Hide Office ware game manager gifts even when other inventory items are visible.</value>
+  </data>
+  <data name="individualAccessLabelContent" xml:space="preserve">
+    <value>Individual</value>
+  </data>
   <data name="installBtnLabelContent" xml:space="preserve">
     <value>Install</value>
+  </data>
+  <data name="lastLaunchLabelContent" xml:space="preserve">
+    <value>Last launch was</value>
+  </data>
+  <data name="libraryMenuItemCollectionsLabelContent" xml:space="preserve">
+    <value>Collections</value>
+  </data>
+  <data name="libraryMenuItemDownloadsLabelContent" xml:space="preserve">
+    <value>Downloads</value>
   </data>
   <data name="libraryMenuItemHomeLabelContent" xml:space="preserve">
     <value>Home</value>
@@ -214,11 +620,26 @@
   <data name="logoutLabelContent" xml:space="preserve">
     <value>Logout from account</value>
   </data>
+  <data name="mainInfoDescLabelContent" xml:space="preserve">
+    <value>Your profile displays a description, friends list, badges, Office ware game manager level, storefronts, comments, and groups.</value>
+  </data>
+  <data name="midnightThemeNameLabelContent" xml:space="preserve">
+    <value>Midnight</value>
+  </data>
+  <data name="myProfileLabelContent" xml:space="preserve">
+    <value>My profile:</value>
+  </data>
+  <data name="newsUpdatedLabelContent" xml:space="preserve">
+    <value>News of updates</value>
+  </data>
   <data name="nextBtnContent" xml:space="preserve">
     <value>Next</value>
   </data>
   <data name="offersDialogTitleContent" xml:space="preserve">
     <value>Office Ware - Offers</value>
+  </data>
+  <data name="offlineLabelContent" xml:space="preserve">
+    <value>is offline</value>
   </data>
   <data name="playBtnLabelContent" xml:space="preserve">
     <value>Play</value>
@@ -226,23 +647,74 @@
   <data name="playerLabelContent" xml:space="preserve">
     <value>Player</value>
   </data>
+  <data name="pressHereForPrintLabelContent" xml:space="preserve">
+    <value>Press here for print</value>
+  </data>
+  <data name="profileMenuItemContentLabelContent" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="profileMenuItemIconsLabelContent" xml:space="preserve">
+    <value>Icons</value>
+  </data>
   <data name="profileMenuItemProfileLabelContent" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="publicAccessLabelContent" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="readAllAggrementLabelContent" xml:space="preserve">
+    <value>Read the entire agreement. You must accept&amp;#10;the terms of the Office ware Game Manager Subscription Agreement to continue.</value>
+  </data>
+  <data name="registerGameLabelContent" xml:space="preserve">
+    <value>To register a product with Office ware game manager and add it&amp;#10;to your library, enter here the activation key&amp;#10;included with your retail copy of the game or other&amp;#10;purchase from Office ware game manager. Click Next to continue.</value>
   </data>
   <data name="requireContinueLabelContent" xml:space="preserve">
     <value>Do you want to continue?</value>
   </data>
+  <data name="returnToProfileLabelContent" xml:space="preserve">
+    <value>Return to profile</value>
+  </data>
   <data name="saveBtnContent" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="screenShotsAndGalleryWorksLabelContent" xml:space="preserve">
+    <value>Screenshots and works in the workshop:</value>
+  </data>
+  <data name="selectColorPaletteForProfilePageLabelContent" xml:space="preserve">
+    <value>Select color palette for profile page</value>
+  </data>
+  <data name="selectImageAndBorderAvatarLabelContent" xml:space="preserve">
+    <value>Select image and avatar border</value>
+  </data>
   <data name="sendFriendRequestLabelContent" xml:space="preserve">
     <value>Send request</value>
+  </data>
+  <data name="setCustomElementsAccessLabelContent" xml:space="preserve">
+    <value>The following profile elements can be configured separately:</value>
+  </data>
+  <data name="spaceThemeNameLabelContent" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="steelThemeNameLabelContent" xml:space="preserve">
+    <value>Steel</value>
   </data>
   <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
     <value>Stats</value>
   </data>
   <data name="storeMenuLabelContent" xml:space="preserve">
     <value>Store</value>
+  </data>
+  <data name="summerThemeNameLabelContent" xml:space="preserve">
+    <value>Summer</value>
+  </data>
+  <data name="totalHoursLabelContent" xml:space="preserve">
+    <value>total hours</value>
+  </data>
+  <data name="updateNameOrAvatarLabelContent" xml:space="preserve">
+    <value>Update name or avatar</value>
+  </data>
+  <data name="uploadAvatarBtnContent" xml:space="preserve">
+    <value>Upload your avatar</value>
   </data>
   <data name="uploadGameErrorLabelContent" xml:space="preserve">
     <value>Can not upload game.</value>

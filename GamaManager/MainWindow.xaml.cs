@@ -2340,12 +2340,14 @@ namespace GamaManager
                 gameStatsInfo.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                 TextBlock gameStatsInfoHoursLabel = new TextBlock();
                 gameStatsInfoHoursLabel.Margin = new Thickness(0, 5, 0, 5);
-                string gameStatsInfoHoursLabelContent = myGameHours + " часов всего";
+                string totalHoursLabelContent = Properties.Resources.totalHoursLabelContent;
+                string gameStatsInfoHoursLabelContent = myGameHours + " " + totalHoursLabelContent;
                 gameStatsInfoHoursLabel.Text = gameStatsInfoHoursLabelContent;
                 gameStatsInfo.Children.Add(gameStatsInfoHoursLabel);
                 TextBlock gameStatsInfoLastLaunchLabel = new TextBlock();
                 gameStatsInfoLastLaunchLabel.Margin = new Thickness(0, 5, 0, 5);
-                string gameStatsInfoLastLaunchLabelContent = "Последний запуск " + myGameLastLaunchDate;
+                string lastLaunchLabelContent = Properties.Resources.lastLaunchLabelContent;
+                string gameStatsInfoLastLaunchLabelContent = lastLaunchLabelContent + " " + myGameLastLaunchDate;
                 gameStatsInfoLastLaunchLabel.Text = gameStatsInfoLastLaunchLabelContent;
                 gameStatsInfo.Children.Add(gameStatsInfoLastLaunchLabel);
                 gameStats.Children.Add(gameStatsInfo);
@@ -4063,9 +4065,16 @@ namespace GamaManager
         {
             if (isAppInit)
             {
+                bool isActivity = index == 1;
                 bool isProfile = index == 2;
                 bool isContent = index == 5;
-                if (isProfile)
+                bool isIcons = index == 6;
+                if (isActivity)
+                {
+                    mainControl.SelectedIndex = 13;
+                    AddHistoryRecord();
+                }
+                else if (isProfile)
                 {
                     object mainControlData = mainControl.DataContext;
                     string userId = ((string)(mainControlData));
@@ -4078,6 +4087,11 @@ namespace GamaManager
                 else if (isContent)
                 {
                     mainControl.SelectedIndex = 5;
+                    AddHistoryRecord();
+                }
+                else if (isIcons)
+                {
+                    mainControl.SelectedIndex = 12;
                     AddHistoryRecord();
                 }
                 ResetMenu();
@@ -4240,10 +4254,126 @@ namespace GamaManager
             StoreItemSelected(selectedIndex);
         }
 
+        public void GetNews()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/news/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        NewsResponseInfo myobj = (NewsResponseInfo)js.Deserialize(objText, typeof(NewsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<News> newsList = myobj.news;
+                            news.Children.Clear();
+                            foreach (News newsListItem in newsList)
+                            {
+                                string title = newsListItem.title;
+                                string content = newsListItem.content;
+                                string game = newsListItem.game;
+                                StackPanel newsItem = new StackPanel();
+                                newsItem.Margin = new Thickness(50);
+                                Border newsItemBody = new Border();
+                                newsItemBody.Margin = new Thickness(0, 15, 0, 15);
+                                newsItemBody.Background = System.Windows.Media.Brushes.DarkCyan;
+                                newsItemBody.CornerRadius = new CornerRadius(5);
+                                DockPanel newsItemBodyWrap = new DockPanel();
+                                StackPanel newsItemBodyWrapAside = new StackPanel();
+                                newsItemBodyWrapAside.Margin = new Thickness(25);
+                                StackPanel newsItemBodyWrapAsideHeader = new StackPanel();
+                                newsItemBodyWrapAsideHeader.Orientation = Orientation.Horizontal;
+                                Image newsItemBodyWrapAsideHeaderIcon = new Image();
+                                newsItemBodyWrapAsideHeaderIcon.HorizontalAlignment = HorizontalAlignment.Right;
+                                newsItemBodyWrapAsideHeaderIcon.Margin = new Thickness(15);
+                                newsItemBodyWrapAsideHeaderIcon.Width = 25;
+                                newsItemBodyWrapAsideHeaderIcon.Height = 25;
+                                newsItemBodyWrapAsideHeaderIcon.BeginInit();
+                                newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                newsItemBodyWrapAsideHeaderIcon.EndInit();
+                                newsItemBodyWrapAsideHeaderIcon.ImageFailed += SetDefaultThumbnailHandler;
+                                newsItemBodyWrapAsideHeader.Children.Add(newsItemBodyWrapAsideHeaderIcon);
+                                TextBlock newsItemBodyWrapAsideHeaderLabel = new TextBlock();
+                                newsItemBodyWrapAsideHeaderLabel.VerticalAlignment = VerticalAlignment.Center;
+                                newsItemBodyWrapAsideHeaderLabel.Text = "Название игры";
+                                newsItemBodyWrapAsideHeader.Children.Add(newsItemBodyWrapAsideHeaderLabel);
+                                newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideHeader);
+                                TextBlock newsItemBodyWrapAsideTitleLabel = new TextBlock();
+                                newsItemBodyWrapAsideTitleLabel.FontSize = 24;
+                                newsItemBodyWrapAsideTitleLabel.Foreground = System.Windows.Media.Brushes.White;
+                                newsItemBodyWrapAsideTitleLabel.Text = "Заголовок новости";
+                                newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideTitleLabel);
+                                TextBlock newsItemBodyWrapAsideDateLabel = new TextBlock();
+                                newsItemBodyWrapAsideDateLabel.Foreground = System.Windows.Media.Brushes.White;
+                                newsItemBodyWrapAsideDateLabel.Text = "Дата публикации новости";
+                                newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideDateLabel);
+                                TextBlock newsItemBodyWrapAsideContentLabel = new TextBlock();
+                                newsItemBodyWrapAsideContentLabel.Foreground = System.Windows.Media.Brushes.White;
+                                newsItemBodyWrapAsideContentLabel.Text = "Контент новости";
+                                newsItemBodyWrapAside.Children.Add(newsItemBodyWrapAsideContentLabel);
+                                newsItemBodyWrap.Children.Add(newsItemBodyWrapAside);
+                                Image newsItemBodyWrapImg = new Image();
+                                newsItemBodyWrapImg.HorizontalAlignment = HorizontalAlignment.Right;
+                                newsItemBodyWrapImg.Margin = new Thickness(15);
+                                newsItemBodyWrapImg.Width = 200;
+                                newsItemBodyWrapImg.Height = 200;
+                                newsItemBodyWrapImg.ImageFailed += SetDefaultThumbnailHandler;
+                                newsItemBodyWrapImg.BeginInit();
+                                newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                newsItemBodyWrapImg.EndInit();
+                                newsItemBodyWrap.Children.Add(newsItemBodyWrapImg);
+                                newsItemBody.Child = newsItemBodyWrap;
+                                newsItem.Children.Add(newsItemBody);
+                                StackPanel newsItemFooter = new StackPanel();
+                                newsItemFooter.Orientation = Orientation.Horizontal;
+                                newsItemFooter.HorizontalAlignment = HorizontalAlignment.Right;
+                                PackIcon newsItemFooterIcon = new PackIcon();
+                                newsItemFooterIcon.Kind = PackIconKind.ThumbUp;
+                                newsItemFooterIcon.Margin = new Thickness(5, 0, 5, 0);
+                                TextBlock newsItemFooterLabel = new TextBlock();
+                                newsItemFooterLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newsItemFooterLabel.Text = "0";
+                                newsItemFooterIcon = new PackIcon();
+                                newsItemFooterIcon.Kind = PackIconKind.ThumbUp;
+                                newsItemFooterIcon.Margin = new Thickness(5, 0, 5, 0);
+                                newsItemFooterLabel = new TextBlock();
+                                newsItemFooterLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newsItemFooterLabel.Text = "0";
+                                newsItemFooterLabel = new TextBlock();
+                                newsItemFooterLabel.Margin = new Thickness(5, 0, 5, 0);
+                                newsItemFooterLabel.Text = "0";
+                                newsItem.Children.Add(newsItemFooter);
+                                news.Children.Add(newsItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void StoreItemSelected(int index)
         {
+            bool isNews = index == 5;
             bool isGamesStats = index == 6;
-            if (isGamesStats)
+            if (isNews)
+            {
+                mainControl.SelectedIndex = 14;
+                GetNews();
+                AddHistoryRecord();
+            }
+            else if (isGamesStats)
             {
                 mainControl.SelectedIndex = 3;
                 GetGamesStats();
@@ -6468,5 +6598,19 @@ namespace GamaManager
         public DateTime date;
         public string user;
     }
+
+    class NewsResponseInfo {
+        public string status;
+        public List<News> news;
+    }
+
+    class News
+    {
+        public string game;
+        public string title;
+        public string content;
+        public DateTime date;
+    }
+
 
 }

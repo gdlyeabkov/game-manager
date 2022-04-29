@@ -1,13 +1,16 @@
 ﻿
 
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AcceptExitDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ActivationGameDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddCollectiionDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddExternalGameDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddFriendDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ChatDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\DownloadGameDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\FriendNotificationsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\FriendsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\FriendsSettingsDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\GameSettingsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\LoginDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\OffersDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\PlayerDialog.xaml;;

@@ -61,11 +61,87 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Accept.
+        /// </summary>
+        public static string acceptBtnContent {
+            get {
+                return ResourceManager.GetString("acceptBtnContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Access to game info:.
+        /// </summary>
+        public static string accessToGameInfoLabelContent {
+            get {
+                return ResourceManager.GetString("accessToGameInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Access to main info:.
+        /// </summary>
+        public static string accessToMainInfoLabelContent {
+            get {
+                return ResourceManager.GetString("accessToMainInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Activate.
+        /// </summary>
+        public static string activateGameLabelContent {
+            get {
+                return ResourceManager.GetString("activateGameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Product activation.
+        /// </summary>
+        public static string activationTitleContent {
+            get {
+                return ResourceManager.GetString("activationTitleContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Add external game to my library.
+        /// </summary>
+        public static string addExternalGameToMyLibraryLabelContent {
+            get {
+                return ResourceManager.GetString("addExternalGameToMyLibraryLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Add friend.
         /// </summary>
         public static string addFriendDialogTitleContent {
             get {
                 return ResourceManager.GetString("addFriendDialogTitleContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Office ware game manager® SUBSCRIBER AGREEMENT
+        ///
+        ///Content:
+        ///
+        ///Registration as a subscriber; Terms of Use; your account
+        ///Licenses
+        ///Billing, payments and other subscriptions
+        ///Online Code of Conduct, Game Cheating and Other Illegal Practices
+        ///Third party content
+        ///User Content
+        ///Denial of responsibility; limitation of liability; lack of warranty obligations; limited warranty and agreement
+        ///Making changes to the agreement
+        ///Duration of the agreement and terms of termination
+        ///Governing Law/Mediation/Jurisdiction/Counsel&apos;s Costs [остаток строки не уместился]&quot;;.
+        /// </summary>
+        public static string aggrementBoxContent {
+            get {
+                return ResourceManager.GetString("aggrementBoxContent", resourceCulture);
             }
         }
         
@@ -115,11 +191,65 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Comments section.
+        /// </summary>
+        public static string commentsSectionLabelContent {
+            get {
+                return ResourceManager.GetString("commentsSectionLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Discussions.
+        /// </summary>
+        public static string communityMenuItemDiscussionsLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuItemDiscussionsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Community.
+        /// </summary>
+        public static string communityMenuLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Dark.
+        /// </summary>
+        public static string darkThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("darkThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Default.
+        /// </summary>
+        public static string defaultThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("defaultThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на About.
         /// </summary>
         public static string editProfileAboutLabelContent {
             get {
                 return ResourceManager.GetString("editProfileAboutLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Avatar.
+        /// </summary>
+        public static string editProfileAvatarInfoLabelContent {
+            get {
+                return ResourceManager.GetString("editProfileAvatarInfoLabelContent", resourceCulture);
             }
         }
         
@@ -178,6 +308,42 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Privacy.
+        /// </summary>
+        public static string editProfilePrivacyInfoLabelContent {
+            get {
+                return ResourceManager.GetString("editProfilePrivacyInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Theme.
+        /// </summary>
+        public static string editProfileThemeInfoLabelContent {
+            get {
+                return ResourceManager.GetString("editProfileThemeInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The inventory contains items received in games with the Office ware game manager exchange function. It also contains collectible Office ware game manager cards and gift copies of Office ware game manager products..
+        /// </summary>
+        public static string equipmentInfoDescLabelContent {
+            get {
+                return ResourceManager.GetString("equipmentInfoDescLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Equipment.
+        /// </summary>
+        public static string equipmentLabelContent {
+            get {
+                return ResourceManager.GetString("equipmentLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error.
         /// </summary>
         public static string errorLabelContent {
@@ -214,6 +380,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Friends only.
+        /// </summary>
+        public static string friendsAccessLabelContent {
+            get {
+                return ResourceManager.GetString("friendsAccessLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Friends and chat.
         /// </summary>
         public static string friendsAndChatLabelContent {
@@ -237,6 +412,15 @@ namespace GamaManager.Properties {
         public static string friendsListLabelContent {
             get {
                 return ResourceManager.GetString("friendsListLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Specify who in the Office ware game manager community can see your friends list on your profile..
+        /// </summary>
+        public static string friendsListVisibleLabelContent {
+            get {
+                return ResourceManager.GetString("friendsListVisibleLabelContent", resourceCulture);
             }
         }
         
@@ -268,6 +452,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and&amp;#10;play time. This setting also affects whether others can see your &quot;In Game&quot; status and the name&amp;#10;of the running game..
+        /// </summary>
+        public static string gameInfoDescLabelContent {
+            get {
+                return ResourceManager.GetString("gameInfoDescLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Login to another account.
         /// </summary>
         public static string gameManagerMenuItemLoginToAnotherAccountLabelContent {
@@ -291,6 +484,24 @@ namespace GamaManager.Properties {
         public static string gamesLabelContent {
             get {
                 return ResourceManager.GetString("gamesLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Games library.
+        /// </summary>
+        public static string gamesLibraryLabelContent {
+            get {
+                return ResourceManager.GetString("gamesLibraryLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Games.
+        /// </summary>
+        public static string gamesMenuItemContent {
+            get {
+                return ResourceManager.GetString("gamesMenuItemContent", resourceCulture);
             }
         }
         
@@ -322,11 +533,74 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Hidden.
+        /// </summary>
+        public static string hiddenAccessLabelContent {
+            get {
+                return ResourceManager.GetString("hiddenAccessLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Hide total game time even when other game data is visible..
+        /// </summary>
+        public static string hideGameTotalTimeLabelContent {
+            get {
+                return ResourceManager.GetString("hideGameTotalTimeLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Hide Office ware game manager gifts even when other inventory items are visible..
+        /// </summary>
+        public static string hidePresentsLabelContent {
+            get {
+                return ResourceManager.GetString("hidePresentsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Individual.
+        /// </summary>
+        public static string individualAccessLabelContent {
+            get {
+                return ResourceManager.GetString("individualAccessLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Install.
         /// </summary>
         public static string installBtnLabelContent {
             get {
                 return ResourceManager.GetString("installBtnLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Last launch was.
+        /// </summary>
+        public static string lastLaunchLabelContent {
+            get {
+                return ResourceManager.GetString("lastLaunchLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Collections.
+        /// </summary>
+        public static string libraryMenuItemCollectionsLabelContent {
+            get {
+                return ResourceManager.GetString("libraryMenuItemCollectionsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Downloads.
+        /// </summary>
+        public static string libraryMenuItemDownloadsLabelContent {
+            get {
+                return ResourceManager.GetString("libraryMenuItemDownloadsLabelContent", resourceCulture);
             }
         }
         
@@ -358,6 +632,42 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Your profile displays a description, friends list, badges, Office ware game manager level, storefronts, comments, and groups..
+        /// </summary>
+        public static string mainInfoDescLabelContent {
+            get {
+                return ResourceManager.GetString("mainInfoDescLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Midnight.
+        /// </summary>
+        public static string midnightThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("midnightThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на My profile:.
+        /// </summary>
+        public static string myProfileLabelContent {
+            get {
+                return ResourceManager.GetString("myProfileLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на News of updates.
+        /// </summary>
+        public static string newsUpdatedLabelContent {
+            get {
+                return ResourceManager.GetString("newsUpdatedLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Next.
         /// </summary>
         public static string nextBtnContent {
@@ -372,6 +682,15 @@ namespace GamaManager.Properties {
         public static string offersDialogTitleContent {
             get {
                 return ResourceManager.GetString("offersDialogTitleContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на is offline.
+        /// </summary>
+        public static string offlineLabelContent {
+            get {
+                return ResourceManager.GetString("offlineLabelContent", resourceCulture);
             }
         }
         
@@ -403,11 +722,65 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Press here for print.
+        /// </summary>
+        public static string pressHereForPrintLabelContent {
+            get {
+                return ResourceManager.GetString("pressHereForPrintLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Content.
+        /// </summary>
+        public static string profileMenuItemContentLabelContent {
+            get {
+                return ResourceManager.GetString("profileMenuItemContentLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Icons.
+        /// </summary>
+        public static string profileMenuItemIconsLabelContent {
+            get {
+                return ResourceManager.GetString("profileMenuItemIconsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Profile.
         /// </summary>
         public static string profileMenuItemProfileLabelContent {
             get {
                 return ResourceManager.GetString("profileMenuItemProfileLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Public.
+        /// </summary>
+        public static string publicAccessLabelContent {
+            get {
+                return ResourceManager.GetString("publicAccessLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Read the entire agreement. You must accept&amp;#10;the terms of the Office ware Game Manager Subscription Agreement to continue..
+        /// </summary>
+        public static string readAllAggrementLabelContent {
+            get {
+                return ResourceManager.GetString("readAllAggrementLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        public static string registerGameLabelContent {
+            get {
+                return ResourceManager.GetString("registerGameLabelContent", resourceCulture);
             }
         }
         
@@ -421,6 +794,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Return to profile.
+        /// </summary>
+        public static string returnToProfileLabelContent {
+            get {
+                return ResourceManager.GetString("returnToProfileLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save.
         /// </summary>
         public static string saveBtnContent {
@@ -430,11 +812,65 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Screenshots and works in the workshop:.
+        /// </summary>
+        public static string screenShotsAndGalleryWorksLabelContent {
+            get {
+                return ResourceManager.GetString("screenShotsAndGalleryWorksLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select color palette for profile page.
+        /// </summary>
+        public static string selectColorPaletteForProfilePageLabelContent {
+            get {
+                return ResourceManager.GetString("selectColorPaletteForProfilePageLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select image and avatar border.
+        /// </summary>
+        public static string selectImageAndBorderAvatarLabelContent {
+            get {
+                return ResourceManager.GetString("selectImageAndBorderAvatarLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Send request.
         /// </summary>
         public static string sendFriendRequestLabelContent {
             get {
                 return ResourceManager.GetString("sendFriendRequestLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The following profile elements can be configured separately:.
+        /// </summary>
+        public static string setCustomElementsAccessLabelContent {
+            get {
+                return ResourceManager.GetString("setCustomElementsAccessLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Space.
+        /// </summary>
+        public static string spaceThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("spaceThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Steel.
+        /// </summary>
+        public static string steelThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("steelThemeNameLabelContent", resourceCulture);
             }
         }
         
@@ -453,6 +889,42 @@ namespace GamaManager.Properties {
         public static string storeMenuLabelContent {
             get {
                 return ResourceManager.GetString("storeMenuLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Summer.
+        /// </summary>
+        public static string summerThemeNameLabelContent {
+            get {
+                return ResourceManager.GetString("summerThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на total hours.
+        /// </summary>
+        public static string totalHoursLabelContent {
+            get {
+                return ResourceManager.GetString("totalHoursLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Update name or avatar.
+        /// </summary>
+        public static string updateNameOrAvatarLabelContent {
+            get {
+                return ResourceManager.GetString("updateNameOrAvatarLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Upload your avatar.
+        /// </summary>
+        public static string uploadAvatarBtnContent {
+            get {
+                return ResourceManager.GetString("uploadAvatarBtnContent", resourceCulture);
             }
         }
         

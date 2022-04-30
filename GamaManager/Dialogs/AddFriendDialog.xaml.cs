@@ -259,8 +259,9 @@ namespace GamaManager.Dialogs
                                         SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                         List<Game> currentGames = loadedContent.games;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
-                                        Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> updatedFriends = currentFriends;
+                                        Settings currentSettings = loadedContent.settings;
+                                        List<string> currentCollections = loadedContent.collections;
                                         updatedFriends.Add(new FriendSettings()
                                         {
                                             id = friendId,
@@ -276,7 +277,8 @@ namespace GamaManager.Dialogs
                                         {
                                             games = currentGames,
                                             friends = updatedFriends,
-                                            settings = currentSettings
+                                            settings = currentSettings,
+                                            collections = currentCollections
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         string eventData = currentUserId + "|" + friendId;

@@ -578,21 +578,151 @@
                                         Text="Имя пользователя"    
                                     />
                                     <TextBlock
-                                        x:Name="userProfileCountryLabel"
+                                        x:Name="userProfileAboutLabel"
                                         Margin="15"
                                         FontSize="14"
                                         Text="Россия"    
                                     />
                                 </StackPanel>
-                                <Button
-                                    x:Name="editProfileBtn"
-                                    Margin="25"
-                                    HorizontalAlignment="Right"
-                                    Width="175"
-                                    Height="35"
-                                    Content="{x:Static p:Resources.editProfileBtnContent}"
-                                    Click="OpenEditProfileHandler"
-                                />
+                                <StackPanel
+                                    HorizontalAlignment="Right"    
+                                >
+                                    <TextBlock
+                                        FontSize="20"
+                                        Text="Уровень 0"
+                                        Margin="25 15"
+                                    />
+                                    <Button
+                                        x:Name="editProfileBtn"
+                                        Margin="25 15"
+                                        HorizontalAlignment="Right"
+                                        Width="175"
+                                        Height="35"
+                                        Content="{x:Static p:Resources.editProfileBtnContent}"
+                                        Click="OpenEditProfileHandler"
+                                    />
+                                    <StackPanel
+                                        x:Name="otherUserBtns"
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Button
+                                            x:Name="openChatBtn"
+                                            Margin="25 0"
+                                            HorizontalAlignment="Right"
+                                            Width="175"
+                                            Height="35"
+                                            Content="Написать"
+                                            Click="OpenChatHandler"
+                                        />
+                                        <Button
+                                            Margin="25 0"
+                                            HorizontalAlignment="Right"
+                                            Width="50"
+                                            Height="35"
+                                            Content="..."
+                                            Click="OpenFriendProfilePopupHandler"
+                                        />
+                                        <Popup
+                                            x:Name="friendProfilePopup"
+                                            Placement="Mouse"
+                                            StaysOpen="False"
+                                            Width="250"
+                                            Height="265"
+                                        >
+                                            <Popup.Child>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                >
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="GroupAdd"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Пригласить в группу"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="Heart"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Отписаться"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="Edit"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Добавить ник"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="Sync"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Предложить обмен"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="Block"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Добавить в черный список"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="Flag"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Пожаловаться"    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="10"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <materialDesign:PackIcon
+                                                            Kind="User"
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15 0"
+                                                            Text="Удалить из друзей"
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Popup.Child>
+                                        </Popup>
+                                    </StackPanel>
+                                </StackPanel>
                             </DockPanel>
                             <DockPanel>
                                 <DockPanel
@@ -604,6 +734,18 @@
                                         DockPanel.Dock="Right"
                                         Width="350"
                                     >
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                x:Name="userProfileStatusLabel"
+                                                Margin="10 0"
+                                                Text="{x:Static p:Resources.offlineLabelContent}"    
+                                                FontSize="20"
+                                                Foreground="White"
+                                            />
+                                        </StackPanel>
                                         <StackPanel
                                             x:Name="userProfileDetailsGames"
                                             Margin="0 10"
@@ -3278,7 +3420,7 @@
                                                 Orientation="Horizontal"
                                                 Height="35"    
                                                 DataContext="0"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3296,7 +3438,7 @@
                                                 Orientation="Horizontal"
                                                 Height="35"    
                                                 DataContext="1"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3314,7 +3456,7 @@
                                                 Orientation="Horizontal"
                                                 Height="35"    
                                                 DataContext="2"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3332,7 +3474,7 @@
                                                 Orientation="Horizontal"
                                                 Height="35"
                                                 DataContext="3"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3349,8 +3491,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="0"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="4"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3367,8 +3509,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="1"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="5"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3390,8 +3532,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="0"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="6"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3408,8 +3550,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="1"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="7"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3432,8 +3574,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="0"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="8"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3450,8 +3592,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="1"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="9"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3468,8 +3610,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"    
-                                                DataContext="2"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="10"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3486,8 +3628,8 @@
                                             <StackPanel
                                                 Orientation="Horizontal"
                                                 Height="35"
-                                                DataContext="3"
-                                                MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                DataContext="11"
+                                                MouseLeftButtonUp="SelectFriendSettingsItemHandler"
                                             >
                                                 <materialDesign:PackIcon
                                                     Foreground="White"
@@ -3506,6 +3648,7 @@
                                     </ScrollViewer>
                                     <TabControl
                                         x:Name="friendsSettingsControl"
+                                        SelectionChanged="FriendsSettingsControlItemSelectedHandler"
                                     >
                                         <TabItem
                                             Visibility="Collapsed"    
@@ -3516,11 +3659,13 @@
                                                     Orientation="Horizontal"    
                                                 >
                                                     <TextBlock
+                                                        x:Name="yourCountOnlineFriendsLabel"
                                                         FontSize="16"
                                                         Text="Ваши друзья 0/"    
                                                         VerticalAlignment="Center"
                                                     />
                                                     <TextBlock
+                                                        x:Name="yourCountFriendsLabel"
                                                         Text="0"    
                                                         VerticalAlignment="Center"
                                                     />
@@ -3555,7 +3700,9 @@
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <TextBox
-                                                    Height="35"                                                    
+                                                    x:Name="friendBox"
+                                                    Height="35"
+                                                    TextChanged="GetFriendsHandler"
                                                 >
                                                     <TextBox.Resources>
                                                         <VisualBrush
@@ -3600,126 +3747,361 @@
                                                 />
                                                 <WrapPanel
                                                     x:Name="onlineFriendsList"    
-                                                >
-                                                    <StackPanel
-                                                        Margin="15"
-                                                        Width="250"
-                                                        Height="50"
-                                                        Orientation="Horizontal"
-                                                        Background="DarkCyan"    
-                                                    >
-                                                        <Image
-                                                            Width="50"    
-                                                            Height="50"    
-                                                            ImageFailed="SetDefautAvatarHandler"
-                                                        >
-                                                            <Image.Source>
-                                                                <BitmapImage
-                                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                                />
-                                                            </Image.Source>
-                                                        </Image>
-                                                        <Separator
-                                                            BorderThickness="5"
-                                                            BorderBrush="SkyBlue"
-                                                        >
-                                                            <Separator.Style>
-                                                                <Style
-                                                                   TargetType="{x:Type Separator}"
-                                                                   BasedOn="{StaticResource {x:Type Separator}}"
-                                                                >
-                                                                    <Setter Property="Margin" Value="6,0,6,0"/>
-                                                                    <Setter Property="LayoutTransform">
-                                                                        <Setter.Value>
-                                                                            <TransformGroup>
-                                                                                <TransformGroup.Children>
-                                                                                    <TransformCollection>
-                                                                                        <RotateTransform Angle="90"/>
-                                                                                    </TransformCollection>
-                                                                                </TransformGroup.Children>
-                                                                            </TransformGroup>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </Style>
-                                                            </Separator.Style>
-                                                        </Separator>
-                                                        <TextBlock
-                                                            Margin="10 0"
-                                                            VerticalAlignment="Center"
-                                                            Text="Пользователь"    
-                                                        />
-                                                    </StackPanel>
-                                                </WrapPanel>
+                                                />
                                                 <TextBlock
                                                     Margin="15"
                                                     Text="{x:Static p:Resources.offlineLabelContent}"
                                                 />
                                                 <WrapPanel
                                                     x:Name="offlineFriendsList"    
+                                                />
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"    
+                                        >
+                                            <StackPanel>
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
                                                 >
-                                                    <StackPanel
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Приглашения в друзья"
                                                         Margin="15"
-                                                        Width="250"
-                                                        Height="50"
-                                                        Orientation="Horizontal"
-                                                        Background="DarkCyan"    
+                                                    />
+                                                    <TextBox
+                                                        x:Name="friendRequestsForMeBox"
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsForMeHandler"
                                                     >
-                                                        <Image
-                                                            Width="50"    
-                                                            Height="50"    
-                                                            ImageFailed="SetDefautAvatarHandler"
-                                                        >
-                                                            <Image.Source>
-                                                                <BitmapImage
-                                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                                />
-                                                            </Image.Source>
-                                                        </Image>
-                                                        <Separator
-                                                            BorderBrush="LightGray"
-                                                            BorderThickness="75"
-                                                        >
-                                                            <Separator.Style>
-                                                                <Style
-                                                                   TargetType="{x:Type Separator}"
-                                                                   BasedOn="{StaticResource {x:Type Separator}}"
-                                                                >
-                                                                    <Setter Property="Margin" Value="6,0,6,0"/>
-                                                                    <Setter Property="LayoutTransform">
-                                                                        <Setter.Value>
-                                                                            <TransformGroup>
-                                                                                <TransformGroup.Children>
-                                                                                    <TransformCollection>
-                                                                                        <RotateTransform Angle="90"/>
-                                                                                    </TransformCollection>
-                                                                                </TransformGroup.Children>
-                                                                            </TransformGroup>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </Style>
-                                                            </Separator.Style>
-                                                        </Separator>
-                                                        <TextBlock
-                                                            Margin="10 0"
-                                                            VerticalAlignment="Center"
-                                                            Text="Пользователь"    
-                                                        />
-                                                    </StackPanel>
-                                                </WrapPanel>
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск приглашений по имени"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button
+                                                        Margin="15 0"
+                                                        HorizontalAlignment="Right"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Отклонить все"    
+                                                        Click="RejectFriendRequestsHandler"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="friendRequestsForMe"
+                                                    Background="DarkBlue"    
+                                                />
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Отправленные приглашения"
+                                                        Margin="15"
+                                                    />
+                                                    <TextBox
+                                                        x:Name="friendRequestsFromMeBox"
+                                                        HorizontalAlignment="Left"
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsFromMeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск приглашений по имени"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="friendRequestsFromMe"
+                                                    Background="DarkBlue"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
-                                            Visibility="Collapsed"    
+                                            Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Черный список"
+                                                        Margin="15"
+                                                    />
+                                                    <TextBox
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск в черном списке по имени"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button
+                                                        Margin="15 0"
+                                                        HorizontalAlignment="Right"
+                                                        Width="275"
+                                                        Height="25"
+                                                        Content="Управление черным списком"    
+                                                        Click="OpenBlackListManagementHandler"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="blackList"
+                                                    Background="DarkBlue"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
-                                            Visibility="Collapsed"    
+                                            Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Недавно играли вместе"
+                                                        Margin="15"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    Background="DarkBlue"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Foreground="White"
+                                                        Text="Некоторые из игр в Office ware game manager запоминают пользователей, с которыми вы играли. Здесь показаны недавние сессии, найденные при помощи подбора&#10;игр Office ware game manager."
+                                                    />
+                                                    <TextBox
+                                                        Margin="25"
+                                                        IsReadOnly="True"
+                                                        Height="50"
+                                                        Width="750"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="50"
+                                                                            Width="750"
+                                                                            Text="Ваша истоирия запуска игр на этот день пуста."
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </TabItem>
+                                        <TabItem
+                                            Visibility="Collapsed"        
+                                        >
+                                            <StackPanel>
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Модераторы трансляции"
+                                                        Margin="15"
+                                                    />
+                                                    <TextBox
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск по имени"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button
+                                                        Margin="15 0"
+                                                        HorizontalAlignment="Right"
+                                                        Width="275"
+                                                        Height="25"
+                                                        Content="Управление модераторами"    
+                                                        Click="OpenBlackListManagementHandler"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="moderators"
+                                                    Background="DarkBlue"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -3740,35 +4122,126 @@
                                             Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Ваши группы"
+                                                        Margin="15"
+                                                    />
+                                                    <TextBox
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск групп по названию"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="groups"
+                                                    Background="DarkBlue"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
                                             Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
-                                            </StackPanel>
-                                        </TabItem>
-                                        <TabItem
-                                            Visibility="Collapsed"        
-                                        >
-                                            <StackPanel>
-
-                                            </StackPanel>
-                                        </TabItem>
-                                        <TabItem
-                                            Visibility="Collapsed"        
-                                        >
-                                            <StackPanel>
-
-                                            </StackPanel>
-                                        </TabItem>
-                                        <TabItem
-                                            Visibility="Collapsed"        
-                                        >
-                                            <StackPanel>
-
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Приглашения в группы"
+                                                        Margin="15"
+                                                    />
+                                                    <TextBox
+                                                        Width="275"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="25"
+                                                                            Width="275"
+                                                                            Text="Поиск групп по названию"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </DockPanel>
+                                                <StackPanel
+                                                    x:Name="myGroupRequests"
+                                                    Background="DarkBlue"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -3792,6 +4265,31 @@
                                 Margin="25"    
                             >
                             </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Найти группы"    
+                                TextAlignment="Center"
+                                Margin="0 15"
+                                FontSize="20"
+                            />
+                            <TextBox
+                                Height="25"
+                            />
+                            <StackPanel
+                                x:Name="searchedGroups"    
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

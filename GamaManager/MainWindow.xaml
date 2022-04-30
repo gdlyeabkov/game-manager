@@ -740,6 +740,7 @@
                                                         <TextBlock
                                                             Margin="15 0"
                                                             Text="Удалить из друзей"
+                                                            MouseLeftButtonUp="RemoveFriendHandler"
                                                         />
                                                     </StackPanel>
                                                 </StackPanel>
@@ -4443,6 +4444,74 @@
                             />
                             <StackPanel
                                 x:Name="searchedGroups"    
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Создание группу"    
+                                TextAlignment="Center"
+                                Margin="0 15"
+                                FontSize="20"
+                            />
+                            <TextBox
+                                x:Name="groupNameBox"
+                                Margin="0 15"
+                                Height="25"
+                                Width="275"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Width="275"
+                                                    Text="Название группы"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <Button
+                                Height="25"
+                                Width="125"
+                                Content="Добавить группу"    
+                                Click="AddGroupHandler"
                             />
                         </StackPanel>
                     </DockPanel>

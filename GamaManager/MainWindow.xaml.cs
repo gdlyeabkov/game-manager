@@ -1111,7 +1111,7 @@ namespace GamaManager
             object rawBtnData = btn.DataContext;
             Dictionary<String, Object> btnData = ((Dictionary<String, Object>)(rawBtnData));
             string groupId = ((string)(btnData["groupId"]));
-            string userId = ((string)(btnData["userd"]));
+            string userId = ((string)(btnData["userId"]));
             string requestId = ((string)(btnData["requestId"]));
             Popup request = ((Popup)(btnData["request"]));
             RejectGroupRequest(groupId, userId, requestId, request);
@@ -1151,10 +1151,10 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-                                        CloseFriendRequest(request);
+                                        CloseGroupRequest(request);
                                         User friend = myobj.user;
                                         string friendLogin = friend.login;
-                                        string msgContent = "Вы отклонили приглашение в друзья";
+                                        string msgContent = "Вы отклонили приглашение в группу";
                                         MessageBox.Show(msgContent, "Внимание");
                                     }
                                 }
@@ -1174,6 +1174,76 @@ namespace GamaManager
             }
         }
 
+        public void RemoveFriendHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveFriend();
+        }
+
+        public void RemoveFriend ()
+        {
+            try
+            {
+                string friendId = cachedUserProfileId;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                            Settings currentSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
+                            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                            {
+                                return friend.id == friendId;
+                            }).ToList();
+                            int countCachedFriends = cachedFriends.Count;
+                            bool isCachedFriendsExists = countCachedFriends >= 1;
+                            if (isCachedFriendsExists)
+                            {
+                                FriendSettings cachedFriend = cachedFriends[0];
+                                updatedFriends.Remove(cachedFriend);
+                                string savedContent = js.Serialize(new SavedContent
+                                {
+                                    games = currentGames,
+                                    friends = updatedFriends,
+                                    settings = currentSettings,
+                                    collections = currentCollections
+                                });
+                                File.WriteAllText(saveDataFilePath, savedContent);
+                                mainControl.DataContext = currentUserId;
+                                mainControl.SelectedIndex = 0;
+                                GetFriendsSettings();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
 
         public void CloseGroupRequestHandler (object sender, RoutedEventArgs e)
         {
@@ -1185,7 +1255,7 @@ namespace GamaManager
 
         public void CloseGroupRequest(Popup request)
         {
-            friendRequests.Children.Remove(request);
+            groupRequests.Children.Remove(request);
         }
 
 
@@ -5440,7 +5510,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -5459,7 +5529,7 @@ namespace GamaManager
                             HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                             {
                                 using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                 {
@@ -5474,6 +5544,7 @@ namespace GamaManager
                                         Group group = myInnerObj.group;
                                         string groupName = group.name;
                                         string msgContent = "Вы были успешно добавлены в группу " + groupName;
+                                        request.IsOpen = false;
                                         MessageBox.Show(msgContent, "Внимание");
                                     }
                                 }
@@ -8031,9 +8102,14 @@ namespace GamaManager
         {
             int selectedIndex = friendsSettingsControl.SelectedIndex;
             bool isGroups = selectedIndex == 10;
+            bool isAddGroup = selectedIndex == 11;
             if (isGroups)
             {
                 mainControl.SelectedIndex = 17;
+            }
+            else if (isAddGroup)
+            {
+                mainControl.SelectedIndex = 18;
             }
         }
 
@@ -8411,6 +8487,44 @@ namespace GamaManager
             Dialogs.AddGroupRequestDialog dialog = new Dialogs.AddGroupRequestDialog(currentUserId, friendId);
             dialog.Show();
             friendProfilePopup.IsOpen = false;
+        }
+
+        private void AddGroupHandler (object sender, RoutedEventArgs e)
+        {
+            AddGroup();
+        }
+
+        public void AddGroup ()
+        {
+            try
+            {
+                string groupNameBoxContent = groupNameBox.Text;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?name=" + groupNameBoxContent + "&id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            MessageBox.Show("Группа была создана", "Внимание");
+                            groupNameBox.Text = "";
+                            GetFriendsSettings();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
     }

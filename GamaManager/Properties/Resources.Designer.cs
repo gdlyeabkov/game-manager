@@ -515,6 +515,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Groups.
+        /// </summary>
+        public static string groupsLabelContent {
+            get {
+                return ResourceManager.GetString("groupsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Help.
         /// </summary>
         public static string helpMenuItemLabelContent {

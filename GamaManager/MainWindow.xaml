@@ -41,6 +41,10 @@
             x:Name="friendRequests"    
             DockPanel.Dock="Top"
         />
+        <StackPanel
+            x:Name="groupRequests"    
+            DockPanel.Dock="Top"
+        />
         <Menu
             DockPanel.Dock="Top"    
         >
@@ -274,10 +278,10 @@
                         Content="{x:Static p:Resources.profileMenuItemProfileLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Друзья"    
+                        Content="{x:Static p:Resources.friendsLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Группы"    
+                        Content="{x:Static p:Resources.groupsLabelContent}"    
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.profileMenuItemContentLabelContent}"
@@ -465,56 +469,75 @@
                     >
                         <StackPanel
                             x:Name="activeGame"
-                            Orientation="Horizontal"    
                         >
-                            <Image
-                                x:Name="gamePhoto"
-                                Margin="15"
-                                Width="100"
-                                Height="100"
-                            >
-                                <Image.Source>
-                                    <BitmapImage
-                                        UriSource="https://steamunlocked.net/wp-content/uploads/2020/07/guns-gore-and-cannoli-2-free-download.jpg"
-                                    />
-                                </Image.Source>
-                            </Image>
                             <StackPanel
-                                Margin="15"    
+                                Orientation="Horizontal"    
+                            >
+                                <Image
+                                    x:Name="gamePhoto"
+                                    Margin="15"
+                                    Width="100"
+                                    Height="100"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://steamunlocked.net/wp-content/uploads/2020/07/guns-gore-and-cannoli-2-free-download.jpg"
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Margin="15"    
+                                >
+                                    <TextBlock
+                                        x:Name="gameNameLabel"
+                                        Margin="0 15"
+                                        FontSize="18"
+                                        Text="Игра"    
+                                    />
+                                    <Button
+                                        x:Name="gameActionLabel"
+                                        HorizontalAlignment="Left"
+                                        Height="35"
+                                        Width="125"
+                                        Content="Установить"
+                                        Click="GameActionHandler"    
+                                    />
+                                </StackPanel>
+                                <materialDesign:PackIcon
+                                    x:Name="removeGameBtn"
+                                    Width="24"
+                                    Height="24"
+                                    Kind="Close"    
+                                    MouseLeftButtonUp="RemoveGameHandler"
+                                    Visibility="Collapsed"
+                                />
+                                <!--
+                                <Button
+                                    x:Name="removeGameBtn"
+                                    Width="24"
+                                    Height="24"
+                                    Content="X"    
+                                    Click="RemoveGameHandler"
+                                    Visibility="Collapsed"
+                                />
+                            -->
+                            </StackPanel>
+
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Background="LightGray"
                             >
                                 <TextBlock
-                                    x:Name="gameNameLabel"
-                                    Margin="0 15"
-                                    FontSize="18"
-                                    Text="Игра"    
+                                    Text="Поиск групп"
+                                    Margin="15"
+                                    MouseLeftButtonUp="SearchGroupsHandler"
                                 />
-                                <Button
-                                    x:Name="gameActionLabel"
-                                    HorizontalAlignment="Left"
-                                    Height="35"
-                                    Width="125"
-                                    Content="Установить"
-                                    Click="GameActionHandler"    
+                                <TextBlock
+                                    Text="Обсуждения"
+                                    Margin="15"
+                                    MouseLeftButtonUp="OpenDiscussionsHandler"
                                 />
                             </StackPanel>
-                            <materialDesign:PackIcon
-                                x:Name="removeGameBtn"
-                                Width="24"
-                                Height="24"
-                                Kind="Close"    
-                                MouseLeftButtonUp="RemoveGameHandler"
-                                Visibility="Collapsed"
-                            />
-                            <!--
-                            <Button
-                                x:Name="removeGameBtn"
-                                Width="24"
-                                Height="24"
-                                Content="X"    
-                                Click="RemoveGameHandler"
-                                Visibility="Collapsed"
-                            />
-                        -->
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>
@@ -644,6 +667,7 @@
                                                         <TextBlock
                                                             Margin="15 0"
                                                             Text="Пригласить в группу"    
+                                                            MouseLeftButtonUp="AddGroupRequestHandler"
                                                         />
                                                     </StackPanel>
                                                     <StackPanel
@@ -3398,6 +3422,7 @@
                                         </Image.Source>
                                     </Image>
                                     <TextBlock
+                                        x:Name="friendsSettingsUserNameLabel"
                                         VerticalAlignment="Center"
                                         FontSize="36"
                                         Text="Аккаунт "    
@@ -3678,6 +3703,7 @@
                                                             Width="275"
                                                             Height="25"
                                                             Margin="10 0"
+                                                            Click="ToggleFriendsListManagementHandler"
                                                         />
                                                         <Button
                                                             Width="125"
@@ -3699,6 +3725,74 @@
                                                         </Button>
                                                     </StackPanel>
                                                 </StackPanel>
+                                                <StackPanel
+                                                    x:Name="friendsListManagement"    
+                                                    Visibility="Collapsed"
+                                                >
+                                                    <StackPanel
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Выберите пользователей для одного из следующих действий."    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Выбрать:"    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="All"
+                                                            Text="ВСЕХ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendsTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Nothing"
+                                                            Text="НИКОГО"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendsTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Invert"
+                                                            Text="ИНВЕРТИРОВАТЬ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendsTypeHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="0 10"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <Button
+                                                            Margin="10 0"
+                                                            Width="125"
+                                                            Height="25"
+                                                            Content="Удалить из друзей"
+                                                            Click="RemoveFriendsHandler"
+                                                        />
+                                                        <Button
+                                                            Margin="10 0"
+                                                            Width="175"
+                                                            Height="25"
+                                                            Content="Добавить в черный список"    
+                                                        />
+                                                        <Button
+                                                            Margin="10 0"
+                                                            Width="175"
+                                                            Height="25"
+                                                            Content="Убрать из черного списка"    
+                                                        />
+                                                        <Button
+                                                            Width="225"
+                                                            Height="25"
+                                                            Content="Повысить до модератора трансляции"    
+                                                        />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Text="Выбрано: 0"    
+                                                    />
+                                                </StackPanel>
+
                                                 <TextBox
                                                     x:Name="friendBox"
                                                     Height="35"
@@ -3755,6 +3849,62 @@
                                                 <WrapPanel
                                                     x:Name="offlineFriendsList"    
                                                 />
+                                                <Popup
+                                                    x:Name="friendInfoPopup"
+                                                    PopupAnimation="Fade"
+                                                    AllowsTransparency="True"
+                                                    StaysOpen="False"
+                                                    Width="350"
+                                                    Height="150"
+                                                >
+                                                    <Popup.Child>
+                                                        <StackPanel
+                                                            Background="LightGray"    
+                                                        >
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <Image
+                                                                    x:Name="friendInfoPopupAvatar"
+                                                                    Margin="15"
+                                                                    Width="50"    
+                                                                    Height="50"    
+                                                                    ImageFailed="SetDefautAvatarHandler"
+                                                                >
+                                                                    <Image.Source>
+                                                                        <BitmapImage
+                                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                                        />
+                                                                    </Image.Source>
+                                                                </Image>
+                                                                <StackPanel
+                                                                    Margin="0 15"    
+                                                                >
+                                                                    <TextBlock
+                                                                        x:Name="friendInfoPopupNameLabel"
+                                                                        FontSize="16"
+                                                                        Margin="15 0"
+                                                                        Foreground="Gray"
+                                                                        Text="Имя пользователя"    
+                                                                    />
+                                                                    <TextBlock
+                                                                        x:Name="friendInfoPopupStatusLabel"
+                                                                        Margin="15 0"
+                                                                        Foreground="Gray"
+                                                                        Text="Статус"    
+                                                                    />
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            <TextBlock
+                                                                x:Name="friendInfoPopupLevelLabel"
+                                                                FontSize="18"
+                                                                Margin="15"
+                                                                Foreground="White"
+                                                                Text="Уровень 0"    
+                                                            />
+                                                        </StackPanel>
+                                                    </Popup.Child>
+                                                </Popup>
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -4132,10 +4282,11 @@
                                                         Margin="15"
                                                     />
                                                     <TextBox
+                                                        x:Name="groupsBox"
                                                         Width="275"
                                                         Height="25"
                                                         Margin="15 0"
-                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                        TextChanged="GetGroupsHandler"
                                                     >
                                                         <TextBox.Resources>
                                                             <VisualBrush
@@ -4285,7 +4436,10 @@
                                 FontSize="20"
                             />
                             <TextBox
+                                x:Name="searchedGroupsBox"
+                                Margin="35 15"
                                 Height="25"
+                                TextChanged="GetSearchedGroupsHandler"
                             />
                             <StackPanel
                                 x:Name="searchedGroups"    

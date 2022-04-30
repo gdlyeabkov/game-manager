@@ -584,6 +584,9 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="gameUploadedLabelContent" xml:space="preserve">
     <value>Игра загружена</value>
   </data>
+  <data name="groupsLabelContent" xml:space="preserve">
+    <value>Группы</value>
+  </data>
   <data name="helpMenuItemLabelContent" xml:space="preserve">
     <value>Справка</value>
   </data>

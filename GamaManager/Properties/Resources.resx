@@ -584,6 +584,9 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="gameUploadedLabelContent" xml:space="preserve">
     <value>Game is uploaded</value>
   </data>
+  <data name="groupsLabelContent" xml:space="preserve">
+    <value>Groups</value>
+  </data>
   <data name="helpMenuItemLabelContent" xml:space="preserve">
     <value>Help</value>
   </data>

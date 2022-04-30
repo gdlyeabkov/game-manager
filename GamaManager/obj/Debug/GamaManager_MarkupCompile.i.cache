@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\wpf_projects\LastGameManager\GamaManager\App.xaml
-22-788471398
+23-1371775082
 2-41794771
-31-2067085413
+32-11707801
 78-504137370
-Dialogs\AcceptExitDialog.xaml;Dialogs\ActivationGameDialog.xaml;Dialogs\AddCollectiionDialog.xaml;Dialogs\AddExternalGameDialog.xaml;Dialogs\AddFriendDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendNotificationsDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\FriendsSettingsDialog.xaml;Dialogs\GameSettingsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;Dialogs\PlayerDialog.xaml;Dialogs\PlayersDialog.xaml;Dialogs\ScreenShotsUploaderDialog.xaml;Dialogs\ServersDialog.xaml;Dialogs\SettingsDialog.xaml;Dialogs\SystemInfoDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
+Dialogs\AcceptExitDialog.xaml;Dialogs\ActivationGameDialog.xaml;Dialogs\AddCollectiionDialog.xaml;Dialogs\AddExternalGameDialog.xaml;Dialogs\AddFriendDialog.xaml;Dialogs\AddGroupRequestDialog.xaml;Dialogs\ChatDialog.xaml;Dialogs\DownloadGameDialog.xaml;Dialogs\FriendNotificationsDialog.xaml;Dialogs\FriendsDialog.xaml;Dialogs\FriendsSettingsDialog.xaml;Dialogs\GameSettingsDialog.xaml;Dialogs\LoginDialog.xaml;Dialogs\OffersDialog.xaml;Dialogs\PlayerDialog.xaml;Dialogs\PlayersDialog.xaml;Dialogs\ScreenShotsUploaderDialog.xaml;Dialogs\ServersDialog.xaml;Dialogs\SettingsDialog.xaml;Dialogs\SystemInfoDialog.xaml;GamePage.xaml;GameWindow.xaml;MainWindow.xaml;
 
 True
 

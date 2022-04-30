@@ -399,6 +399,7 @@ namespace GamaManager.Dialogs
                             List<Game> currentGames = loadedContent.games;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             Settings currentSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -413,8 +414,9 @@ namespace GamaManager.Dialogs
                                 {
                                     games = currentGames,
                                     friends = updatedFriends,
-                                    settings = currentSettings
-                                });
+                                    settings = currentSettings,
+                                    collections = currentCollections
+                            });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }
 

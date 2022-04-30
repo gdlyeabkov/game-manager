@@ -60,6 +60,7 @@ namespace GamaManager
         public Brush disabledColor;
         public Brush enabledColor;
         public bool isFullScreenMode = false;
+        public string cachedUserProfileId = "";
         public ObservableCollection<Model> Collection { get; set; }
 
         public MainWindow(string id)
@@ -118,7 +119,6 @@ namespace GamaManager
                                     FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                                     status = myobj.status;
                                     isOkStatus = status == "OK";
-                                    onlineFriendsList.Children.Clear();
                                     if (isOkStatus)
                                     {
                                         List<Friend> receivedFriends = myInnerObj.friends;
@@ -191,7 +191,6 @@ namespace GamaManager
                                     FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                                     status = myobj.status;
                                     isOkStatus = status == "OK";
-                                    onlineFriendsList.Children.Clear();
                                     if (isOkStatus)
                                     {
                                         List<Friend> receivedFriends = myInnerObj.friends;
@@ -368,6 +367,7 @@ namespace GamaManager
                                                             bool isOnline = userStatus == "online";
                                                             if (isOnline)
                                                             {
+                                                                string senderId = myFriend._id;
                                                                 string senderName = myFriend.name;
                                                                 string insensitiveCaseSenderName = senderName.ToLower();
                                                                 string friendBoxContent = friendBox.Text;
@@ -399,9 +399,30 @@ namespace GamaManager
                                                                     TextBlock friendNameLabel = new TextBlock();
                                                                     friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
                                                                     friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                    friendNameLabel.Width = 75;
                                                                     friendNameLabel.Text = name;
                                                                     friend.Children.Add(friendNameLabel);
+                                                                    CheckBox friendCheckBox = new CheckBox();
+                                                                    Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
+                                                                    bool isVisible = friendsListManagementVisibility == visible;
+                                                                    if (isVisible)
+                                                                    {
+                                                                        friendCheckBox.Visibility = visible;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        friendCheckBox.Visibility = invisible;
+                                                                    }
+                                                                    friendCheckBox.Margin = new Thickness(5, 15, 5, 15);
+                                                                    friend.Children.Add(friendCheckBox);
                                                                     onlineFriendsList.Children.Add(friend);
+                                                                    friend.DataContext = senderId;
+                                                                    /*
+                                                                    friend.MouseEnter += ShowFriendInfoHandler;
+                                                                    friend.MouseLeave += HideFriendInfoHandler;
+                                                                    */
+                                                                    mainControl.DataContext = senderId;
+                                                                    friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                                                 }
                                                             }
                                                         }
@@ -422,6 +443,66 @@ namespace GamaManager
                 this.Close();
             }
         }
+
+        public void ShowFriendInfoHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel friend = ((StackPanel)(sender));
+            object friendData = friend.DataContext;
+            string friendId = ((string)(friendData));
+            ShowFriendInfo(friendId, friend);
+        }
+
+        public void ShowFriendInfo (string friendId, StackPanel friend)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            string userStatus = user.status;
+                            string userLevel = "Уровень 0";
+                            friendInfoPopupAvatar.BeginInit();
+                            friendInfoPopupAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendId));
+                            friendInfoPopupAvatar.EndInit();
+                            friendInfoPopupNameLabel.Text = userName;
+                            friendInfoPopupStatusLabel.Text = userStatus;
+                            friendInfoPopupLevelLabel.Text = userLevel;
+                            friendInfoPopup.IsOpen = true;
+                            friendInfoPopup.PlacementTarget = friend;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void HideFriendInfoHandler (object sender, RoutedEventArgs e)
+        {
+            HideFriendInfo();
+        }
+
+        public void HideFriendInfo ()
+        {
+            friendInfoPopup.IsOpen = false;
+        }
+
 
         public void GetOfflineFriends ()
         {
@@ -492,6 +573,7 @@ namespace GamaManager
                                                             bool isOffline = userStatus == "offline";
                                                             if (isOffline)
                                                             {
+                                                                string senderId = myFriend._id;
                                                                 string senderName = myFriend.name;
                                                                 string insensitiveCaseSenderName = senderName.ToLower();
                                                                 string friendBoxContent = friendBox.Text;
@@ -523,9 +605,30 @@ namespace GamaManager
                                                                     TextBlock friendNameLabel = new TextBlock();
                                                                     friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
                                                                     friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                                    friendNameLabel.Width = 75;
                                                                     friendNameLabel.Text = name;
                                                                     friend.Children.Add(friendNameLabel);
+                                                                    CheckBox friendCheckBox = new CheckBox();
+                                                                    Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
+                                                                    bool isVisible = friendsListManagementVisibility == visible;
+                                                                    if (isVisible)
+                                                                    {
+                                                                        friendCheckBox.Visibility = visible;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        friendCheckBox.Visibility = invisible;
+                                                                    }
+                                                                    friendCheckBox.Margin = new Thickness(5, 15, 5, 15);
+                                                                    friend.Children.Add(friendCheckBox);
                                                                     offlineFriendsList.Children.Add(friend);
+                                                                    friend.DataContext = senderId;
+                                                                    /*
+                                                                    friend.MouseEnter += ShowFriendInfoHandler;
+                                                                    friend.MouseLeave += HideFriendInfoHandler;
+                                                                    */
+                                                                    mainControl.DataContext = senderId;
+                                                                    friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                                                 }
                                                             }
                                                         }
@@ -547,7 +650,7 @@ namespace GamaManager
             }
         }
 
-        public void GetFriendsSettings()
+        public void GetFriendsSettings ()
         {
 
             GetFriends();
@@ -559,6 +662,158 @@ namespace GamaManager
             GetFriendRequestsForMe();
 
             GetFriendRequestsFromMe();
+
+            GetUserName();
+
+            GetGroups();
+
+            GetSearchedGroups();
+
+        }
+
+        public void GetSearchedGroups ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GroupsResponseInfo myObj = (GroupsResponseInfo)js.Deserialize(objText, typeof(GroupsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            searchedGroups.Children.Clear();
+                            List<Group> totalGroups = myObj.groups;
+                            foreach (Group group in totalGroups)
+                            {
+                                string name = group.name;
+                                string insensitiveCaseName = name.ToLower();
+                                string searchedGroupsBoxContent = searchedGroupsBox.Text;
+                                string insensitiveCaseSearchedGroupsBoxContent = searchedGroupsBoxContent.ToLower();
+                                int insensitiveCaseNameLength = insensitiveCaseName.Length;
+                                bool isMatch = insensitiveCaseName.Contains(insensitiveCaseSearchedGroupsBoxContent);
+                                bool isBoxEmpty = insensitiveCaseNameLength <= 0;
+                                bool isAddGroup = isMatch || isBoxEmpty;
+                                if (isAddGroup)
+                                {
+                                    StackPanel localGroup = new StackPanel();
+                                    localGroup.Margin = new Thickness(15);
+                                    localGroup.Height = 50;
+                                    localGroup.Background = System.Windows.Media.Brushes.LightGray;
+                                    TextBlock localGroupNameLabel = new TextBlock();
+                                    localGroupNameLabel.FontSize = 20;
+                                    localGroupNameLabel.Margin = new Thickness(15);
+                                    localGroupNameLabel.Text = name;
+                                    localGroup.Children.Add(localGroupNameLabel);
+                                    searchedGroups.Children.Add(localGroup);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetGroups ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GroupsResponseInfo myObj = (GroupsResponseInfo)js.Deserialize(objText, typeof(GroupsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            groups.Children.Clear();
+                            List<Group> totalGroups = myObj.groups;
+                            foreach (Group group in totalGroups)
+                            {
+                                string owner = group.owner;
+                                string name = group.name;
+                                string insensitiveCaseName = name.ToLower();
+                                string groupsBoxContent = groupsBox.Text;
+                                string insensitiveCaseGroupsBoxContent = groupsBoxContent.ToLower();
+                                int insensitiveCaseNameLength = insensitiveCaseName.Length;
+                                bool isMatch = insensitiveCaseName.Contains(insensitiveCaseGroupsBoxContent);
+                                bool isBoxEmpty = insensitiveCaseNameLength <= 0;
+                                bool isMyGroup = owner == currentUserId;
+                                bool isAddGroup = (isMatch || isBoxEmpty) && isMyGroup;
+                                if (isAddGroup)
+                                {
+                                    StackPanel localGroup = new StackPanel();
+                                    localGroup.Margin = new Thickness(15);
+                                    localGroup.Height = 50;
+                                    localGroup.Background = System.Windows.Media.Brushes.LightGray;
+                                    TextBlock localGroupNameLabel = new TextBlock();
+                                    localGroupNameLabel.FontSize = 20;
+                                    localGroupNameLabel.Margin = new Thickness(15);
+                                    localGroupNameLabel.Text = name;
+                                    localGroup.Children.Add(localGroupNameLabel);
+                                    groups.Children.Add(localGroup);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetUserName()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myObj.user;
+                            string userName = user.name;
+                            friendsSettingsUserNameLabel.Text = userName;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                Debugger.Log(0, "debug", "friend requests: " + exception.Message);
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
 
         }
 
@@ -718,7 +973,221 @@ namespace GamaManager
             GetForums("");
             GetGameCollections();
             GetFriendsSettings();/**/
+            GetGroupRequests();
         }
+
+        public void GetGroupRequests ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GroupRequestsResponseInfo myobj = (GroupRequestsResponseInfo)js.Deserialize(objText, typeof(GroupRequestsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GroupRequest> myRequests = new List<GroupRequest>();
+                            List<GroupRequest> requests = myobj.requests;
+                            foreach (GroupRequest request in requests)
+                            {
+                                string recepientId = request.user;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
+                                {
+                                    myRequests.Add(request);
+                                }
+                            }
+                            foreach (GroupRequest myRequest in myRequests)
+                            {
+                                string groupId = myRequest.group;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            Group group = myInnerObj.group;
+                                            string groupName = group.name;
+                                            Popup groupRequest = new Popup();
+                                            groupRequest.Placement = PlacementMode.Custom;
+                                            groupRequest.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                            groupRequest.PlacementTarget = this;
+                                            groupRequest.Width = 225;
+                                            groupRequest.Height = 275;
+                                            StackPanel groupRequestBody = new StackPanel();
+                                            groupRequestBody.Background = friendRequestBackground;
+                                            PackIcon closeRequestBtn = new PackIcon();
+                                            closeRequestBtn.Margin = new Thickness(10);
+                                            closeRequestBtn.Kind = PackIconKind.Close;
+                                            closeRequestBtn.DataContext = groupRequest;
+                                            closeRequestBtn.MouseLeftButtonUp += CloseGroupRequestHandler;
+                                            groupRequestBody.Children.Add(closeRequestBtn);
+                                            Image groupRequestBodySenderAvatar = new Image();
+                                            groupRequestBodySenderAvatar.Width = 100;
+                                            groupRequestBodySenderAvatar.Height = 100;
+                                            groupRequestBodySenderAvatar.BeginInit();
+                                            Uri groupRequestBodySenderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                            BitmapImage groupRequestBodySenderAvatarImg = new BitmapImage(groupRequestBodySenderAvatarUri);
+                                            groupRequestBodySenderAvatar.Source = groupRequestBodySenderAvatarImg;
+                                            groupRequestBodySenderAvatar.EndInit();
+                                            groupRequestBodySenderAvatar.ImageFailed += SetDefautAvatarHandler;
+                                            groupRequestBody.Children.Add(groupRequestBodySenderAvatar);
+                                            TextBlock groupRequestBodySenderLoginLabel = new TextBlock();
+                                            groupRequestBodySenderLoginLabel.Margin = new Thickness(10);
+                                            groupRequestBodySenderLoginLabel.Text = groupName;
+                                            groupRequestBody.Children.Add(groupRequestBodySenderLoginLabel);
+                                            StackPanel groupRequestBodyActions = new StackPanel();
+                                            groupRequestBodyActions.Orientation = Orientation.Horizontal;
+                                            Button acceptActionBtn = new Button();
+                                            acceptActionBtn.Margin = new Thickness(10, 5, 10, 5);
+                                            acceptActionBtn.Height = 25;
+                                            acceptActionBtn.Width = 65;
+                                            acceptActionBtn.Content = "Принять";
+                                            string myUserId = myRequest.user;
+                                            string myRequestId = myRequest._id;
+                                            Dictionary<String, Object> acceptActionBtnData = new Dictionary<String, Object>();
+                                            acceptActionBtnData.Add("groupId", ((string)(groupId)));
+                                            acceptActionBtnData.Add("userId", ((string)(myUserId)));
+                                            acceptActionBtnData.Add("requestId", ((string)(myRequestId)));
+                                            acceptActionBtnData.Add("request", ((Popup)(groupRequest)));
+                                            acceptActionBtn.DataContext = acceptActionBtnData;
+                                            acceptActionBtn.Click += AcceptGroupRequestHandler;
+                                            groupRequestBodyActions.Children.Add(acceptActionBtn);
+                                            Button rejectActionBtn = new Button();
+                                            rejectActionBtn.Margin = new Thickness(10, 5, 10, 5);
+                                            rejectActionBtn.Height = 25;
+                                            rejectActionBtn.Width = 65;
+                                            rejectActionBtn.Content = "Отклонить";
+                                            Dictionary<String, Object> rejectActionBtnData = new Dictionary<String, Object>();
+                                            rejectActionBtnData.Add("groupId", ((string)(groupId)));
+                                            rejectActionBtnData.Add("userId", ((string)(myUserId)));
+                                            rejectActionBtnData.Add("requestId", ((string)(myRequestId)));
+                                            rejectActionBtnData.Add("request", ((Popup)(groupRequest)));
+                                            rejectActionBtn.DataContext = rejectActionBtnData;
+                                            rejectActionBtn.Click += RejectGroupRequestHandler;
+                                            groupRequestBodyActions.Children.Add(rejectActionBtn);
+                                            groupRequestBody.Children.Add(groupRequestBodyActions);
+                                            groupRequest.Child = groupRequestBody;
+                                            groupRequests.Children.Add(groupRequest);
+                                            groupRequest.IsOpen = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            CloseManager();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RejectGroupRequestHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object rawBtnData = btn.DataContext;
+            Dictionary<String, Object> btnData = ((Dictionary<String, Object>)(rawBtnData));
+            string groupId = ((string)(btnData["groupId"]));
+            string userId = ((string)(btnData["userd"]));
+            string requestId = ((string)(btnData["requestId"]));
+            Popup request = ((Popup)(btnData["request"]));
+            RejectGroupRequest(groupId, userId, requestId, request);
+        }
+
+        public void RejectGroupRequest (string groupId, string userId, string requestId, Popup request)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/reject/?id=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        CloseFriendRequest(request);
+                                        User friend = myobj.user;
+                                        string friendLogin = friend.login;
+                                        string msgContent = "Вы отклонили приглашение в друзья";
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось отклонить приглашение", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+
+        public void CloseGroupRequestHandler (object sender, RoutedEventArgs e)
+        {
+            PackIcon btn = ((PackIcon)(sender));
+            object btnData = btn.DataContext;
+            Popup request = ((Popup)(btnData));
+            CloseGroupRequest(request);
+        }
+
+        public void CloseGroupRequest(Popup request)
+        {
+            friendRequests.Children.Remove(request);
+        }
+
 
         public void GetFriendRequestsForMeHandler(object sender, TextChangedEventArgs e)
         {
@@ -3155,6 +3624,9 @@ namespace GamaManager
             }
             userProfileDetailsFriends.Visibility = friendsVisibility;
 
+            object currentUserProfileId = mainControl.DataContext;
+            cachedUserProfileId = ((string)(currentUserProfileId));
+
             mainControl.DataContext = currentUserId;
 
         }
@@ -4952,6 +5424,75 @@ namespace GamaManager
             }
         }
 
+        public void AcceptGroupRequestHandler(object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object rawBtnData = btn.DataContext;
+            Dictionary<String, Object> btnData = ((Dictionary<String, Object>)(rawBtnData));
+            string groupId = ((string)(btnData["groupId"]));
+            string userId = ((string)(btnData["userId"]));
+            string requestId = ((string)(btnData["requestId"]));
+            Popup request = ((Popup)(btnData["request"]));
+            AcceptGroupRequest(groupId, userId, requestId, request);
+        }
+
+        public void AcceptGroupRequest(string groupId, string userId, string requestId, Popup request)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        CloseFriendRequest(request);
+                                        Group group = myInnerObj.group;
+                                        string groupName = group.name;
+                                        string msgContent = "Вы были успешно добавлены в группу " + groupName;
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось принять приглашение", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public CustomPopupPlacement[] FriendRequestPlacementHandler(Size popupSize, Size targetSize, Point offset)
         {
             return new CustomPopupPlacement[]
@@ -5004,7 +5545,7 @@ namespace GamaManager
                 }
                 else if (isGroups)
                 {
-                    OpenFriendsSettings();
+                    OpenGroupsSettings();
                 }
                 else if (isContent)
                 {
@@ -5020,9 +5561,17 @@ namespace GamaManager
             }
         }
 
+        public void OpenGroupsSettings ()
+        {
+            mainControl.SelectedIndex = 16;
+            friendsSettingsControl.SelectedIndex = 8;
+            GetGroups();
+        }
+
         public void OpenFriendsSettings ()
         {
             mainControl.SelectedIndex = 16;
+            friendsSettingsControl.SelectedIndex = 0;
             GetFriendsSettings();
         }
 
@@ -6892,7 +7441,7 @@ namespace GamaManager
             ReturnToProfile();
         }
 
-        public void ReturnToProfile()
+        public void ReturnToProfile ()
         {
             object mainControlData = mainControl.DataContext;
             string userId = ((string)(mainControlData));
@@ -7488,6 +8037,382 @@ namespace GamaManager
             }
         }
 
+        private void ToggleFriendsListManagementHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleFriendsListManagement();
+        }
+
+        public void ToggleFriendsListManagement ()
+        {
+            Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
+            bool isVisible = friendsListManagementVisibility == visible;
+            if (isVisible)
+            {
+                friendsListManagement.Visibility = invisible;
+                foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+                {
+                    foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                            checkBox.Visibility = invisible;
+                        }
+                    }
+                }
+                foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+                {
+                    foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                            checkBox.Visibility = invisible;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                friendsListManagement.Visibility = visible;
+                foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+                {
+                    foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                            checkBox.Visibility = visible;
+                        }
+                    }
+                }
+                foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+                {
+                    foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                            checkBox.Visibility = visible;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RemoveFriendsHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveFriends();
+        }
+
+        public void RemoveFriends ()
+        {
+            foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+            {
+                foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                {
+                    bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object friendData = onlineFriendsListItem.DataContext;
+                            string friendId = ((string)(friendData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                            js = new JavaScriptSerializer();
+                                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                            List<Game> currentGames = loadedContent.games;
+                                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                                            Settings currentSettings = loadedContent.settings;
+                                            List<string> currentCollections = loadedContent.collections;
+                                            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                                            {
+                                                return friend.id == friendId;
+                                            }).ToList();
+                                            int countCachedFriends = cachedFriends.Count;
+                                            bool isCachedFriendsExists = countCachedFriends >= 1;
+                                            if (isCachedFriendsExists)
+                                            {
+                                                FriendSettings cachedFriend = cachedFriends[0];
+                                                updatedFriends.Remove(cachedFriend);
+                                                string savedContent = js.Serialize(new SavedContent
+                                                {
+                                                    games = currentGames,
+                                                    friends = updatedFriends,
+                                                    settings = currentSettings,
+                                                    collections = currentCollections
+                                                });
+                                                File.WriteAllText(saveDataFilePath, savedContent);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+            {
+                foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                {
+                    bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object friendData = offlineFriendsListItem.DataContext;
+                            string friendId = ((string)(friendData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                            js = new JavaScriptSerializer();
+                                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                            List<Game> currentGames = loadedContent.games;
+                                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                                            Settings currentSettings = loadedContent.settings;
+                                            List<string> currentCollections = loadedContent.collections;
+                                            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                                            {
+                                                return friend.id == friendId;
+                                            }).ToList();
+                                            int countCachedFriends = cachedFriends.Count;
+                                            bool isCachedFriendsExists = countCachedFriends >= 1;
+                                            if (isCachedFriendsExists)
+                                            {
+                                                FriendSettings cachedFriend = cachedFriends[0];
+                                                updatedFriends.Remove(cachedFriend);
+                                                string savedContent = js.Serialize(new SavedContent
+                                                {
+                                                    games = currentGames,
+                                                    friends = updatedFriends,
+                                                    settings = currentSettings,
+                                                    collections = currentCollections
+                                                });
+                                                File.WriteAllText(saveDataFilePath, savedContent);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            GetFriendsSettings();
+        }
+
+        private void SelectFriendsTypeHandler (object sender, MouseButtonEventArgs e)
+        {
+            TextBlock typeLabel = ((TextBlock)(sender));
+            object typeLabelData = typeLabel.DataContext;
+            string type = typeLabelData.ToString();
+            SelectFriendsType(type);
+        }
+
+        public void SelectFriendsType (string type)
+        {
+            bool isAll = type == "All";
+            bool isNothing = type == "Nothing";
+            bool isInvert = type == "Invert";
+            if (isAll)
+            {
+                foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+                {
+                    foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                            checkBox.IsChecked = true;
+                        }
+                    }
+                }
+                foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+                {
+                    foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                            checkBox.IsChecked = true;
+                        }
+                    }
+                }
+            }
+            else if (isNothing)
+            {
+                foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+                {
+                    foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                            checkBox.IsChecked = false;
+                        }
+                    }
+                }
+                foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+                {
+                    foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                            checkBox.IsChecked = false;
+                        }
+                    }
+                }
+            }
+            else if (isInvert)
+            {
+                foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+                {
+                    foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                            object rawIsChecked = checkBox.IsChecked;
+                            bool isChecked = ((bool)(rawIsChecked));
+                            checkBox.IsChecked = !isChecked;
+                        }
+                    }
+                }
+                foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+                {
+                    foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                    {
+                        bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                            object rawIsChecked = checkBox.IsChecked;
+                            bool isChecked = ((bool)(rawIsChecked));
+                            checkBox.IsChecked = !isChecked;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OpenDiscussionsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenDiscussions();
+        }
+
+        public void OpenDiscussions ()
+        {
+            string currentGameName = gameNameLabel.Text;
+            forumsKeywordsBox.Text = currentGameName;
+            mainControl.SelectedIndex = 6;
+        }
+
+        private void SearchGroupsHandler (object sender, MouseButtonEventArgs e)
+        {
+            SearchGroups();
+        }
+
+        public void SearchGroups ()
+        {
+            mainControl.SelectedIndex = 17;
+        }
+
+        private void GetSearchedGroupsHandler (object sender, TextChangedEventArgs e)
+        {
+            GetSearchedGroups();
+        }
+
+        private void GetGroupsHandler (object sender, TextChangedEventArgs e)
+        {
+            GetGroups();
+        }
+
+        private void AddGroupRequestHandler (object sender, MouseButtonEventArgs e)
+        {
+            AddGroupRequest();
+        }
+
+        public void AddGroupRequest ()
+        {
+            /*object mainControlData = mainControl.DataContext;
+            string friendId = ((string)(mainControlData));*/
+            string friendId = cachedUserProfileId;
+            Dialogs.AddGroupRequestDialog dialog = new Dialogs.AddGroupRequestDialog(currentUserId, friendId);
+            dialog.Show();
+            friendProfilePopup.IsOpen = false;
+        }
+
     }
 
     class SavedContent
@@ -7735,5 +8660,48 @@ namespace GamaManager
         public DateTime date;
     }
 
+    class GroupsResponseInfo
+    {
+        public List<Group> groups;
+        public string status;
+    }
+
+    class GroupResponseInfo
+    {
+        public Group group;
+        public string status;
+    }
+
+    class Group
+    {
+        public string _id;
+        public string name;
+        public string owner;
+    }
+
+    class GroupRelationsResponseInfo
+    {
+        public List<GroupRelation> relations;
+        public string status;
+    }
+
+    class GroupRelation
+    {
+        public string group;
+        public string user;
+    }
+
+    class GroupRequestsResponseInfo
+    {
+        public List<GroupRequest> requests;
+        public string status;
+    }
+
+    class GroupRequest
+    {
+        public string _id;
+        public string group;
+        public string user;
+    }
 
 }

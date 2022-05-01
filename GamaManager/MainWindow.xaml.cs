@@ -1518,13 +1518,165 @@ namespace GamaManager
             GetGroupRequests();
             GetRequestsCount();
             GetComments(currentUserId);
-            GetCommunityInfo();/**/
+            GetCommunityInfo();
+            InitializeTray();/**/
+        }
+
+        public void InitializeTray ()
+        {
+            System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
+            nIcon.Icon = new System.Drawing.Icon(@"C:\wpf_projects\AntiVirus\AntiVirus\Assets\application_icon.ico");
+            nIcon.Visible = true;
+            string nIconTitle = "Office ware game manager";
+            nIcon.Text = nIconTitle;
         }
 
         public void GetCommunityInfo ()
         {
+            GetCommunityTotalContent();
             GetIllustrations();
             GetManuals();
+        }
+
+        public void GetCommunityTotalContent()
+        {
+            List<UIElement> communityElements = new List<UIElement>();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+                            foreach (Illustration totalIllustrationsItem in totalIllustrations)
+                            {
+                                string id = totalIllustrationsItem._id;
+                                string title = totalIllustrationsItem.title;
+                                string desc = totalIllustrationsItem.desc;
+                                StackPanel illustration = new StackPanel();
+                                illustration.Width = 500;
+                                illustration.Margin = new Thickness(15);
+                                illustration.Background = System.Windows.Media.Brushes.LightGray;
+                                TextBlock illustrationTitleLabel = new TextBlock();
+                                illustrationTitleLabel.FontSize = 16;
+                                illustrationTitleLabel.Margin = new Thickness(15);
+                                illustrationTitleLabel.Text = title;
+                                illustration.Children.Add(illustrationTitleLabel);
+                                Image illustrationPhoto = new Image();
+                                illustrationPhoto.Margin = new Thickness(15);
+                                illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                illustrationPhoto.Width = 50;
+                                illustrationPhoto.Height = 50;
+                                illustrationPhoto.BeginInit();
+                                illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                illustrationPhoto.EndInit();
+                                illustration.Children.Add(illustrationPhoto);
+                                TextBlock illustrationDescLabel = new TextBlock();
+                                illustrationDescLabel.Margin = new Thickness(15);
+                                illustrationDescLabel.Text = desc;
+                                illustration.Children.Add(illustrationDescLabel);
+                                communityElements.Add(illustration);
+                                illustration.DataContext = id;
+                                illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ManualsResponseInfo myobj = (ManualsResponseInfo)js.Deserialize(objText, typeof(ManualsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Manual> totalManuals = myobj.manuals;
+                            foreach (Manual totalManualsItem in totalManuals)
+                            {
+                                string id = totalManualsItem._id;
+                                string title = totalManualsItem.title;
+                                string desc = totalManualsItem.desc;
+                                StackPanel manual = new StackPanel();
+                                manual.Width = 500;
+                                manual.Margin = new Thickness(15);
+                                manual.Background = System.Windows.Media.Brushes.LightGray;
+                                TextBlock manualTitleLabel = new TextBlock();
+                                manualTitleLabel.FontSize = 16;
+                                manualTitleLabel.Margin = new Thickness(15);
+                                manualTitleLabel.Text = title;
+                                manual.Children.Add(manualTitleLabel);
+                                Image manualPhoto = new Image();
+                                manualPhoto.Margin = new Thickness(15);
+                                manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                manualPhoto.Width = 50;
+                                manualPhoto.Height = 50;
+                                manualPhoto.BeginInit();
+                                manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                manualPhoto.EndInit();
+                                manual.Children.Add(manualPhoto);
+                                TextBlock manualDescLabel = new TextBlock();
+                                manualDescLabel.Margin = new Thickness(15);
+                                manualDescLabel.Text = desc;
+                                manual.Children.Add(manualDescLabel);
+                                communityElements.Add(manual);
+                                manual.DataContext = id;
+                                manual.MouseLeftButtonUp += SelectManualHandler;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+            communityTotalContent.Children.Clear();
+            int communityElementsCount = communityElements.Count;
+            bool isHaveElements = communityElementsCount >= 1;
+            if (isHaveElements)
+            {
+                communityTotalContent.HorizontalAlignment = HorizontalAlignment.Left;
+                foreach (UIElement communityElement in communityElements)
+                {
+                    communityTotalContent.Children.Add(communityElement);
+                }
+            }
+            else
+            {
+                TextBlock notFoundLabel = new TextBlock();
+                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                notFoundLabel.TextAlignment = TextAlignment.Center;
+                notFoundLabel.FontSize = 18;
+                notFoundLabel.Text = "Иллюстраций не найдено";
+                communityTotalContent.HorizontalAlignment = HorizontalAlignment.Center;
+                communityTotalContent.Children.Add(notFoundLabel);
+            }
         }
 
         public void GetIllustrations ()
@@ -8250,14 +8402,11 @@ namespace GamaManager
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            // string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            // string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\games\";
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
             string[] games = Directory.GetDirectories(appPath);
             screenShots.Children.Clear();
             foreach (string game in games)
             {
-                // FileInfo gameInfo = new FileInfo(game);
                 DirectoryInfo gameInfo = new DirectoryInfo(game);
                 string gameName = gameInfo.Name;
                 if (isInit)
@@ -10113,6 +10262,17 @@ namespace GamaManager
                 manualAttachmentExt = System.IO.Path.GetExtension(path);
                 manualAttachment = ImageFileToByteArray(path);
             }
+        }
+
+        private void ShowScreenShotUploadersDialogHandler (object sender, RoutedEventArgs e)
+        {
+            ShowScreenShotUploadersDialog();
+        }
+
+        public void ShowScreenShotUploadersDialog ()
+        {
+            Dialogs.ScreenShotsUploaderDialog dialog = new Dialogs.ScreenShotsUploaderDialog(currentUserId);
+            dialog.Show();
         }
 
 

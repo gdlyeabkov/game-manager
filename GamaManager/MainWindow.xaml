@@ -72,6 +72,10 @@
                     Click="OpenPlayerHandler"
                 />
                 <MenuItem
+                    Header="Скриншоты"
+                    Click="ShowScreenShotUploadersDialogHandler"
+                />
+                <MenuItem
                     Header="{x:Static p:Resources.newsUpdatedLabelContent}"
                     Click="ShowOffersHandler"
                 />
@@ -5245,7 +5249,9 @@
                                         Header="Все"        
                                     >
                                         <StackPanel>
-
+                                            <WrapPanel
+                                                x:Name="communityTotalContent"
+                                            />
                                         </StackPanel>
                                     </TabItem>
                                     <TabItem
@@ -5890,7 +5896,7 @@
                                 <StackPanel
                                     Margin="15"
                                     Background="LightGray" 
-                                    Width="750"
+                                    Width="1000"
                                 >
                                     <StackPanel
                                         Orientation="Horizontal"    
@@ -5898,8 +5904,8 @@
                                         <Image
                                             x:Name="mainIllustrationPhoto"
                                             Margin="15"
-                                            Width="50"    
-                                            Height="50"    
+                                            Width="650"    
+                                            Height="650"    
                                             ImageFailed="SetDefautAvatarHandler"
                                         >
                                             <Image.Source>

@@ -6,8 +6,154 @@
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
         Title="Загрузчик скриншотов"
-        Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Height="450"
+        Width="800"
+        Loaded="AppLoadedHandler"    
+    >
+    <DockPanel>
+        <StackPanel
+            DockPanel.Dock="Top"    
+            Orientation="Horizontal"
+            Margin="25"
+        >
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Показать"    
+            />
+            <ComboBox
+                x:Name="screenShotsFilter"
+                VerticalAlignment="Center"
+                Width="125"
+                Height="25"
+                Margin="15 0"
+                SelectedIndex="0"
+                SelectionChanged="SelectScreenShotsFilterHandler"
+            >
+                <ComboBoxItem
+                    Visibility="Collapsed"
+                    Content="Выбрать игру"
+                />
+                <ComboBoxItem
+                    Content="Все игры"
+                />
+            </ComboBox>
+        </StackPanel>
+        <WrapPanel
+            x:Name="screenShots"
+            Width="350"
+            DockPanel.Dock="Left"    
+        >
+            <Image />
+        </WrapPanel>
+        <DockPanel
+            DockPanel.Dock="Bottom"    
+            Margin="0 15"
+        >
+            <Button
+                Margin="5 0"
+                Width="85"
+                Height="25"
+                Content="Выбрать все"    
+            />
+            <Button
+                Margin="5 0"
+                Width="115"
+                Height="25"
+                Content="Показать на диске"    
+            />
+            <Button
+                Margin="5 0"
+                Width="150"
+                Height="25"
+                Content="Открыть в сообществе"    
+            />
+            <StackPanel
+                x:Name="actionBtns"
+                Visibility="Collapsed"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"    
+            >
+                <Button
+                    Margin="5 0"
+                    Width="75"
+                    Height="25"
+                    Content="Удалить"    
+                />
+                <Button
+                    Margin="5 0"
+                    Width="75"
+                    Height="25"
+                    Content="Загрузить"    
+                />
+            </StackPanel>
+        </DockPanel>
+        <TabControl
+            x:Name="screenShotsControl"    
+        >
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Margin="15 0"
+                >
+                    <TextBlock
+                        Margin="0 10"
+                        FontSize="20"
+                        Text="Делитесь скриншотами ваших&#10;любимых игр в Интернете"
+                    />
+                    <TextBlock
+                        Margin="0 10"
+                        Text="Нажмите F12 чтобы сделать скриншот."
+                    />
+                    <TextBlock
+                        Margin="0 10"
+                        Text="Выберите скриншоты, которые хотите загрузить в&#10;вашу библиотеку."
+                    />
+                    <TextBlock
+                        Margin="0 10"
+                        Text="Выберите несколько скриншотов, удерживая Shift&#10;или Ctrl"
+                    />
+                    <TextBlock
+                        Margin="10 0"
+                        Text="Сделайте скриншоты общедоступными и&#10;поделитесь ими в Интернете"
+                    />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    DockPanel.Dock="Right"
+                    Margin="15 0"
+                >
+                    <Image
+                        x:Name="mainScreenShot"
+                        Width="150"
+                        Height="150"
+                    />
+                    <DockPanel
+                    >
+                        <TextBlock
+                            Margin="0 10"
+                            Text="00/00/00"
+                        />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            Margin="0 10"
+                            Text="0 Б"
+                        />
+                    </DockPanel>
+                    <TextBox
+                        Margin="0 10"
+                    />
+                    <CheckBox
+                        Content="Пометить как спойлер"    
+                    />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

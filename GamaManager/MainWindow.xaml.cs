@@ -7188,6 +7188,18 @@ namespace GamaManager
                         Application.Current.Dispatcher.Invoke(() => GetGroupRequests());
                     }
                 });
+                client.On("user_receive_comment", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string profileId = result[0];
+                    bool isRequestForMe = profileId == cachedUserProfileId && userId != currentUserId;
+                    if (isRequestForMe)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => GetComments());
+                    }
+                });
                 await client.ConnectAsync();
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -9282,6 +9294,8 @@ namespace GamaManager
                         {
                             userProfileCommentBox.Text = "";
                             GetComments();
+                            string eventData = currentUserId + "|" + cachedUserProfileId;
+                            client.EmitAsync("user_send_comment", eventData);
                         }
                     }
                 }
@@ -9299,7 +9313,7 @@ namespace GamaManager
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + cachedUserProfileId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9318,7 +9332,11 @@ namespace GamaManager
                             {
                                 string msg = commentsListItem.msg;
                                 StackPanel comment = new StackPanel();
+                                comment.Background = System.Windows.Media.Brushes.AliceBlue;
+                                comment.Margin = new Thickness(15);
+                                comment.Orientation = Orientation.Horizontal;
                                 Image commentAvatar = new Image();
+                                commentAvatar.Margin = new Thickness(15);
                                 commentAvatar.Width = 50;
                                 commentAvatar.Height = 50;
                                 commentAvatar.BeginInit();
@@ -9326,6 +9344,7 @@ namespace GamaManager
                                 commentAvatar.EndInit();
                                 comment.Children.Add(commentAvatar);
                                 TextBlock commenMsgLabel = new TextBlock();
+                                commenMsgLabel.Margin = new Thickness(15);
                                 commenMsgLabel.Text = msg;
                                 comment.Children.Add(commenMsgLabel);
                                 comments.Children.Add(comment);

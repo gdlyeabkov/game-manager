@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,25 +26,27 @@ namespace GamaManager.Dialogs
 
         public string currentUserId = "";
         public string friendId = "";
+        public SocketIO client = null;
 
-        public AddGroupRequestDialog(string currentUserId, string friendId)
+        public AddGroupRequestDialog(string currentUserId, string friendId, SocketIO client)
         {
             InitializeComponent();
 
-            Initialize(currentUserId, friendId);
+            Initialize(currentUserId, friendId, client);
 
         }
 
-        public void Initialize(string currentUserId, string friendId)
+        public void Initialize(string currentUserId, string friendId, SocketIO client)
         {
-            InitConstants(currentUserId, friendId);
+            InitConstants(currentUserId, friendId, client);
             GetGroups();
         }
 
-        public void InitConstants(string currentUserId, string friendId)
+        public void InitConstants(string currentUserId, string friendId, SocketIO client)
         {
             this.currentUserId = currentUserId;
             this.friendId = friendId;
+            this.client = client;
         }
 
         public void GetGroups()
@@ -125,6 +128,8 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            string eventData = id + "|" + friendId;
+                            client.EmitAsync("user_send_friend_request", eventData);
                             this.Close();
                         }
                     }

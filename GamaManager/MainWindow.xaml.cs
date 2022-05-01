@@ -693,6 +693,7 @@ namespace GamaManager
                             List<Group> totalGroups = myObj.groups;
                             foreach (Group group in totalGroups)
                             {
+                                string groupId = group._id;
                                 string name = group.name;
                                 string insensitiveCaseName = name.ToLower();
                                 string searchedGroupsBoxContent = searchedGroupsBox.Text;
@@ -713,6 +714,8 @@ namespace GamaManager
                                     localGroupNameLabel.Text = name;
                                     localGroup.Children.Add(localGroupNameLabel);
                                     searchedGroups.Children.Add(localGroup);
+                                    localGroup.DataContext = groupId;
+                                    localGroup.MouseLeftButtonUp += SelectGroupHandler;
                                 }
                             }
                         }
@@ -725,6 +728,39 @@ namespace GamaManager
                 this.Close();
             }
         }
+
+        public void SelectGroupHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel group = ((StackPanel)(sender));
+            object groupData = group.DataContext;
+            string groupId = ((string)(groupData));
+            SelectGroup(groupId);
+        }
+
+        public void SelectGroup (string groupId)
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    string objText = reader.ReadToEnd();
+                    GroupResponseInfo myObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                    string status = myObj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        Group group = myObj.group;
+                        string groupName = group.name;
+                        mainControl.SelectedIndex = 19;
+                    }
+                }
+            }
+        }
+
 
         public void GetGroups ()
         {
@@ -6662,6 +6698,18 @@ namespace GamaManager
                         }
                     });
                 });
+                client.On("user_receive_group_request", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string groupId = result[0];
+                    string userId = result[1];
+                    bool isRequestForMe = userId == currentUserId;
+                    if (isRequestForMe)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => GetGroupRequests());
+                    }
+                });
                 await client.ConnectAsync();
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -8484,7 +8532,7 @@ namespace GamaManager
             /*object mainControlData = mainControl.DataContext;
             string friendId = ((string)(mainControlData));*/
             string friendId = cachedUserProfileId;
-            Dialogs.AddGroupRequestDialog dialog = new Dialogs.AddGroupRequestDialog(currentUserId, friendId);
+            Dialogs.AddGroupRequestDialog dialog = new Dialogs.AddGroupRequestDialog(currentUserId, friendId, client);
             dialog.Show();
             friendProfilePopup.IsOpen = false;
         }

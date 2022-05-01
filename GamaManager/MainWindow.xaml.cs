@@ -61,6 +61,10 @@ namespace GamaManager
         public Brush enabledColor;
         public bool isFullScreenMode = false;
         public string cachedUserProfileId = "";
+        public string cachedGroupId = "";
+        public byte[] manualAttachment;
+        public string manualAttachmentExt;
+
         public ObservableCollection<Model> Collection { get; set; }
 
         public MainWindow(string id)
@@ -88,7 +92,7 @@ namespace GamaManager
 
         }
 
-        public void GetTotalFriendsCount ()
+        public void GetTotalFriendsCount()
         {
             int countFriends = 0;
             try
@@ -147,12 +151,12 @@ namespace GamaManager
 
         }
 
-        public void GetFriendsHandler (object sender, TextChangedEventArgs e)
+        public void GetFriendsHandler(object sender, TextChangedEventArgs e)
         {
             GetFriends();
         }
 
-        public void GetFriends ()
+        public void GetFriends()
         {
             GetConnectedFriends();
             GetOfflineFriends();
@@ -258,12 +262,12 @@ namespace GamaManager
 
         }
 
-        public void OpenChatHandler (object sender, RoutedEventArgs e)
+        public void OpenChatHandler(object sender, RoutedEventArgs e)
         {
             OpenChat();
         }
 
-        public void OpenChat ()
+        public void OpenChat()
         {
             object openChatBtnData = openChatBtn.DataContext;
             string id = ((string)(openChatBtnData));
@@ -293,7 +297,7 @@ namespace GamaManager
             }
         }
 
-        public void GetConnectedFriends ()
+        public void GetConnectedFriends()
         {
             try
             {
@@ -444,7 +448,7 @@ namespace GamaManager
             }
         }
 
-        public void ShowFriendInfoHandler (object sender, RoutedEventArgs e)
+        public void ShowFriendInfoHandler(object sender, RoutedEventArgs e)
         {
             StackPanel friend = ((StackPanel)(sender));
             object friendData = friend.DataContext;
@@ -452,7 +456,7 @@ namespace GamaManager
             ShowFriendInfo(friendId, friend);
         }
 
-        public void ShowFriendInfo (string friendId, StackPanel friend)
+        public void ShowFriendInfo(string friendId, StackPanel friend)
         {
             try
             {
@@ -493,18 +497,18 @@ namespace GamaManager
             }
         }
 
-        public void HideFriendInfoHandler (object sender, RoutedEventArgs e)
+        public void HideFriendInfoHandler(object sender, RoutedEventArgs e)
         {
             HideFriendInfo();
         }
 
-        public void HideFriendInfo ()
+        public void HideFriendInfo()
         {
             friendInfoPopup.IsOpen = false;
         }
 
 
-        public void GetOfflineFriends ()
+        public void GetOfflineFriends()
         {
             try
             {
@@ -650,7 +654,7 @@ namespace GamaManager
             }
         }
 
-        public void GetFriendsSettings ()
+        public void GetFriendsSettings()
         {
 
             GetFriends();
@@ -673,7 +677,7 @@ namespace GamaManager
 
         }
 
-        public void GetSearchedGroups ()
+        public void GetSearchedGroups()
         {
             try
             {
@@ -729,6 +733,326 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        public void OpenAddIllustrationPageHandler(object sender, RoutedEventArgs e)
+        {
+            OpenAddIllustrationPage();
+        }
+
+        public void OpenAddIllustrationPage()
+        {
+            mainControl.SelectedIndex = 23;
+        }
+
+        public void OpenAddManualPageHandler(object sender, RoutedEventArgs e)
+        {
+            OpenAddManualPage();
+        }
+
+        public void OpenAddManualPage ()
+        {
+            mainControl.SelectedIndex = 21;
+        }
+
+        public void AddManualHandler (object sender, RoutedEventArgs e)
+        {
+            AddManual();
+        }
+
+        public void AddManual ()
+        {
+            try
+            {
+                string manualNameBoxContent = manualNameBox.Text;
+                string manualDescBoxContent = manualDescBox.Text;
+                string manualLang = "";
+                object rawIsChecked = manualLangRuBtn.IsChecked;
+                bool isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    manualLang = "русский";
+                }
+                rawIsChecked = manualLangEngBtn.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    manualLang = "english";
+                }
+                string manualCategories = "";
+                rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Достижения";
+                }
+                rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Достижения";
+                }
+                rawIsChecked = manualCategoriesCharactersBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Персонажи";
+                }
+                rawIsChecked = manualCategoriesClassesBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Классы";
+                }
+                rawIsChecked = manualCategoriesCooperativeBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Кооператив";
+                }
+                rawIsChecked = manualCategoriesCraftBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Крафтинг";
+                }
+                rawIsChecked = manualCategoriesModesBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Режимы игры";
+                }
+                rawIsChecked = manualCategoriesTutorialsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Основы игры";
+                }
+                rawIsChecked = manualCategoriesRewardsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Награды";
+                }
+                rawIsChecked = manualCategoriesMapsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Карты или уровни";
+                }
+                rawIsChecked = manualCategoriesSettingsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Модификации или настройки";
+                }
+                rawIsChecked = manualCategoriesMultiplayerBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Мультиплеер";
+                }
+                rawIsChecked = manualCategoriesSecretsBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Секреты";
+                }
+                rawIsChecked = manualCategoriesStoryBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Сюжет или история";
+                }
+                rawIsChecked = manualCategoriesTradeBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Обмен";
+                }
+                rawIsChecked = manualCategoriesSpeedRunBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Прохождения";
+                }
+                rawIsChecked = manualCategoriesWeaponBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Оружие";
+                }
+                rawIsChecked = manualWorkShopBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    int manualCategoriesLength = manualCategories.Length;
+                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                    if (isManualCategoriesLengthExists)
+                    {
+                        manualCategories += "|";
+                    }
+                    manualCategories += "Мастерская";
+                }
+                rawIsChecked = drmBox.IsChecked;
+                isChecked = ((bool)(rawIsChecked));
+                bool isDrm = false;
+                string rawIsDrm = "false";
+                if (isChecked)
+                {
+                    isDrm = true;
+                    rawIsDrm = "true";
+                }
+                /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 20;
+                            GetCommunityInfo();
+                        }
+                    }
+                }*/
+
+                string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = manualAttachment;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                mainControl.SelectedIndex = 20;
+                GetCommunityInfo();
+
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenCommunityInfoHandler(object sender, RoutedEventArgs e)
+        {
+            OpenCommunityInfo();
+        }
+
+        public void OpenCommunityInfo()
+        {
+            mainControl.SelectedIndex = 20;
+            GetCommunityInfo();
         }
 
         public void SelectGroupHandler (object sender, RoutedEventArgs e)
@@ -788,7 +1112,7 @@ namespace GamaManager
                                 {
                                     List<GroupRelation> relations = myInnerObj.relations;
                                     int countGroupUsers = 0;
-                                    List<string>  relationGroupUserIds = new List<string>();
+                                    List<string> relationGroupUserIds = new List<string>();
                                     foreach (GroupRelation relation in relations)
                                     {
                                         string relationUser = relation.user;
@@ -806,17 +1130,125 @@ namespace GamaManager
                                     countGroupUsersLabel.Text = countGroupUsersLabelContent;
                                     bool isMyUserInGroup = relationGroupUserIds.Contains(currentUserId);
                                     bool isMyUserNotInGroup = !isMyUserInGroup;
-                                    groupJoinBtn.IsEnabled = isMyUserNotInGroup;
+                                    if (isMyUserNotInGroup)
+                                    {
+                                        groupJoinBtn.Content = "Присоединиться";
+                                        groupJoinBtn.Click -= ExitFromGroupHandler;
+                                        groupJoinBtn.Click += JoinToGroupHandler;
+                                    }
+                                    else
+                                    {
+                                        groupJoinBtn.Content = "Выйти";
+                                        groupJoinBtn.Click -= JoinToGroupHandler;
+                                        groupJoinBtn.Click += ExitFromGroupHandler;
+                                    }
                                 }
                             }
                         }
+                        cachedGroupId = groupId;
                         mainControl.SelectedIndex = 19;
                     }
                 }
             }
         }
 
-        public void OpenLinkHandler (object sender, RoutedEventArgs e)
+        public void ExitFromGroupHandler (object sender, RoutedEventArgs e)
+        {
+            ExitFromGroup();
+        }
+
+        public void ExitFromGroup ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/remove/?id=" + currentUserId + @"&group=" + cachedGroupId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            string msgContent = "Вы были успешно удалены из группы";
+                            GetGroupRequests();
+                            GetFriendsSettings();
+                            SelectGroup(cachedGroupId);
+                            MessageBox.Show(msgContent, "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void JoinToGroupHandler (object sender, RoutedEventArgs e)
+        {
+            JoinToGroup();
+        }
+
+        public void JoinToGroup ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + cachedGroupId + @"&user=" + currentUserId + "&request=" + "mockId");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + cachedGroupId);
+                        innerWebRequest.Method = "GET";
+                        innerWebRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                        {
+                            using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                            {
+                                js = new JavaScriptSerializer();
+                                objText = innerReader.ReadToEnd();
+                                GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                status = myInnerObj.status;
+                                isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    Group group = myInnerObj.group;
+                                    string groupName = group.name;
+                                    string msgContent = "Вы были успешно добавлены в группу " + groupName;
+                                    GetGroupRequests();
+                                    GetFriendsSettings();
+                                    SelectGroup(cachedGroupId);
+                                    MessageBox.Show(msgContent, "Внимание");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenLinkHandler(object sender, RoutedEventArgs e)
         {
             TextBlock label = ((TextBlock)(sender));
             object labelData = label.DataContext;
@@ -824,7 +1256,7 @@ namespace GamaManager
             OpenLink(link);
         }
 
-        public void OpenLink (string link)
+        public void OpenLink(string link)
         {
             System.Diagnostics.Process.Start(new ProcessStartInfo
             {
@@ -833,7 +1265,7 @@ namespace GamaManager
             });
         }
 
-        public void GetGroups ()
+        public void GetGroups()
         {
             try
             {
@@ -855,6 +1287,7 @@ namespace GamaManager
                             List<Group> totalGroups = myObj.groups;
                             foreach (Group group in totalGroups)
                             {
+                                string groupId = group._id;
                                 string owner = group.owner;
                                 string name = group.name;
                                 string insensitiveCaseName = name.ToLower();
@@ -877,6 +1310,8 @@ namespace GamaManager
                                     localGroupNameLabel.Text = name;
                                     localGroup.Children.Add(localGroupNameLabel);
                                     groups.Children.Add(localGroup);
+                                    localGroup.DataContext = groupId;
+                                    localGroup.MouseLeftButtonUp += SelectGroupHandler;
                                 }
                             }
                         }
@@ -924,7 +1359,7 @@ namespace GamaManager
 
         }
 
-        public void GetFriendRequestsFromMe ()
+        public void GetFriendRequestsFromMe()
         {
             try
             {
@@ -1082,10 +1517,266 @@ namespace GamaManager
             GetFriendsSettings();
             GetGroupRequests();
             GetRequestsCount();
-            GetComments();/**/
+            GetComments(currentUserId);
+            GetCommunityInfo();/**/
         }
 
-        public void GetGroupRequests ()
+        public void GetCommunityInfo ()
+        {
+            GetIllustrations();
+            GetManuals();
+        }
+
+        public void GetIllustrations ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+                            illustrations.Children.Clear();
+                            int totalIllustrationsCount = totalIllustrations.Count;
+                            bool isHaveIllustrations = totalIllustrationsCount >= 1;
+                            if (isHaveIllustrations)
+                            {
+                                illustrations.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Illustration totalIllustrationsItem in totalIllustrations)
+                                {
+                                    string id = totalIllustrationsItem._id;
+                                    string title = totalIllustrationsItem.title;
+                                    string desc = totalIllustrationsItem.desc;
+                                    StackPanel illustration = new StackPanel();
+                                    illustration.Width = 500;
+                                    illustration.Margin = new Thickness(15);
+                                    illustration.Background = System.Windows.Media.Brushes.LightGray;
+                                    TextBlock illustrationTitleLabel = new TextBlock();
+                                    illustrationTitleLabel.FontSize = 16;
+                                    illustrationTitleLabel.Margin = new Thickness(15);
+                                    illustrationTitleLabel.Text = title;
+                                    illustration.Children.Add(illustrationTitleLabel);
+                                    Image illustrationPhoto = new Image();
+                                    illustrationPhoto.Margin = new Thickness(15);
+                                    illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                    illustrationPhoto.Width = 50;
+                                    illustrationPhoto.Height = 50;
+                                    illustrationPhoto.BeginInit();
+                                    illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                    illustrationPhoto.EndInit();
+                                    illustration.Children.Add(illustrationPhoto);
+                                    TextBlock illustrationDescLabel = new TextBlock();
+                                    illustrationDescLabel.Margin = new Thickness(15);
+                                    illustrationDescLabel.Text = desc;
+                                    illustration.Children.Add(illustrationDescLabel);
+                                    illustrations.Children.Add(illustration);
+                                    illustration.DataContext = id;
+                                    illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Иллюстраций не найдено";
+                                illustrations.HorizontalAlignment = HorizontalAlignment.Center;
+                                illustrations.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetManuals()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ManualsResponseInfo myobj = (ManualsResponseInfo)js.Deserialize(objText, typeof(ManualsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Manual> totalManuals = myobj.manuals;
+                            manuals.Children.Clear();
+                            int totalManualsCount = totalManuals.Count;
+                            bool isHaveManuals = totalManualsCount >= 1;
+                            if (isHaveManuals)
+                            {
+                                manuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Manual totalManualsItem in totalManuals)
+                                {
+                                    string id = totalManualsItem._id;
+                                    string title = totalManualsItem.title;
+                                    string desc = totalManualsItem.desc;
+                                    StackPanel manual = new StackPanel();
+                                    manual.Width = 500;
+                                    manual.Margin = new Thickness(15);
+                                    manual.Background = System.Windows.Media.Brushes.LightGray;
+                                    TextBlock manualTitleLabel = new TextBlock();
+                                    manualTitleLabel.FontSize = 16;
+                                    manualTitleLabel.Margin = new Thickness(15);
+                                    manualTitleLabel.Text = title;
+                                    manual.Children.Add(manualTitleLabel);
+                                    Image manualPhoto = new Image();
+                                    manualPhoto.Margin = new Thickness(15);
+                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                    manualPhoto.Width = 50;
+                                    manualPhoto.Height = 50;
+                                    manualPhoto.BeginInit();
+                                    // manualPhoto.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                    manualPhoto.EndInit();
+                                    manual.Children.Add(manualPhoto);
+                                    TextBlock manualDescLabel = new TextBlock();
+                                    manualDescLabel.Margin = new Thickness(15);
+                                    manualDescLabel.Text = desc;
+                                    manual.Children.Add(manualDescLabel);
+                                    manuals.Children.Add(manual);
+                                    manual.DataContext = id;
+                                    manual.MouseLeftButtonUp += SelectManualHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Руководств не найдено";
+                                manuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                manuals.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectManualHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel manual = ((StackPanel)(sender));
+            object manualData = manual.DataContext;
+            string manualId = ((string)(manualData));
+            SelectManual(manualId);
+        }
+
+        public void SelectManual (string manualId)
+        {
+            mainControl.SelectedIndex = 22;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/get/?id=" + manualId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ManualResponseInfo myobj = (ManualResponseInfo)js.Deserialize(objText, typeof(ManualResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Manual manual = myobj.manual;
+                            string title = manual.title;
+                            string desc = manual.desc;
+                            mainManualPhoto.BeginInit();
+                            mainManualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + manualId));
+                            mainManualPhoto.EndInit();
+                            mainManualTitleLabel.Text = title;
+                            mainManualDescLabel.Text = desc;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectIllustrationHandler(object sender, RoutedEventArgs e)
+        {
+            StackPanel illustration = ((StackPanel)(sender));
+            object illustrationData = illustration.DataContext;
+            string illustrationId = ((string)(illustrationData));
+            SelectIllustration(illustrationId);
+        }
+
+        public void SelectIllustration(string illustrationId)
+        {
+            mainControl.SelectedIndex = 24;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/get/?id=" + illustrationId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationResponseInfo myobj = (IllustrationResponseInfo)js.Deserialize(objText, typeof(IllustrationResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Illustration illustration = myobj.illustration;
+                            string title = illustration.title;
+                            string desc = illustration.desc;
+                            mainIllustrationPhoto.BeginInit();
+                            mainIllustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + illustrationId));
+                            mainIllustrationPhoto.EndInit();
+                            mainIllustrationTitleLabel.Text = title;
+                            mainIllustrationDescLabel.Text = desc;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetGroupRequests()
         {
             foreach (Popup groupRequest in groupRequests.Children)
             {
@@ -1219,7 +1910,7 @@ namespace GamaManager
             }
         }
 
-        public void RejectGroupRequestHandler (object sender, RoutedEventArgs e)
+        public void RejectGroupRequestHandler(object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             object rawBtnData = btn.DataContext;
@@ -1231,7 +1922,7 @@ namespace GamaManager
             RejectGroupRequest(groupId, userId, requestId, request);
         }
 
-        public void RejectGroupRequest (string groupId, string userId, string requestId, Popup request)
+        public void RejectGroupRequest(string groupId, string userId, string requestId, Popup request)
         {
             try
             {
@@ -1288,12 +1979,12 @@ namespace GamaManager
             }
         }
 
-        public void RemoveFriendHandler (object sender, RoutedEventArgs e)
+        public void RemoveFriendHandler(object sender, RoutedEventArgs e)
         {
             RemoveFriend();
         }
 
-        public void RemoveFriend ()
+        public void RemoveFriend()
         {
             try
             {
@@ -1360,7 +2051,7 @@ namespace GamaManager
             }
         }
 
-        public void CloseGroupRequestHandler (object sender, RoutedEventArgs e)
+        public void CloseGroupRequestHandler(object sender, RoutedEventArgs e)
         {
             PackIcon btn = ((PackIcon)(sender));
             object btnData = btn.DataContext;
@@ -3615,7 +4306,7 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo (string id, bool isLocalUser)
+        public void GetUserInfo(string id, bool isLocalUser)
         {
 
             string gamesSettings = "public";
@@ -3757,7 +4448,7 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-            
+
             Visibility reverseVisibility = Visibility.Collapsed;
             bool isOtherUser = !isLocalUser;
             if (isOtherUser)
@@ -3816,7 +4507,7 @@ namespace GamaManager
 
         }
 
-        public void GetFriendRequests ()
+        public void GetFriendRequests()
         {
             foreach (Popup friendRequest in friendRequests.Children)
             {
@@ -5232,7 +5923,7 @@ namespace GamaManager
             RejectFriendRequest(friendId, requestId, request);
         }
 
-        public void GetFriendRequestsForMe ()
+        public void GetFriendRequestsForMe()
         {
             try
             {
@@ -5324,7 +6015,7 @@ namespace GamaManager
                                                     ContextMenu friendContextMenu = new ContextMenu();
                                                     MenuItem friendContextMenuItem = new MenuItem();
                                                     friendContextMenuItem.Header = "Принять";
-                                                    Dictionary<String, Object>  friendContextMenuItemData = new Dictionary<String, Object>();
+                                                    Dictionary<String, Object> friendContextMenuItemData = new Dictionary<String, Object>();
                                                     friendContextMenuItemData.Add("friendId", senderId);
                                                     friendContextMenuItemData.Add("requestId", requestId);
                                                     friendContextMenuItem.DataContext = friendContextMenuItemData;
@@ -5375,7 +6066,7 @@ namespace GamaManager
             AcceptGroupRequestFromSettings(groupId, userId, requestId);
         }
 
-        public void AcceptGroupRequestFromSettings (string groupId, string userId, string requestId)
+        public void AcceptGroupRequestFromSettings(string groupId, string userId, string requestId)
         {
             try
             {
@@ -5496,7 +6187,7 @@ namespace GamaManager
             }
         }
 
-        public void AcceptFriendRequestFromSettingsHandler (object sender, RoutedEventArgs e)
+        public void AcceptFriendRequestFromSettingsHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object rawMenuItemData = menuItem.DataContext;
@@ -5506,7 +6197,7 @@ namespace GamaManager
             AcceptFriendRequestFromSettings(friendId, requestId);
         }
 
-        public void AcceptFriendRequestFromSettings (string friendId, string requestId)
+        public void AcceptFriendRequestFromSettings(string friendId, string requestId)
         {
             try
             {
@@ -5592,7 +6283,7 @@ namespace GamaManager
             }
         }
 
-        public void RejectFriendRequestFromSettingsHandler (object sender, RoutedEventArgs e)
+        public void RejectFriendRequestFromSettingsHandler(object sender, RoutedEventArgs e)
         {
 
             MenuItem menuItem = ((MenuItem)(sender));
@@ -5603,7 +6294,7 @@ namespace GamaManager
             RejectFriendRequestFromSettings(friendId, requestId);
         }
 
-        public void RejectFriendRequestFromSettings (string friendId, string requestId)
+        public void RejectFriendRequestFromSettings(string friendId, string requestId)
         {
             try
             {
@@ -5765,7 +6456,7 @@ namespace GamaManager
 
         }
 
-        public void RejectFriendRequest (string friendId, string requestId, Popup request)
+        public void RejectFriendRequest(string friendId, string requestId, Popup request)
         {
             try
             {
@@ -5924,7 +6615,7 @@ namespace GamaManager
             }
         }
 
-        public void AcceptGroupRequestHandler (object sender, RoutedEventArgs e)
+        public void AcceptGroupRequestHandler(object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             object rawBtnData = btn.DataContext;
@@ -6064,14 +6755,14 @@ namespace GamaManager
             }
         }
 
-        public void OpenGroupsSettings ()
+        public void OpenGroupsSettings()
         {
             mainControl.SelectedIndex = 16;
             friendsSettingsControl.SelectedIndex = 8;
             GetGroups();
         }
 
-        public void OpenFriendsSettings ()
+        public void OpenFriendsSettings()
         {
             mainControl.SelectedIndex = 16;
             friendsSettingsControl.SelectedIndex = 0;
@@ -6145,7 +6836,7 @@ namespace GamaManager
 
         }
 
-        public void GetRequestsCount ()
+        public void GetRequestsCount()
         {
             int countRequests = 0;
 
@@ -6298,13 +6989,17 @@ namespace GamaManager
 
         public void CommunityItemSelected(int index)
         {
+            bool isMain = index == 1;
             bool isDiscussions = index == 2;
-            if (isDiscussions)
+            if (isMain)
+            {
+                mainControl.SelectedIndex = 20;
+                GetCommunityInfo();
+            }
+            else if (isDiscussions)
             {
                 mainControl.SelectedIndex = 6;
-
                 AddHistoryRecord();
-
             }
             ResetMenu();
         }
@@ -6316,7 +7011,7 @@ namespace GamaManager
             StoreItemSelected(selectedIndex);
         }
 
-        public void GetNews ()
+        public void GetNews()
         {
             try
             {
@@ -6358,7 +7053,7 @@ namespace GamaManager
                                         if (isOkStatus)
                                         {
                                             List<GameResponseInfo> games = myInnerObj.games;
-                                            int  gameIndex = games.FindIndex((GameResponseInfo localGame) =>
+                                            int gameIndex = games.FindIndex((GameResponseInfo localGame) =>
                                             {
                                                 string localGameId = localGame._id;
                                                 bool isFound = localGameId == game;
@@ -7195,9 +7890,10 @@ namespace GamaManager
                     string userId = result[0];
                     string profileId = result[0];
                     bool isRequestForMe = profileId == cachedUserProfileId && userId != currentUserId;
+                    Debugger.Log(0, "debug", Environment.NewLine + "profileId: " + profileId + ", userId: " + userId + ", cachedUserProfileId: " + cachedUserProfileId + Environment.NewLine);
                     if (isRequestForMe)
                     {
-                        Application.Current.Dispatcher.Invoke(() => GetComments());
+                        Application.Current.Dispatcher.Invoke(() => GetComments(profileId));
                     }
                 });
                 await client.ConnectAsync();
@@ -7289,6 +7985,45 @@ namespace GamaManager
         private void BackForHistoryHandler(object sender, MouseButtonEventArgs e)
         {
             BackForHistory();
+        }
+
+        public void AddIllustationHandler (object sender, RoutedEventArgs e)
+        {
+            AddIllustation();
+        }
+
+        public void AddIllustation ()
+        {
+            try
+            {
+                string illustrationNameBoxContent = illustrationNameBox.Text;
+                string illustrationDescBoxContent = illustrationDescBox.Text;
+                object rawIsChecked = drmBox.IsChecked;
+                bool isChecked = ((bool)(rawIsChecked));
+                bool isDrm = false;
+                string rawIsDrm = "false";
+                if (isChecked)
+                {
+                    isDrm = true;
+                    rawIsDrm = "true";
+                }
+                string url = "http://localhost:4000/api/illustrations/add/?id=" + currentUserId + @"&title=" + illustrationNameBoxContent + @"&desc=" + illustrationDescBoxContent + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = manualAttachment;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                mainControl.SelectedIndex = 20;
+                GetCommunityInfo();
+
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void BackForHistory()
@@ -8078,7 +8813,7 @@ namespace GamaManager
             ReturnToProfile();
         }
 
-        public void ReturnToProfile ()
+        public void ReturnToProfile()
         {
             object mainControlData = mainControl.DataContext;
             string userId = ((string)(mainControlData));
@@ -8520,24 +9255,24 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void OpenNewsHandler (object sender, MouseButtonEventArgs e)
+        private void OpenNewsHandler(object sender, MouseButtonEventArgs e)
         {
             OpenNews();
         }
 
-        public void OpenNews ()
+        public void OpenNews()
         {
             mainControl.SelectedIndex = 14;
             GetNews();
             AddHistoryRecord();
         }
 
-        private void ToggleNotificationsPopupHandler (object sender, MouseButtonEventArgs e)
+        private void ToggleNotificationsPopupHandler(object sender, MouseButtonEventArgs e)
         {
             ToggleNotificationsPopup();
         }
 
-        public void ToggleNotificationsPopup ()
+        public void ToggleNotificationsPopup()
         {
             /*bool isOpen = notificationsPopup.IsOpen;
             bool toggleValue = !isOpen;
@@ -8545,7 +9280,7 @@ namespace GamaManager
             notificationsPopup.IsOpen = true;
         }
 
-        private void SelectAccountSettingsItemHandler (object sender, MouseButtonEventArgs e)
+        private void SelectAccountSettingsItemHandler(object sender, MouseButtonEventArgs e)
         {
             StackPanel item = ((StackPanel)(sender));
             object data = item.DataContext;
@@ -8554,12 +9289,12 @@ namespace GamaManager
             SelectAccountSettingsItem(index);
         }
 
-        public void SelectAccountSettingsItem (int index)
+        public void SelectAccountSettingsItem(int index)
         {
             accountSettingsControl.SelectedIndex = index;
         }
 
-        private void SelectFriendSettingsItemHandler (object sender, MouseButtonEventArgs e)
+        private void SelectFriendSettingsItemHandler(object sender, MouseButtonEventArgs e)
         {
             StackPanel item = ((StackPanel)(sender));
             object data = item.DataContext;
@@ -8568,17 +9303,17 @@ namespace GamaManager
             SelectFriendSettingsItem(index);
         }
 
-        public void SelectFriendSettingsItem (int index)
+        public void SelectFriendSettingsItem(int index)
         {
             friendsSettingsControl.SelectedIndex = index;
         }
 
-        private void DeleteAccountHandler (object sender, MouseButtonEventArgs e)
+        private void DeleteAccountHandler(object sender, MouseButtonEventArgs e)
         {
             DeleteAccount();
         }
 
-        public void DeleteAccount ()
+        public void DeleteAccount()
         {
             try
             {
@@ -8623,13 +9358,13 @@ namespace GamaManager
             }
         }
 
-        public void GetAccountSettings ()
+        public void GetAccountSettings()
         {
             string idLabelContent = @"Office ware game manager ID: " + currentUserId;
             idLabel.Text = idLabelContent;
         }
 
-        private void RejectFriendRequestsHandler (object sender, RoutedEventArgs e)
+        private void RejectFriendRequestsHandler(object sender, RoutedEventArgs e)
         {
             RejectFriendRequests();
         }
@@ -8644,22 +9379,22 @@ namespace GamaManager
             OpenBlackListManagement();
         }
 
-        public void OpenBlackListManagement ()
+        public void OpenBlackListManagement()
         {
 
         }
 
-        private void OpenFriendProfilePopupHandler (object sender, RoutedEventArgs e)
+        private void OpenFriendProfilePopupHandler(object sender, RoutedEventArgs e)
         {
             OpenFriendProfilePopup();
         }
 
-        public void OpenFriendProfilePopup ()
+        public void OpenFriendProfilePopup()
         {
             friendProfilePopup.IsOpen = true;
         }
 
-        private void FriendsSettingsControlItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        private void FriendsSettingsControlItemSelectedHandler(object sender, SelectionChangedEventArgs e)
         {
             FriendsSettingsControlItemSelected();
         }
@@ -8679,12 +9414,12 @@ namespace GamaManager
             }
         }
 
-        private void ToggleFriendsListManagementHandler (object sender, RoutedEventArgs e)
+        private void ToggleFriendsListManagementHandler(object sender, RoutedEventArgs e)
         {
             ToggleFriendsListManagement();
         }
 
-        public void ToggleFriendsListManagement ()
+        public void ToggleFriendsListManagement()
         {
             Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
             bool isVisible = friendsListManagementVisibility == visible;
@@ -8746,12 +9481,12 @@ namespace GamaManager
             }
         }
 
-        private void RemoveFriendsHandler (object sender, RoutedEventArgs e)
+        private void RemoveFriendsHandler(object sender, RoutedEventArgs e)
         {
             RemoveFriends();
         }
 
-        public void RemoveFriends ()
+        public void RemoveFriends()
         {
             foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
             {
@@ -8909,7 +9644,7 @@ namespace GamaManager
             GetFriendsSettings();
         }
 
-        private void SelectFriendsTypeHandler (object sender, MouseButtonEventArgs e)
+        private void SelectFriendsTypeHandler(object sender, MouseButtonEventArgs e)
         {
             TextBlock typeLabel = ((TextBlock)(sender));
             object typeLabelData = typeLabel.DataContext;
@@ -8917,7 +9652,7 @@ namespace GamaManager
             SelectFriendsType(type);
         }
 
-        public void SelectFriendsType (string type)
+        public void SelectFriendsType(string type)
         {
             bool isAll = type == "All";
             bool isNothing = type == "Nothing";
@@ -9009,44 +9744,44 @@ namespace GamaManager
             }
         }
 
-        private void OpenDiscussionsHandler (object sender, MouseButtonEventArgs e)
+        private void OpenDiscussionsHandler(object sender, MouseButtonEventArgs e)
         {
             OpenDiscussions();
         }
 
-        public void OpenDiscussions ()
+        public void OpenDiscussions()
         {
             string currentGameName = gameNameLabel.Text;
             forumsKeywordsBox.Text = currentGameName;
             mainControl.SelectedIndex = 6;
         }
 
-        private void SearchGroupsHandler (object sender, MouseButtonEventArgs e)
+        private void SearchGroupsHandler(object sender, MouseButtonEventArgs e)
         {
             SearchGroups();
         }
 
-        public void SearchGroups ()
+        public void SearchGroups()
         {
             mainControl.SelectedIndex = 17;
         }
 
-        private void GetSearchedGroupsHandler (object sender, TextChangedEventArgs e)
+        private void GetSearchedGroupsHandler(object sender, TextChangedEventArgs e)
         {
             GetSearchedGroups();
         }
 
-        private void GetGroupsHandler (object sender, TextChangedEventArgs e)
+        private void GetGroupsHandler(object sender, TextChangedEventArgs e)
         {
             GetGroups();
         }
 
-        private void AddGroupRequestHandler (object sender, MouseButtonEventArgs e)
+        private void AddGroupRequestHandler(object sender, MouseButtonEventArgs e)
         {
             AddGroupRequest();
         }
 
-        public void AddGroupRequest ()
+        public void AddGroupRequest()
         {
             /*object mainControlData = mainControl.DataContext;
             string friendId = ((string)(mainControlData));*/
@@ -9056,12 +9791,12 @@ namespace GamaManager
             friendProfilePopup.IsOpen = false;
         }
 
-        private void AddGroupHandler (object sender, RoutedEventArgs e)
+        private void AddGroupHandler(object sender, RoutedEventArgs e)
         {
             AddGroup();
         }
 
-        public void AddGroup ()
+        public void AddGroup()
         {
             try
             {
@@ -9119,7 +9854,7 @@ namespace GamaManager
             GetGroupRequestsForMe();
         }
 
-        public void GetGroupRequestsForMe ()
+        public void GetGroupRequestsForMe()
         {
             try
             {
@@ -9253,7 +9988,7 @@ namespace GamaManager
             ToggleCommentFooter();
         }
 
-        public void ToggleCommentFooter ()
+        public void ToggleCommentFooter()
         {
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             int userProfileCommentBoxContentLength = userProfileCommentBoxContent.Length;
@@ -9268,7 +10003,7 @@ namespace GamaManager
             }
         }
 
-        private void SendCommentHandler (object sender, RoutedEventArgs e)
+        private void SendCommentHandler(object sender, RoutedEventArgs e)
         {
             SendComment();
         }
@@ -9278,7 +10013,7 @@ namespace GamaManager
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/add/?id=" + currentUserId + "&msg=" + userProfileCommentBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/add/?id=" + cachedUserProfileId + "&msg=" + userProfileCommentBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9293,7 +10028,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             userProfileCommentBox.Text = "";
-                            GetComments();
+                            GetComments(cachedUserProfileId);
                             string eventData = currentUserId + "|" + cachedUserProfileId;
                             client.EmitAsync("user_send_comment", eventData);
                         }
@@ -9307,13 +10042,13 @@ namespace GamaManager
             }
         }
 
-        public void GetComments ()
+        public void GetComments(string id)
         {
             comments.Children.Clear();
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + cachedUserProfileId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9357,6 +10092,26 @@ namespace GamaManager
             {
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
+            }
+        }
+
+        private void PickFileHandler (object sender, RoutedEventArgs e)
+        {
+            PickFile();
+        }
+
+        public void PickFile ()
+        {
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Title = "Выберите обложку";
+            ofd.Filter = "Png documents (.png)|*.png";
+            bool? res = ofd.ShowDialog();
+            bool isOpened = res != false;
+            if (isOpened)
+            {
+                string path = ofd.FileName;
+                manualAttachmentExt = System.IO.Path.GetExtension(path);
+                manualAttachment = ImageFileToByteArray(path);
             }
         }
 
@@ -9595,7 +10350,8 @@ namespace GamaManager
         public string user;
     }
 
-    class NewsResponseInfo {
+    class NewsResponseInfo
+    {
         public string status;
         public List<News> news;
     }
@@ -9668,6 +10424,52 @@ namespace GamaManager
     {
         public string user;
         public string msg;
+        public DateTime date;
+    }
+
+    class ManualsResponseInfo
+    {
+        public List<Manual> manuals;
+        public string status;
+    }
+
+    class ManualResponseInfo
+    {
+        public Manual manual;
+        public string status;
+    }
+
+    class Manual
+    {
+        public string _id;
+        public string title;
+        public string desc;
+        public string user;
+        public string categories;
+        public string lang;
+        public bool isDrm;
+        public DateTime date;
+    }
+
+    class IllustrationsResponseInfo
+    {
+        public List<Illustration> illustrations;
+        public string status;
+    }
+
+    class IllustrationResponseInfo
+    {
+        public Illustration illustration;
+        public string status;
+    }
+
+    class Illustration
+    {
+        public string _id;
+        public string title;
+        public string desc;
+        public string user;
+        public bool isDrm;
         public DateTime date;
     }
 

@@ -4535,7 +4535,7 @@
                             Background="Blue"    
                         >
                             <TextBlock
-                                Text="Создание группу"    
+                                Text="Создание группы"    
                                 TextAlignment="Center"
                                 Margin="0 15"
                                 FontSize="20"
@@ -4827,7 +4827,6 @@
                                         Width="175"
                                         Height="35"
                                         Content="Присоединиться"
-                                        Click="OpenEditProfileHandler"
                                     />
                                 </StackPanel>
                             </DockPanel>
@@ -5221,7 +5220,715 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel>
+                                <TextBlock
+                                    Text="Активность сообщества"
+                                    FontSize="20"
+                                    Margin="15 10"
+                                />
+                                <TextBlock
+                                    Text="Фанатский и официальный контент для всех игр и программ в Office ware game manager."
+                                    FontSize="16"
+                                    Margin="15 10"
+                                />
+                                <TabControl>
+                                    <TabItem
+                                        Header="Все"        
+                                    >
+                                        <StackPanel>
 
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Скриншоты"                                    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Иллюстрации"    
+                                    >
+                                        <StackPanel>
+                                            <Button
+                                                Margin="5"
+                                                HorizontalAlignment="Right"
+                                                Width="175"
+                                                Height="25"
+                                                Content="Загрузите вашу иллюстрацию"
+                                                Click="OpenAddIllustrationPageHandler"    
+                                            />
+                                            <WrapPanel
+                                                x:Name="illustrations"
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Трансляции"    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Видео"        
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Мастерская"        
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Новости"    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Руководства"        
+                                    >
+                                        <StackPanel>
+                                            <Button
+                                                Margin="5"
+                                                HorizontalAlignment="Right"
+                                                Width="175"
+                                                Height="25"
+                                                Content="Добавить свое руководство"
+                                                Click="OpenAddManualPageHandler"    
+                                            />
+                                            <WrapPanel
+                                                x:Name="manuals"
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Обзоры"    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Игра >> Написание нового руководства"    
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Чтобы приступить к написанию руководства, заполните поля ниже. Затем вам нужно будет добавить разделы."    
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Введите название руководства"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBox
+                                x:Name="manualNameBox"
+                                HorizontalAlignment="Left"
+                                Margin="15 5"
+                                Height="25"
+                                Width="275"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Выберите логотип"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Это изображение будет представлять ваше руководство в сообществе Steam. При поиске, просмотре и фильтрации списка руководств это&#10;изображение будет отображаться рядом с вашим руководством."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Для наилучших результатов используйте что-нибудь, что отражало бы суть или тематику руководства."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Изображение должно быть квадратным, размерами не менее 195 на 195 пикселей"
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <Button
+                                HorizontalAlignment="Left"
+                                Content="Выберите файл"
+                                Margin="15 5"
+                                Height="25"
+                                Width="175"
+                                Click="PickFileHandler"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Опишите ваше руководство"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Опишите в этом поле ваше руководство, что в нем интересного и для чего оно было создано. Это описание будет отображаться в списке&#10;руководств для этой игры."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBox
+                                x:Name="manualDescBox"
+                                HorizontalAlignment="Left"
+                                Margin="15 5"
+                                Height="250"
+                                Width="750"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="К каким категориям относится ваше руководство?"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"        
+                                    />
+                                    <RowDefinition 
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                    <RowDefinition
+                                        Height="25"    
+                                    />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Margin="15 5"
+                                    Text="Категория"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                />
+                                <TextBlock
+                                    Margin="15 5"
+                                    Text="Языки"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesAchievementsBox"
+                                    Margin="15 5"
+                                    Content="Достижения"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                />
+                                <RadioButton
+                                    x:Name="manualLangRuBtn"
+                                    Margin="15 5"
+                                    IsChecked="True"
+                                    Content="Русский"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesCharactersBox"
+                                    Margin="15 5"
+                                    Content="Персонажи"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                />
+                                <RadioButton
+                                    x:Name="manualLangEngBtn"
+                                    Margin="15 5"
+                                    Content="English"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesClassesBox"
+                                    Margin="15 5"
+                                    Content="Классы"
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesCooperativeBox"
+                                    Margin="15 5"
+                                    Content="Кооператив"
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesCraftBox"
+                                    Margin="15 5"
+                                    Content="Крафтинг"
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesModesBox"
+                                    Margin="15 5"
+                                    Content="Режимы игры"
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesTutorialsBox"
+                                    Margin="15 5"
+                                    Content="Основы игры"
+                                    Grid.Row="7"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesRewardsBox"
+                                    Margin="15 5"
+                                    Content="Награды"
+                                    Grid.Row="8"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesMapsBox"
+                                    Margin="15 5"
+                                    Content="Карты или уровни"
+                                    Grid.Row="9"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesSettingsBox"
+                                    Margin="15 5"
+                                    Content="Модификации или настройки"
+                                    Grid.Row="10"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesMultiplayerBox"                                    
+                                    Margin="15 5"
+                                    Content="Мультиплеер"
+                                    Grid.Row="11"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesSecretsBox"
+                                    Margin="15 5"
+                                    Content="Секреты"
+                                    Grid.Row="12"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesStoryBox"
+                                    Margin="15 5"
+                                    Content="Сюжет или история"
+                                    Grid.Row="13"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesTradeBox"
+                                    Margin="15 5"
+                                    Content="Обмен"
+                                    Grid.Row="14"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesSpeedRunBox"
+                                    Margin="15 5"
+                                    Content="Прохождения"
+                                    Grid.Row="15"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualCategoriesWeaponBox"
+                                    Margin="15 5"
+                                    Content="Оружие"
+                                    Grid.Row="16"
+                                    Grid.Column="0"
+                                />
+                                <CheckBox
+                                    x:Name="manualWorkShopBox"
+                                    Margin="15 5"
+                                    Content="Мастерская"
+                                    Grid.Row="17"
+                                    Grid.Column="0"
+                                />
+                            </Grid>
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Права и авторство"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <CheckBox
+                                x:Name="drmBox"
+                                Margin="15 5"
+                                Content="Я являюсь автором этого руководства или имею официальное разрешение от автора руководства на эту публикацию."    
+                            />
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                                Margin="15 5"    
+                                Orientation="Horizontal"
+                            >
+                                <Button
+                                    Margin="15 5"
+                                    Height="25"
+                                    Width="125"
+                                    Content="Отмена"    
+                                    Click="OpenCommunityInfoHandler"
+                                />
+                                <Button
+                                    Height="25"
+                                    Width="175"
+                                    Content="Сохранить и продолжить"    
+                                    Click="AddManualHandler"
+                                />
+                            </StackPanel>
+
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel
+                                HorizontalAlignment="Center"
+                            >
+                                <StackPanel
+                                    Margin="15"
+                                    Background="LightGray" 
+                                    Width="750"
+                                >
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Image
+                                            x:Name="mainManualPhoto"
+                                            Margin="15"
+                                            Width="50"    
+                                            Height="50"    
+                                            ImageFailed="SetDefautAvatarHandler"
+                                        >
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                />
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock
+                                            x:Name="mainManualTitleLabel"
+                                            FontSize="18"
+                                            Margin="15"
+                                            Text="Заголовок мануала"
+                                        />
+                                    </StackPanel>
+                                    <TextBlock
+                                        x:Name="mainManualDescLabel"
+                                        Margin="15"
+                                        Text="Описание мануала"    
+                                    />
+                                    <Separator
+                                        Margin="15 5"    
+                                    />
+                                </StackPanel>
+                            </DockPanel>                        
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Загрузите вашу иллюстрацию"    
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Вы создали потрясающую иллюстрацию к этой игре? Загрузите ее и поделитесь ей с сообществом."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Иллюстрация, которую вы хотите загрузить, должна быть создана именно вами. Не загружайте работы других людей, просто попросите их&#10;сделать это самостоятельно."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Примечание: уважайте своих товарищей из сообщества и не загружайте неподобающие иллюстрации, содержащие сцены расизма, сцены&#10;сексуального характера, наготу или чрезмерную жестокость. Такие работы, а также работы, нарушающие авторские права, будут удаляться."    
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Дайте название своей иллюстрации"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBox
+                                x:Name="illustrationNameBox"
+                                HorizontalAlignment="Left"
+                                Margin="15 5"
+                                Height="25"
+                                Width="275"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Выберите файл иллюстрации"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Допускаются форматы JPG, PNG и GIF."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBlock
+                                Text="Размер файла не должен превышать 8 МБ."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <Button
+                                HorizontalAlignment="Left"
+                                Content="Выберите файл"
+                                Margin="15 5"
+                                Height="25"
+                                Width="175"
+                                Click="PickFileHandler"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Добавить описание"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Используйте это место, чтобы описать вашу работу или рассказать о том, что вас вдохновило создать ее."
+                                Margin="15 5"
+                                FontSize="16"
+                            />
+                            <TextBox
+                                x:Name="illustrationDescBox"
+                                HorizontalAlignment="Left"
+                                Margin="15 5"
+                                Height="250"
+                                Width="750"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Установить видимость"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Margin="0 15"
+                            >
+                                <RadioButton
+                                    IsChecked="True"
+                                    Margin="15 0"
+                                    Content="Для друзей"    
+                                />
+                                <RadioButton
+                                    Margin="15 0"
+                                    Content="Для себя"    
+                                />
+                                <RadioButton
+                                    Margin="15 0"
+                                    Content="не показывать"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                Text="Ваша иллюстрация должна быть видима всем, чтобы она появилась в Центре Сообщества."
+                                Margin="15 5"
+                            />
+                            <Separator
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="Права и авторство"
+                                Margin="15 5"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Убедитесь, что ваша иллюстрация не нарушает соглашение подписчика Steam и правила поведения в Steam."
+                                Margin="15 5"
+                            />
+                            <CheckBox
+                                Margin="15 5"
+                                Content="Я подтверждаю, что являюсь автором этой иллюстрации"
+                            />
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                                Margin="15 5"    
+                                Orientation="Horizontal"
+                            >
+                                <Button
+                                    Margin="15 5"
+                                    Height="25"
+                                    Width="125"
+                                    Content="Отмена"    
+                                    Click="OpenCommunityInfoHandler"
+                                />
+                                <Button
+                                    Height="25"
+                                    Width="275"
+                                    Content="Сохранить иллюстрацию в центре сообщества"    
+                                    Click="AddIllustationHandler"
+                                />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel
+                                HorizontalAlignment="Center"
+                            >
+                                <StackPanel
+                                    Margin="15"
+                                    Background="LightGray" 
+                                    Width="750"
+                                >
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Image
+                                            x:Name="mainIllustrationPhoto"
+                                            Margin="15"
+                                            Width="50"    
+                                            Height="50"    
+                                            ImageFailed="SetDefautAvatarHandler"
+                                        >
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                />
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock
+                                            x:Name="mainIllustrationTitleLabel"
+                                            FontSize="18"
+                                            Margin="15"
+                                            Text="Заголовок иллюстрации"
+                                        />
+                                    </StackPanel>
+                                    <TextBlock
+                                        x:Name="mainIllustrationDescLabel"
+                                        Margin="15"
+                                        Text="Описание иллюстрации"    
+                                    />
+                                    <Separator
+                                        Margin="15 5"    
+                                    />
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

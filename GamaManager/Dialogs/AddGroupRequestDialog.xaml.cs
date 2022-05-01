@@ -129,7 +129,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             string eventData = id + "|" + friendId;
-                            client.EmitAsync("user_send_friend_request", eventData);
+                            client.EmitAsync("user_send_group_request", eventData);
                             this.Close();
                         }
                     }

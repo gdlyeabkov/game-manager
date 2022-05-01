@@ -667,6 +667,8 @@ namespace GamaManager
 
             GetGroups();
 
+            GetGroupRequestsForMe();
+
             GetSearchedGroups();
 
         }
@@ -755,12 +757,81 @@ namespace GamaManager
                     {
                         Group group = myObj.group;
                         string groupName = group.name;
+                        DateTime groupDate = group.date;
+                        string rawGroupDate = groupDate.ToLongDateString();
+                        string groupLang = group.lang;
+                        string groupCountry = group.country;
+                        string groupFanPage = group.fanPage;
+                        string groupTwitch = group.twitch;
+                        string groupYotube = group.youtube;
+                        groupNameLabel.Text = groupName;
+                        groupDateLabel.Text = rawGroupDate;
+                        groupLangLabel.Text = groupLang;
+                        groupCountryLabel.Text = groupCountry;
+                        groupFanPageLabel.DataContext = groupFanPage;
+                        groupTwitchLabel.DataContext = groupTwitch;
+                        groupYoutubeLabel.DataContext = groupYotube;
+                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/all");
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                        {
+                            using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                            {
+                                js = new JavaScriptSerializer();
+                                objText = innerReader.ReadToEnd();
+                                GroupRelationsResponseInfo myInnerObj = (GroupRelationsResponseInfo)js.Deserialize(objText, typeof(GroupRelationsResponseInfo));
+
+                                status = myInnerObj.status;
+                                isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    List<GroupRelation> relations = myInnerObj.relations;
+                                    int countGroupUsers = 0;
+                                    List<string>  relationGroupUserIds = new List<string>();
+                                    foreach (GroupRelation relation in relations)
+                                    {
+                                        string relationUser = relation.user;
+                                        string relationGroup = relation.group;
+                                        bool isGroupUser = relationGroup == groupId;
+                                        if (isGroupUser)
+                                        {
+                                            countGroupUsers++;
+                                            relationGroupUserIds.Add(relationUser);
+                                        }
+                                    }
+                                    string rawCountGroupUsers = countGroupUsers.ToString();
+                                    string newLine = Environment.NewLine;
+                                    string countGroupUsersLabelContent = rawCountGroupUsers + newLine + "участники";
+                                    countGroupUsersLabel.Text = countGroupUsersLabelContent;
+                                    bool isMyUserInGroup = relationGroupUserIds.Contains(currentUserId);
+                                    bool isMyUserNotInGroup = !isMyUserInGroup;
+                                    groupJoinBtn.IsEnabled = isMyUserNotInGroup;
+                                }
+                            }
+                        }
                         mainControl.SelectedIndex = 19;
                     }
                 }
             }
         }
 
+        public void OpenLinkHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock label = ((TextBlock)(sender));
+            object labelData = label.DataContext;
+            string link = ((string)(labelData));
+            OpenLink(link);
+        }
+
+        public void OpenLink (string link)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = link,
+                UseShellExecute = true
+            });
+        }
 
         public void GetGroups ()
         {
@@ -1008,12 +1079,19 @@ namespace GamaManager
             GetScreenShots("", true);
             GetForums("");
             GetGameCollections();
-            GetFriendsSettings();/**/
+            GetFriendsSettings();
             GetGroupRequests();
+            GetRequestsCount();
+            GetComments();/**/
         }
 
         public void GetGroupRequests ()
         {
+            foreach (Popup groupRequest in groupRequests.Children)
+            {
+                groupRequest.IsOpen = false;
+            }
+            groupRequests.Children.Clear();
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
@@ -1265,6 +1343,7 @@ namespace GamaManager
                                 mainControl.DataContext = currentUserId;
                                 mainControl.SelectedIndex = 0;
                                 GetFriendsSettings();
+                                GetOnlineFriends();
                             }
                         }
                         else
@@ -3737,8 +3816,13 @@ namespace GamaManager
 
         }
 
-        public void GetFriendRequests()
+        public void GetFriendRequests ()
         {
+            foreach (Popup friendRequest in friendRequests.Children)
+            {
+                friendRequest.IsOpen = false;
+            }
+            friendRequests.Children.Clear();
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
@@ -3750,9 +3834,7 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -3780,9 +3862,7 @@ namespace GamaManager
                                     {
                                         js = new JavaScriptSerializer();
                                         objText = innerReader.ReadToEnd();
-
                                         UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                                         status = myInnerObj.status;
                                         isOkStatus = status == "OK";
                                         if (isOkStatus)
@@ -3807,16 +3887,11 @@ namespace GamaManager
                                             friendRequestBodySenderAvatar.Width = 100;
                                             friendRequestBodySenderAvatar.Height = 100;
                                             friendRequestBodySenderAvatar.BeginInit();
-
-                                            // Uri friendRequestBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                             Uri friendRequestBodySenderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + senderId);
-
                                             BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
                                             friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
                                             friendRequestBodySenderAvatar.EndInit();
-
                                             friendRequestBodySenderAvatar.ImageFailed += SetDefautAvatarHandler;
-
                                             friendRequestBody.Children.Add(friendRequestBodySenderAvatar);
                                             TextBlock friendRequestBodySenderLoginLabel = new TextBlock();
                                             friendRequestBodySenderLoginLabel.Margin = new Thickness(10);
@@ -5193,7 +5268,9 @@ namespace GamaManager
                             {
                                 foreach (FriendRequest requestForMe in requestsForMe)
                                 {
+                                    string requestId = requestForMe._id;
                                     string senderId = requestForMe.user;
+                                    string friendId = requestForMe.friend;
                                     HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
@@ -5244,6 +5321,24 @@ namespace GamaManager
                                                     friendNameLabel.Text = senderLogin;
                                                     friend.Children.Add(friendNameLabel);
                                                     friendRequestsForMe.Children.Add(friend);
+                                                    ContextMenu friendContextMenu = new ContextMenu();
+                                                    MenuItem friendContextMenuItem = new MenuItem();
+                                                    friendContextMenuItem.Header = "Принять";
+                                                    Dictionary<String, Object>  friendContextMenuItemData = new Dictionary<String, Object>();
+                                                    friendContextMenuItemData.Add("friendId", senderId);
+                                                    friendContextMenuItemData.Add("requestId", requestId);
+                                                    friendContextMenuItem.DataContext = friendContextMenuItemData;
+                                                    friendContextMenuItem.Click += AcceptFriendRequestFromSettingsHandler;
+                                                    friendContextMenu.Items.Add(friendContextMenuItem);
+                                                    friendContextMenuItem = new MenuItem();
+                                                    friendContextMenuItem.Header = "Отклонить";
+                                                    friendContextMenuItemData = new Dictionary<String, Object>();
+                                                    friendContextMenuItemData.Add("friendId", senderId);
+                                                    friendContextMenuItemData.Add("requestId", requestId);
+                                                    friendContextMenuItem.DataContext = friendContextMenuItemData;
+                                                    friendContextMenuItem.Click += RejectFriendRequestFromSettingsHandler;
+                                                    friendContextMenu.Items.Add(friendContextMenuItem);
+                                                    friend.ContextMenu = friendContextMenu;
                                                 }
                                             }
                                         }
@@ -5258,6 +5353,305 @@ namespace GamaManager
                                 requestsNotFoundLabel.Text = "Извините, здесь никого нет.";
                                 friendRequestsForMe.Children.Add(requestsNotFoundLabel);
                             }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void AcceptGroupRequestFromSettingsHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            string groupId = ((string)(menuItemData["groupId"]));
+            string userId = ((string)(menuItemData["userId"]));
+            string requestId = ((string)(menuItemData["requestId"]));
+            AcceptGroupRequestFromSettings(groupId, userId, requestId);
+        }
+
+        public void AcceptGroupRequestFromSettings (string groupId, string userId, string requestId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        Group group = myInnerObj.group;
+                                        string groupName = group.name;
+                                        string msgContent = "Вы были успешно добавлены в группу " + groupName;
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось принять приглашение", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RejectGroupRequestFromSettingsHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            string groupId = ((string)(menuItemData["groupId"]));
+            string userId = ((string)(menuItemData["userId"]));
+            string requestId = ((string)(menuItemData["requestId"]));
+            RejectGroupRequestFromSettings(groupId, userId, requestId);
+        }
+
+        public void RejectGroupRequestFromSettings(string groupId, string userId, string requestId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/reject/?id=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User friend = myobj.user;
+                                        string friendLogin = friend.login;
+                                        string msgContent = "Вы отклонили приглашение в группу";
+                                        GetGroupRequests();
+                                        GetFriendsSettings();
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось отклонить приглашение", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void AcceptFriendRequestFromSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            string friendId = ((string)(menuItemData["friendId"]));
+            string requestId = ((string)(menuItemData["requestId"]));
+            AcceptFriendRequestFromSettings(friendId, requestId);
+        }
+
+        public void AcceptFriendRequestFromSettings (string friendId, string requestId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User friend = myobj.user;
+                                        string friendName = friend.name;
+                                        string msgContent = "Пользователь " + friendName + " был добавлен в друзья";
+                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                        js = new JavaScriptSerializer();
+                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                        List<Game> currentGames = loadedContent.games;
+                                        Settings currentSettings = loadedContent.settings;
+                                        List<FriendSettings> currentFriends = loadedContent.friends;
+                                        List<string> currentCollections = loadedContent.collections;
+                                        List<FriendSettings> updatedFriends = currentFriends;
+                                        updatedFriends.Add(new FriendSettings()
+                                        {
+                                            id = friendId,
+                                            isFriendOnlineNotification = true,
+                                            isFriendOnlineSound = true,
+                                            isFriendPlayedNotification = true,
+                                            isFriendPlayedSound = true,
+                                            isFriendSendMsgNotification = true,
+                                            isFriendSendMsgSound = true,
+                                            isFavoriteFriend = false
+                                        });
+                                        string savedContent = js.Serialize(new SavedContent
+                                        {
+                                            games = currentGames,
+                                            friends = updatedFriends,
+                                            settings = currentSettings,
+                                            collections = currentCollections
+                                        });
+                                        File.WriteAllText(saveDataFilePath, savedContent);
+                                        GetFriendsSettings();
+                                        GetFriendRequests();
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось принять приглашение", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RejectFriendRequestFromSettingsHandler (object sender, RoutedEventArgs e)
+        {
+
+            MenuItem menuItem = ((MenuItem)(sender));
+            object rawMenuItemData = menuItem.DataContext;
+            Dictionary<String, Object> menuItemData = ((Dictionary<String, Object>)(rawMenuItemData));
+            string friendId = ((string)(menuItemData["friendId"]));
+            string requestId = ((string)(menuItemData["requestId"]));
+            RejectFriendRequestFromSettings(friendId, requestId);
+        }
+
+        public void RejectFriendRequestFromSettings (string friendId, string requestId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+
+                                    myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User friend = myobj.user;
+                                        string friendLogin = friend.login;
+                                        string msgContent = "Вы отклонили приглашение в друзья";
+                                        GetFriendsSettings();
+                                        GetFriendRequests();
+                                        MessageBox.Show(msgContent, "Внимание");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось отклонить приглашение", "Ошибка");
                         }
                     }
                 }
@@ -5530,7 +5924,7 @@ namespace GamaManager
             }
         }
 
-        public void AcceptGroupRequestHandler(object sender, RoutedEventArgs e)
+        public void AcceptGroupRequestHandler (object sender, RoutedEventArgs e)
         {
             Button btn = ((Button)(sender));
             object rawBtnData = btn.DataContext;
@@ -5576,11 +5970,13 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-                                        CloseFriendRequest(request);
+                                        CloseGroupRequest(request);
                                         Group group = myInnerObj.group;
                                         string groupName = group.name;
                                         string msgContent = "Вы были успешно добавлены в группу " + groupName;
                                         request.IsOpen = false;
+                                        GetGroupRequests();
+                                        GetFriendsSettings();
                                         MessageBox.Show(msgContent, "Внимание");
                                     }
                                 }
@@ -5747,6 +6143,88 @@ namespace GamaManager
             // SetUserStatus("online");
             UpdateUserStatus("online");
 
+        }
+
+        public void GetRequestsCount ()
+        {
+            int countRequests = 0;
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<FriendRequest> myRequests = new List<FriendRequest>();
+                            List<FriendRequest> requests = myobj.requests;
+                            foreach (FriendRequest request in requests)
+                            {
+                                string recepientId = request.friend;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
+                                {
+                                    myRequests.Add(request);
+                                }
+                            }
+                            foreach (FriendRequest myRequest in myRequests)
+                            {
+                                countRequests++;
+                            }
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GroupRequestsResponseInfo myInnerObj = (GroupRequestsResponseInfo)js.Deserialize(objText, typeof(GroupRequestsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GroupRequest> localMyRequests = new List<GroupRequest>();
+                                        List<GroupRequest> localRequests = myInnerObj.requests;
+                                        foreach (GroupRequest request in localRequests)
+                                        {
+                                            string recepientId = request.user;
+                                            bool isRequestForMe = currentUserId == recepientId;
+                                            if (isRequestForMe)
+                                            {
+                                                localMyRequests.Add(request);
+                                            }
+                                        }
+                                        foreach (GroupRequest myRequest in localMyRequests)
+                                        {
+                                            countRequests++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+            string rawCountRequests = countRequests.ToString();
+            string countNewRequestsLabelContent = "Новых приглашений: " + rawCountRequests;
+            countNewRequestsLabel.Text = countNewRequestsLabelContent;
         }
 
         public void SetUserStatus(string userStatus)
@@ -7068,6 +7546,34 @@ namespace GamaManager
                     }
                 }
             }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            userNameContentLabel.Text = userName;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void SelectScreenShotsFilterHandler(object sender, SelectionChangedEventArgs e)
@@ -8293,6 +8799,7 @@ namespace GamaManager
                                                     collections = currentCollections
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
+                                                GetOnlineFriends();
                                             }
                                         }
                                         else
@@ -8547,7 +9054,22 @@ namespace GamaManager
             try
             {
                 string groupNameBoxContent = groupNameBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?name=" + groupNameBoxContent + "&id=" + currentUserId);
+                int groupLangSelectorIndex = groupLangSelector.SelectedIndex;
+                ItemCollection groupLangSelectorItems = groupLangSelector.Items;
+                object rawGroupLangSelectorItem = groupLangSelectorItems[groupLangSelectorIndex];
+                ComboBoxItem groupLangSelectorItem = ((ComboBoxItem)(rawGroupLangSelectorItem));
+                object groupLangSelectorItemData = groupLangSelectorItem.DataContext;
+                string groupLang = groupLangSelectorItemData.ToString();
+                int groupCountrySelectorIndex = groupCountrySelector.SelectedIndex;
+                ItemCollection groupCountrySelectorItems = groupCountrySelector.Items;
+                object rawGroupCountrySelectorItem = groupCountrySelectorItems[groupCountrySelectorIndex];
+                ComboBoxItem groupCountrySelectorItem = ((ComboBoxItem)(rawGroupCountrySelectorItem));
+                object groupCountrySelectorItemData = groupCountrySelectorItem.DataContext;
+                string groupCountry = groupCountrySelectorItemData.ToString();
+                string groupFanPageBoxContent = groupFanPageBox.Text;
+                string groupTwitchBoxContent = groupTwitchBox.Text;
+                string groupYoutubeBoxContent = groupYoutubeBox.Text;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?name=" + groupNameBoxContent + "&id=" + currentUserId + "&lang=" + groupLang + "&country=" + groupCountry + "&fanpage=" + groupFanPageBoxContent + "&twitch=" + groupTwitchBoxContent + "&youtube=" + groupYoutubeBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8563,6 +9085,11 @@ namespace GamaManager
                         {
                             MessageBox.Show("Группа была создана", "Внимание");
                             groupNameBox.Text = "";
+                            groupLangSelector.SelectedIndex = 0;
+                            groupCountrySelector.SelectedIndex = 0;
+                            groupFanPageBox.Text = "";
+                            groupTwitchBox.Text = "";
+                            groupYoutubeBox.Text = "";
                             GetFriendsSettings();
                         }
                     }
@@ -8574,6 +9101,246 @@ namespace GamaManager
                 this.Close();
             }
         }
+
+        private void GetGroupRequestsForMeHandler(object sender, TextChangedEventArgs e)
+        {
+            GetGroupRequestsForMe();
+        }
+
+        public void GetGroupRequestsForMe ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GroupRequestsResponseInfo myobj = (GroupRequestsResponseInfo)js.Deserialize(objText, typeof(GroupRequestsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GroupRequest> requestsForMe = new List<GroupRequest>();
+                            List<GroupRequest> requests = myobj.requests;
+                            foreach (GroupRequest request in requests)
+                            {
+                                string recepientId = request.user;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
+                                {
+                                    requestsForMe.Add(request);
+                                }
+                            }
+                            myGroupRequests.Children.Clear();
+                            int countRequestsForMe = requestsForMe.Count;
+                            bool isHaveRequests = countRequestsForMe >= 1;
+                            if (isHaveRequests)
+                            {
+                                foreach (GroupRequest requestForMe in requestsForMe)
+                                {
+                                    string requestId = requestForMe._id;
+                                    string groupId = requestForMe.group;
+                                    string userId = requestForMe.user;
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+                                            GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                Group group = myInnerObj.group;
+                                                string groupName = group.name;
+                                                string insensitiveCaseSenderName = groupName.ToLower();
+                                                string myGroupRequestsBoxContent = myGroupRequestsBox.Text;
+                                                string insensitiveCaseKeywords = myGroupRequestsBoxContent.ToLower();
+                                                bool isGroupFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
+                                                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                                                bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                                bool isRequestMatch = isGroupFound || isFilterDisabled;
+                                                if (isRequestMatch)
+                                                {
+                                                    StackPanel myGroupRequest = new StackPanel();
+                                                    myGroupRequest.Margin = new Thickness(15);
+                                                    myGroupRequest.Width = 250;
+                                                    myGroupRequest.Height = 50;
+                                                    myGroupRequest.Orientation = Orientation.Horizontal;
+                                                    myGroupRequest.Background = System.Windows.Media.Brushes.DarkCyan;
+                                                    Image myGroupRequestIcon = new Image();
+                                                    myGroupRequestIcon.Width = 50;
+                                                    myGroupRequestIcon.Height = 50;
+                                                    myGroupRequestIcon.BeginInit();
+                                                    myGroupRequestIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                                    myGroupRequestIcon.EndInit();
+                                                    myGroupRequestIcon.ImageFailed += SetDefautAvatarHandler;
+                                                    myGroupRequest.Children.Add(myGroupRequestIcon);
+                                                    TextBlock myGroupRequestGroupNameLabel = new TextBlock();
+                                                    myGroupRequestGroupNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                                    myGroupRequestGroupNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                    myGroupRequestGroupNameLabel.Text = groupName;
+                                                    myGroupRequest.Children.Add(myGroupRequestGroupNameLabel);
+                                                    myGroupRequests.Children.Add(myGroupRequest);
+                                                    ContextMenu myGroupRequestContextMenu = new ContextMenu();
+                                                    MenuItem myGroupRequestContextMenuItem = new MenuItem();
+                                                    myGroupRequestContextMenuItem.Header = "Принять";
+                                                    Dictionary<String, Object> myGroupRequestContextMenuItemData = new Dictionary<String, Object>();
+                                                    myGroupRequestContextMenuItemData.Add("groupId", groupId);
+                                                    myGroupRequestContextMenuItemData.Add("userId", userId);
+                                                    myGroupRequestContextMenuItemData.Add("requestId", requestId);
+                                                    myGroupRequestContextMenuItem.DataContext = myGroupRequestContextMenuItemData;
+                                                    myGroupRequestContextMenuItem.Click += AcceptGroupRequestFromSettingsHandler;
+                                                    myGroupRequestContextMenu.Items.Add(myGroupRequestContextMenuItem);
+                                                    myGroupRequestContextMenuItem = new MenuItem();
+                                                    myGroupRequestContextMenuItem.Header = "Отклонить";
+                                                    myGroupRequestContextMenuItemData = new Dictionary<String, Object>();
+                                                    myGroupRequestContextMenuItemData.Add("groupId", groupId);
+                                                    myGroupRequestContextMenuItemData.Add("userId", userId);
+                                                    myGroupRequestContextMenuItemData.Add("requestId", requestId);
+                                                    myGroupRequestContextMenuItem.DataContext = myGroupRequestContextMenuItemData;
+                                                    myGroupRequestContextMenuItem.Click += RejectGroupRequestFromSettingsHandler;
+                                                    myGroupRequestContextMenu.Items.Add(myGroupRequestContextMenuItem);
+                                                    myGroupRequest.ContextMenu = myGroupRequestContextMenu;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                TextBlock requestsNotFoundLabel = new TextBlock();
+                                requestsNotFoundLabel.Margin = new Thickness(15);
+                                requestsNotFoundLabel.FontSize = 18;
+                                requestsNotFoundLabel.Text = "Извините, здесь ничего нет.";
+                                myGroupRequests.Children.Add(requestsNotFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void ToggleCommentFooterHandler(object sender, TextChangedEventArgs e)
+        {
+            ToggleCommentFooter();
+        }
+
+        public void ToggleCommentFooter ()
+        {
+            string userProfileCommentBoxContent = userProfileCommentBox.Text;
+            int userProfileCommentBoxContentLength = userProfileCommentBoxContent.Length;
+            bool isContentExists = userProfileCommentBoxContentLength >= 1;
+            if (isContentExists)
+            {
+                userProfileCommentFooter.Visibility = visible;
+            }
+            else
+            {
+                userProfileCommentFooter.Visibility = invisible;
+            }
+        }
+
+        private void SendCommentHandler (object sender, RoutedEventArgs e)
+        {
+            SendComment();
+        }
+
+        public void SendComment()
+        {
+            string userProfileCommentBoxContent = userProfileCommentBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/add/?id=" + currentUserId + "&msg=" + userProfileCommentBoxContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            userProfileCommentBox.Text = "";
+                            GetComments();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetComments ()
+        {
+            comments.Children.Clear();
+            string userProfileCommentBoxContent = userProfileCommentBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        CommentsResponseInfo myobj = (CommentsResponseInfo)js.Deserialize(objText, typeof(CommentsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Comment> commentsList = myobj.comments;
+                            foreach (Comment commentsListItem in commentsList)
+                            {
+                                string msg = commentsListItem.msg;
+                                StackPanel comment = new StackPanel();
+                                Image commentAvatar = new Image();
+                                commentAvatar.Width = 50;
+                                commentAvatar.Height = 50;
+                                commentAvatar.BeginInit();
+                                commentAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                commentAvatar.EndInit();
+                                comment.Children.Add(commentAvatar);
+                                TextBlock commenMsgLabel = new TextBlock();
+                                commenMsgLabel.Text = msg;
+                                comment.Children.Add(commenMsgLabel);
+                                comments.Children.Add(comment);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
 
     }
 
@@ -8839,6 +9606,12 @@ namespace GamaManager
         public string _id;
         public string name;
         public string owner;
+        public DateTime date;
+        public string lang;
+        public string country;
+        public string fanPage;
+        public string twitch;
+        public string youtube;
     }
 
     class GroupRelationsResponseInfo
@@ -8864,6 +9637,19 @@ namespace GamaManager
         public string _id;
         public string group;
         public string user;
+    }
+
+    class CommentsResponseInfo
+    {
+        public string status;
+        public List<Comment> comments;
+    }
+
+    class Comment
+    {
+        public string user;
+        public string msg;
+        public DateTime date;
     }
 
 }

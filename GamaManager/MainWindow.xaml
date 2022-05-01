@@ -354,6 +354,7 @@
                                     Kind="Add"    
                                 />
                                 <TextBlock
+                                    x:Name="countNewRequestsLabel"
                                     Margin="15 0"
                                     Text="Новых приглашений: 0"    
                                 />
@@ -854,6 +855,79 @@
                                     </StackPanel>
                                 </DockPanel>
                             </DockPanel>
+                            <StackPanel
+                                x:Name="comments"    
+                            />
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <Image
+                                    x:Name="userProfileCommentAvatar"
+                                    Margin="15"
+                                    Width="50"    
+                                    Height="50"    
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBox
+                                    x:Name="userProfileCommentBox"
+                                    Height="35"
+                                    Width="750"
+                                    TextChanged="ToggleCommentFooterHandler"
+                                >
+                                    <TextBox.Resources>
+                                        <VisualBrush
+                                            x:Key="hinttext"
+                                            AlignmentX="Left"
+                                            Stretch="None"
+                                            TileMode="None"
+                                        >
+                                            <VisualBrush.Visual>
+                                                <DockPanel>
+                                                    <TextBlock
+                                                    Height="35"
+                                                    Width="750"
+                                                    Text="Оставить комментарий"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                                </DockPanel>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </TextBox.Resources>
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="FontSize" Value="12" />
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="{x:Null}">
+                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </StackPanel>
+                            <StackPanel
+                                x:Name="userProfileCommentFooter"
+                                Visibility="Collapsed"    
+                            >
+                                <Button
+                                    Content="Отправить"
+                                    Height="25"
+                                    Width="125"
+                                    Click="SendCommentHandler"
+                                />
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -1807,6 +1881,7 @@
                                 </Image>
                                 <StackPanel>
                                     <TextBlock
+                                        x:Name="userNameContentLabel"
                                         Margin="15"
                                         FontSize="24"
                                         Text="Имя пользователя"    
@@ -4347,10 +4422,11 @@
                                                         Margin="15"
                                                     />
                                                     <TextBox
+                                                        x:Name="myGroupRequestsBox"
                                                         Width="275"
                                                         Height="25"
                                                         Margin="15 0"
-                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                        TextChanged="GetGroupRequestsForMeHandler"
                                                     >
                                                         <TextBox.Resources>
                                                             <VisualBrush
@@ -4507,6 +4583,167 @@
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
+                            <ComboBox
+                                x:Name="groupLangSelector"
+                                SelectedIndex="0"
+                                Width="125"
+                                Margin="0 5"
+                                HorizontalAlignment="Center"
+                            >
+                                <ComboBoxItem
+                                    DataContext="Русский"
+                                    Content="Русский"    
+                                />
+                                <ComboBoxItem
+                                    DataContext="English"
+                                    Content="English"    
+                                />
+                            </ComboBox>
+                            <ComboBox
+                                x:Name="groupCountrySelector"
+                                SelectedIndex="0"
+                                Width="125"
+                                Margin="0 5"
+                                HorizontalAlignment="Center"
+                            >
+                                <ComboBoxItem
+                                    DataContext="Россия"
+                                    Content="Россия"    
+                                />
+                                <ComboBoxItem
+                                    DataContext="USA"
+                                    Content="USA"    
+                                />
+                            </ComboBox>
+                            <TextBox
+                                x:Name="groupFanPageBox"
+                                Margin="0 15"
+                                Height="25"
+                                Width="275"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Width="275"
+                                                    Text="Ссылка на FanPage группы"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <TextBox
+                                x:Name="groupTwitchBox"
+                                Margin="0 15"
+                                Height="25"
+                                Width="275"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Width="275"
+                                                    Text="Ссылка на twitch группы"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <TextBox
+                                x:Name="groupYoutubeBox"
+                                Margin="0 15"
+                                Height="25"
+                                Width="275"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Width="275"
+                                                    Text="Ссылка на Youtube группы"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                             <Button
                                 Height="25"
                                 Width="125"
@@ -4569,214 +4806,416 @@
                                 </Image>
                                 <StackPanel>
                                     <TextBlock
+                                        x:Name="groupNameLabel"
                                         Margin="15"
                                         FontSize="24"
-                                        Text="Имя пользователя"    
+                                        Text="Имя группы"    
                                     />
                                     <TextBlock
                                         Margin="15"
                                         FontSize="14"
-                                        Text="Россия"    
+                                        Text="группа Office ware game manager"    
                                     />
                                 </StackPanel>
                                 <StackPanel
                                     HorizontalAlignment="Right"    
                                 >
-                                    <TextBlock
-                                        FontSize="20"
-                                        Text="Уровень 0"
-                                        Margin="25 15"
-                                    />
                                     <Button
+                                        x:Name="groupJoinBtn"
                                         Margin="25 15"
                                         HorizontalAlignment="Right"
                                         Width="175"
                                         Height="35"
-                                        Content="{x:Static p:Resources.editProfileBtnContent}"
+                                        Content="Присоединиться"
                                         Click="OpenEditProfileHandler"
                                     />
-                                    <StackPanel
-                                        HorizontalAlignment="Right"
-                                        Orientation="Horizontal"    
-                                    >
-                                        <Button
-                                            Margin="25 0"
-                                            HorizontalAlignment="Right"
-                                            Width="175"
-                                            Height="35"
-                                            Content="Написать"
-                                            Click="OpenChatHandler"
-                                        />
-                                        <Button
-                                            Margin="25 0"
-                                            HorizontalAlignment="Right"
-                                            Width="50"
-                                            Height="35"
-                                            Content="..."
-                                            Click="OpenFriendProfilePopupHandler"
-                                        />
-                                        <Popup
-                                            Placement="Mouse"
-                                            StaysOpen="False"
-                                            Width="250"
-                                            Height="265"
-                                        >
-                                            <Popup.Child>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                >
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="GroupAdd"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Пригласить в группу"    
-                                                            MouseLeftButtonUp="AddGroupRequestHandler"
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="Heart"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Отписаться"    
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="Edit"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Добавить ник"    
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="Sync"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Предложить обмен"    
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="Block"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Добавить в черный список"    
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="Flag"    
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Пожаловаться"    
-                                                        />
-                                                    </StackPanel>
-                                                    <StackPanel
-                                                        Margin="10"
-                                                        Orientation="Horizontal"
-                                                    >
-                                                        <materialDesign:PackIcon
-                                                            Kind="User"
-                                                        />
-                                                        <TextBlock
-                                                            Margin="15 0"
-                                                            Text="Удалить из друзей"
-                                                            MouseLeftButtonUp="RemoveFriendHandler"
-                                                        />
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Popup.Child>
-                                        </Popup>
-                                    </StackPanel>
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel>
-                                <DockPanel
-                                    Margin="25"
-                                >
-                                    <StackPanel
-                                        Margin="25"
-                                        DockPanel.Dock="Right"
-                                        Width="350"
+                                <TabControl>
+                                    <TabItem
+                                        Header="Главная"    
                                     >
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
+                                        <DockPanel
+                                            Margin="25"
                                         >
-                                            <TextBlock
-                                                Margin="10 0"
-                                                Text="{x:Static p:Resources.offlineLabelContent}"    
-                                                FontSize="20"
-                                                Foreground="White"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                        >
-                                            <TextBlock
-                                                Margin="10 0"
-                                                Text="{x:Static p:Resources.gamesLabelContent}"    
-                                                FontSize="20"
-                                                Foreground="White"
-                                            />
-                                            <TextBlock
-                                                Margin="10 0"
-                                                Text="0"    
-                                                FontSize="18"
-                                                Foreground="LightGray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                        >
-                                            <TextBlock
-                                                Margin="10 0"
-                                                Text="{x:Static p:Resources.friendsLabelContent}"    
-                                                FontSize="20"
-                                                Foreground="White"
-                                            />
-                                            <TextBlock
-                                                Margin="10 0"
-                                                Text="0"    
-                                                FontSize="18"
-                                                Foreground="LightGray"
-                                            />
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel
-                                        Margin="25"
+                                            <StackPanel
+                                                Margin="25"
+                                                DockPanel.Dock="Right"
+                                                Width="350"
+                                            >
+                                                <StackPanel
+                                                    Margin="0 15"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        x:Name="countGroupUsersLabel"
+                                                        TextAlignment="Center"
+                                                        FontSize="18"
+                                                        Text="0&#10;участники"
+                                                        Margin="10 0"    
+                                                    />
+                                                    <TextBlock
+                                                        TextAlignment="Center"
+                                                        FontSize="18"
+                                                        Text="0&#10;в игре"
+                                                        Margin="10 0"    
+                                                    />
+                                                    <TextBlock
+                                                        TextAlignment="Center"
+                                                        FontSize="18"
+                                                        Text="0&#10;в сети"
+                                                        Margin="10 0"    
+                                                    />
+                                                </StackPanel>
+                                                <Button
+                                                    Width="100"
+                                                    Height="25"
+                                                    Content="Войти в чат"        
+                                                />
+                                                <Separator
+                                                    Margin="15 5"    
+                                                />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock
+                                                        Text="Создана"    
+                                                        Grid.Row="0"
+                                                        Grid.Column="0"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="groupDateLabel"
+                                                        Text="00/00/00"    
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Язык"    
+                                                        Grid.Row="1"
+                                                        Grid.Column="0"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="groupLangLabel"
+                                                        Text="русский"    
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Страна"    
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="groupCountryLabel"
+                                                        Text="Россия"    
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                    />
+                                                </Grid>
+                                                <Separator
+                                                    Margin="15 5"    
+                                                />
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        x:Name="groupFanPageLabel"
+                                                        Text="FanPage"
+                                                        MouseLeftButtonUp="OpenLinkHandler"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="groupTwitchLabel"
+                                                        Text="Twitch"
+                                                        MouseLeftButtonUp="OpenLinkHandler"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="groupYoutubeLabel"
+                                                        Text="Youttube"
+                                                        MouseLeftButtonUp="OpenLinkHandler"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="25"
+                                            >
+                                                
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Объявления"    
                                     >
-                                    </StackPanel>
-                                </DockPanel>
+                                        <StackPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Обсуждения"    
+                                    >
+                                        <StackPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="События"        
+                                    >
+                                        <StackPanel>
+                                            <Calendar
+                                                Margin="15"
+                                                HorizontalAlignment="Right"
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Участники"    
+                                    >
+                                        <StackPanel>
+                                            <StackPanel
+                                                Margin="0 15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <TextBox
+                                                    Width="275"
+                                                    Margin="15 0"
+                                                    Height="25"
+                                                >
+                                                    <TextBox.Resources>
+                                                        <VisualBrush
+                                                            x:Key="hinttext"
+                                                            AlignmentX="Left"
+                                                            Stretch="None"
+                                                            TileMode="None"
+                                                        >
+                                                            <VisualBrush.Visual>
+                                                                <DockPanel>
+                                                                    <TextBlock
+                                                                        Height="25"
+                                                                        Width="275"
+                                                                        Text="Введите имя или код друга"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                    />
+                                                                </DockPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </TextBox.Resources>
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="FontSize" Value="12" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                                <Button
+                                                    Margin="15 0"
+                                                    Content="Поиск"
+                                                    Width="100"
+                                                    Height="25"
+                                                    
+                                                />
+                                            </StackPanel>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    VerticalAlignment="Center"
+                                                    Text="Участники 0 из 0"    
+                                                />
+                                                <StackPanel
+                                                    HorizontalAlignment="Right"
+                                                    Margin="15 0"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Button
+                                                        Height="25"
+                                                        Width="25"
+                                                        Margin="15 0"    
+                                                    >
+                                                        <Button.Content>
+                                                            <materialDesign:PackIcon
+                                                                Kind="ArrowBack"    
+                                                            />
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <StackPanel
+                                                        VerticalAlignment="Center"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="1"
+                                                            Margin="5 0"    
+                                                        />
+                                                        <TextBlock
+                                                            Text="2"
+                                                            Margin="5 0"    
+                                                        />
+                                                        <TextBlock
+                                                            Text="3"
+                                                            Margin="5 0"    
+                                                        />
+                                                        <TextBlock
+                                                            Text="4"
+                                                            Margin="5 0"    
+                                                        />
+                                                        <TextBlock
+                                                            Text="5"
+                                                            Margin="5 0"    
+                                                        />
+                                                    </StackPanel>
+                                                    <Button
+                                                        Height="25"
+                                                        Width="25"
+                                                        Margin="15 0"    
+                                                    >
+                                                        <Button.Content>
+                                                            <materialDesign:PackIcon
+                                                            Kind="ArrowForward"    
+                                                        />
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <WrapPanel
+                                                x:Name="groupUsers"    
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Комментарии"    
+                                    >
+                                        <StackPanel>
+                                            <Separator
+                                                BorderBrush="Black" 
+                                                BorderThickness="1"
+                                                Margin="15"
+                                            />
+                                            <StackPanel
+                                                Orientation="Horizontal"    
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Margin="15 0"
+                                                    Kind="Chat"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Комментариев: 0"    
+                                                />
+                                                <CheckBox
+                                                    Margin="15 0"
+                                                    Content="Подписаться"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <DockPanel
+                                                    Width="650"
+                                                >
+                                                    <Image
+                                                        Margin="15"
+                                                        Width="35"    
+                                                        Height="35"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel>
+                                                        <StackPanel
+                                                            Orientation="Horizontal"    
+                                                        >
+                                                            <TextBlock
+                                                                Margin="15 0"
+                                                                Text="Имя пользователя"    
+                                                            />
+                                                            <TextBlock
+                                                                Margin="15 0"
+                                                                Text="Дата публикации"    
+                                                                Foreground="LightGray"
+                                                            />
+                                                        </StackPanel>
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="asd"    
+                                                        />
+                                                    </StackPanel>
+                                                    <materialDesign:PackIcon
+                                                        HorizontalAlignment="Right"
+                                                        Kind="Flag"
+                                                        Margin="15 0"
+                                                    />
+                                                </DockPanel>
+                                            </StackPanel>
+                                            <StackPanel
+                                                HorizontalAlignment="Right"
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <Button
+                                                    Height="25"
+                                                    Width="25"
+                                                    Margin="15 0"    
+                                                >
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Kind="ArrowBack"    
+                                                        />
+                                                    </Button.Content>
+                                                </Button>
+                                                <StackPanel
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Text="1"
+                                                        Margin="5 0"    
+                                                    />
+                                                    <TextBlock
+                                                        Text="2"
+                                                        Margin="5 0"    
+                                                    />
+                                                    <TextBlock
+                                                        Text="3"
+                                                        Margin="5 0"    
+                                                    />
+                                                    <TextBlock
+                                                        Text="4"
+                                                        Margin="5 0"    
+                                                    />
+                                                    <TextBlock
+                                                        Text="5"
+                                                        Margin="5 0"    
+                                                    />
+                                                </StackPanel>    
+                                                <Button
+                                                    Height="25"
+                                                    Width="25"
+                                                    Margin="15 0"    
+                                                >
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Kind="ArrowForward"    
+                                                        />
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>

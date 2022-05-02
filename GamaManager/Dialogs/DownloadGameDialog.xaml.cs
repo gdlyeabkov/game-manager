@@ -62,7 +62,6 @@ namespace GamaManager.Dialogs
             string filename = cachePath + @"\game.exe";
             // string filename = cachePath + @"\game.zip";
             wc.Headers.Add("User-Agent: Other");   //that is the simple line!
-            // await wc.DownloadFileTaskAsync(uri, filename);
             wc.DownloadFileAsync(uri, filename);
             wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);

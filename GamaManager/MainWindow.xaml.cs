@@ -1604,24 +1604,29 @@ namespace GamaManager
 
         private void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string xpsPath = appFolder + "index.xps";
-            string wordPath = appFolder + "index.doc";
-            // Create a WordApplication and add Document to it
-            Microsoft.Office.Interop.Word.Application wordApplication = new Microsoft.Office.Interop.Word.Application();
-            wordApplication.Documents.Add(wordPath);
-            Microsoft.Office.Interop.Word.Document doc = wordApplication.ActiveDocument;
-            bool isXpsExists = File.Exists(xpsPath);
-            if (isXpsExists)
+            Exception downloadError = e.Error;
+            bool isErrorsNotFound = downloadError == null;
+            if (isErrorsNotFound)
             {
-                File.Delete(xpsPath);
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+                string xpsPath = appFolder + "index.xps";
+                string wordPath = appFolder + "index.doc";
+                // Create a WordApplication and add Document to it
+                Microsoft.Office.Interop.Word.Application wordApplication = new Microsoft.Office.Interop.Word.Application();
+                wordApplication.Documents.Add(wordPath);
+                Microsoft.Office.Interop.Word.Document doc = wordApplication.ActiveDocument;
+                bool isXpsExists = File.Exists(xpsPath);
+                if (isXpsExists)
+                {
+                    File.Delete(xpsPath);
+                }
+                doc.SaveAs(xpsPath, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatXPS);
+                System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
+                activeExperiment.Document = document.GetFixedDocumentSequence();
+                mainControl.SelectedIndex = 30;
             }
-            doc.SaveAs(xpsPath, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatXPS);
-            System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
-            activeExperiment.Document = document.GetFixedDocumentSequence();
-            mainControl.SelectedIndex = 30;
         }
 
         public void InitializeTray ()

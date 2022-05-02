@@ -56,14 +56,11 @@ namespace GamaManager.Dialogs
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             // string cachePath = appFolder + gameName;
             string cachePath = appFolder + @"games\" + gameName;
-            Directory.CreateDirectory(cachePath);
-            
+            Directory.CreateDirectory(cachePath);            
             string screenShotsPath = appFolder + @"screenshots\" + gameName;
             Directory.CreateDirectory(screenShotsPath);
-
             string filename = cachePath + @"\game.exe";
             // string filename = cachePath + @"\game.zip";
-
             wc.Headers.Add("User-Agent: Other");   //that is the simple line!
             // await wc.DownloadFileTaskAsync(uri, filename);
             wc.DownloadFileAsync(uri, filename);

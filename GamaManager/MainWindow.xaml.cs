@@ -1519,7 +1519,98 @@ namespace GamaManager
             GetRequestsCount();
             GetComments(currentUserId);
             GetCommunityInfo();
-            InitializeTray();/**/
+            InitializeTray();
+            GetExperiments();/**/
+        }
+
+        public void GetExperiments ()
+        {
+            experiments.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/experiments/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ExperimentsResponseInfo myobj = (ExperimentsResponseInfo)js.Deserialize(objText, typeof(ExperimentsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Experiment> totalExperiments = myobj.experiments;
+                            foreach (Experiment totalExperimentsItem in totalExperiments)
+                            {
+                                string id = totalExperimentsItem._id;
+                                string title = totalExperimentsItem.title;
+                                string desc = totalExperimentsItem.desc;
+                                StackPanel experiment = new StackPanel();
+                                experiment.Background = System.Windows.Media.Brushes.LightGray;
+                                experiment.Margin = new Thickness(15);
+                                experiment.Width = 850;
+                                Image experimentPhoto = new Image();
+                                experimentPhoto.Width = 500;
+                                experimentPhoto.BeginInit();
+                                experimentPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/experiment/photo/?id=" + id));
+                                experimentPhoto.EndInit();
+                                experiment.Children.Add(experimentPhoto);
+                                TextBlock experimentTitleLabel = new TextBlock();
+                                experimentTitleLabel.Margin = new Thickness(15);
+                                experimentTitleLabel.FontSize = 20;
+                                experimentTitleLabel.Text = title;
+                                experiment.Children.Add(experimentTitleLabel);
+                                TextBlock experimentDescLabel = new TextBlock();
+                                experimentDescLabel.Margin = new Thickness(15);
+                                experimentDescLabel.Text = desc;
+                                experiment.Children.Add(experimentDescLabel);
+                                experiments.Children.Add(experiment);
+                                experiment.DataContext = id;
+                                experiment.MouseLeftButtonUp += OpenExperimentHandler;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenExperimentHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel experiment = ((StackPanel)(sender));
+            object experimentData = experiment.DataContext;
+            string experimentId = ((string)(experimentData));
+            OpenExperiment(experimentId);
+        }
+
+        public void OpenExperiment (string experimentId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            string xpsPath = appFolder + "index.xps";
+            WebClient wc = new WebClient();
+            wc.Headers.Add("User-Agent: Other");   //that is the simple line!
+            wc.DownloadFileAsync(new Uri(@"http://localhost:4000/api/experiment/document/?id=" + experimentId), xpsPath);
+            wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
+        }
+
+        private void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
+            string xpsPath = appFolder + "index.xps";
+            System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
+            activeExperiment.Document = document.GetFixedDocumentSequence();
+            mainControl.SelectedIndex = 30;
         }
 
         public void InitializeTray ()
@@ -7736,9 +7827,13 @@ namespace GamaManager
 
         public void StoreItemSelected(int index)
         {
+            bool isWant = index == 2;
             bool isNews = index == 5;
             bool isGamesStats = index == 6;
-            if (isNews)
+            if (isWant) {
+                mainControl.SelectedIndex = 28;
+            }
+            else if (isNews)
             {
                 OpenNews();
             }
@@ -10778,6 +10873,17 @@ namespace GamaManager
             }
         }
 
+        private void OpenLabsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenLabs();
+        }
+
+        public void OpenLabs ()
+        {
+            GetExperiments();
+            mainControl.SelectedIndex = 29;
+        }
+
     }
 
     class SavedContent
@@ -11185,6 +11291,25 @@ namespace GamaManager
         public string desc;
         public string hours;
         public DateTime date;
+    }
+
+    class ExperimentsResponseInfo
+    {
+        public List<Experiment> experiments;
+        public string status;
+    }
+
+    class ExperimentResponseInfo
+    {
+        public Experiment experiment;
+        public string status;
+    }
+    
+    class Experiment
+    {
+        public string _id;
+        public string title;
+        public string desc;
     }
 
 }

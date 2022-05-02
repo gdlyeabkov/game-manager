@@ -6196,6 +6196,197 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel>
+                                <StackPanel
+                                    Height="35"
+                                    Orientation="Horizontal" 
+                                    Background="SkyBlue"
+                                >
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                    >
+                                        <TextBlock
+                                            Text="Ваш магазин"
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                    >
+                                        <TextBlock
+                                            Text="Новое и примечательное"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                    >
+                                        <TextBlock
+                                            Text="Категории"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                    >
+                                        <TextBlock
+                                            Text="Магазин очков"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                    >
+                                        <TextBlock
+                                            Text="Новости"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                        MouseLeftButtonUp="OpenLabsHandler"
+                                    >
+                                        <TextBlock
+                                            Text="Лаборатории"    
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock
+                                    FontSize="24"
+                                    Margin="15"
+                                    Text="ВАШ СПИСОК РЕКОМЕНДАЦИЙ"    
+                                />
+                                <TextBlock
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Список рекомендаций совмещает новые, самые продаваемые и рекомендуемые вам товары, похожие на то, чем пользуетесь именно вы. С помощью кнопок на странице каждого товара можно добавить его в список желаемого, подписаться на обновления, скрыть или сразу перейти к следующему элементу списка."    
+                                />
+                                <TextBlock
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="ВАШ СПИСОК"    
+                                />
+                                <StackPanel
+                                    Margin="25"
+                                    Background="LightGray"
+                                    Height="75"
+                                >
+                                    <Button
+                                        Margin="15"
+                                        VerticalAlignment="Center"
+                                        Width="375"
+                                        Height="50"
+                                        Content="Нажмите чтобы открыть ваш список рекомендаций"    
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    Background="LightGray"
+                                    Height="75"
+                                    Orientation="Horizontal"    
+                                >
+                                    <Button
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"
+                                        Width="175"
+                                        Height="35"
+                                        Content="Настроить ваш список"    
+                                    />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Margin="25 0"
+                                        Text="Выберите типы товаров, которые вы хотели бы видеть в списке реже."    
+                                    />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <StackPanel
+                                    DockPanel.Dock="Right"    
+                                >
+                                    <TextBlock
+                                        Text="ПРИВЕТСТВУЕМ В ЛАБОРАТОРИИ!"    
+                                        FontSize="20"
+                                        Foreground="Cyan"
+                                    />
+                                    <TextBlock
+                                        Text="Каждый год мы проводим множество экспериментов&#10;с поиском игр, видео, машинным обучением&#10;и многим другим. Кому это может быть интересно?&#10;Мы считаем, что всем!"    
+                                    />
+                                    <TextBlock
+                                        Text="Впервые вы можете участвовать в этих&#10;экспериментах, проверять их на прочность,&#10;затем делиться впечатлениями с разработчиками."    
+                                    />
+                                    <TextBlock
+                                        Text="О ЛАБОРАТОРИЯХ STEAM"    
+                                        FontSize="20"
+                                        Foreground="Cyan"
+                                    />
+                                    <TextBlock
+                                        FontSize="20"
+                                        Text="ЭКСПЕРИМЕНТАЛЬНЫЕ НАРАБОТКИ"    
+                                    />
+                                    <TextBlock
+                                        Text="Эти проекты ещё требуют доработки. Что-то будем&#10;развивать, а что-то отложим за ненадобностью.&#10;Надеемся, что ваши отзывы помогут улучшить&#10;большую часть экспериментов и сделать их частью&#10;Steam. Именно так устроены наши лаборатории."    
+                                    />
+                                    <TextBlock
+                                        FontSize="20"
+                                        Text="ДЛЯ ЧЕГО?"    
+                                    />
+                                    <TextBlock
+                                        Text="Мы всегда стараемся привнести в Steam что-то&#10;новое, но раньше наши наработки озвучивались,&#10;только если планировалось сделать их частью&#10;платформы. Лаборатории Steam позволяют нам&#10;делиться этими идеями и улучшать их с помощью&#10;ваших отзывов прежде, чем они появятся в Steam."    
+                                    />
+                                    <TextBlock
+                                        FontSize="20"
+                                        Text="Что дальше?"    
+                                    />
+                                    <TextBlock
+                                        Text="Как и другие функции Steam, лаборатории также&#10;являются своего рода экспериментом. Он требует&#10;доработки, а значит нам не помешали бы ваши&#10;отзывы. Надеемся, что вы поделитесь идеями и&#10;впечатлениями в обсуждениях, и с нетерпением&#10;ждём совместных экспериментов."    
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    DockPanel.Dock="Left"    
+                                >
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="16"
+                                        Text="ПОСЛЕДНИЕ ЭКСПЕРИМЕНТЫ"    
+                                    />
+                                    <StackPanel
+                                        x:Name="experiments"    
+                                    />
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <StackPanel>
+                    <DocumentViewer
+                        x:Name="activeExperiment"
+                    />
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

@@ -1595,10 +1595,10 @@ namespace GamaManager
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
-            string xpsPath = appFolder + "index.xps";
+            string wordPath = appFolder + "index.doc";
             WebClient wc = new WebClient();
             wc.Headers.Add("User-Agent: Other");   //that is the simple line!
-            wc.DownloadFileAsync(new Uri(@"http://localhost:4000/api/experiment/document/?id=" + experimentId), xpsPath);
+            wc.DownloadFileAsync(new Uri(@"http://localhost:4000/api/experiment/document/?id=" + experimentId), wordPath);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
         }
 
@@ -1608,6 +1608,17 @@ namespace GamaManager
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
             string xpsPath = appFolder + "index.xps";
+            string wordPath = appFolder + "index.doc";
+            // Create a WordApplication and add Document to it
+            Microsoft.Office.Interop.Word.Application wordApplication = new Microsoft.Office.Interop.Word.Application();
+            wordApplication.Documents.Add(wordPath);
+            Microsoft.Office.Interop.Word.Document doc = wordApplication.ActiveDocument;
+            bool isXpsExists = File.Exists(xpsPath);
+            if (isXpsExists)
+            {
+                File.Delete(xpsPath);
+            }
+            doc.SaveAs(xpsPath, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatXPS);
             System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
             activeExperiment.Document = document.GetFixedDocumentSequence();
             mainControl.SelectedIndex = 30;

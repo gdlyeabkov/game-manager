@@ -64,6 +64,9 @@ namespace GamaManager
         public string cachedGroupId = "";
         public byte[] manualAttachment;
         public string manualAttachmentExt;
+        public Microsoft.Office.Interop.Word.Document doc = null;
+        public Microsoft.Office.Interop.Word.Application wordApplication = null;
+        public System.Windows.Xps.Packaging.XpsDocument document = null;
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -1608,22 +1611,41 @@ namespace GamaManager
             bool isErrorsNotFound = downloadError == null;
             if (isErrorsNotFound)
             {
+                activeExperiment.Document = null;
+                bool isWordOpened = doc != null;
+                if (isWordOpened)
+                {
+                    doc.Close();
+                    doc = null;
+                    bool isDocsOpened = wordApplication.Documents.Count >= 1;
+                    if (isDocsOpened)
+                    {
+                        wordApplication.Documents.Close();
+                        wordApplication.Quit();
+                    }
+                }
+                bool isDocOpened = document != null;
+                if (isDocOpened)
+                {
+                    document.Close();
+                    document = null;
+                }
                 Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                 string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
                 string appFolder = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\";
                 string xpsPath = appFolder + "index.xps";
                 string wordPath = appFolder + "index.doc";
                 // Create a WordApplication and add Document to it
-                Microsoft.Office.Interop.Word.Application wordApplication = new Microsoft.Office.Interop.Word.Application();
+                wordApplication = new Microsoft.Office.Interop.Word.Application();
                 wordApplication.Documents.Add(wordPath);
-                Microsoft.Office.Interop.Word.Document doc = wordApplication.ActiveDocument;
+                doc = wordApplication.ActiveDocument;
                 bool isXpsExists = File.Exists(xpsPath);
                 if (isXpsExists)
                 {
                     File.Delete(xpsPath);
                 }
                 doc.SaveAs(xpsPath, Microsoft.Office.Interop.Word.WdSaveFormat.wdFormatXPS);
-                System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
+                document = new System.Windows.Xps.Packaging.XpsDocument(xpsPath, FileAccess.Read);
                 activeExperiment.Document = document.GetFixedDocumentSequence();
                 mainControl.SelectedIndex = 30;
             }
@@ -9942,12 +9964,12 @@ namespace GamaManager
             dialog.Show();
         }
 
-        private void OpenNewsHandler(object sender, MouseButtonEventArgs e)
+        private void OpenNewsHandler (object sender, MouseButtonEventArgs e)
         {
             OpenNews();
         }
 
-        public void OpenNews()
+        public void OpenNews ()
         {
             mainControl.SelectedIndex = 14;
             GetNews();
@@ -10898,6 +10920,82 @@ namespace GamaManager
         {
             GetExperiments();
             mainControl.SelectedIndex = 29;
+        }
+
+        private void OpenPointsStoreHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenPointsStore();
+        }
+
+        public void OpenPointsStore ()
+        {
+            mainControl.SelectedIndex = 31;
+            GetPoints();
+        }
+
+        public void GetPoints ()
+        {
+
+        }
+
+        public void ShowStoreMenuHandler (object sender, MouseEventArgs e)
+        {
+            ShowStoreMenu();
+        }
+
+        public void ShowStoreMenu ()
+        {
+            storeMenuPopup.IsOpen = true;
+        }
+
+        public void HideStoreMenuHandler (object sender, MouseEventArgs e)
+        {
+            HideStoreMenu();
+        }
+
+        public void HideStoreMenu ()
+        {
+            storeMenuPopup.IsOpen = false;
+        }
+
+        public void ShowNewMenuHandler(object sender, MouseEventArgs e)
+        {
+            ShowNewMenu();
+        }
+
+        public void ShowNewMenu()
+        {
+            newMenuPopup.IsOpen = true;
+        }
+
+        public void HideNewMenuHandler(object sender, MouseEventArgs e)
+        {
+            HideNewMenu();
+        }
+
+        public void HideNewMenu ()
+        {
+            newMenuPopup.IsOpen = false;
+        }
+
+        public void ShowCategoriesMenuHandler(object sender, MouseEventArgs e)
+        {
+            ShowCategoriesMenu();
+        }
+
+        public void ShowCategoriesMenu()
+        {
+            categoriesMenuPopup.IsOpen = true;
+        }
+
+        public void HideCategoriesMenuHandler (object sender, MouseEventArgs e)
+        {
+            HideCategoriesMenu();
+        }
+
+        public void HideCategoriesMenu()
+        {
+            categoriesMenuPopup.IsOpen = false;
         }
 
     }

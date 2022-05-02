@@ -6212,32 +6212,98 @@
                                     Background="SkyBlue"
                                 >
                                     <StackPanel
+                                        x:Name="storeMenuPanel"
                                         Margin="15 0"
-                                        VerticalAlignment="Center"    
+                                        VerticalAlignment="Center"
                                     >
                                         <TextBlock
                                             Text="Ваш магазин"
                                         />
                                     </StackPanel>
+                                    <Popup
+                                        x:Name="storeMenuPopup"
+                                        StaysOpen="False"
+                                        IsOpen="False"
+                                        PlacementTarget="{Binding ElementName=storeMenuPanel}"
+                                        MouseEnter="ShowStoreMenuHandler"
+                                        MouseLeave="HideStoreMenuHandler"
+                                    >
+                                        <Popup.Style>
+                                            <Style TargetType="Popup">
+                                                <Style.Triggers>
+                                                    <DataTrigger
+                                                        Binding="{Binding PlacementTarget.IsMouseOver, RelativeSource={RelativeSource Self}}" 
+                                                        Value="True"
+                                                    >
+                                                        <Setter Property="IsOpen" Value="True" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Popup.Style>
+                                        <Popup.Child>
+                                            <StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        Text="Главная страница"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Popup.Child>
+                                    </Popup>
                                     <StackPanel
                                         Margin="15 0"
                                         VerticalAlignment="Center"    
+                                        MouseEnter="ShowNewMenuHandler"
+                                        MouseLeave="HideNewMenuHandler"
                                     >
                                         <TextBlock
                                             Text="Новое и примечательное"    
                                         />
                                     </StackPanel>
+                                    <Popup
+                                        x:Name="newMenuPopup"
+                                        StaysOpen="False"
+                                        IsOpen="False"
+                                    >
+                                        <Popup.Child>
+                                            <StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        Text="Главная страница"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Popup.Child>
+                                    </Popup>
                                     <StackPanel
                                         Margin="15 0"
-                                        VerticalAlignment="Center"    
+                                        VerticalAlignment="Center"
+                                        MouseEnter="ShowCategoriesMenuHandler"
+                                        MouseLeave="HideCategoriesMenuHandler"
                                     >
                                         <TextBlock
                                             Text="Категории"    
                                         />
                                     </StackPanel>
+                                    <Popup
+                                        x:Name="categoriesMenuPopup"
+                                        StaysOpen="False"
+                                        IsOpen="False"
+                                    >
+                                        <Popup.Child>
+                                            <StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        Text="Главная страница"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Popup.Child>
+                                    </Popup>
                                     <StackPanel
                                         Margin="15 0"
                                         VerticalAlignment="Center"    
+                                        MouseLeftButtonUp="OpenPointsStoreHandler"
                                     >
                                         <TextBlock
                                             Text="Магазин очков"    
@@ -6245,7 +6311,8 @@
                                     </StackPanel>
                                     <StackPanel
                                         Margin="15 0"
-                                        VerticalAlignment="Center"    
+                                        VerticalAlignment="Center"
+                                        MouseLeftButtonUp="OpenNewsHandler"
                                     >
                                         <TextBlock
                                             Text="Новости"    
@@ -6323,6 +6390,7 @@
                         >
                             <DockPanel>
                                 <StackPanel
+                                    Margin="25"
                                     DockPanel.Dock="Right"    
                                 >
                                     <TextBlock
@@ -6384,8 +6452,23 @@
                 <StackPanel>
                     <DocumentViewer
                         x:Name="activeExperiment"
+                        Height="750"
                     />
                 </StackPanel>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </DockPanel>

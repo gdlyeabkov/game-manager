@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -77,7 +78,6 @@ namespace GamaManager.Dialogs
                             screenShot.Source = new BitmapImage(screenShotUri);
                             screenShot.EndInit();
                             screenShots.Children.Add(screenShot);
-                            // screenShot.DataContext = info.Name;
                             screenShot.DataContext = file;
                             screenShot.MouseLeftButtonUp += SelectScreenShotHandler;
                         }
@@ -99,6 +99,37 @@ namespace GamaManager.Dialogs
             screenShotsControl.SelectedIndex = 1;
             actionBtns.Visibility = Visibility.Visible;
             mainScreenShot.Source = new BitmapImage(new Uri(name));
+            FileInfo info = new FileInfo(name);
+            DateTime creationTime = info.CreationTime;
+            string rawCreationTime = creationTime.ToLongDateString();
+            mainScreenShotDateLabel.Text = rawCreationTime;
+            long size = info.Length;
+            string measure = "Б";
+            double updatedSize = size / 1024;
+            bool isUpdateSize = updatedSize > 0;
+            if (isUpdateSize)
+            {
+                size = ((int)(updatedSize));
+                measure = "Кб";
+            }
+            updatedSize = size / 1024;
+            isUpdateSize = updatedSize > 0;
+            if (isUpdateSize)
+            {
+                size = ((int)(updatedSize));
+                measure = "Мб";
+            }
+            updatedSize = size / 1024;
+            isUpdateSize = updatedSize > 0;
+            if (isUpdateSize)
+            {
+                size = ((int)(updatedSize));
+                measure = "Гб";
+            }
+            string rawSize = size.ToString();
+            string mainScreenShotSizeLabelContent = rawSize + " " + measure;
+            mainScreenShotSizeLabel.Text = mainScreenShotSizeLabelContent;
+            mainScreenShot.DataContext = name;
         }
 
         public void InitConstants (string currentUserId)
@@ -142,7 +173,85 @@ namespace GamaManager.Dialogs
         {
             isAppInit = true;
         }
+        
+        public void UploadScreenShotHandler (object sender, RoutedEventArgs e)
+        {
+            UploadScreenShot();
+        }
 
+        public void UploadScreenShot ()
+        {
+            try
+            {
+                object mainScreenShotData = mainScreenShot.DataContext;
+                string path = ((string)(mainScreenShotData));
+                string ext = System.IO.Path.GetExtension(path);
+                string desc = descBox.Text;
+                string spoiler = "false";
+                object rawIsChecked = spoilerCheckBox.IsChecked;
+                bool isChecked = ((bool)(rawIsChecked));
+                if (isChecked)
+                {
+                    spoiler = "true";
+                }
+                string url = "http://localhost:4000/api/screenshots/add/?id=" + currentUserId + @"&desc=" + desc + @"&spoiler=" + spoiler + @"&ext=" + ext;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = getPngFromImageControl(((BitmapImage)(mainScreenShot.Source)));
+                string uploadedFileName = "hash." + ext;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", uploadedFileName);
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                this.Close();
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public byte[] getPngFromImageControl (BitmapImage imageC)
+        {
+            MemoryStream memStream = new MemoryStream();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageC));
+            encoder.Save(memStream);
+            return memStream.ToArray();
+        }
+
+        private void DetectDescChangedHandler (object sender, TextCompositionEventArgs e)
+        {
+            DetectDescChanged(e);
+        }
+
+        public void DetectDescChanged (TextCompositionEventArgs e)
+        {
+            string desc = descBox.Text;
+            int descLength = desc.Length;
+            bool isCanInput = descLength < 150;
+            if (isCanInput)
+            {
+                bool isHaveDesc = descLength > 0;
+                if (isHaveDesc)
+                {
+                    int charsLeft = 149 - descLength;
+                    string rawCharsLeft = charsLeft.ToString();
+                    charsLeftLabel.Text = rawCharsLeft + " символов осталось";
+                    charsLeftLabel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    charsLeftLabel.Visibility = Visibility.Collapsed;
+                }
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
 
     }
 }

@@ -797,3 +797,4 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\GamaManager.exe
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\GamaManager.pdb
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddGroupRequestDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddGroupRequestDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\GeneratedInternalTypeHelper.g.cs

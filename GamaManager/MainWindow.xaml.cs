@@ -1534,9 +1534,301 @@ namespace GamaManager
         public void GetCommunityInfo ()
         {
             GetCommunityTotalContent();
+            GetCommunityScreenShots();
             GetIllustrations();
             GetManuals();
+            GetReviews();
         }
+
+        public void GetReviews ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ReviewsResponseInfo myobj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Review> totalReviews = myobj.reviews;
+                            reviews.Children.Clear();
+                            int totalReviewsCount = totalReviews.Count;
+                            bool isHaveReviews = totalReviewsCount >= 1;
+                            if (isHaveReviews)
+                            {
+                                reviews.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Review totalReviewsItem in totalReviews)
+                                {
+                                    string id = totalReviewsItem._id;
+                                    string desc = totalReviewsItem.desc;
+                                    StackPanel review = new StackPanel();
+                                    review.Width = 500;
+                                    review.Margin = new Thickness(15);
+                                    review.Background = System.Windows.Media.Brushes.LightGray;
+                                    PackIcon reviewIcon = new PackIcon();
+                                    reviewIcon.Margin = new Thickness(15);
+                                    reviewIcon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    reviewIcon.Width = 50;
+                                    reviewIcon.Height = 50;
+                                    reviewIcon.Kind = PackIconKind.ThumbsUp;
+                                    review.Children.Add(reviewIcon);
+                                    TextBlock reviewDescLabel = new TextBlock();
+                                    reviewDescLabel.Margin = new Thickness(15);
+                                    reviewDescLabel.Text = desc;
+                                    review.Children.Add(reviewDescLabel);
+                                    reviews.Children.Add(review);
+                                    review.DataContext = id;
+                                    review.MouseLeftButtonUp += SelectReviewHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Обзоров не найдено";
+                                reviews.HorizontalAlignment = HorizontalAlignment.Center;
+                                reviews.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectReviewHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel review = ((StackPanel)(sender));
+            object reviewData = review.DataContext;
+            string reviewId = ((string)(reviewData));
+            SelectReview(reviewId);
+        }
+
+        public void SelectReview (string id)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ReviewResponseInfo myobj = (ReviewResponseInfo)js.Deserialize(objText, typeof(ReviewResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Review review = myobj.review;
+                            string userId = review.user;
+                            string currentGameId = review.game;
+                            string desc = review.desc;
+                            DateTime date = review.date;
+                            string hours = review.hours;
+                            string rawDate = date.ToLongDateString();
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GamesListResponseInfo myInnerObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GameResponseInfo> games = myInnerObj.games;
+                                        List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                        {
+                                            string gameId = game._id;
+                                            bool isIdMatches = gameId == currentGameId;
+                                            return isIdMatches;
+                                        }).ToList<GameResponseInfo>();
+                                        int countResults = gameResults.Count;
+                                        bool isResultsFound = countResults >= 1;
+                                        if (isResultsFound)
+                                        {
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User user = myNestedObj.user;
+                                                        string userName = user.name;
+                                                        string hoursMeasure = "часов";
+                                                        string mainReviewGameHoursLabelContent = hours + " " + hoursMeasure;
+                                                        mainReviewGameHoursLabel.Text = mainReviewGameHoursLabelContent;
+                                                        mainReviewUserNameLabel.Text = userName;
+                                                        mainReviewUserAvatar.BeginInit();
+                                                        mainReviewUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                        mainReviewUserAvatar.EndInit();
+                                                        GameResponseInfo foundedGame = gameResults[0];
+                                                        string foundedGameName = foundedGame.name;
+                                                        Debugger.Log(0, "debug", Environment.NewLine + "foundedGameName: " + foundedGameName + Environment.NewLine);
+                                                        mainReviewGameThumbnail.BeginInit();
+                                                        // mainReviewGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + foundedGameName));
+                                                        mainReviewGameThumbnail.Source = new BitmapImage(new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png"));
+                                                        mainReviewGameThumbnail.EndInit();
+                                                        mainReviewGameLabel.Text = foundedGameName;
+                                                        mainReviewDescLabel.Text = desc;
+                                                        mainReviewDateLabel.Text = rawDate;
+                                                        mainControl.SelectedIndex = 27;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetCommunityScreenShots ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShot> totalCommunityScreenShots = myobj.screenShots;
+                            communityScreenShots.Children.Clear();
+                            int totalCommunityScreenShotsCount = totalCommunityScreenShots.Count;
+                            bool isHaveCommunityScreenShots = totalCommunityScreenShotsCount >= 1;
+                            if (isHaveCommunityScreenShots)
+                            {
+                                communityScreenShots.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (ScreenShot totalCommunityScreenShotsItem in totalCommunityScreenShots)
+                                {
+                                    string id = totalCommunityScreenShotsItem._id;
+                                    StackPanel communityScreenShot = new StackPanel();
+                                    communityScreenShot.Width = 500;
+                                    communityScreenShot.Margin = new Thickness(15);
+                                    communityScreenShot.Background = System.Windows.Media.Brushes.LightGray;
+                                    Image communityScreenShotPhoto = new Image();
+                                    communityScreenShotPhoto.Margin = new Thickness(15);
+                                    communityScreenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                    communityScreenShotPhoto.Width = 50;
+                                    communityScreenShotPhoto.Height = 50;
+                                    communityScreenShotPhoto.BeginInit();
+                                    communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                    communityScreenShotPhoto.EndInit();
+                                    communityScreenShot.Children.Add(communityScreenShotPhoto);
+                                    communityScreenShots.Children.Add(communityScreenShot);
+                                    communityScreenShot.DataContext = id;
+                                    communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Скриншотов не найдено";
+                                communityScreenShots.HorizontalAlignment = HorizontalAlignment.Center;
+                                communityScreenShots.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectCommunityScreenShotHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel screenShot = ((StackPanel)(sender));
+            object screenShotData = screenShot.DataContext;
+            string screenShotId = ((string)(screenShotData));
+            SelectCommunityScreenShot(screenShotId);
+        }
+
+        public void SelectCommunityScreenShot (string id)
+        {
+            mainControl.SelectedIndex = 25;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotResponseInfo myobj = (ScreenShotResponseInfo)js.Deserialize(objText, typeof(ScreenShotResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            ScreenShot communityScreenShot = myobj.screenShot;
+                            mainCommunityScreenShotPhoto.BeginInit();
+                            mainCommunityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                            mainCommunityScreenShotPhoto.EndInit();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
 
         public void GetCommunityTotalContent()
         {
@@ -1656,7 +1948,136 @@ namespace GamaManager
                 this.Close();
             }
 
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShot> totalCommunityScreenShots = myobj.screenShots;
+                            communityScreenShots.Children.Clear();
+                            int totalCommunityScreenShotsCount = totalCommunityScreenShots.Count;
+                            bool isHaveCommunityScreenShots = totalCommunityScreenShotsCount >= 1;
+                            if (isHaveCommunityScreenShots)
+                            {
+                                foreach (ScreenShot totalCommunityScreenShotsItem in totalCommunityScreenShots)
+                                {
+                                    string id = totalCommunityScreenShotsItem._id;
+                                    StackPanel communityScreenShot = new StackPanel();
+                                    communityScreenShot.Width = 500;
+                                    communityScreenShot.Margin = new Thickness(15);
+                                    communityScreenShot.Background = System.Windows.Media.Brushes.LightGray;
+                                    Image communityScreenShotPhoto = new Image();
+                                    communityScreenShotPhoto.Margin = new Thickness(15);
+                                    communityScreenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                    communityScreenShotPhoto.Width = 50;
+                                    communityScreenShotPhoto.Height = 50;
+                                    communityScreenShotPhoto.BeginInit();
+                                    communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                    communityScreenShotPhoto.EndInit();
+                                    communityScreenShot.Children.Add(communityScreenShotPhoto);
+                                    communityElements.Add(communityScreenShot);
+                                    communityScreenShot.DataContext = id;
+                                    communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Не найдено";
+                                communityScreenShots.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ReviewsResponseInfo myobj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Review> totalReviews = myobj.reviews;
+                            reviews.Children.Clear();
+                            int totalReviewsCount = totalReviews.Count;
+                            bool isHaveReviews = totalReviewsCount >= 1;
+                            if (isHaveReviews)
+                            {
+                                foreach (Review totalReviewsItem in totalReviews)
+                                {
+                                    string id = totalReviewsItem._id;
+                                    string desc = totalReviewsItem.desc;
+                                    StackPanel review = new StackPanel();
+                                    review.Width = 500;
+                                    review.Margin = new Thickness(15);
+                                    review.Background = System.Windows.Media.Brushes.LightGray;
+                                    PackIcon reviewIcon = new PackIcon();
+                                    reviewIcon.Margin = new Thickness(15);
+                                    reviewIcon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    reviewIcon.Width = 50;
+                                    reviewIcon.Height = 50;
+                                    reviewIcon.Kind = PackIconKind.ThumbsUp;
+                                    review.Children.Add(reviewIcon);
+                                    TextBlock reviewDescLabel = new TextBlock();
+                                    reviewDescLabel.Margin = new Thickness(15);
+                                    reviewDescLabel.Text = desc;
+                                    review.Children.Add(reviewDescLabel);
+                                    communityElements.Add(review);
+                                    review.DataContext = id;
+                                    review.MouseLeftButtonUp += SelectReviewHandler;
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Обзоров не найдено";
+                                reviews.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
             communityTotalContent.Children.Clear();
+            var r = new Random();
+            communityElements = communityElements.OrderBy(x => r.Next()).ToList<UIElement>();
             int communityElementsCount = communityElements.Count;
             bool isHaveElements = communityElementsCount >= 1;
             if (isHaveElements)
@@ -5729,12 +6150,18 @@ namespace GamaManager
                 gameActionLabel.DataContext = gamePath;
                 removeGameBtn.Visibility = visible;
                 AddUserToGameStats(gameId);
+            
+                gameDetails.Visibility = visible;
+
             }
             else
             {
                 gameActionLabel.Content = Properties.Resources.installBtnLabelContent;
                 gameActionLabel.DataContext = gameData;
                 removeGameBtn.Visibility = invisible;
+
+                gameDetails.Visibility = invisible;
+
             }
             gameNameLabel.Text = gameName;
 
@@ -10275,6 +10702,81 @@ namespace GamaManager
             dialog.Show();
         }
 
+        private void OpenAddReviewHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAddReview();
+        }
+
+        public void AddReviewHandler (object sender, RoutedEventArgs e)
+        {
+            AddReview();
+        }
+
+        public void AddReview ()
+        {
+            try
+            {
+                object rawGame = reviewGameLabel.DataContext;
+                Game game = ((Game)(rawGame));
+                string hours = game.hours;
+                string gameId = game.id;
+                string reviewDescBoxContent = reviewDescBox.Text;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/add/?id=" + currentUserId + @"&game=" + gameId + @"&hours=" + hours + @"&desc=" + reviewDescBoxContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 20;
+                            GetCommunityInfo();
+                        }
+                    }
+                }
+
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenAddReview ()
+        {
+            mainControl.SelectedIndex = 26;
+            string name = gameNameLabel.Text;
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> loadedGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            List<Game> results = loadedGames.Where<Game>((Game game) =>
+            {
+                return game.name == name;
+            }).ToList<Game>();
+            int resultsCount = results.Count;
+            bool isFound = resultsCount >= 1;
+            if (isFound)
+            {
+                Game result = results[0];
+                string gameId = result.id;
+                reviewGameLabel.Text = name;
+                reviewGameLabel.DataContext = result;
+            }
+        }
 
     }
 
@@ -10630,6 +11132,58 @@ namespace GamaManager
         public string desc;
         public string user;
         public bool isDrm;
+        public DateTime date;
+    }
+
+    class ScreenShotsResponseInfo
+    {
+        public List<ScreenShot> screenShots;
+        public string status;
+    }
+
+    class ScreenShotResponseInfo
+    {
+        public ScreenShot screenShot;
+        public string status;
+    }
+
+    class ScreenShot
+    {
+        public string _id;
+        public DateTime date;
+    }
+
+    class BlackListRelationsResponseInfo
+    {
+        public List<BlackListRelation> relations;
+        public string status;
+    }
+
+    class BlackListRelation
+    {
+        public string user;
+        public string friend;
+    }
+
+    class ReviewsResponseInfo
+    {
+        public List<Review> reviews;
+        public string status;
+    }
+
+    class ReviewResponseInfo
+    {
+        public Review review;
+        public string status;
+    }
+
+    class Review
+    {
+        public string _id;
+        public string game;
+        public string user;
+        public string desc;
+        public string hours;
         public DateTime date;
     }
 

@@ -267,6 +267,55 @@ namespace GamaManager.Dialogs
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 innerFriendsItemContextMenuItem.Click += OpenFriendNotificationsDialogHandler;
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+                                                                try
+                                                                {
+                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/all");
+                                                                    innerNestedWebRequest.Method = "GET";
+                                                                    innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                    using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                    {
+                                                                        using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                        {
+                                                                            js = new JavaScriptSerializer();
+                                                                            objText = innerNestedReader.ReadToEnd();
+                                                                            BlackListRelationsResponseInfo myInnerNestedObj = (BlackListRelationsResponseInfo)js.Deserialize(objText, typeof(BlackListRelationsResponseInfo));
+                                                                            status = myInnerNestedObj.status;
+                                                                            isOkStatus = status == "OK";
+                                                                            if (isOkStatus)
+                                                                            {
+                                                                                List<BlackListRelation> relations = myInnerNestedObj.relations;
+                                                                                List<BlackListRelation> results = relations.Where<BlackListRelation>((BlackListRelation relation) =>
+                                                                                {
+                                                                                    bool isMyFriendInBlackList = relation.user == currentUserId && relation.friend == friendId; 
+                                                                                    return isMyFriendInBlackList;
+                                                                                }).ToList<BlackListRelation>();
+                                                                                int countResults = results.Count;
+                                                                                bool isHaveResults = countResults >= 1;
+                                                                                if (isHaveResults)
+                                                                                {
+                                                                                    innerFriendsItemContextMenuItem.Header = "Удалить из черного списка";
+                                                                                    innerFriendsItemContextMenuItem.Click += RemoveFromBlackListHandler;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    innerFriendsItemContextMenuItem.Header = "Добавить в черный список";
+                                                                                    innerFriendsItemContextMenuItem.Click += AddToBlackListHandler;
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                catch (System.Net.WebException)
+                                                                {
+                                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                                    this.Close();
+                                                                }
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItem.ContextMenu = friendsItemContextMenu;
                                                             }
@@ -668,6 +717,84 @@ namespace GamaManager.Dialogs
         {
             this.DataContext = friendId;
             this.Close();
+        }
+
+        public void AddToBlackListHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            AddToBlackList(friendId);
+        }
+
+        public void AddToBlackList (string friendId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/add/?id=" + currentUserId + @"&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetFriends(currentUserId, "");
+                            MessageBox.Show("Друг был добавлен в черный список", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RemoveFromBlackListHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            RemoveFromBlackList(friendId);
+        }
+
+        public void RemoveFromBlackList (string friendId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/remove/?id=" + currentUserId + @"&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetFriends(currentUserId, "");
+                            MessageBox.Show("Друг был удален из черного списка", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
     }

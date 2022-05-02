@@ -11,40 +11,6 @@
         Loaded="AppLoadedHandler"    
     >
     <DockPanel>
-        <StackPanel
-            DockPanel.Dock="Top"    
-            Orientation="Horizontal"
-            Margin="25"
-        >
-            <TextBlock
-                VerticalAlignment="Center"
-                Text="Показать"    
-            />
-            <ComboBox
-                x:Name="screenShotsFilter"
-                VerticalAlignment="Center"
-                Width="125"
-                Height="25"
-                Margin="15 0"
-                SelectedIndex="0"
-                SelectionChanged="SelectScreenShotsFilterHandler"
-            >
-                <ComboBoxItem
-                    Visibility="Collapsed"
-                    Content="Выбрать игру"
-                />
-                <ComboBoxItem
-                    Content="Все игры"
-                />
-            </ComboBox>
-        </StackPanel>
-        <WrapPanel
-            x:Name="screenShots"
-            Width="350"
-            DockPanel.Dock="Left"    
-        >
-            <Image />
-        </WrapPanel>
         <DockPanel
             DockPanel.Dock="Bottom"    
             Margin="0 15"
@@ -84,11 +50,47 @@
                     Width="75"
                     Height="25"
                     Content="Загрузить"    
+                    Click="UploadScreenShotHandler"
                 />
             </StackPanel>
         </DockPanel>
+        <StackPanel
+            DockPanel.Dock="Top"    
+            Orientation="Horizontal"
+            Margin="25"
+        >
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Показать"    
+            />
+            <ComboBox
+                x:Name="screenShotsFilter"
+                VerticalAlignment="Center"
+                Width="125"
+                Height="25"
+                Margin="15 0"
+                SelectedIndex="0"
+                SelectionChanged="SelectScreenShotsFilterHandler"
+            >
+                <ComboBoxItem
+                    Visibility="Collapsed"
+                    Content="Выбрать игру"
+                />
+                <ComboBoxItem
+                    Content="Все игры"
+                />
+            </ComboBox>
+        </StackPanel>
+        <WrapPanel
+            x:Name="screenShots"
+            Width="350"
+            DockPanel.Dock="Left"    
+        >
+            <Image />
+        </WrapPanel>
         <TabControl
             x:Name="screenShotsControl"    
+            Width="400"
         >
             <TabItem
                 Visibility="Collapsed"    
@@ -137,21 +139,73 @@
                     <DockPanel
                     >
                         <TextBlock
+                            x:Name="mainScreenShotDateLabel"
                             Margin="0 10"
                             Text="00/00/00"
                         />
                         <TextBlock
+                            x:Name="mainScreenShotSizeLabel"
                             HorizontalAlignment="Right"
                             Margin="0 10"
                             Text="0 Б"
                         />
                     </DockPanel>
                     <TextBox
+                        x:Name="descBox"
                         Margin="0 10"
-                    />
-                    <CheckBox
-                        Content="Пометить как спойлер"    
-                    />
+                        Height="25"
+                        Width="250"
+                        PreviewTextInput="DetectDescChangedHandler"
+                    >
+                        <TextBox.Resources>
+                            <VisualBrush
+                                x:Key="hinttext"
+                                AlignmentX="Left"
+                                Stretch="None"
+                                TileMode="None"
+                            >
+                                <VisualBrush.Visual>
+                                    <DockPanel>
+                                        <TextBlock
+                                            Height="25"
+                                            Width="250"
+                                            Text="Оставить комментарий"
+                                            Foreground="#959595"
+                                            Background="White"
+                                        />
+                                    </DockPanel>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="FontSize" Value="12" />
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Width" Value="Auto" />
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <DockPanel>
+                        <CheckBox
+                            x:Name="spoilerCheckBox"
+                            Content="Пометить как спойлер"    
+                        />
+                        <TextBlock
+                            x:Name="charsLeftLabel"
+                            Margin="75 0 0 0"
+                            Visibility="Collapsed"
+                            HorizontalAlignment="Right"  
+                        />
+                    </DockPanel>
                 </StackPanel>
             </TabItem>
         </TabControl>

@@ -7782,6 +7782,8 @@ namespace GamaManager
         {
             bool isMain = index == 1;
             bool isDiscussions = index == 2;
+            bool isWorkshop = index == 3;
+            bool isPlatform = index == 4;
             if (isMain)
             {
                 mainControl.SelectedIndex = 20;
@@ -7790,6 +7792,16 @@ namespace GamaManager
             else if (isDiscussions)
             {
                 mainControl.SelectedIndex = 6;
+                AddHistoryRecord();
+            }
+            else if (isWorkshop)
+            {
+                mainControl.SelectedIndex = 38;
+                AddHistoryRecord();
+            }
+            else if (isPlatform)
+            {
+                mainControl.SelectedIndex = 39;
                 AddHistoryRecord();
             }
             ResetMenu();
@@ -10185,6 +10197,14 @@ namespace GamaManager
         public void SelectAccountSettingsItem(int index)
         {
             accountSettingsControl.SelectedIndex = index;
+            foreach (StackPanel accountSettingsTab in accountSettingsTabs.Children)
+            {
+                accountSettingsTab.Background = System.Windows.Media.Brushes.Transparent;
+            }
+            UIElementCollection accountSettingsTabsChildren = accountSettingsTabs.Children;
+            UIElement rawActiveAccountSettingsTab = accountSettingsTabsChildren[index];
+            StackPanel activeAccountSettingsTab = ((StackPanel)(rawActiveAccountSettingsTab));
+            activeAccountSettingsTab.Background = System.Windows.Media.Brushes.LightGray;
         }
 
         private void SelectFriendSettingsItemHandler(object sender, MouseButtonEventArgs e)
@@ -11795,6 +11815,16 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        private void OpenStoreSettingsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenStoreSettings();
+        }
+
+        public void OpenStoreSettings()
+        {
+            accountSettingsControl.SelectedIndex = 1;
         }
 
     }

@@ -3382,6 +3382,7 @@
                                 <DockPanel>
                                     <ScrollViewer>
                                         <StackPanel
+                                            x:Name="accountSettingsTabs"
                                             Background="DarkCyan"
                                             Width="250"
                                             DockPanel.Dock="Left"    
@@ -3390,6 +3391,7 @@
                                                 Height="35"    
                                                 DataContext="0"
                                                 MouseLeftButtonUp="SelectAccountSettingsItemHandler"
+                                                Background="LightGray"
                                             >
                                                 <TextBlock
                                                     Margin="15 5"
@@ -3444,8 +3446,42 @@
                                                 >
                                                     <TextBlock
                                                         Margin="15"
+                                                        Text="ОПЕРАЦИИ В МАГАЗИНЕ И ИСТОРИЯ ПОКУПОК"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15 10"
+                                                    Text="Изменить настройки магазина"    
+                                                    MouseLeftButtonUp="OpenStoreSettingsHandler"
+                                                />
+                                                <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
                                                         Text="КОНТАКТНАЯ ИНФОРМАЦИЯ"    
                                                         FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Foreground="SkyBlue"
+                                                    Text="Настройки эл. почты"    
+                                                    Margin="15"
+                                                    MouseLeftButtonUp="OpenUpdateEmailHandler"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Статус"    
+                                                        Margin="15"
+                                                        MouseLeftButtonUp="OpenUpdateEmailHandler"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Подтвержден"    
+                                                        Margin="15"
+                                                        MouseLeftButtonUp="OpenUpdateEmailHandler"
                                                     />
                                                 </StackPanel>
                                                 <TextBlock
@@ -3453,10 +3489,32 @@
                                                     Margin="15"
                                                     MouseLeftButtonUp="OpenUpdateEmailHandler"
                                                 />
+                                                <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Защита аккаунта"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
                                                 <TextBlock
                                                     Text="Сменить пароль"    
                                                     Margin="15"
                                                     MouseLeftButtonUp="OpenUpdatePasswordHandler"
+                                                />
+                                                <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="СЕМЕЙНЫЕ НАСТРОЙКИ"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15 10"
+                                                    Text="Семейный просмотр отключён."    
                                                 />
                                                 <StackPanel
                                                     Height="50"
@@ -3751,7 +3809,34 @@
                                             Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
+                                                <StackPanel
+                                                    Margin="0 10"
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="НЕОБЯЗАТЕЛЬНЫЕ ФАЙЛЫ COOKIE"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="0 10"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Button
+                                                        Width="175"
+                                                        Height="30"
+                                                        Content="Отклонить все"
+                                                        Margin="15 0"    
+                                                    />
+                                                    <Button
+                                                        Background="SkyBlue"
+                                                        Width="175"
+                                                        Height="30"
+                                                        Content="Принять все"
+                                                        Margin="15 0"    
+                                                    />
+                                                </StackPanel>
                                             </StackPanel>
                                         </TabItem>
                                     </TabControl>
@@ -9320,6 +9405,171 @@
                                     </StackPanel>
                                 </TabItem>
                             </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TabControl>
+                                <TabItem
+                                    Header="Главная мастерской"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="20"
+                                            Margin="15 5"
+                                            Text="Создавайте, ищите и загружайте контент для вашей игры"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Ищите модификации для ваших игр, созданные другими игроками. Хотите создать свою? Нажмите здесь, чтобы узнать больше."    
+                                        />
+                                        <DockPanel
+                                            Margin="0 15"
+                                        >
+                                            <TextBlock
+                                                FontSize="18"
+                                                Margin="15 0"
+                                                Text="Просматриваем"    
+                                            />
+                                            <TextBlock
+                                                FontSize="18"
+                                                Margin="15 0"
+                                                Text="Все Мастерские"    
+                                            />
+                                            <TextBox
+                                                HorizontalAlignment="Right"
+                                                Margin="25 0"
+                                                Height="30"
+                                                Width="250"    
+                                            >
+                                                <TextBox.Resources>
+                                                    <VisualBrush
+                                                        x:Key="hinttext"
+                                                        AlignmentX="Left"
+                                                        Stretch="None"
+                                                        TileMode="None"
+                                                    >
+                                                        <VisualBrush.Visual>
+                                                            <DockPanel>
+                                                                <TextBlock
+                                                                    Height="30"
+                                                                    Width="250"
+                                                                    Text="Найти игру"
+                                                                    Foreground="#959595"
+                                                                    Background="White"
+                                                                />
+                                                            </DockPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </TextBox.Resources>
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                            <Trigger Property="Text" Value="{x:Null}">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </DockPanel>
+                                        <WrapPanel
+                                            x:Name="workShopItems"    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Header="О мастерской"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="20"
+                                            Margin="15 5"
+                                            Text="Как это работает"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="В мастерской Steam объединяет контент, созданный игроками, позволяя искать, загружать и добавлять подобный контент в свои игры. У&#10;каждой из них Мастерская используется по-разному. Для некоторых, например, для Team Fortress 2, можно создавать новые предметы (такие&#10;как шляпы, оружие, значки, обувь и так далее), которые разработчики могут добавить в игру. Для других, например, для The Elder Scrolls V:&#10;Skyrim, можно публиковать модификации, на которые игроки могут подписаться, чтобы использовать их у себя в игре."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Виды работ, условия их включения в игру и вознаграждения могут отличаться у каждого продукта, поэтому внимательно ознакомьтесь с&#10;инструкциями, чтобы определить, где именно вы найдете лучшее применение своим умениям."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Отправляя работу в мастерскую Steam или принимая процент распределения получаемых за неё доходов, вы автоматически соглашаетесь с&#10;условиями соглашения подписчика Steam."    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel>
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="18"
+                                        Margin="0 10"
+                                        Text="Торговая площадка"    
+                                    />
+                                    <TextBlock
+                                        Margin="0 10"
+                                        Text="Продавайте предметы участникам сообщества или приобретайте их, используя средства из кошелька Steam."    
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                    Margin="0 15"    
+                                >
+                                    <Image
+                                        Margin="15"
+                                        Width="50"    
+                                        Height="50"    
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                        </Image.Source>
+                                    </Image>
+                                    <StackPanel
+                                        Margin="15 0"    
+                                    >
+                                        <TextBlock
+                                            Text="Баланс кошелька 0 pуб."    
+                                        />
+                                        <TextBlock
+                                            Text="Просмотреть инвентарь"    
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

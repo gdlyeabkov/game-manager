@@ -428,6 +428,7 @@ namespace GamaManager
                                                                     friend.MouseEnter += ShowFriendInfoHandler;
                                                                     friend.MouseLeave += HideFriendInfoHandler;
                                                                     */
+                                                                    friend.MouseMove += ShowFriendInfoHandler;
                                                                     mainControl.DataContext = senderId;
                                                                     friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                                                 }
@@ -451,7 +452,7 @@ namespace GamaManager
             }
         }
 
-        public void ShowFriendInfoHandler(object sender, RoutedEventArgs e)
+        public void ShowFriendInfoHandler (object sender, RoutedEventArgs e)
         {
             StackPanel friend = ((StackPanel)(sender));
             object friendData = friend.DataContext;
@@ -459,11 +460,11 @@ namespace GamaManager
             ShowFriendInfo(friendId, friend);
         }
 
-        public void ShowFriendInfo(string friendId, StackPanel friend)
+        public void ShowFriendInfo (string friendId, StackPanel friend)
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -487,7 +488,14 @@ namespace GamaManager
                             friendInfoPopupNameLabel.Text = userName;
                             friendInfoPopupStatusLabel.Text = userStatus;
                             friendInfoPopupLevelLabel.Text = userLevel;
-                            friendInfoPopup.IsOpen = true;
+                            if (friend.IsMouseOver)
+                            {
+                                friendInfoPopup.IsOpen = true;
+                            }
+                            else
+                            {
+                                friendInfoPopup.IsOpen = false;
+                            }
                             friendInfoPopup.PlacementTarget = friend;
                         }
                     }
@@ -634,6 +642,7 @@ namespace GamaManager
                                                                     friend.MouseEnter += ShowFriendInfoHandler;
                                                                     friend.MouseLeave += HideFriendInfoHandler;
                                                                     */
+                                                                    friend.MouseMove += ShowFriendInfoHandler;
                                                                     mainControl.DataContext = senderId;
                                                                     friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                                                 }
@@ -1555,8 +1564,10 @@ namespace GamaManager
                                 experiment.Background = System.Windows.Media.Brushes.LightGray;
                                 experiment.Margin = new Thickness(15);
                                 experiment.Width = 850;
+                                experiment.Height = 350;
                                 Image experimentPhoto = new Image();
                                 experimentPhoto.Width = 500;
+                                experimentPhoto.Height = 300;
                                 experimentPhoto.BeginInit();
                                 experimentPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/experiment/photo/?id=" + id));
                                 experimentPhoto.EndInit();
@@ -10940,12 +10951,20 @@ namespace GamaManager
 
         public void ShowStoreMenuHandler (object sender, MouseEventArgs e)
         {
-            ShowStoreMenu();
+            StackPanel panel = ((StackPanel)(sender));
+            ShowStoreMenu(panel);
         }
 
-        public void ShowStoreMenu ()
+        public void ShowStoreMenu (StackPanel panel)
         {
-            storeMenuPopup.IsOpen = true;
+            if (panel.IsMouseOver)
+            {
+                storeMenuPopup.IsOpen = true;
+            }
+            else
+            {
+                storeMenuPopup.IsOpen = false;
+            }
         }
 
         public void HideStoreMenuHandler (object sender, MouseEventArgs e)
@@ -10960,32 +10979,52 @@ namespace GamaManager
 
         public void ShowNewMenuHandler(object sender, MouseEventArgs e)
         {
-            ShowNewMenu();
+            StackPanel panel = ((StackPanel)(sender));
+            ShowNewMenu(panel);
         }
 
-        public void ShowNewMenu()
+        public void ShowNewMenu(StackPanel panel)
         {
-            newMenuPopup.IsOpen = true;
+            if (panel.IsMouseOver)
+            {
+                newMenuPopup.IsOpen = true;
+            }
+            else
+            {
+                newMenuPopup.IsOpen = false;
+            }
         }
 
         public void HideNewMenuHandler(object sender, MouseEventArgs e)
         {
-            HideNewMenu();
+            StackPanel panel = ((StackPanel)(sender));
+            HideNewMenu(panel);
         }
 
-        public void HideNewMenu ()
+        public void HideNewMenu (StackPanel panel)
         {
-            newMenuPopup.IsOpen = false;
+            if (!panel.IsMouseOver)
+            {
+                newMenuPopup.IsOpen = false;
+            }
         }
 
         public void ShowCategoriesMenuHandler(object sender, MouseEventArgs e)
         {
-            ShowCategoriesMenu();
+            StackPanel panel = ((StackPanel)(sender));
+            ShowCategoriesMenu(panel);
         }
 
-        public void ShowCategoriesMenu()
+        public void ShowCategoriesMenu (StackPanel panel)
         {
-            categoriesMenuPopup.IsOpen = true;
+            if (panel.IsMouseOver)
+            {
+                categoriesMenuPopup.IsOpen = true;
+            }
+            else
+            {
+                categoriesMenuPopup.IsOpen = false;
+            }
         }
 
         public void HideCategoriesMenuHandler (object sender, MouseEventArgs e)

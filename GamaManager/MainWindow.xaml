@@ -3952,6 +3952,7 @@
                                                     StaysOpen="False"
                                                     Width="350"
                                                     Height="150"
+                                                    Placement="MousePoint"
                                                 >
                                                     <Popup.Child>
                                                         <StackPanel
@@ -6215,6 +6216,7 @@
                                         x:Name="storeMenuPanel"
                                         Margin="15 0"
                                         VerticalAlignment="Center"
+                                        MouseMove="ShowStoreMenuHandler"
                                     >
                                         <TextBlock
                                             Text="Ваш магазин"
@@ -6224,27 +6226,128 @@
                                         x:Name="storeMenuPopup"
                                         StaysOpen="False"
                                         IsOpen="False"
-                                        PlacementTarget="{Binding ElementName=storeMenuPanel}"
-                                        MouseEnter="ShowStoreMenuHandler"
-                                        MouseLeave="HideStoreMenuHandler"
+                                        Placement="Mouse"
+                                        Width="250"
+                                        Height="575"
                                     >
-                                        <Popup.Style>
-                                            <Style TargetType="Popup">
-                                                <Style.Triggers>
-                                                    <DataTrigger
-                                                        Binding="{Binding PlacementTarget.IsMouseOver, RelativeSource={RelativeSource Self}}" 
-                                                        Value="True"
-                                                    >
-                                                        <Setter Property="IsOpen" Value="True" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Popup.Style>
                                         <Popup.Child>
-                                            <StackPanel>
-                                                <StackPanel>
+                                            <StackPanel
+                                                Background="LightGray"
+                                            >
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
                                                     <TextBlock
                                                         Text="Главная страница"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Отслеживаемые товары"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Настройки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Foreground="SkyBlue"
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Рекомендации"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Ваш список рекомендаций"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Очередь новинок"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Рекомендации сообщества"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Интерактивный советник"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Популярно у друзей"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Кураторы Office ware game manager"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Foreground="SkyBlue"
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Потому что вам нравится"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Геройский шутер"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Баскетбол"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Гонки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Зомби"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Больше меток для вас"    
                                                     />
                                                 </StackPanel>
                                             </StackPanel>
@@ -6253,8 +6356,7 @@
                                     <StackPanel
                                         Margin="15 0"
                                         VerticalAlignment="Center"    
-                                        MouseEnter="ShowNewMenuHandler"
-                                        MouseLeave="HideNewMenuHandler"
+                                        MouseMove="ShowNewMenuHandler"
                                     >
                                         <TextBlock
                                             Text="Новое и примечательное"    
@@ -6264,22 +6366,57 @@
                                         x:Name="newMenuPopup"
                                         StaysOpen="False"
                                         IsOpen="False"
+                                        Placement="Mouse"
+                                        Width="225"
+                                        Height="185"
                                     >
                                         <Popup.Child>
-                                            <StackPanel>
-                                                <StackPanel>
+                                            <StackPanel
+                                                Background="LightGray"    
+                                            >
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
                                                     <TextBlock
-                                                        Text="Главная страница"    
+                                                        Text="Лидеры продаж"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Популярные новинки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Текущие предложения"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Недавно обновленные"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Популярные будущие проекты"    
                                                     />
                                                 </StackPanel>
                                             </StackPanel>
                                         </Popup.Child>
                                     </Popup>
                                     <StackPanel
+                                        x:Name="categoriesMenuPanel"
                                         Margin="15 0"
                                         VerticalAlignment="Center"
-                                        MouseEnter="ShowCategoriesMenuHandler"
-                                        MouseLeave="HideCategoriesMenuHandler"
+                                        MouseMove="ShowCategoriesMenuHandler"
                                     >
                                         <TextBlock
                                             Text="Категории"    
@@ -6289,15 +6426,812 @@
                                         x:Name="categoriesMenuPopup"
                                         StaysOpen="False"
                                         IsOpen="False"
+                                        Placement="Left"
+                                        PlacementTarget="{ Binding ElementName=categoriesMenuPanel }"
+                                        Width="725"
+                                        Height="650"
                                     >
                                         <Popup.Child>
-                                            <StackPanel>
-                                                <StackPanel>
+                                            <Grid
+                                                Background="LightGray"
+                                            >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                    <RowDefinition
+                                                        Height="35"    
+                                                    />
+                                                </Grid.RowDefinitions>
+                                                <StackPanel
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
                                                     <TextBlock
-                                                        Text="Главная страница"    
+                                                        Foreground="SkyBlue"
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Особые разделы"    
                                                     />
                                                 </StackPanel>
-                                            </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Бесплатно"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="2"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Демоверсии"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Ранний доступ"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="4"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="С поддержкой контроллеров"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="5"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Remote play"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="6"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Программы"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="7"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Саундтреки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="8"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Продукты для VR"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="9"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="VR устройства"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="10"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="macOS"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="11"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Linux"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="12"
+                                                    Grid.Column="0"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Для интернет-кафе"    
+                                                    />
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Foreground="SkyBlue"
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Жанры"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Экшен"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Beat 'Em up"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Аркада и ритм-игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="4"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Платформер и раннер"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="5"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Файтинги и боевые искусства"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="6"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Шутер от первого лица"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="7"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Шутер от третьего лица"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="8"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Экшен-рогалик"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="9"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Приключенческая казуальная игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="10"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Визуальная новелла"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="11"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Глубокий сюжет"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="12"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Головоломка"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="13"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Казуальная игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="14"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Метроидвания"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="15"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Приключенческая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="16"
+                                                    Grid.Column="1"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Приключенческая ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Ролевые игры"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Групповая ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Пошаговая ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="4"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Приключенческая ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="5"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Рогалик"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="6"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Ролевой экшен"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="7"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Стратегическая ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="8"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Японская ролевая игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="9"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Симулятор"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="10"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Жизнь и иммерсивные игры"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="11"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Космос и полеты"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="12"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Песочницы и физика"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="13"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Свидания"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="14"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Строительство и автоматизация"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="15"
+                                                    Grid.Column="2"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Фермерство"    
+                                                    />
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Стратегия"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="2"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Башенная защита"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Военная"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="4"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Глобальная стратегия и 4X-игры"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="5"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Города и колонизация"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="6"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Карточная и настольная игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="7"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Пошаговая стратегия"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="8"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Стратегия в реальном времени"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="9"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Спорт и гонки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="10"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Гонки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="11"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Индивидуаальный спорт"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="12"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Командный спорт"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="13"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Охота и рыбалка"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="14"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Симулятор гонок"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="15"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Спортивные игры"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="16"
+                                                    Grid.Column="3"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Спортивные симуляторы"    
+                                                    />
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Grid.Row="0"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Foreground="SkyBlue"
+                                                        FontWeight="ExtraBlack"
+                                                        Text="Темы"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Going rogue"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="2"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Аниме"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Выживание"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="4"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Космос"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="5"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Научная фантастика и киберпанк"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="6"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Открытый мир"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="7"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Тайны и детективы"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="8"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Только для взрослых"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="9"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Хоррор"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="10"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        FontWeight="ExtraBlack"
+                                                        Foreground="SkyBlue"
+                                                        Text="Число игроков"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="11"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Игра по локальной сети"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="12"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Кооперативы"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="13"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Локальная игра для вечеринок"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="14"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Массовый мультиплеер"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="15"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Многопользовательская игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="16"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Одиночная игра"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Grid.Row="17"
+                                                    Grid.Column="4"
+                                                    Margin="15 10"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Сетевая"    
+                                                    />
+                                                </StackPanel>
+
+                                            </Grid>
                                         </Popup.Child>
                                     </Popup>
                                     <StackPanel

@@ -1,0 +1,16 @@
+ComponentOne Studio controls require a valid license for runtime testing and distribution. An active subscription to ComponentOne Studio Enterprise, Studio for Xamarin, WPF Edition, UWP Edition, or ComponentOne Ultimate is required to generate valid licenses.
+
+WPF apps require all components be listed in the licenses.licx file which is automatically generated when a licensed component is added to a form.
+
+Xamarin and UWP apps require a runtime app key. App keys are validated at runtime and continue to remain active indefinitely until the app identifier changes or the controls are updated to a version outside the subscription window. 
+
+For trial purposes, download the samples at www.grapecity.com/componentone-studio.
+
+Additional notes about ComponentOne Studio Subscription Licensing:
+-A subscription license entitles you to build applications using ComponentOne Studio components. 
+-A subscription license entitles you to one year of free upgrades, including bug fixes and new features. 
+-After one year, you are no longer entitled to updates (unless you renew), but you may continue to use the products received with your subscription after your subscription has expired.
+-The applications you build can be distributed royalty-free.
+-Source code is not included.
+
+For more licensing information visit www.grapecity.com/licensing/componentone.

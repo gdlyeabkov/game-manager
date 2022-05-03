@@ -1,0 +1,994 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C1.WPF.Carousel.4.6.2</name>
+    </assembly>
+    <members>
+        <member name="T:C1.Util.Licensing.ProviderInfo">
+            <summary>
+            <para>Provides static <see cref="M:C1.Util.Licensing.ProviderInfo.Validate(System.Type,System.Object)"/> methods that 
+            should be called from the constructors of licensed classes.</para>
+            <para>Also provides a static <see cref="M:C1.Util.Licensing.ProviderInfo.ShowAboutBox(System.Object)"/> method that can 
+            be called to show the about box with product and licensing information.</para>
+            </summary>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfo.Validate(System.Type,System.Object)">
+            <summary>
+            Perform license validation. Call this method from the licensed object's 
+            constructor to save a license key at design time, validate it at runtime, 
+            and display a nag dialog if a valid license is not found.
+            </summary>
+            <param name="type">Type of licensed object (use typeof() and not GetType()).</param>
+            <param name="instance">Reference to the licensed object (not currently used).</param>
+            <returns>A <see cref="T:C1.Util.Licensing.LicenseInfo"/> object that contains information about the license.</returns>
+            <remarks>
+            <para>Check the <b>ShouldNag</b> property of the returned <see cref="T:C1.Util.Licensing.LicenseInfo"/> 
+            to determine whether the licensed class should nag the user. This value is set
+            to true in situations where a valid license was not found but a nag dialog
+            could not be displayed. In these cases, the licensed class is supposed to nag
+            in some other way (with a watermark for example).</para>
+            </remarks>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfo.Validate(System.Type,System.Object,System.Boolean)">
+            <summary>
+            Perform license validation. Call this method from the licensed object's 
+            constructor to save a license key at design time, validate it at runtime, 
+            and display a nag dialog if a valid license is not found.
+            </summary>
+            <param name="type">Type of licensed object (use typeof() and not GetType()).</param>
+            <param name="instance">Reference to the licensed object (not currently used).</param>
+            <param name="showNagDialog">Whether the nag dialog should be displayed when a valid license is not found.</param>
+            <returns>A <see cref="T:C1.Util.Licensing.LicenseInfo"/> object that contains information about the license.</returns>
+            <remarks>
+            <para>This overload was created for use in WPF. It should be called in the control's constructor
+            in order to support license persistence correctly. But it should not show the nag dialog until the
+            control is fully loaded, or the VS designer may remain blank.</para>
+            <para>So the solution is this:</para>
+            <code>
+            LicenseInfo _licInfo;
+            public LicensedControl()
+            {
+              // check license but don't nag yet
+              _licInfo = ProviderInfo.Validate(typeof(LicensedControl), this, false);
+              
+              // perform licensing after control is fully loaded
+              Loaded += LicensedControl_Loaded;
+            }
+            void LicensedControl_Loaded(object sender, RoutedEventArgs e)
+            {
+              // nag after loading
+              if (_licInfo.ShouldNag)
+              {
+                ProviderInfo.ShowAboutBox(this);
+              }
+            }
+            </code>
+            </remarks>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfo.Validate(System.Type,System.Object,System.Reflection.Assembly,System.String)">
+            <summary>
+            Version of Validate used by constructors that take runtime keys.
+            </summary>
+            <param name="type">Type of licensed object (use typeof() and not GetType()).</param>
+            <param name="instance">Reference to the licensed object.</param>
+            <param name="callingAsm">Assembly that contains the owner licensed control.</param>
+            <param name="runtimeKey">Any valid C1 runtime key.</param>
+            <returns>A <see cref="T:C1.Util.Licensing.LicenseInfo"/> with information about the runtime key.</returns>
+            <remarks>
+            <para>This allows a licensed C1 class to create other C1 objects bypassing 
+            license verification for the child objects.</para>
+            <para>For extra safety, we check that the owner object is defined in an assembly
+            the contains a 'C1ProductInfo' attribute.</para>
+            </remarks>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfo.ShowAboutBox(System.Object)">
+            <summary>
+            Shows the About Box for an instance of a C1 product.
+            </summary>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfo.GetC1Type(System.Object)">
+            <summary>
+            Get the type whose assembly contains a 'C1ProductInfoAttribute'.
+            </summary>
+            <param name="instance">Instance of an object whose type is to be checked.</param>
+            <returns>The type whose assembly contains a 'C1ProductInfoAttribute'</returns>
+        </member>
+        <member name="T:C1.Util.Licensing.LicenseInfo">
+            <summary>
+            Contains information about a license stored in an application.
+            </summary>
+        </member>
+        <member name="T:C1.Util.Licensing.C1AboutNameAttribute">
+            <summary>
+            Attribute used to specify the product name shown on the About Box.
+            </summary>
+        </member>
+        <member name="T:C1.Util.Licensing.C1ProductInfoAttribute">
+            <summary>
+            Attribute used to attach licensing/product information to assemblies.
+            </summary>
+        </member>
+        <member name="T:C1.Util.Licensing.ProviderInfoWPF">
+            <summary>
+            Helper class to implement Licensing for WPF classes.
+            This should be used only in WPF projects.
+            </summary>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfoWPF.Validate(System.Type,System.Windows.FrameworkElement,System.Boolean,System.Boolean)">
+            <summary>
+            Perform license validation. Call this method from the licensed object's 
+            constructor to save a license key at design time, validate it at runtime, 
+            and display a nag dialog if a valid license is not found.
+            <param name="type">Type of licensed object (use typeof() and not GetType()).</param>
+            <param name="instance">Reference to the licensed object.</param>
+            <param name="testDomain">Whether to test for an IdeDomainManager (ASP.NET design time that looks like runtime).</param>
+            <param name="showNag">Whether to show nag screen or it will be handled from some other place.</param>
+            <returns>A <see cref="T:C1.Util.Licensing.LicenseInfo"/> object that contains information about the license.</returns>
+            </summary>
+        </member>
+        <member name="M:C1.Util.Licensing.ProviderInfoWPFEnt.Validate(System.Type,System.Windows.FrameworkElement,System.Boolean)">
+            <summary>
+            Perform license validation. Call this method from the licensed object's 
+            constructor to save a license key at design time, validate it at runtime, 
+            and display a nag dialog if a valid license is not found.
+            <param name="type">Type of licensed object (use typeof() and not GetType()).</param>
+            <param name="instance">Reference to the licensed object.</param>
+            <param name="testDomain">Whether to test for an IdeDomainManager (ASP.NET design time that looks like runtime).</param>
+            <returns>A <see cref="T:C1.Util.Licensing.LicenseInfo"/> object that contains information about the license.</returns>
+            </summary>
+        </member>
+        <member name="T:C1.Util.Localization.C1DescriptionAttribute">
+            <summary>
+            C1DescriptionAttribute replaces the DescriptionAttribute
+            and uses the C1Localizer class to return the localized Attribute string
+            </summary>
+        </member>
+        <member name="T:C1.Util.Localization.C1CategoryAttribute">
+            <summary>
+            C1CategoryAttribute replaces the CategoryAttribute
+            and uses the C1Localizer class to return the localized Attribute string
+            </summary>
+        </member>
+        <member name="T:C1.Util.Localization.C1Localizer">
+            <summary>
+            Localization tables and methods for looking up localized strings.
+            </summary>
+        </member>
+        <member name="T:C1.Util.Localization.StringTables">
+            <summary>
+            Contains a single static method called InitTables that populates the
+            tables used by the C1Localizer class.
+            
+            ** This file is project-specific **
+            Do not include it in your project. Instead, copy it into your project
+            and customize the copy with the strings you need.
+            </summary>
+        </member>
+        <member name="T:C1.WPF.Carousel.HorizontalItemAnchor">
+            <summary>
+            Defines possible horizontal placements of the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> child controls relative
+            to the carousel's path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.HorizontalItemAnchor.Left">
+            <summary>
+            Child element is aligned to the left of the path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.HorizontalItemAnchor.Center">
+            <summary>
+            Child element is centered horizontally relative to the path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.HorizontalItemAnchor.Right">
+            <summary>
+            Child element is aligned to the right of the path.
+            </summary>
+        </member>
+        <member name="T:C1.WPF.Carousel.VerticalItemAnchor">
+            <summary>
+            Defines possible vertical placements of the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> child controls relative
+            to the carousel's path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.VerticalItemAnchor.Top">
+            <summary>
+            Child element is aligned to the top of the path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.VerticalItemAnchor.Center">
+            <summary>
+            Child element is centered vertically relative to the path.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.VerticalItemAnchor.Bottom">
+            <summary>
+            Child element is aligned to the bottom of the path.
+            </summary>
+        </member>
+        <member name="T:C1.WPF.Carousel.C1CarouselPanel">
+            <summary>
+            Represents a virtualizing panel that lays out its child elements along an arbitrary path.
+            </summary>
+            <remarks>
+            The <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> can be used only as a panel of ItemsControl or derived
+            control, it can't be used as a standalone panel.
+            <para>
+            Most of the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> properties are attached properties, so their values
+            can be specified on ItemsControl that hosts the panel.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.PageSizeProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PageSize"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.PaddingProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.Padding"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.PathGeometryProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.HorizontalPathAlignmentProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalPathAlignment"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.VerticalPathAlignmentProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalPathAlignment"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.HorizontalItemAnchorOnPathProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalItemAnchorOnPath"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.VerticalItemAnchorOnPathProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalItemAnchorOnPath"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngleProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngle"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.PerspectiveFactorProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveFactor"/> property.
+            </summary>
+        </member>
+        <member name="F:C1.WPF.Carousel.C1CarouselPanel.DrawPathProperty">
+            <summary>
+            Identifies the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.DrawPath"/> property.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> class.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.ClearCarouselProperties(System.Windows.DependencyObject)">
+            <summary>
+            Clears the values of all <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> attached properties on the specified
+            object.
+            </summary>
+            <param name="d">
+            The object to clear <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>'s attached properties on.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.PageSize">
+            <summary>
+            Defines the number of visible items in <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetPageSize(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PageSize"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetPageSize(System.Windows.DependencyObject,System.Int32)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PageSize"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.Padding">
+            <summary>
+            Gets or sets the amount of space between <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> and its child elements.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetPadding(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.Padding"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetPadding(System.Windows.DependencyObject,System.Windows.Thickness)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.Padding"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry">
+            <summary>
+            Defines the path that child elements are laid out along.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            <para>
+            The <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/> itself defines a two-dimentional curve, but in a composition
+            with the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngle"/> property it defines three-dimentional curve.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetPathGeometry(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetPathGeometry(System.Windows.DependencyObject,System.Windows.Media.PathGeometry)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalPathAlignment">
+            <summary>
+            Gets or sets a horizontal alignment of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/>.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetHorizontalPathAlignment(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalPathAlignment"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetHorizontalPathAlignment(System.Windows.DependencyObject,System.Windows.HorizontalAlignment)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalPathAlignment"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.VerticalPathAlignment">
+            <summary>
+            Gets or sets a vertical alignment of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/>.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetVerticalPathAlignment(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalPathAlignment"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetVerticalPathAlignment(System.Windows.DependencyObject,System.Windows.VerticalAlignment)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalPathAlignment"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalItemAnchorOnPath">
+            <summary>
+            Gets or sets the horizontal placement of the child controls relative to the carousel's path.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetHorizontalItemAnchorOnPath(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalItemAnchorOnPath"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetHorizontalItemAnchorOnPath(System.Windows.DependencyObject,C1.WPF.Carousel.HorizontalItemAnchor)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalItemAnchorOnPath"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.VerticalItemAnchorOnPath">
+            <summary>
+            Gets or sets the vertical placement of the child controls relative to the carousel's path.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetVerticalItemAnchorOnPath(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalItemAnchorOnPath"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetVerticalItemAnchorOnPath(System.Windows.DependencyObject,C1.WPF.Carousel.VerticalItemAnchor)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.VerticalItemAnchorOnPath"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngle">
+            <summary>
+            Gets or sets the angle, in degrees, to which the planar <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PathGeometry"/> curve is
+            turned around the x-axis and thus forms a three-dimensional curve.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetPerspectiveAngle(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngle"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetPerspectiveAngle(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveAngle"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveFactor">
+            <summary>
+            Gets or sets the value defining how much more distant elements are zoomed out comparing
+            to less distant elements.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetPerspectiveFactor(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveFactor"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetPerspectiveFactor(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.PerspectiveFactor"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.DrawPath">
+            <summary>
+            Gets or sets the value indicating whether the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/> path should
+            be drawn.
+            This is an attached dependency property.
+            </summary>
+            <remarks>
+            You can specify this property value on ItemsControl that hosts the <see cref="T:C1.WPF.Carousel.C1CarouselPanel"/>.
+            </remarks>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetDrawPath(System.Windows.DependencyObject)">
+            <summary>
+            Gets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.DrawPath"/> attached property from a given object.
+            </summary>
+            <param name="d">
+            The object to read value from.
+            </param>
+            <returns>
+            The property value.
+            </returns>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetDrawPath(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the value of the <see cref="P:C1.WPF.Carousel.C1CarouselPanel.DrawPath"/> attached property to a given object.
+            </summary>
+            <param name="d">
+            The object to set value to.
+            </param>
+            <param name="value">
+            The property value.
+            </param>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ActualScrollTransitionFactor">
+            <summary>
+            Negative or positive depending on scroll direction. Absolute range is [0; 1].
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.CanHorizontallyScroll">
+            <summary>
+            Implements the IScrollInfo.CanHorizontallyScroll property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.CanVerticallyScroll">
+            <summary>
+            Implements the IScrollInfo.CanVerticallyScroll property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ExtentHeight">
+            <summary>
+            Implements the IScrollInfo.ExtentHeight property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ExtentWidth">
+            <summary>
+            Implements the IScrollInfo.ExtentWidth property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.HorizontalOffset">
+            <summary>
+            Implements the IScrollInfo.HorizontalOffset property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ScrollOwner">
+            <summary>
+            Implements the IScrollInfo.ScrollOwner property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.VerticalOffset">
+            <summary>
+            Implements the IScrollInfo.VerticalOffset property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ViewportHeight">
+            <summary>
+            Implements the IScrollInfo.ViewportHeight property.
+            </summary>
+        </member>
+        <member name="P:C1.WPF.Carousel.C1CarouselPanel.ViewportWidth">
+            <summary>
+            Implements the IScrollInfo.ViewportWidth property.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.LineDown">
+            <summary>
+            Implements the IScrollInfo.LineDown method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.LineLeft">
+            <summary>
+            Implements the IScrollInfo.LineLeft method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.LineRight">
+            <summary>
+            Implements the IScrollInfo.LineRight method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.LineUp">
+            <summary>
+            Implements the IScrollInfo.LineUp method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.MakeVisible(System.Windows.UIElement,System.Windows.Rect)">
+            <summary>
+            Implements the IScrollInfo.MakeVisible method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.System#Windows#Controls#Primitives#IScrollInfo#MakeVisible(System.Windows.Media.Visual,System.Windows.Rect)">
+            <summary>
+            Implements the IScrollInfo.MakeVisible method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.MouseWheelDown">
+            <summary>
+            Implements the IScrollInfo.MouseWheelDown method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.MouseWheelLeft">
+            <summary>
+            Implements the IScrollInfo.MouseWheelLeft method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.MouseWheelRight">
+            <summary>
+            Implements the IScrollInfo.MouseWheelRight method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.MouseWheelUp">
+            <summary>
+            Implements the IScrollInfo.MouseWheelUp method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.PageDown">
+            <summary>
+            Implements the IScrollInfo.PageDown method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.PageLeft">
+            <summary>
+            Implements the IScrollInfo.PageLeft method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.PageRight">
+            <summary>
+            Implements the IScrollInfo.PageRight method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.PageUp">
+            <summary>
+            Implements the IScrollInfo.PageUp method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetHorizontalOffset(System.Double)">
+            <summary>
+            Implements the IScrollInfo.SetHorizontalOffset method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.SetVerticalOffset(System.Double)">
+            <summary>
+            Implements the IScrollInfo.SetVerticalOffset method.
+            </summary>
+        </member>
+        <member name="M:C1.WPF.Carousel.C1CarouselPanel.GetFinalTransform(System.Windows.Size)">
+            <summary>
+            
+            </summary>
+            <param name="panelContentSize">
+            Use RenderSize in OnRender
+            </param>
+            <returns></returns>
+        </member>
+        <member name="F:Public.RunTimeNameSuffix">
+            <summary>
+            Defines the WPF platform specific suffix of a run-time assembly name.
+            </summary>
+        </member>
+        <member name="F:Public.DesignTimeNet4NameSuffix">
+            <summary>
+            Defines the WPF platform specific suffix of a VS2010/Blend3-4 design-time assembly name.
+            </summary>
+        </member>
+        <member name="F:Public.DesignTimeNet45NameSuffix">
+            <summary>
+            Defines the WPF platform specific suffix of a VS2012 design-time assembly name.
+            </summary>
+        </member>
+        <member name="M:GrapeCity.Common.GcNetFxLicenseProvider`1.VerifyDesignTimeEnvironment">
+            <summary>
+              Verify the environment to get whether the component is in design-time. 
+            </summary>
+            <returns>
+              <c>true</c> if it is in design-time; otherwise <c>false</c>.
+            </returns>
+            <remarks>
+              In DesignTime, because of IDE bugs, some component are not created with DesigntimeLicenseContext. 
+              For example, when drag a control from Win Forms DataSource tool window, or use a web control in a ASP.NET Template.
+              This may cause the control do run-time license validation and found that there is no license.
+              To resolve this problem, we will check the environment and decide whether to do design-time license validation again.
+            </remarks>
+        </member>
+        <member name="T:GrapeCity.Common.LicenseInfoPanel">
+            <summary>
+            Interaction logic for LicenseInfoPanel.xaml
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.headerPanel">
+            <summary>
+            headerPanel Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.headerIcon">
+            <summary>
+            headerIcon Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.headerText">
+            <summary>
+            headerText Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyText">
+            <summary>
+            bodyText Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyLinkPanel">
+            <summary>
+            bodyLinkPanel Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyWebLinkBlock">
+            <summary>
+            bodyWebLinkBlock Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyWebLink">
+            <summary>
+            bodyWebLink Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyWebLinkText">
+            <summary>
+            bodyWebLinkText Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyActivateLinkBlock">
+            <summary>
+            bodyActivateLinkBlock Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyActivateLink">
+            <summary>
+            bodyActivateLink Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyActivateLinkText">
+            <summary>
+            bodyActivateLinkText Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyDetailHeader">
+            <summary>
+            bodyDetailHeader Name Field
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.LicenseInfoPanel.bodyDetail">
+            <summary>
+            bodyDetail Name Field
+            </summary>
+        </member>
+        <member name="M:GrapeCity.Common.LicenseInfoPanel.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:GrapeCity.Common.Resources.LicenseResource">
+            <summary>
+              Contains the resource for PowerToolsLicenseProvider
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.ErrorIcon">
+            <summary>
+              Gets the Error icon for license dialog.
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.InfoIcon">
+            <summary>
+              Gets the Info icon for license dialog.
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.WarningIcon">
+            <summary>
+              Gets the Warning icon for license dialog.
+            </summary>
+        </member>
+        <member name="P:GrapeCity.Common.Resources.LicenseResource.GrapeCityIcon">
+            <summary>
+              Gets the GrapeCity icon for license dialog.
+            </summary>
+        </member>
+        <member name="M:GrapeCity.Common.Resources.LicenseResource.GetString(System.String)">
+            <summary>
+              Gets the localized string.
+            </summary>
+            <param name="name">
+              The name of the string. It could be a const value in <see cref="T:GrapeCity.Common.Resources.LicenseResource"/>.
+            </param>
+            <returns>
+              The localized string.
+            </returns>
+        </member>
+        <member name="M:GrapeCity.Common.Resources.LicenseResource.GetString(System.String,System.Object[])">
+            <summary>
+              Gets the localized string.
+            </summary>
+            <param name="name">
+              The name of the string. It could be a const value in <see cref="T:GrapeCity.Common.Resources.LicenseResource"/>.
+            </param>
+            <param name="args">
+              The data used in the string.
+            </param>
+            <returns>
+              The localized string.
+            </returns>
+        </member>
+        <member name="M:GrapeCity.Common.Resources.LicenseResource.GetAssemblyFileVersion(System.Reflection.Assembly)">
+            <summary>
+              Get the file version description of the specified assembly.
+            </summary>
+            <param name="assembly">
+              The <see cref="T:System.Reflection.Assembly"/> whose file version description should be get.
+            </param>
+            <returns>
+              A <see cref="T:System.String"/> indicates the file version description of the specified assembly.
+            </returns>
+        </member>
+        <member name="M:GrapeCity.Common.Resources.LicenseResource.GetAssemblyName(System.Reflection.Assembly)">
+            <summary>
+              Get the name of the specified assembly.
+            </summary>
+            <param name="assembly">
+              The <see cref="T:System.Reflection.Assembly"/> whose name should be get.
+            </param>
+            <returns>
+              A <see cref="T:System.String"/> indicates the name of the specified assembly.
+            </returns>
+            <remarks>
+              Please use this method to get assembly name. It is because that the Assembly.GetName method need FileIO permission.
+            </remarks>
+        </member>
+        <member name="M:GrapeCity.Common.Resources.LicenseResource.FormatSerialKey(System.String)">
+            <summary>
+              Format the product key as "xxxx-xxxx-xxxx-xxxx-xxxx-xxxx".
+            </summary>
+            <param name="productKey">
+              A <see cref="T:System.String"/> indicates the original product key which is a sequence of 24 digits.
+            </param>
+            <returns>
+              A readable text indicates the product key.
+            </returns>
+        </member>
+        <member name="T:GrapeCity.Common.Resources.LicenseDialogKind">
+            <summary>
+              Represents the kind of license dialog.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogKind.Info">
+            <summary>
+              Info dialog. It is shown for a trial license.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogKind.Warning">
+            <summary>
+              Warning dialog. It is shown for a trial license which is expired.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogKind.Error">
+            <summary>
+              Error dialog. It is shown for an invalid license or other errors.
+            </summary>
+        </member>
+        <member name="T:GrapeCity.Common.Resources.LicenseDialogWebLinkTarget">
+            <summary>
+              Represents the target web site for the link in license dialog.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogWebLinkTarget.None">
+            <summary>
+              None target.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogWebLinkTarget.GotoWebFAQ">
+            <summary>
+              Goto web site http://www.grapecity.com/support/portal/.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogWebLinkTarget.GotoWebActivation">
+            <summary>
+              Goto web site http://www.grapecity.com/componentone/.
+            </summary>
+        </member>
+        <member name="F:GrapeCity.Common.Resources.LicenseDialogWebLinkTarget.GotoWebShop">
+            <summary>
+              Goto web site http://www.grapecity.com/pricing/componentone/.
+            </summary>
+        </member>
+        <member name="T:GrapeCity.Common.WPFLicenseProvider`1">
+            <summary>
+              Represents a license provider of a WPF PowerTools component.
+            </summary>
+        </member>
+    </members>
+</doc>

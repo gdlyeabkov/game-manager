@@ -1,0 +1,9 @@
+* This software is based in part on the Okapi Barcode project.
+
+Project info: https://github.com/woo-j/OkapiBarcode
+
+That software is governed by the following license:
+===================================================
+
+  The Apache License, Version 2.0 (the "License");
+  You may obtain a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0

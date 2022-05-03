@@ -6231,7 +6231,33 @@ namespace GamaManager
 
             GetGamesList("");
 
-            MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/likes/increase/?id=" + gameId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            MessageBox.Show(gameUploadedLabelContent, attentionLabelContent);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         private void SelectGameHandler(object sender, MouseButtonEventArgs e)
@@ -7876,11 +7902,27 @@ namespace GamaManager
 
         public void StoreItemSelected(int index)
         {
-            bool isWant = index == 2;
+            bool isPopular = index == 1;
+            bool isHint = index == 2;
+            bool isWant = index == 3;
+            bool isPointsStore = index == 4;
             bool isNews = index == 5;
             bool isGamesStats = index == 6;
-            if (isWant) {
+            if (isPopular)
+            {
+                OpenPopularGames();
+            }
+            else if (isHint)
+            {
                 mainControl.SelectedIndex = 28;
+            }
+            else if (isWant)
+            {
+                GetWantGames();
+            }
+            else if (isPointsStore)
+            {
+                mainControl.SelectedIndex = 34;
             }
             else if (isNews)
             {
@@ -7895,6 +7937,72 @@ namespace GamaManager
 
             }
             ResetMenu();
+        }
+
+        public void GetWantGamesHandler (object sender, TextChangedEventArgs e)
+        {
+            GetWantGames();
+        }
+
+        public void GetWantGames ()
+        {
+            mainControl.SelectedIndex = 33;
+            wantGamesList.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            totalGames = totalGames.Where((GameResponseInfo game) =>
+                            {
+                                return false;
+                            }).ToList<GameResponseInfo>();
+                            int totalGamesCount = totalGames.Count;
+                            bool isGamesExists = totalGamesCount >= 1;
+                            if (isGamesExists)
+                            {
+                                wantGamesList.HorizontalAlignment = HorizontalAlignment.Left;
+                            }
+                            else
+                            {
+                                StackPanel notFound = new StackPanel();
+                                notFound.Margin = new Thickness(0, 15, 0, 15);
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "ОЙ, ТУТ НИЧЕГО НЕТ";
+                                notFound.Children.Add(notFoundLabel);
+                                TextBlock notFoundSubLabel = new TextBlock();
+                                notFoundSubLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundSubLabel.TextAlignment = TextAlignment.Center;
+                                notFoundSubLabel.FontSize = 18;
+                                notFoundSubLabel.Text = "Ни один продукт из вашего списка желаемого не подходит под указанные фильтры.";
+                                notFound.Children.Add(notFoundSubLabel);
+                                wantGamesList.HorizontalAlignment = HorizontalAlignment.Center;
+                                wantGamesList.Children.Add(notFound);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void OpenEditProfileHandler(object sender, RoutedEventArgs e)
@@ -11037,6 +11145,92 @@ namespace GamaManager
             categoriesMenuPopup.IsOpen = false;
         }
 
+        public void OpenPopularGames ()
+        {
+            mainControl.SelectedIndex = 32;
+            GetPopularGames();
+        }
+
+        public void GetPopularGames ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            totalGames = totalGames.OrderByDescending(x => x.likes).ToList<GameResponseInfo>();
+                            int gamesCount = totalGames.Count;
+                            bool isGamesExists = gamesCount >= 1;
+                            if (isGamesExists)
+                            {
+                                popularGame.Visibility = visible;
+                                GameResponseInfo popularGamesItem = totalGames[0];
+                                string gameName = popularGamesItem.name;
+                                popularGame.BeginInit();
+                                popularGame.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + gameName));
+                                popularGame.EndInit();
+                            }
+                            else
+                            {
+                                popularGame.Visibility = invisible;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void ToggleWantListSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleButton btn = ((ToggleButton)(sender));
+            ToggleWantListSettings(btn);
+        }
+
+        public void ToggleWantListSettings (ToggleButton btn)
+        {
+            object isRawChecked = btn.IsChecked;
+            bool isChecked = ((bool)(isRawChecked));
+            wantListPopup.IsOpen = isChecked;
+        }
+
+        private void ToggleSortWantGamesHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox list = ((ComboBox)(sender));
+            ToggleSortWantGames(list);
+        }
+
+        public void ToggleSortWantGames (ComboBox list)
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = list.SelectedIndex;
+                ItemCollection listItems = list.Items;
+                object rawSelectedItem = listItems[selectedIndex];
+                ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
+                object rawSelectedItemContent = selectedItem.Content;
+                string selectedItemContent = rawSelectedItemContent.ToString();
+                list.SelectedIndex = 0;
+                wantListSelectedItemLabel.Text = selectedItemContent;
+            }
+        }
+
     }
 
     class SavedContent
@@ -11087,6 +11281,7 @@ namespace GamaManager
         public string image;
         public int users;
         public int maxUsers;
+        public int likes;
     }
 
     class UserResponseInfo

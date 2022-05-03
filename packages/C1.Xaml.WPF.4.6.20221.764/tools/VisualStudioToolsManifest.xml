@@ -1,0 +1,32 @@
+﻿<FileList>
+  <File Reference="C1.WPF.4.6.2.dll"
+  >
+      <ToolboxItems VSCategory="C1 WPF Controls" BlendCategory="C1 WPF Controls">
+	      <Item Type = "C1.WPF.C1ComboBox"/>
+	      <Item Type = "C1.WPF.C1DockPanel"/>
+	      <Item Type = "C1.WPF.C1DropDown"/>
+	      <Item Type = "C1.WPF.C1DropDownButton"/>
+	      <Item Type = "C1.WPF.C1FilePicker"/>
+	      <Item Type = "C1.WPF.C1HyperlinkButton"/>
+	      <Item Type = "C1.WPF.C1HyperPanel"/>
+	      <Item Type = "C1.WPF.C1ListBox"/>
+	      <Item Type = "C1.WPF.C1MaskedTextBox"/>
+	      <Item Type = "C1.WPF.C1Menu"/>
+	      <Item Type = "C1.WPF.C1MenuList"/>
+	      <Item Type = "C1.WPF.C1NumericBox"/>
+	      <Item Type = "C1.WPF.C1ProgressBar"/>
+	      <Item Type = "C1.WPF.C1ProgressIndicator"/>
+	      <Item Type = "C1.WPF.C1RadialMenu"/>
+	      <Item Type = "C1.WPF.C1RadialPanel"/>
+	      <Item Type = "C1.WPF.C1RangeSlider"/>
+	      <Item Type = "C1.WPF.C1ScrollViewer"/>
+	      <Item Type = "C1.WPF.C1SplitButton"/>
+	      <Item Type = "C1.WPF.C1TabControl"/>
+	      <Item Type = "C1.WPF.C1TileListBox"/>
+	      <Item Type = "C1.WPF.C1TreeView"/>
+	      <Item Type = "C1.WPF.C1Window"/>
+	      <Item Type = "C1.WPF.C1WrapPanel"/>
+	    </ToolboxItems>
+   	
+  </File>
+</FileList>

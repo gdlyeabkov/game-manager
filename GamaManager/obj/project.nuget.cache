@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "qZV2jFGEyO7tq5TEfsZShHISSp1Y8PDJRdhVq84jBcrq8VntY3t1rcLVznDLlD6KYKrdbn34rpe7F+4vDuCI+w==",
+  "success": true,
+  "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512"
+  ],
+  "logs": []
+}

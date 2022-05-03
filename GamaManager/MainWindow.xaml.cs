@@ -1045,8 +1045,26 @@ namespace GamaManager
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
-                mainControl.SelectedIndex = 20;
-                GetCommunityInfo();
+
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 20;
+                            GetCommunityInfo();
+                        }
+                    }
+                }
 
             }
             catch (System.Net.WebException)
@@ -1532,7 +1550,8 @@ namespace GamaManager
             GetComments(currentUserId);
             GetCommunityInfo();
             InitializeTray();
-            GetExperiments();/**/
+            GetExperiments();
+            GetAccountSettings();/**/
         }
 
         public void GetExperiments ()
@@ -5903,7 +5922,34 @@ namespace GamaManager
         public void OpenSettings()
         {
             Dialogs.SettingsDialog dialog = new Dialogs.SettingsDialog(currentUserId);
+            dialog.Closed += DetectSettingsEventHandler;
             dialog.Show();
+        }
+
+        public void DetectSettingsEventHandler (object sender, EventArgs e)
+        {
+            Dialogs.SettingsDialog dialog = ((Dialogs.SettingsDialog)(sender));
+            object dialogData = dialog.DataContext;
+            DetectSettingsEvent(dialogData);
+        }
+
+        public void DetectSettingsEvent (object data)
+        {
+            bool isDataExists = data != null;
+            if (isDataExists)
+            {
+                string settingsEvent = ((string)(data));
+                bool isUpdateEmail = settingsEvent == "email update";
+                bool isUpdatePassword = settingsEvent == "password update";
+                if (isUpdateEmail)
+                {
+                    OpenUpdateEmail();
+                }
+                else if (isUpdatePassword)
+                {
+                    OpenUpdatePassword();
+                }
+            }
         }
 
         async public void RunGame(string gameName, string joinedGameName = "")
@@ -7923,6 +7969,7 @@ namespace GamaManager
             else if (isPointsStore)
             {
                 mainControl.SelectedIndex = 34;
+                GetPoints();
             }
             else if (isNews)
             {
@@ -8846,8 +8893,26 @@ namespace GamaManager
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
-                mainControl.SelectedIndex = 20;
-                GetCommunityInfo();
+
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 20;
+                            GetCommunityInfo();
+                        }
+                    }
+                }
 
             }
             catch (System.Net.WebException)
@@ -10190,6 +10255,7 @@ namespace GamaManager
         {
             string idLabelContent = @"Office ware game manager ID: " + currentUserId;
             idLabel.Text = idLabelContent;
+            GetLangSettings();
         }
 
         private void RejectFriendRequestsHandler(object sender, RoutedEventArgs e)
@@ -10987,8 +11053,27 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            mainControl.SelectedIndex = 20;
-                            GetCommunityInfo();
+
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        mainControl.SelectedIndex = 20;
+                                        GetCommunityInfo();
+                                    }
+                                }
+                            }
+
                         }
                     }
                 }
@@ -11054,7 +11139,35 @@ namespace GamaManager
 
         public void GetPoints ()
         {
-
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            int points = user.points;
+                            string rawPoints = points.ToString();
+                            userPointsLabel.Text = rawPoints;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void ShowStoreMenuHandler (object sender, MouseEventArgs e)
@@ -11231,6 +11344,459 @@ namespace GamaManager
             }
         }
 
+        private void OpenPointsHistoryHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenPointsHistory();
+        }
+
+        public void OpenPointsHistory ()
+        {
+            mainControl.SelectedIndex = 35;
+        }
+
+        public void OpenSmileysHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSmileys();
+        }
+
+        public void OpenSmileys()
+        {
+            pointsStoreControl.SelectedIndex = 13;
+        }
+
+        public void OpenChatEffectsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenChatEffects();
+        }
+
+        public void OpenChatEffects ()
+        {
+            pointsStoreControl.SelectedIndex = 12;
+        }
+
+        public void OpenStickersHandler(object sender, RoutedEventArgs e)
+        {
+            OpenStickers();
+        }
+
+        public void OpenStickers ()
+        {
+            pointsStoreControl.SelectedIndex = 11;
+        }
+
+        public void OpenShowCaseProfileHandler (object sender, RoutedEventArgs e)
+        {
+            OpenShowCaseProfile();
+        }
+
+        public void OpenShowCaseProfile ()
+        {
+            pointsStoreControl.SelectedIndex = 10;
+        }
+
+        public void OpenArtistProfilesHandler(object sender, RoutedEventArgs e)
+        {
+            OpenArtistProfiles();
+        }
+
+        public void OpenArtistProfiles ()
+        {
+            pointsStoreControl.SelectedIndex = 9;
+        }
+
+        public void OpenGameProfilesHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGameProfiles();
+        }
+
+        public void OpenGameProfiles()
+        {
+            pointsStoreControl.SelectedIndex = 8;
+
+        }
+
+        public void OpenSeasonIconHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSeasonIcon();
+        }
+
+        public void OpenSeasonIcon()
+        {
+            pointsStoreControl.SelectedIndex = 7;
+        }
+
+        public void OpenBackgroundsHandler(object sender, RoutedEventArgs e)
+        {
+            OpenBackgrounds();
+        }
+
+        public void OpenBackgrounds()
+        {
+            pointsStoreControl.SelectedIndex = 6;
+        }
+
+        public void OpenAvatarHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAvatar();
+        }
+
+        public void OpenAvatar()
+        {
+            pointsStoreControl.SelectedIndex = 5;
+        }
+
+        public void OpenCommunityRewardsHandler(object sender, RoutedEventArgs e)
+        {
+            OpenCommunityRewards();
+        }
+
+        public void OpenCommunityRewards()
+        {
+            pointsStoreControl.SelectedIndex = 4;
+        }
+
+        public void OpenSubjectsSetHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSubjectsSet();
+        }
+
+        public void OpenSubjectsSet()
+        {
+            pointsStoreControl.SelectedIndex = 3;
+        }
+
+        public void OpenGameSubjectsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGameSubjects();
+        }
+
+        public void OpenGameSubjects()
+        {
+            pointsStoreControl.SelectedIndex = 2;
+        }
+
+        public void OpenFavoriteSubjectsHandler(object sender, RoutedEventArgs e)
+        {
+            OpenFavoriteSubjects();
+        }
+
+        public void OpenFavoriteSubjects()
+        {
+            pointsStoreControl.SelectedIndex = 1;
+        }
+
+        public void OpenPointsHelpHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPointsHelp();
+        }
+
+        public void OpenPointsHelp()
+        {
+            pointsStoreControl.SelectedIndex = 0;
+        }
+
+        private void SaveLangSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            SaveLangSettings();
+        }
+
+        public void GetLangSettings ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            string currentLang = currentSettings.language;
+            ItemCollection langSelectorItems = langSelector.Items;
+            foreach (ComboBoxItem langSelectorItem in langSelectorItems)
+            {
+                object rawSelectedLangData = langSelectorItem.DataContext;
+                string selectedLangData = ((string)(rawSelectedLangData));
+                bool isLangFound = selectedLangData == currentLang;
+                if (isLangFound)
+                {
+                    int currentLangIndex = langSelectorItems.IndexOf(langSelectorItem);
+                    langSelector.SelectedIndex = currentLangIndex;
+                    break;
+                }
+            }
+        }
+
+        public void SaveLangSettings ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings updatedSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            int selectedLangIndex = langSelector.SelectedIndex;
+            ItemCollection langSelectorItems = langSelector.Items;
+            object rawSelectedLang = langSelectorItems[selectedLangIndex];
+            ComboBoxItem selectedLang = ((ComboBoxItem)(rawSelectedLang));
+            object rawSelectedLangData = selectedLang.DataContext;
+            string selectedLangData = ((string)(rawSelectedLangData));
+            updatedSettings.language = selectedLangData;
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = currentGames,
+                friends = currentFriends,
+                settings = updatedSettings,
+                collections = currentCollections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            this.Close();
+        }
+
+        private void OpenUpdateEmailHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdateEmail();
+        }
+
+        public void OpenUpdateEmail()
+        {
+            Random rd = new Random();
+            int rand_num = rd.Next(0, 1000);
+            string code = rand_num.ToString();
+            emailUpdateControl.DataContext = code;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string email = user.login;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/email/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        mainControl.SelectedIndex = 36;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void OpenUpdatePasswordHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdatePassword();
+        }
+
+        public void OpenUpdatePassword ()
+        {
+            Random rd = new Random();
+            int rand_num = rd.Next(0, 1000);
+            string code = rand_num.ToString();
+            passwordUpdateControl.DataContext = code;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string email = user.login;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/password/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        mainControl.SelectedIndex = 37;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void AcceptEmailUpdateHandler (object sender, RoutedEventArgs e)
+        {
+            AcceptEmailUpdate();
+        }
+
+        public void AcceptEmailUpdate()
+        {
+            object emailUpdateControlData = emailUpdateControl.DataContext;
+            bool isDataExists = emailUpdateControlData != null;
+            if (isDataExists)
+            {
+                string code = ((string)(emailUpdateControlData));
+                string emailCodeBoxContent = emailCodeBox.Text;
+                bool isCodeMatches = code == emailCodeBoxContent;
+                if (isCodeMatches)
+                {
+                    emailUpdateControl.SelectedIndex = 1;
+                }
+                else
+                {
+                    MessageBox.Show("Код введен неправильно", "Ошибка");
+                }
+            }
+        }
+
+        private void AcceptPasswordUpdateHandler(object sender, RoutedEventArgs e)
+        {
+            AcceptPasswordUpdate();
+        }
+
+        public void AcceptPasswordUpdate()
+        {
+            object passwordUpdateControlData = passwordUpdateControl.DataContext;
+            bool isDataExists = passwordUpdateControlData != null;
+            if (isDataExists)
+            {
+                string code = ((string)(passwordUpdateControlData));
+                string passwordCodeBoxContent = passwordCodeBox.Text;
+                bool isCodeMatches = code == passwordCodeBoxContent;
+                if (isCodeMatches)
+                {
+                    passwordUpdateControl.SelectedIndex = 1;
+                }
+                else
+                {
+                    MessageBox.Show("Код введен неправильно", "Ошибка");
+                }
+            }
+        }
+
+        public void EmailUpdateHandler (object sender, RoutedEventArgs e)
+        {
+            EmailUpdate();
+        }
+
+        public void EmailUpdate ()
+        {
+            string updatedEmailBoxContent = updatedEmailBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/email/set/?id=" + currentUserId + @"&email=" + updatedEmailBoxContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 0;
+                            emailUpdateControl.SelectedIndex = 0;
+                            MessageBox.Show("E-mail был обновлен", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void PasswordUpdateHandler(object sender, RoutedEventArgs e)
+        {
+            PasswordUpdate();
+        }
+
+        public void PasswordUpdate()
+        {
+            string updatedPasswordBoxContent = updatedPasswordBox.Password;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/password/set/?id=" + currentUserId + @"&password=" + updatedPasswordBoxContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainControl.SelectedIndex = 0;
+                            passwordUpdateControl.SelectedIndex = 0;
+                            MessageBox.Show("Пароль был обновлен", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
     }
 
     class SavedContent
@@ -11303,6 +11869,7 @@ namespace GamaManager
         public string gamesSettings;
         public string equipmentSettings;
         public string commentsSettings;
+        public int points;
     }
 
     class FriendRequestsResponseInfo

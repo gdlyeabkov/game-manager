@@ -3440,6 +3440,25 @@
                                         >
                                             <StackPanel>
                                                 <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="КОНТАКТНАЯ ИНФОРМАЦИЯ"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Text="Сменить адресс эл. почты"    
+                                                    Margin="15"
+                                                    MouseLeftButtonUp="OpenUpdateEmailHandler"
+                                                />
+                                                <TextBlock
+                                                    Text="Сменить пароль"    
+                                                    Margin="15"
+                                                    MouseLeftButtonUp="OpenUpdatePasswordHandler"
+                                                />
+                                                <StackPanel
                                                     Height="50"
                                                     Background="DarkCyan"
                                                     Orientation="Horizontal"    
@@ -3462,14 +3481,270 @@
                                             Visibility="Collapsed"    
                                         >
                                             <StackPanel>
-
+                                                <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="НАСТРОЙКИ МАГАЗИНА STEAM"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Text="ТИПЫ ТОВАРОВ"    
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                />
+                                                <TextBlock
+                                                    Text="Показывать товары следующих типов: "    
+                                                    Margin="15"
+                                                />
+                                                <CheckBox
+                                                    Margin="15 5"    
+                                                    Content="Ранний доступ"
+                                                    IsChecked="True"
+                                                />
+                                                <CheckBox
+                                                    Margin="15 5"    
+                                                    Content="Предзаказы"
+                                                    IsChecked="True"
+                                                />
+                                                <CheckBox
+                                                    Margin="15 5"    
+                                                    Content="Программное обеспечение"
+                                                    IsChecked="True"
+                                                />
+                                                <CheckBox
+                                                    Margin="15 5"    
+                                                    Content="Видео и фильмы"
+                                                    IsChecked="True"
+                                                />
+                                                <CheckBox
+                                                    Margin="15 5"    
+                                                    Content="Виртуальная реальность"
+                                                    IsChecked="True"
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
                                             Visibility="Collapsed"    
                                         >
                                             <StackPanel>
-
+                                                <StackPanel
+                                                    Background="Cyan"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Настройки языка"    
+                                                        FontSize="16"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Text="ОСНОВНОЙ ЯЗЫК"    
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                />
+                                                <TextBlock
+                                                    Text="Если возможно, отображать контент на этом языке:"    
+                                                    Margin="15"
+                                                />
+                                                <ComboBox
+                                                    x:Name="langSelector"
+                                                    SelectedIndex="0"
+                                                    Width="125"
+                                                    Margin="15 5"
+                                                    HorizontalAlignment="Left"
+                                                >
+                                                    <ComboBoxItem
+                                                        DataContext="ru-RU"
+                                                        Content="Русский"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        DataContext="en-US"
+                                                        Content="English"    
+                                                    />
+                                                </ComboBox>
+                                                <TextBlock
+                                                    Text="ДОПОЛНИТЕЛЬНЫЕ ЯЗЫКИ"    
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                />
+                                                <TextBlock
+                                                    Text="А также отображать контент на следующих языках:"    
+                                                    Margin="15"
+                                                />
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <CheckBox
+                                                        Grid.Row="0"
+                                                        Grid.Column="0"
+                                                        Content="англиский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Content="болгарский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="1"
+                                                        Grid.Column="0"
+                                                        Content="бр. португальский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Content="венгерский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        Content="вьетнамский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Content="греческий"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="3"
+                                                        Grid.Column="0"
+                                                        Content="датский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="3"
+                                                        Grid.Column="1"
+                                                        Content="испанский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="4"
+                                                        Grid.Column="0"
+                                                        Content="иатльянский Лат. Ам."    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="4"
+                                                        Grid.Column="1"
+                                                        Content="итальяский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="5"
+                                                        Grid.Column="0"
+                                                        Content="китайский (трад.)"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="5"
+                                                        Grid.Column="1"
+                                                        Content="китайский (упр.)"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="6"
+                                                        Grid.Column="0"
+                                                        Content="корейский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="6"
+                                                        Grid.Column="1"
+                                                        Content="немецкий"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="7"
+                                                        Grid.Column="0"
+                                                        Content="нидерландский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="7"
+                                                        Grid.Column="1"
+                                                        Content="норвежский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="8"
+                                                        Grid.Column="0"
+                                                        Content="польский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="8"
+                                                        Grid.Column="1"
+                                                        Content="португальский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="9"
+                                                        Grid.Column="0"
+                                                        Content="румынский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="9"
+                                                        Grid.Column="1"
+                                                        Content="русский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="10"
+                                                        Grid.Column="0"
+                                                        Content="тайский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="10"
+                                                        Grid.Column="1"
+                                                        Content="турецкий"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="11"
+                                                        Grid.Column="0"
+                                                        Content="украинский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="11"
+                                                        Grid.Column="1"
+                                                        Content="финский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="12"
+                                                        Grid.Column="0"
+                                                        Content="французский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="12"
+                                                        Grid.Column="1"
+                                                        Content="чешский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="13"
+                                                        Grid.Column="0"
+                                                        Content="шведский"    
+                                                    />
+                                                    <CheckBox
+                                                        Grid.Row="13"
+                                                        Grid.Column="1"
+                                                        Content="японский"    
+                                                    />
+                                                </Grid>
+                                                <Button
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15"
+                                                    Content="Сохранить"
+                                                    Width="175"
+                                                    Height="30"
+                                                    Background="YellowGreen"
+                                                    Foreground="White"
+                                                    Click="SaveLangSettingsHandler"
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -7782,6 +8057,7 @@
                                         Text="Ваши очки"    
                                     />
                                     <TextBlock
+                                        x:Name="userPointsLabel"
                                         Text="0"    
                                     />
                                 </StackPanel>
@@ -7796,6 +8072,7 @@
                             >
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenPointsHelpHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7810,6 +8087,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenFavoriteSubjectsHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7824,6 +8102,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenGameSubjectsHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7838,6 +8117,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenSubjectsSetHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7852,6 +8132,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenCommunityRewardsHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7873,6 +8154,7 @@
                                 />
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenAvatarHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7887,6 +8169,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenBackgroundsHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7901,6 +8184,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenSeasonIconHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7915,6 +8199,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenGameProfilesHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7929,6 +8214,22 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenArtistProfilesHandler"
+                                >
+                                    <materialDesign:PackIcon
+                                        Margin="10"
+                                        Width="25"
+                                        Height="25"
+                                        Kind="ShapeOutline"    
+                                    />
+                                    <TextBlock
+                                        Margin="10"
+                                        Text="Профили художников"
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenShowCaseProfileHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7950,6 +8251,7 @@
                                 />
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenStickersHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7964,6 +8266,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenChatEffectsHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7978,6 +8281,7 @@
                                 </StackPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
+                                    MouseLeftButtonUp="OpenSmileysHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -7992,7 +8296,8 @@
                                 </StackPanel>
                                 <Separator />
                                 <StackPanel
-                                    Orientation="Horizontal"    
+                                    Orientation="Horizontal"
+                                    MouseLeftButtonUp="OpenPointsHistoryHandler"
                                 >
                                     <materialDesign:PackIcon
                                         Margin="10"
@@ -8010,7 +8315,1011 @@
                         <StackPanel
                             Background="Red"    
                         >
-
+                            <TabControl
+                                x:Name="pointsStoreControl"    
+                            >
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="ОЧКИ Office ware game manager"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    TextAlignment="Center"
+                                                    Text="Получайте очки за покупки в Steam или за свой вклад в&#10;сообщество Steam."
+                                                    Margin="15"
+                                                />
+                                                <materialDesign:PackIcon
+                                                    Width="50"
+                                                    Height="50"
+                                                    Kind="Circle"
+                                                    HorizontalAlignment="Center"
+                                                />
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    TextAlignment="Center"
+                                                    Text="Тратьте очки на предметы для профиля в Steam или награды&#10;для других пользователей."
+                                                    Margin="15"
+                                                />
+                                                <Border
+                                                    Background="LightGray"
+                                                    CornerRadius="5"
+                                                    Width="500"
+                                                    Height="100"
+                                                    Padding="15"
+                                                    Margin="15"
+                                                >
+                                                    <Border.Child>
+                                                        <StackPanel>
+                                                            <TextBlock
+                                                                FontSize="14"
+                                                                TextAlignment="Center"
+                                                                Text="64 очк. за каждые потраченные 100 pуб.&#10;Вы получите очки, купив любую игру, доп. контент, устройство,&#10;приложение, саундтрек или внутриигровой предмет."    
+                                                            />
+                                                        </StackPanel>
+                                                    </Border.Child>
+                                                </Border>
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="МАГАЗИН ОЧКОВ"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    Text="В магазине очков вы найдёте разнообразные предметы, украшающие ваш профиль и сообщения в чате Office ware game manager."                               
+                                                    TextAlignment="Center"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Margin="15"
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Center"
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Width="25"
+                                                        Height="25"
+                                                        Kind="Infinity"    
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Анимированные аватары, рамки, фоны, значки и предметы для чата останутся с вами навсегда."    
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15"
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Center"
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Width="25"
+                                                        Height="25"
+                                                        Kind="CalendarOutline"    
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Магазин очков остаётся навсегда и работает круглый год."    
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15"
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Center"
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Width="25"
+                                                        Height="25"
+                                                        Kind="InfoCircle"    
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <TextBlock
+                                                        Text="Предметы из магазина очков нельзя обменять или продать."    
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    FontSize="20"
+                                                    TextAlignment="Center"
+                                                    Text="Общие сведения"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="Как получить очки Steam?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Очки выдаются за любую покупку в Steam, а их количество зависит от суммы покупки. Сначала мы конвертируем её в доллары США (по стабильному курсу), а затем рассчитаем, сколько очков вы получите."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="За пополнение кошелька Steam и покупки на Торговой площадке очки не начисляются."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Вы также можете получить очки Steam, когда кто-то из сообщества награждает ваш пользовательский обзор или другой загруженный в Steam контент (например, скриншоты, руководства, работы в Мастерской и т. п."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="Есть ли у очков Steam срок годности?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Неа! Магазин очков тоже остаётся навсегда и работает круглый год."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="На прошлых распродажах подобные предметы исчезали через некоторое время, либо их можно было использовать ограниченное количество раз. Так ли это сейчас?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Предметы из магазина очков остаются с вами навсегда, и их можно использовать сколько угодно раз. Единственное исключение — сезонный профиль, который действует только 30 дней с момента покупки."    
+                                                />
+                                                <TextBlock
+                                                    FontWeight="Bold"
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Можно ли обменять или продать предметы из магазина очков?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Нет, все предметы из магазина очков привязаны к вашему аккаунту, и их нельзя передать другим пользователям."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="В чём отличие от коллекционных карточек Steam?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Теперь смайлики и фоны профиля из ваших игр можно получить за очки Steam. Эта новая система расширяет функционал коллекционных карточек и делает смайлики и фоны доступнее для большего количества игроков, дополняя сбор карточек и создание значков."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    FontWeight="Bold"
+                                                    Margin="15 5"
+                                                    Text="Что будет с системой коллекционных карточек Steam? Её упразднят?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Нет! Мы знаем, что многим очень нравится собирать коллекционные карточки и создавать значки, поэтому мы не планируем убирать эту функцию"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="Что случится с моими очками Steam, если я верну средства за покупку?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Если вы вернули средства за покупку, все заработанные за эту покупку очки будут вычтены с вашего аккаунта. Если из-за этого баланс очков окажется отрицательным, мы удалим наиболее недавние предметы или награды сообщества (и начисленные за них очки), на которые вы потратили очки, пока баланс не станет положительным"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="Я потратил не все жетоны во время распродажи «Лунный Новый год 2020». Что с ними случится"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Все очки, полученные и не использованные во время последнего сезонного мероприятия, сгорели. Но! Мы начислили вам очки за каждую покупку в Steam после окончания лунного Нового года 2020."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="Кажется, мой профиль Steam выглядит немного непривычно. Что изменилось?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Мы немного обновили стиль профилей Steam и добавили настройки цветовой схемы, чтобы у вас было ещё больше возможностей украсить профиль."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    FontWeight="Bold"
+                                                    Text="На что ещё можно потратить очки?"    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Если вы не нашли ничего нужного в магазине очков, можете наградить пользовательский обзор, чтобы показать другим его важность. Эту награду увидят все, а автор обзора получит немного очков Steam."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="Таким же образом вы можете награждать другой пользовательский контент, в том числе работы в Мастерской, руководства, скриншоты и видео."    
+                                                />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15 5"
+                                                    Text="В будущем мы планируем расширить число применений для очков Steam."    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Width="75"
+                                                    Height="75"
+                                                    Kind="Circle"
+                                                    HorizontalAlignment="Center"
+                                                />
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="ПОКУПАЙТЕ ИГРЫ, ПОЛУЧАЙТЕ ОЧКИ"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Настройте Steam под себя с предметами из магазина очков"
+                                                    Margin="15"
+                                                />
+                                                <Button
+                                                    Margin="15"
+                                                    HorizontalAlignment="Center"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="Зачем нужны очки"
+                                                    Click="OpenPointsHelpHandler"
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Предметы из ваших игр"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Приобретите фон или смайлик любимой игры, которая у вас уже есть."
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="gameSubjects"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Наборы предметов"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Нравятся предметы из магазина очков? Приобретите целый набор с большой скидкой, заплатив только за недостающие предметы."
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="subjectsSet"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="НАГРАДЫ СООБЩЕСТВА"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Используйте очки, чтобы особо отметить обзоры, профили, обсуждения или пользовательский контент в Steam. Награду увидят все, а автор получит как минимум 100 очк."
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="communityRewards"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Анимированные аватары и рамки"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="accountItems"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Фоны профиля"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="backgrounds"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 0"
+                                                        Text="СЕЗОННЫЙ ЗНАЧОК"    
+                                                    />
+                                                    <Separator
+                                                        VerticalAlignment="Center"    
+                                                        BorderBrush="LightGray"
+                                                        BorderThickness="1"
+                                                        Width="650"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Используйте очки, чтобы повысить уровень значка. Значки отображаются на странице вашего профиля и могут быть показаны в мини-профиле."
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="seasonPoints"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Игровые профили"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Покажите приверженность своим любимым играм с помощью особых игровых профилей"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    x:Name="gameProfiles"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Профили художников"
+                                                    Margin="15"
+                                                />
+                                                <TextBlock
+                                                    TextAlignment="Center"
+                                                    Text="Украсьте свой профиль с помощью уникальных иллюстраций с распродаж и событий Steam."
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 0"
+                                                        Text="Все профили художников"    
+                                                    />
+                                                    <Separator
+                                                        VerticalAlignment="Center"    
+                                                        BorderBrush="LightGray"
+                                                        BorderThickness="1"
+                                                        Width="600"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    x:Name="artistProfiles"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Улучшения витрины профиля"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <StackPanel
+                                                        Width="150"
+                                                        Height="150"
+                                                        Background="LightGray"
+                                                        Margin="15"
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Kind="ArrowRight"    
+                                                        Margin="15"
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <StackPanel
+                                                        Width="150"
+                                                        Height="175"
+                                                        Background="LightGray"
+                                                        Margin="15"
+                                                    />                                                    
+                                                    <materialDesign:PackIcon
+                                                        Kind="ArrowRight"    
+                                                        Margin="15"
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <StackPanel
+                                                        Width="150"
+                                                        Height="200"
+                                                        Background="LightGray"
+                                                        Margin="15"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    x:Name="profileShowCases"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Анимированные стикеры"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 0"
+                                                        Text="ПОПУЛЯРНЫЕ АНИМИРОВАННЫЕ СТИКЕРЫ"    
+                                                    />
+                                                    <Separator
+                                                        VerticalAlignment="Center"    
+                                                        BorderBrush="LightGray"
+                                                        BorderThickness="1"
+                                                        Width="600"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="Некоторые фавориты из магазина очков."    
+                                                />
+                                                <StackPanel
+                                                    x:Name="stickers"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Эффекты для чата"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 0"
+                                                        Text="ПОПУЛЯРНЫЕ ЭФФЕКТЫ ДЛЯ ЧАТА"    
+                                                    />
+                                                    <Separator
+                                                        VerticalAlignment="Center"    
+                                                        BorderBrush="LightGray"
+                                                        BorderThickness="1"
+                                                        Width="600"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="Добавьте живости своим сообщениям в чате Steam."    
+                                                />
+                                                <StackPanel
+                                                    x:Name="chatEffects"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <ScrollViewer>
+                                        <DockPanel
+                                            Background="Green"    
+                                        >
+                                            <StackPanel
+                                                Margin="175 0"
+                                                Background="Blue"
+                                            >
+                                                <TextBlock
+                                                    FontSize="24"
+                                                    TextAlignment="Center"
+                                                    Text="Смайлики"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 0"
+                                                        Text="ПОПУЛЯРНЫЕ СМАЙЛИКИ"    
+                                                    />
+                                                    <Separator
+                                                        VerticalAlignment="Center"    
+                                                        BorderBrush="LightGray"
+                                                        BorderThickness="1"
+                                                        Width="600"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="Некоторые фавориты из магазина очков."    
+                                                />
+                                                <StackPanel
+                                                    x:Name="smileys"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </ScrollViewer>
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Margin="15"
+                                Text="Главная >> Аккаунт"
+                            />
+                            <TextBlock
+                                FontSize="24"
+                                Margin="15"
+                                Text="ИСТОРИЯ ОЧКОВ Office ware game manager: пользователя"
+                            />
+                            <StackPanel
+                                Background="Cyan"    
+                            >
+                                <TextBlock
+                                    Margin="15"
+                                    Text="СВОДКА ОЧКОВ Office ware game manager"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                Margin="15"
+                                Text="Подробный список полученных и потраченных вами очков Steam."    
+                            />
+                            <Grid
+                                Margin="15"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition
+                                        Height="50"
+                                    />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="White"
+                                    Text="ВСЕГО"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                />
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="White"
+                                    Text="0"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                />
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="Red"
+                                    Text="ВСЕГО ПОТРАЧЕНО"
+                                    VerticalAlignment="Bottom"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                />
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="Red"
+                                    Text="0"
+                                    VerticalAlignment="Bottom"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                />
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="Orange"
+                                    Text="ТЕКУЩИЙ БАЛАНС"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                />
+                                <TextBlock
+                                    FontWeight="ExtraBlack"
+                                    Foreground="Orange"
+                                    Text="0"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                />
+                            </Grid>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TabControl
+                                x:Name="emailUpdateControl"    
+                                SelectedIndex="0"
+                                Background="Transparent"
+                            >
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Поддержка"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Отправить код > Введите код"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Код подтверждения был отправлен на почту"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Введите полученный код подтверждения"
+                                        />
+                                        <TextBox
+                                            x:Name="emailCodeBox"
+                                            Width="275"
+                                            Height="30"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                        />
+                                        <Button
+                                            Width="175"
+                                            Height="30"
+                                            Content="Продолжить"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                            Click="AcceptEmailUpdateHandler"    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Поддержка"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Введите новый email"
+                                        />
+                                        <TextBox
+                                            x:Name="updatedEmailBox"
+                                            Width="275"
+                                            Height="30"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                        />
+                                        <Button
+                                            Width="175"
+                                            Height="30"
+                                            Content="Обновить"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                            Click="EmailUpdateHandler"    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TabControl
+                                x:Name="passwordUpdateControl"    
+                                SelectedIndex="0"
+                                Background="Transparent"
+                            >
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Поддержка"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Отправить код > Введите код"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Код подтверждения был отправлен на почту"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Введите полученный код подтверждения"
+                                        />
+                                        <TextBox
+                                            x:Name="passwordCodeBox"
+                                            Width="275"
+                                            Height="30"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                        />
+                                        <Button
+                                            Width="175"
+                                            Height="30"
+                                            Content="Продолжить"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                            Click="AcceptPasswordUpdateHandler"    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Поддержка"
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Введите новый пароль"
+                                        />
+                                        <PasswordBox
+                                            x:Name="updatedPasswordBox"
+                                            Width="275"
+                                            Height="30"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                        />
+                                        <Button
+                                            Width="175"
+                                            Height="30"
+                                            Content="Обновить"
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                            Click="PasswordUpdateHandler"    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

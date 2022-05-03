@@ -142,6 +142,7 @@ namespace GamaManager.Dialogs
             this.currentUserId = currentUserId;
             transparentBrush = System.Windows.Media.Brushes.Transparent;
             selectedBrush = System.Windows.Media.Brushes.LightGray;
+            this.DataContext = null;
         }
 
 
@@ -421,6 +422,28 @@ namespace GamaManager.Dialogs
                 Arguments = screenShotsPath,
                 UseShellExecute = true
             });
+        }
+
+        public void UpdateEmailHandler(object sender, RoutedEventArgs e)
+        {
+            UpdateEmail();
+        }
+
+        public void UpdateEmail()
+        {
+            this.DataContext = "email update";
+            this.Close();
+        }
+
+        public void UpdatePasswordHandler (object sender, RoutedEventArgs e)
+        {
+            UpdatePassword();
+        }
+
+        public void UpdatePassword ()
+        {
+            this.DataContext = "password update";
+            this.Close();
         }
 
     }

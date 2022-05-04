@@ -292,6 +292,7 @@
                             Margin="0 25"    
                             Text="Управление семейным просмотром"
                             TextDecorations="Underline"
+                            MouseLeftButtonUp="OpenFamilyViewManagementHandler"
                         />
                         <Separator />
                         <TextBlock

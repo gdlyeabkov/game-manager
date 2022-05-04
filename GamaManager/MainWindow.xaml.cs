@@ -70,7 +70,7 @@ namespace GamaManager
         public Microsoft.Office.Interop.Word.Application wordApplication = null;
         public System.Windows.Xps.Packaging.XpsDocument document = null;
         public ImapClient mailClient = null;
-
+        public bool isFamilyViewMode = false;
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -1556,7 +1556,32 @@ namespace GamaManager
             InitializeTray();
             GetExperiments();
             GetAccountSettings();
-            InitMail();/**/
+            InitMail();
+            GetFamilyView(); /**/
+        }
+
+        public void GetFamilyView ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            bool isFamilyViewEnabled = currentSettings.familyView;
+            if (isFamilyViewEnabled)
+            {
+                familyViewIcon.Visibility = visible;
+                moreInfoFamilyViewBtn.Visibility = invisible;
+                disableFamilyViewBtn.Visibility = visible;
+            }
+            else
+            {
+                familyViewIcon.Visibility = invisible;
+                moreInfoFamilyViewBtn.Visibility = visible;
+                disableFamilyViewBtn.Visibility = invisible;
+            }
         }
 
         public void InitMail()
@@ -6139,7 +6164,10 @@ namespace GamaManager
                         showScreenShotsNotification = true,
                         playScreenShotsNotification = true,
                         saveScreenShotsCopy = false,
-                        showOverlay = true
+                        showOverlay = true,
+                        familyView = false,
+                        familyViewCode = "",
+                        familyViewGames = new List<string>()
                     },
                     collections = new List<string>() { }
                 });
@@ -6184,6 +6212,7 @@ namespace GamaManager
                 string settingsEvent = ((string)(data));
                 bool isUpdateEmail = settingsEvent == "email update";
                 bool isUpdatePassword = settingsEvent == "password update";
+                bool isUpdateFamilyView = settingsEvent == "family view update";
                 if (isUpdateEmail)
                 {
                     OpenUpdateEmail();
@@ -6192,7 +6221,16 @@ namespace GamaManager
                 {
                     OpenUpdatePassword();
                 }
+                else if (isUpdateFamilyView)
+                {
+                    OpenFamilyViewManagement();
+                }
             }
+        }
+
+        public void OpenFamilyViewManagement()
+        {
+            mainControl.SelectedIndex = 44;
         }
 
         async public void RunGame(string gameName, string joinedGameName = "")
@@ -10535,6 +10573,18 @@ namespace GamaManager
             UIElement rawActiveAccountSettingsTab = accountSettingsTabsChildren[index];
             StackPanel activeAccountSettingsTab = ((StackPanel)(rawActiveAccountSettingsTab));
             activeAccountSettingsTab.Background = System.Windows.Media.Brushes.LightGray;
+
+            bool isAbout = index == 0;
+            bool isLang = index == 2;
+            if (isAbout)
+            {
+                GetAboutAccountSettings();
+            }
+            else if (isLang)
+            {
+                GetLangSettings();
+            }
+
         }
 
         private void SelectFriendSettingsItemHandler(object sender, MouseButtonEventArgs e)
@@ -10605,7 +10655,46 @@ namespace GamaManager
         {
             string idLabelContent = @"Office ware game manager ID: " + currentUserId;
             idLabel.Text = idLabelContent;
+            GetAboutAccountSettings();
             GetLangSettings();
+        }
+
+        public void GetAboutAccountSettings ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string country = user.country;
+                            int amount = user.amount;
+                            string accountSettingsCountryLabelContent = "Страна: " + country;
+                            accountSettingsCountryLabel.Text = accountSettingsCountryLabelContent;
+                            string rawAmount = amount.ToString();
+                            string amountMeasure = "руб.";
+                            string accountSettingsAmountLabelContent = rawAmount + " " + amountMeasure;
+                            accountSettingsAmountLabel.Text = accountSettingsAmountLabelContent;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void RejectFriendRequestsHandler(object sender, RoutedEventArgs e)
@@ -12307,6 +12396,544 @@ namespace GamaManager
             mainControl.SelectedIndex = 43;
         }
 
+        private void SelectGamesForFamilyViewOrSetAddressHandler (object sender, RoutedEventArgs e)
+        {
+            SelectGamesForFamilyViewOrSetAddress();
+        }
+
+        public void SelectGamesForFamilyViewOrSetAddress ()
+        {
+            object rawIsSelectedGames = familyViewSelectedGamesRadionBtn.IsChecked;
+            bool isSelectedGames = ((bool)(rawIsSelectedGames));
+            if (isSelectedGames)
+            {
+                SelectGamesForFamilyView();
+            }
+            else
+            {
+                SetFamilyViewAddress();
+            }
+        }
+
+        public void SetFamilyViewAddressHandler (object sender, RoutedEventArgs e)
+        {
+            SetFamilyViewAddress();
+        }
+
+        public void SelectGamesForFamilyView ()
+        {
+            familyViewManagementControl.SelectedIndex = 1;
+            GetFamilyViewGames();
+        }
+
+        public void GetFamilyViewGames ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            familyViewGames.RowDefinitions.Clear();
+            familyViewGames.Children.Clear();
+            foreach (Game game in currentGames)
+            {
+                string gameId = game.id;
+                string gameName = game.name;
+                string insensitiveCaseGameName = gameName.ToLower();
+                string keywords = familyViewGamesBox.Text;
+                string insensitiveCaseKeywords = keywords.ToLower();
+                bool isKeywordsMatch = insensitiveCaseGameName.Contains(insensitiveCaseKeywords);
+                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                bool isFilterDisabled = insensitiveCaseKeywordsLength < 0; ;
+                bool isAddGame = isKeywordsMatch || isFilterDisabled;
+                if (isAddGame)
+                {
+                    RowDefinition row = new RowDefinition();
+                    familyViewGames.RowDefinitions.Add(row);
+                    RowDefinitionCollection rows = familyViewGames.RowDefinitions;
+                    int countRows = rows.Count;
+                    int lastRowIndex = countRows - 1;
+                    CheckBox checkBox = new CheckBox();
+                    familyViewGames.Children.Add(checkBox);
+                    Grid.SetRow(checkBox, lastRowIndex);
+                    Grid.SetColumn(checkBox, 0);
+                    TextBlock gameNameLabel = new TextBlock();
+                    gameNameLabel.DataContext = gameId;
+                    gameNameLabel.Text = gameName;
+                    familyViewGames.Children.Add(gameNameLabel);
+                    Grid.SetRow(gameNameLabel, lastRowIndex);
+                    Grid.SetColumn(gameNameLabel, 1);
+                }
+            }
+        }
+
+        public void SetFamilyViewAddress ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string email = user.login;
+                            familyViewRecoveryEmailBox.Text = email;
+                            familyViewManagementControl.SelectedIndex = 2;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void SetFamilyViewPinCodeHandler (object sender, RoutedEventArgs e)
+        {
+            SetFamilyViewPinCode();
+        }
+
+        public void SetFamilyViewPinCode ()
+        {
+            familyViewPinCodeErrorsLabel.Visibility = invisible;
+            familyViewManagementControl.SelectedIndex = 3;
+        }
+
+        private void CheckFamilyViewPinCodeHandler (object sender, RoutedEventArgs e)
+        {
+            CheckFamilyViewPinCode();
+        }
+
+        public void CheckFamilyViewPinCode ()
+        {
+            string familyViewRecoveryEmailBoxContent = familyViewRecoveryEmailBox.Text;
+            string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
+            string familyViewPinCodeConfirmBoxContent = familyViewPinCodeConfirmBox.Password;
+            bool isCodeMatch = familyViewPinCodeBoxContent == familyViewPinCodeConfirmBoxContent;
+            if (isCodeMatch)
+            {
+
+                Random rd = new Random();
+                int rand_num = rd.Next(0, 1000);
+                string secret = rand_num.ToString();
+                familyViewManagementControl.DataContext = secret;
+                try
+                {
+                    MailMessage message = new MailMessage();
+                    SmtpClient smtp = new SmtpClient();
+                    message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                    message.To.Add(new System.Net.Mail.MailAddress(familyViewRecoveryEmailBoxContent));
+                    string subjectBoxContent = @"Ваш аккаунт Office ware game manager: активация семейного просмотра";
+                    message.Subject = subjectBoxContent;
+                    message.IsBodyHtml = true; //to make message body as html  
+                    string messageBodyBoxContent = "<h3>Здравствуйте, " + familyViewRecoveryEmailBoxContent + "!</h3><p>Мы получили запрос на включение семейного просмотра на вашем аккаунте Steam.</p><p>Вот ваш код:</p><p>" + secret + "</p>";
+                    message.Body = messageBodyBoxContent;
+                    smtp.Port = 587;
+                    smtp.Host = "smtp.gmail.com"; //for gmail host  
+                    smtp.EnableSsl = true;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Send(message);
+
+                    string familyViewRecoveryEmailLabelContent = @"Чтобы включить семейный просмотр на вашем аккаунте, введите код,&#10;отправленный на адресс эл. почты " + familyViewRecoveryEmailBoxContent + ".";
+                    familyViewRecoveryEmailLabel.Text = familyViewRecoveryEmailLabelContent;
+                    familyViewManagementControl.SelectedIndex = 4;
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                }
+
+            }
+            else
+            {
+                familyViewPinCodeErrorsLabel.Visibility = visible;
+            }
+        }
+
+        private void CheckFamilyViewSecretCodeHandler (object sender, RoutedEventArgs e)
+        {
+            CheckFamilyViewSecretCode();
+        }
+
+        public void CheckFamilyViewSecretCode ()
+        {
+            object secretData = familyViewManagementControl.DataContext;
+            string secret = ((string)(secretData));
+            string familyViewSecretCodeBoxContent = familyViewSecretCodeBox.Password;
+            bool isSecretMatch = familyViewSecretCodeBoxContent == secret;
+            if (isSecretMatch)
+            {
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                List<Game> currentGames = loadedContent.games;
+                List<FriendSettings> currentFriends = loadedContent.friends;
+                Settings updatedSettings = loadedContent.settings;
+                List<string> currentCollections = loadedContent.collections;
+                updatedSettings.familyView = true;
+                string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
+                updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
+                List<string> selectedGames = new List<string>();
+                foreach (UIElement familyViewGameItem in familyViewGames.Children)
+                {
+                    bool isCheckBox = familyViewGameItem is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = ((CheckBox)(familyViewGameItem));
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            int checkBoxIndex = familyViewGames.Children.IndexOf(familyViewGameItem);
+                            int labelIndex = checkBoxIndex + 1;
+                            UIElement label = familyViewGames.Children[labelIndex];
+                            TextBlock gameNameLabel = ((TextBlock)(label));
+                            object labelData = gameNameLabel.DataContext;
+                            string id = ((string)(labelData));
+                            selectedGames.Add(id);
+                        }
+                    }
+                }
+                updatedSettings.familyViewGames = selectedGames;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = currentFriends,
+                    settings = updatedSettings,
+                    collections = currentCollections
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+                GetFamilyView();
+                familyViewManagementControl.SelectedIndex = 5;
+            }
+        }
+
+        private void ToggleFamilyViewModeHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleFamilyViewMode();
+        }
+
+        public void ShowFamilyViewPopupHandler(object sender, RoutedEventArgs e)
+        {
+            ShowFamilyViewPopup();
+        }
+
+        public void ShowFamilyViewPopup ()
+        {
+            familyViewPopup.IsOpen = true;
+            if (isFamilyViewMode)
+            {
+                familyViewPopupControl.SelectedIndex = 0;
+            }
+            else
+            {
+                familyViewPopupControl.SelectedIndex = 1;
+            }
+        }
+
+        public void ToggleFamilyViewMode ()
+        {
+            if (isFamilyViewMode)
+            {
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                Settings currentSettings = loadedContent.settings;
+                string familyViewCode = currentSettings.familyViewCode;
+                string familyViewPopupCodeBoxContent = familyViewPopupCodeBox.Text;
+                bool isCodeMatch = familyViewPopupCodeBoxContent == familyViewCode;
+                if (isCodeMatch)
+                {
+                    isFamilyViewMode = !isFamilyViewMode;
+                    if (isFamilyViewMode)
+                    {
+                        familyViewPopupControl.SelectedIndex = 0;
+                        familyViewIcon.Foreground = System.Windows.Media.Brushes.Green;
+                    }
+                    else
+                    {
+                        familyViewPopupControl.SelectedIndex = 1;
+                        familyViewIcon.Foreground = System.Windows.Media.Brushes.Orange;
+                    }
+                    CloseFamilyViewPopup();
+                }
+            }
+            else
+            {
+                isFamilyViewMode = !isFamilyViewMode;
+                if (isFamilyViewMode)
+                {
+                    familyViewPopupControl.SelectedIndex = 0;
+                    familyViewIcon.Foreground = System.Windows.Media.Brushes.Green;
+                }
+                else
+                {
+                    familyViewPopupControl.SelectedIndex = 1;
+                    familyViewIcon.Foreground = System.Windows.Media.Brushes.Orange;
+                }
+                CloseFamilyViewPopup();
+            }
+        }
+
+        private void CloseFamilyViewPopupHandler (object sender, RoutedEventArgs e)
+        {
+            CloseFamilyViewPopup();
+        }
+
+        public void CloseFamilyViewPopup ()
+        {
+            familyViewPopup.IsOpen = false;
+        }
+
+        private void DisableFamilyViewHandler (object sender, RoutedEventArgs e)
+        {
+            DisableFamilyView();
+        }
+
+        public void DisableFamilyView ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings updatedSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            updatedSettings.familyView = false;
+            string familyViewPinCodeBoxContent = "";
+            updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = currentGames,
+                friends = currentFriends,
+                settings = updatedSettings,
+                collections = currentCollections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            GetFamilyView();
+            familyViewManagementControl.SelectedIndex = 0;
+        }
+
+        private void OpenFamilyViewDisableHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFamilyViewDisable();
+        }
+
+        public void OpenFamilyViewDisable ()
+        {
+            familyViewManagementControl.SelectedIndex = 6;
+        }
+
+        private void OpenIncreaseAmountHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenIncreaseAmount();
+        }
+
+        public void OpenIncreaseAmount ()
+        {
+            mainControl.SelectedIndex = 45;
+            GetAmountInfo();
+        }
+
+        public void GetAmountInfo()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            int amount = user.amount;
+                            string rawAmount = amount.ToString();
+                            string measure = "руб.";
+                            string amountLabelContent = rawAmount + " " + measure;
+                            amountLabel.Text = amountLabelContent;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void IncreaseAmountHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string amount = btnData.ToString();
+            // string rawAmount = btnData.ToString();
+            // int amount = Int32.Parse(rawAmount);
+            IncreaseAmount(amount);
+        }
+
+        public void IncreaseAmount (string amount)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/amount/increase/?id=" + currentUserId + @"&amount=" + amount);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetAmountInfo();
+                            MessageBox.Show("Счет был пополнен.", "Внимание");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось пополнить счет.", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void RefreshFamilyViewGamesHandler (object sender, TextChangedEventArgs e)
+        {
+            RefreshFamilyViewGames();
+        }
+
+        public void RefreshFamilyViewGames ()
+        {
+            GetFamilyViewGames();
+        }
+
+        private void OpenUpdatePhoneHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdatePhone();
+        }
+
+        public void OpenUpdatePhone ()
+        {
+            mainControl.SelectedIndex = 46;
+        }
+
+        private void TogglePhoneCountryCodeHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            ItemCollection selectorItems = selector.Items;
+            int selectedIndex = selector.SelectedIndex;
+            object selectedItem = selectorItems[selectedIndex];
+            ComboBoxItem selectedCountryCodeItem = ((ComboBoxItem)(selectedItem));
+            object selectedCountryCodeItemData = selectedCountryCodeItem.DataContext;
+            string countryCode = selectedCountryCodeItemData.ToString();
+            TogglePhoneCountryCode(countryCode);
+        }
+
+        public void TogglePhoneCountryCode (string countryCode)
+        {
+            if (isAppInit)
+            {
+                phoneBox.Text = countryCode;
+                string phoneFormatLabelContent = countryCode + "9123456789";
+                phoneFormatLabel.Text = phoneFormatLabelContent;
+            }
+        }
+
+        private void UpdatePhoneHandler (object sender, RoutedEventArgs e)
+        {
+            UpdatePhone();
+        }
+
+        public void UpdatePhone ()
+        {
+            string phone = phoneBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/phone/set/?id=" + currentUserId + @"&phone=" + phone);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetAccountSettings();
+                            MessageBox.Show("Номер телефона был обновлен.", "Внимание");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удалось обновить номер телефона.", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void CancelUpdatePhoneHandler (object sender, RoutedEventArgs e)
+        {
+            CancelUpdatePhone();
+        }
+
+        public void CancelUpdatePhone ()
+        {
+            phoneBox.Text = "";
+        }
+
     }
 
     class SavedContent
@@ -12380,6 +13007,7 @@ namespace GamaManager
         public string equipmentSettings;
         public string commentsSettings;
         public int points;
+        public int amount;
     }
 
     class FriendRequestsResponseInfo
@@ -12415,6 +13043,9 @@ namespace GamaManager
         public bool playScreenShotsNotification;
         public bool saveScreenShotsCopy;
         public bool showOverlay;
+        public bool familyView;
+        public string familyViewCode;
+        public List<string> familyViewGames;
     }
 
     public class MusicSettings

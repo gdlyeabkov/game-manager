@@ -322,7 +322,87 @@
                     />
                 </ComboBox>
                 <materialDesign:PackIcon
+                    x:Name="familyViewIcon"
+                    Foreground="Orange"
+                    Visibility="Collapsed"
                     Margin="175 10 10 10"
+                    Kind="People"
+                    VerticalAlignment="Center"
+                    Width="24"
+                    Height="24"
+                    MouseLeftButtonUp="ShowFamilyViewPopupHandler"
+                />
+                <Popup
+                    x:Name="familyViewPopup"
+                    StaysOpen="False"
+                    Placement="Mouse"
+                    Width="350"
+                    Height="350"
+                >
+                    <Popup.Child>
+                        <StackPanel
+                            Background="LightGray"    
+                        >
+                            <TextBlock
+                                Margin="15"
+                                Text="Семейный просмотр"    
+                            />
+                            <TabControl
+                                x:Name="familyViewPopupControl"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                SelectedIndex="0"
+                            >
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Введите свой ПИН ниже, чтобы выйти из&#10;семейного просмотра"    
+                                        />
+                                        <TextBox
+                                            x:Name="familyViewPopupCodeBox"
+                                            Width="100"
+                                            Height="30"
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Пожалуйста подтвердите, что вы хотите вернуться в&#10;семейного просмотр."    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                            <StackPanel
+                                Margin="0 15"
+                                Orientation="Horizontal"    
+                            >
+                                <Button
+                                    Margin="15 0"
+                                    Width="125"
+                                    Height="30"
+                                    Content="ОК"
+                                    Click="ToggleFamilyViewModeHandler"
+                                />
+                                <Button
+                                    Margin="15 0"
+                                    Width="125"
+                                    Height="30"
+                                    Content="Отмена"
+                                    Click="CloseFamilyViewPopupHandler"
+                                />
+                            </StackPanel>
+                        </StackPanel>
+                    </Popup.Child>
+                </Popup>
+                <materialDesign:PackIcon
+                    Margin="10 0"
                     Kind="Megaphone"
                     VerticalAlignment="Center"
                     Width="24"
@@ -3725,8 +3805,38 @@
                                                 </StackPanel>
                                                 <TextBlock
                                                     Margin="15 10"
+                                                    Text="+ Пополнить баланс"
+                                                    MouseLeftButtonUp="OpenIncreaseAmountHandler"
+                                                />
+                                                <StackPanel
+                                                    Margin="15 5"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Text="Баланс кошелька"    
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="accountSettingsAmountLabel"
+                                                        Margin="25 0"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="16"
+                                                        Text="0 руб."    
+                                                    />
+                                                </StackPanel>
+                                                <Separator
+                                                    Margin="15 5"
+                                                />
+                                                
+                                                <TextBlock
+                                                    Margin="15 10"
                                                     Text="Изменить настройки магазина"    
                                                     MouseLeftButtonUp="OpenStoreSettingsHandler"
+                                                />
+                                                <TextBlock
+                                                    x:Name="accountSettingsCountryLabel"
+                                                    Margin="15 10"
+                                                    Text="Страна: Россия"
                                                 />
                                                 <StackPanel
                                                     Background="Cyan"    
@@ -3761,6 +3871,15 @@
                                                     Text="Сменить адресс эл. почты"    
                                                     Margin="15"
                                                     MouseLeftButtonUp="OpenUpdateEmailHandler"
+                                                />
+                                                <TextBlock
+                                                    Text="Привязать телефон."    
+                                                    Margin="15"
+                                                    MouseLeftButtonUp="OpenUpdatePhoneHandler"
+                                                />
+                                                <TextBlock
+                                                    Text="Для обеспечения дополнительной безопасности вы можете&#10;привязать к своему аккаунту номер телефона. Steam&#10;сможет отсылать на ваш телефон важные сообщения."    
+                                                    Margin="15"
                                                 />
                                                 <StackPanel
                                                     Background="Cyan"    
@@ -10546,6 +10665,904 @@ E. Что произойдет, если положение Пункта 11 бу
                             <TextBlock
                                 Margin="15"
                                 Text="Отзыв о конфиденциальности"    
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TabControl
+                                x:Name="familyViewManagementControl"    
+                            >
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Семейный просмотр можно использовать для ограничения доступа к контенту и&#10;возможностям аккаунта, если аккаунт защищён специальным ПИН-кодом."
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                x:Name="familyViewEnabledLabel"
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Семейный просмотр: Выключен"
+                                            />
+                                            <Button
+                                                x:Name="disableFamilyViewBtn"
+                                                Visibility="Collapsed"
+                                                Margin="15"
+                                                HorizontalAlignment="Left"
+                                                Width="225"
+                                                Height="30"
+                                                Content="Отключить семейный просмотр"    
+                                                Click="OpenFamilyViewDisableHandler"
+                                            />
+                                            <TextBlock
+                                                x:Name="moreInfoFamilyViewBtn"
+                                                Margin="15"
+                                                Text="Чтобы узнать больше о семейном просмотре, нажмите здесь."
+                                            />
+                                            <Separator
+                                                Margin="15 0"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="НАСТРОИТЬ СЕМЕЙНЫЙ ПРОСМОТР"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Чтобы настроить семейный просмотр для этого аккаунта, определитесь со следующими настройками."
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Выберите, к чему защищённый аккаунт будет иметь доступ в семейном режиме:"
+                                            />
+                                            <StackPanel
+                                                Margin="15"    
+                                            >
+                                                <TextBlock
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Содержимое библиотеки"
+                                                />
+                                                <RadioButton
+                                                    x:Name="familyViewSelectedGamesRadionBtn"
+                                                    Margin="0 5"    
+                                                    Content="Только те игры, которые я выберу"    
+                                                    IsChecked="true"
+                                                />
+                                                <RadioButton
+                                                    Margin="0 5"    
+                                                    Content="Все игры"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Содержимое библиотеки"
+                                                />
+                                                <CheckBox
+                                                    Margin="0 5"    
+                                                    Content="Магазин Steam"    
+                                                />
+                                                <CheckBox
+                                                    Content=" Контент сообщества"    
+                                                    Margin="0 5"    
+                                                />
+                                                <CheckBox
+                                                    Margin="0 5"    
+                                                    Content="Друзья, чат и группы"    
+                                                />
+                                                <CheckBox
+                                                    Margin="0 5"    
+                                                    Content=" Мой профиль в сети, скриншоты и достижения"    
+                                                />
+                                            </StackPanel>
+                                            <Button
+                                                Margin="15"    
+                                                Width="125"
+                                                Height="30"
+                                                Content="Далее"    
+                                                Click="SelectGamesForFamilyViewOrSetAddressHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Мои игры"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="К каким товарам вы хотите открыть доступ, когда ваш аккаунт находится в&#10;защищенном с помощью ПИН-кода семейном просмотре?"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="ПРИМЕЧАНИЕ: Любой контент, добавленный в вашу библиотеку, будет автоматически&#10;исключен из этого списка, пока вы его не добавите. Чтобы добавить или удалить контент,&#10;либо вернитесь к этим настройкам, либо выберите «Добавить в игры для семьи» в вашей&#10;библиотеке при отключенном семейном просмотре."
+                                            />
+                                            <TextBox
+                                                x:Name="familyViewGamesBox"
+                                                Margin="15 5"
+                                                HorizontalAlignment="Left"
+                                                Height="30"
+                                                Width="250"
+                                                TextChanged="RefreshFamilyViewGamesHandler"
+                                            >
+                                                <TextBox.Resources>
+                                                    <VisualBrush
+                                                        x:Key="hinttext"
+                                                        AlignmentX="Left"
+                                                        Stretch="None"
+                                                        TileMode="None"
+                                                    >
+                                                        <VisualBrush.Visual>
+                                                            <DockPanel>
+                                                                <TextBlock
+                                                                    Height="30"
+                                                                    Width="250"
+                                                                    Text="Поиск в библиотеке"
+                                                                    Foreground="#959595"
+                                                                    Background="White"
+                                                                />
+                                                            </DockPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </TextBox.Resources>
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                            <Trigger Property="Text" Value="{x:Null}">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                            <StackPanel
+                                                Margin="0 15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Выбрать все"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Снять выбор"    
+                                                />
+                                            </StackPanel>
+                                            <Grid
+                                                x:Name="familyViewGames"    
+                                            >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions />
+                                            </Grid>
+                                            <Button
+                                                Margin="15"    
+                                                Width="125"
+                                                Height="30"
+                                                Content="Далее"    
+                                                Click="SetFamilyViewAddressHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="НАСТРОЙКИ ВОССТАНОВЛЕНИЯ"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="На случай, если вы забудете или потеряете свой ПИН-код от семейного просмотра,&#10;пожалуйста, укажите адрес эл. почты для его восстановления."
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Эта почта должна принадлежать взрослому, а не ребенку, так как любой&#10;человек с доступом к указанному адресу сможет отключить режим&#10;семейного просмотра, не зная ПИН-кода."
+                                            />
+                                            <StackPanel
+                                                Margin="15"    
+                                                Orientation="Horizontal"
+                                            >
+                                                <TextBlock
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Эл. адрес для восстановления:"
+                                                />
+                                                <TextBox
+                                                    x:Name="familyViewRecoveryEmailBox"
+                                                    Width="250"
+                                                    Height="30"
+                                                />
+                                            </StackPanel>
+                                            <Button
+                                                Margin="15"    
+                                                Width="125"
+                                                Height="30"
+                                                Content="Далее"
+                                                Click="SetFamilyViewPinCodeHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="ПИН-КОД СЕМЕЙНОГО ПРОСМОТРА"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Пожалуйста, придумайте ПИН-код из четырех цифр для вашего аккаунта.&#10;ПИН понадобится для отключения семейного просмотра, а также для&#10;изменения этих настроек в будущем, так что рекомендуем записать его и&#10;хранить в надежном месте."
+                                            />
+                                            <TextBlock
+                                                x:Name="familyViewPinCodeErrorsLabel"
+                                                Margin="35 10"
+                                                Foreground="Red"
+                                                Text="Хм, ПИН-коды не совпадают. Пожалуйста, введите свой ПИН-код еще раз."
+                                            />
+                                            <StackPanel
+                                                Margin="15"    
+                                                Orientation="Horizontal"
+                                            >
+                                                <TextBlock
+                                                    Width="235"
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Введите ваш ПИН-код:"
+                                                />
+                                                <PasswordBox
+                                                    x:Name="familyViewPinCodeBox"
+                                                    VerticalContentAlignment="Center"
+                                                    Margin="15"
+                                                    Width="250"
+                                                    MaxLength="4"
+                                                    Height="30"
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="15"    
+                                                Orientation="Horizontal"
+                                            >
+                                                <TextBlock
+                                                    Width="235"
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Введите свой ПИН-код ещё раз:"
+                                                />
+                                                <PasswordBox
+                                                    x:Name="familyViewPinCodeConfirmBox"
+                                                    VerticalContentAlignment="Center"
+                                                    MaxLength="4"
+                                                    Margin="15"
+                                                    Width="250"
+                                                    Height="30"
+                                                />
+                                            </StackPanel>
+                                            <Button
+                                                Margin="15"    
+                                                Width="125"
+                                                Height="30"
+                                                Content="Далее"
+                                                Click="CheckFamilyViewPinCodeHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Введите секретный код"
+                                            />
+                                            <TextBlock
+                                                x:Name="familyViewRecoveryEmailLabel"
+                                                Margin="15"
+                                                Text="Чтобы включить семейный просмотр на вашем аккаунте, введите код,&#10;отправленный на адресс эл. почты ящик."
+                                            />
+                                            <StackPanel
+                                                Margin="15"    
+                                                Orientation="Horizontal"
+                                            >
+                                                <TextBlock
+                                                    Width="235"
+                                                    Margin="15"
+                                                    FontSize="16"
+                                                    Text="Секретный код:"
+                                                />
+                                                <PasswordBox
+                                                    x:Name="familyViewSecretCodeBox"
+                                                    VerticalContentAlignment="Center"
+                                                    MaxLength="4"
+                                                    Margin="15"
+                                                    Width="250"
+                                                    Height="30"
+                                                />
+                                            </StackPanel>
+                                            <Button
+                                                Margin="15"    
+                                                Width="125"
+                                                Height="30"
+                                                Content="Далее"
+                                                Click="CheckFamilyViewSecretCodeHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Семейный просмотр теперь включен"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Чтобы войти или выйти из семейного просмотра нажмите на значок семейного режима в верхней&#10;части главного окна клиента, затем введите ПИН-код."
+                                            />
+                                            <Separator
+                                                Margin="25 10"    
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"   
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Главная > Аккаунт > Семейный просмотр"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="20"
+                                            Text="СЕМЕЙНЫЙ ПРОСМОТР"
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="16"
+                                                Text="Отключить семейный просмотр"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Это действие отключит семейный просмотр. Кнопка его включения&#10;пропадает из клиента. Семейеый просмотр можно активировать снова зайдя, на страницу информации об аккаунте."
+                                            />
+                                            <Button
+                                                HorizontalAlignment="Left"
+                                                Margin="15"    
+                                                Width="275"
+                                                Height="30"
+                                                Content="Отключить семейный просмотр"    
+                                                Click="DisableFamilyViewHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                    Background="Green"    
+                >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Margin="15"
+                                Text="Главная > Аккаунт > Пополнить баланс"    
+                            />
+                            <TextBlock
+                                FontSize="20"
+                                Margin="15"
+                                Text="ПОПОЛНИТЬ БАЛАНС"    
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="16"
+                                Text="ПОПОЛНИТЬ БАЛАНС КОШЕЛЬКА Пользователя"
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="16"
+                                Text="Средства в вашем кошельке Steam можно тратить на покупку любых игр в Steam или внутри&#10;игр, которые поддерживают оплату товаров через Steam."
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="16"
+                                Text="Вы сможете просмотреть заказ до оплаты."
+                            />
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <StackPanel
+                                    Width="750"    
+                                >
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="Gray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel
+                                            Margin="15"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="0 5"
+                                                Text="Добавить 150 pуб."    
+                                            />
+                                            <TextBlock
+                                                Margin="0 5"
+                                                Text="Минимальная сумма"    
+                                            />
+                                        </StackPanel>
+                                        <DockPanel
+                                            Background="Black"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Text="Пополнить баланс"    
+                                            />
+                                            <Button
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Height="30"
+                                                Width="75"
+                                                Content="150 pуб."
+                                                DataContext="150"
+                                                Click="IncreaseAmountHandler"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="Gray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel
+                                            Margin="15"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="0 5"
+                                                Text="Добавить 300 pуб."    
+                                            />
+                                        </StackPanel>
+                                        <DockPanel
+                                            Background="Black"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Text="Пополнить баланс"    
+                                            />
+                                            <Button
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Height="30"
+                                                Width="75"
+                                                Content="300 pуб."
+                                                DataContext="300"
+                                                Click="IncreaseAmountHandler"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="Gray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel
+                                            Margin="15"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="0 5"
+                                                Text="Добавить 750 pуб."    
+                                            />
+                                        </StackPanel>
+                                        <DockPanel
+                                            Background="Black"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Text="Пополнить баланс"    
+                                            />
+                                            <Button
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Height="30"
+                                                Width="75"
+                                                Content="750 pуб."
+                                                DataContext="750"
+                                                Click="IncreaseAmountHandler"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="Gray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel
+                                            Margin="15"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="0 5"
+                                                Text="Добавить 1500 pуб."    
+                                            />
+                                        </StackPanel>
+                                        <DockPanel
+                                            Background="Black"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Text="Пополнить баланс"    
+                                            />
+                                            <Button
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Height="30"
+                                                Width="75"
+                                                Content="1500 pуб."
+                                                DataContext="1500"
+                                                Click="IncreaseAmountHandler"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="Gray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel
+                                            Margin="15"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="0 5"
+                                                Text="Добавить 3000 pуб."    
+                                            />
+                                        </StackPanel>
+                                        <DockPanel
+                                            Background="Black"
+                                            Height="30"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Text="Пополнить баланс"    
+                                            />
+                                            <Button
+                                                VerticalAlignment="Center"
+                                                Margin="15 5"
+                                                Height="30"
+                                                Width="75"
+                                                Content="3000 pуб."    
+                                                DataContext="3000"
+                                                Click="IncreaseAmountHandler"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <TextBlock
+                                        Margin="15 0"
+                                        Text="Для получения дополнительной информации, обратитесь к соглашению подписчика Steam."    
+                                    />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="16"
+                                        Margin="16"
+                                        Text="Ваш аккаунт."
+                                    />
+                                    <StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                        >
+                                            <TextBlock
+                                                Margin="15 0"
+                                                VerticalAlignment="Center"
+                                                Text="Остаток средств"    
+                                            />
+                                            <TextBlock
+                                                x:Name="amountLabel"
+                                                Margin="25 0"
+                                                VerticalAlignment="Center"
+                                                FontSize="16"
+                                                Text="0 руб."    
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Background="Gray"    
+                                            Margin="15"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Просмотреть подробности"    
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Background="Gray"    
+                                            Margin="15"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Код кошелька или подарочной карты Steam"    
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Margin="15"
+                                Text="Главная > Аккаунт > Привязать номер телефона к аккаунту"    
+                            />
+                            <TextBlock
+                                FontSize="24"
+                                Margin="15"
+                                Text="ПРИВЯЗАТЬ НОМЕР ТЕЛЕФОНА К АККАУНТУ"    
+                            />
+                            <Separator
+                                Margin="25 10"    
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="15"
+                                Text="ДОБАВИТЬ НОМЕР ТЕЛЕФОНА ДЛЯ Пользователя"    
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="15"
+                                Text="Привяжите телефон, поддерживающий функцию СМС к аккаунту Steam. Так вы сможете запросить сообщение с кодом, который поможет&#10;восстановить доступ к аккаунту в случае его кражи или потери пароля, или если у вас нет доступа к эл. почте или мобильному&#10;аутентификатору Office ware game manager."    
+                            />
+                            <StackPanel
+                                Margin="15"
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    FontSize="16"
+                                    Margin="15"
+                                    Text="ВВЕДИТЕ НОМЕР ВАШЕГО ТЕЛЕФОНА"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Введите ниже номер вашего телефона в международном формате. Мы попытаемся определить ваш&#10;международный префикс, но вы можете сменить его, выбрав другую страну или просто указав&#10;префикс вашей страны самостоятельно."    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Один и тот же номер телефона можно привязать к нескольким аккаунтам. Такие аккаунты могут&#10;рассматриваться как один и тот же аккаунт в рамках соглашения подписчика Steam, правил и&#10;ограничений."    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Когда вы нажмете кнопку «Далее», Steam отправит на ваш телефон СМС с кодом."    
+                                />
+                                <StackPanel
+                                    Margin="0 15"
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Margin="15 0"
+                                        Text="Международный формат (пример):"    
+                                    />
+                                    <TextBlock
+                                        x:Name="phoneFormatLabel"
+                                        Margin="15 0"
+                                        Text="+79123456789"    
+                                    />
+                                </StackPanel>
+                                <ComboBox
+                                    Margin="15"
+                                    Width="275"
+                                    Height="30"
+                                    SelectedIndex="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalContentAlignment="Center"
+                                    SelectionChanged="TogglePhoneCountryCodeHandler"
+                                >
+                                    <ComboBoxItem
+                                        VerticalContentAlignment="Center"
+                                        DataContext="+7"
+                                        Content="Россия (+7)"    
+                                    />
+                                    <ComboBoxItem
+                                        VerticalContentAlignment="Center"
+                                        DataContext="+1"
+                                        Content="USA (+1)"    
+                                    />
+                                </ComboBox>
+                                <TextBox
+                                    x:Name="phoneBox"
+                                    Width="250"
+                                    Height="30"
+                                    Margin="15"
+                                    HorizontalAlignment="Left"
+                                    VerticalContentAlignment="Center"
+                                    TextAlignment="Center"
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                                Margin="0 15"
+                                Orientation="Horizontal"    
+                            >
+                                <Button
+                                    Margin="15 0"
+                                    Content="Отмена"
+                                    Width="100"
+                                    Height="30"
+                                    Click="CancelUpdatePhoneHandler"
+                                />
+                                <Button
+                                    Margin="15 0"
+                                    Content="Далее"
+                                    Width="100"
+                                    Height="30"
+                                    Click="UpdatePhoneHandler"
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                Margin="15"
+                                Text="Примечание: Steam подтвердит изменение номера телефона по СМС. Взимается стандартная плата,&#10;установленная вашим оператором."    
                             />
                         </StackPanel>
                     </DockPanel>

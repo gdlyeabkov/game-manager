@@ -446,5 +446,16 @@ namespace GamaManager.Dialogs
             this.Close();
         }
 
+        private void OpenFamilyViewManagementHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenFamilyViewManagement();
+        }
+
+        public void OpenFamilyViewManagement ()
+        {
+            this.DataContext = "family view update";
+            this.Close();
+        }
+
     }
 }

@@ -37,6 +37,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Specialized;
 using Sparrow.Chart;
+using ImapX;
+using System.Net.Mail;
 
 namespace GamaManager
 {
@@ -67,6 +69,8 @@ namespace GamaManager
         public Microsoft.Office.Interop.Word.Document doc = null;
         public Microsoft.Office.Interop.Word.Application wordApplication = null;
         public System.Windows.Xps.Packaging.XpsDocument document = null;
+        public ImapClient mailClient = null;
+
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -1551,10 +1555,33 @@ namespace GamaManager
             GetCommunityInfo();
             InitializeTray();
             GetExperiments();
-            GetAccountSettings();/**/
+            GetAccountSettings();
+            InitMail();/**/
         }
 
-        public void GetContent ()
+        public void InitMail()
+        {
+            mailClient = new ImapClient("imap.gmail.com", true);
+            bool isConnected = mailClient.Connect();
+            bool isNotConnected = !isConnected;
+            if (isNotConnected)
+            {
+                ClientClosed();
+                this.Close();
+            }
+            else
+            {
+                bool isLogined = mailClient.Login(@"glebdyakov2000@gmail.com", @"ttolpqpdzbigrkhz");
+                bool isNotLogined = !isLogined;
+                if (isNotConnected)
+                {
+                    ClientClosed();
+                    this.Close();
+                }
+            }
+        }
+
+    public void GetContent ()
         {
             GetScreenShots("", true);
             GetIllustrationsContent();
@@ -11922,6 +11949,31 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         mainControl.SelectedIndex = 36;
+
+                                        try
+                                        {
+                                            MailMessage message = new MailMessage();
+                                            SmtpClient smtp = new SmtpClient();
+                                            message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                                            message.To.Add(new System.Net.Mail.MailAddress(email));
+                                            string subjectBoxContent = @"Подтверждение аккаунта Office ware game manager";
+                                            message.Subject = subjectBoxContent;
+                                            message.IsBodyHtml = true; //to make message body as html  
+                                            string messageBodyBoxContent = "<h3>Здравствуйте, " + email + "!</h3><p>" + code + "</p><p>Код для смены E-mail вашего аккаунта Office ware game manager</p>";
+                                            message.Body = messageBodyBoxContent;
+                                            smtp.Port = 587;
+                                            smtp.Host = "smtp.gmail.com"; //for gmail host  
+                                            smtp.EnableSsl = true;
+                                            smtp.UseDefaultCredentials = false;
+                                            smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                            smtp.Send(message);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                                        }
+
                                     }
                                 }
                             }
@@ -11980,6 +12032,31 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         mainControl.SelectedIndex = 37;
+
+                                        try
+                                        {
+                                            MailMessage message = new MailMessage();
+                                            SmtpClient smtp = new SmtpClient();
+                                            message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                                            message.To.Add(new System.Net.Mail.MailAddress(email));
+                                            string subjectBoxContent = @"Подтверждение аккаунта Office ware game manager";
+                                            message.Subject = subjectBoxContent;
+                                            message.IsBodyHtml = true; //to make message body as html  
+                                            string messageBodyBoxContent = "<h3>Здравствуйте, " + email + "!</h3><p>" + code + "</p><p>Код для смены пароля вашего аккаунта Office ware game manager</p>";
+                                            message.Body = messageBodyBoxContent;
+                                            smtp.Port = 587;
+                                            smtp.Host = "smtp.gmail.com"; //for gmail host  
+                                            smtp.EnableSsl = true;
+                                            smtp.UseDefaultCredentials = false;
+                                            smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                            smtp.Send(message);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                                        }
+
                                     }
                                 }
                             }

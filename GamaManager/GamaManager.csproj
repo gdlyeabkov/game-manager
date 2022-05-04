@@ -266,6 +266,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AboutManagerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AcceptExitDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -364,6 +368,9 @@
     </Compile>
     <Compile Include="CarousalUC.xaml.cs">
       <DependentUpon>CarousalUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AboutManagerDialog.xaml.cs">
+      <DependentUpon>AboutManagerDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\AcceptExitDialog.xaml.cs">
       <DependentUpon>AcceptExitDialog.xaml</DependentUpon>

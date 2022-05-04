@@ -844,3 +844,5 @@ C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Microsoft.Windows.Shell.dl
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\UWPHost.dll
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\UWPHost.pdb
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\UWPHost.dll.config
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AboutManagerDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AboutManagerDialog.baml

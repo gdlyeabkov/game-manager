@@ -12179,6 +12179,57 @@ namespace GamaManager
             }
         }
 
+        private void OpenAboutManagerDialogHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAboutManagerDialog();
+        }
+
+        public void OpenAboutManagerDialog ()
+        {
+            Dialogs.AboutManagerDialog dialog = new Dialogs.AboutManagerDialog();
+            dialog.Show();
+        }
+
+        private void OpenSupportServiceHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSupportService();
+        }
+
+        public void OpenSupportService()
+        {
+            mainControl.SelectedIndex = 40;
+        }
+
+        private void OpenPrivacyInfoHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPrivacyInfo();
+        }
+
+        public void OpenPrivacyInfo ()
+        {
+            mainControl.SelectedIndex = 41;
+        }
+
+        private void OpenLawInfoHandler(object sender, RoutedEventArgs e)
+        {
+            OpenLawInfo();
+        }
+
+        public void OpenLawInfo ()
+        {
+            mainControl.SelectedIndex = 42;
+        }
+
+        private void OpenSubAggermentHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSubAggerment();
+        }
+
+        public void OpenSubAggerment ()
+        {
+            mainControl.SelectedIndex = 43;
+        }
+
     }
 
     class SavedContent

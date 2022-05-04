@@ -1541,7 +1541,7 @@ namespace GamaManager
             LoadStartWindow();
             GetOnlineFriends();
             GetDownloads();
-            GetScreenShots("", true);
+            GetContent();
             GetForums("");
             GetGameCollections();
             GetFriendsSettings();
@@ -1552,6 +1552,222 @@ namespace GamaManager
             InitializeTray();
             GetExperiments();
             GetAccountSettings();/**/
+        }
+
+        public void GetContent ()
+        {
+            GetScreenShots("", true);
+            GetIllustrationsContent();
+            GetVideoContent();
+            GetStoreContent();
+            GetCollectionsContent();
+            GetManualsContent();
+        }
+
+        public void GetIllustrationsContent ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+                            totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
+                            {
+                                string userId = content.user;
+                                bool isMyContent = userId == currentUserId;
+                                return isMyContent;
+                            }).ToList<Illustration>();
+                            contentIllustrations.Children.Clear();
+                            int totalIllustrationsCount = totalIllustrations.Count;
+                            bool isHaveIllustrations = totalIllustrationsCount >= 1;
+                            if (isHaveIllustrations)
+                            {
+                                contentIllustrations.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Illustration totalIllustrationsItem in totalIllustrations)
+                                {
+                                    string id = totalIllustrationsItem._id;
+                                    string userId = totalIllustrationsItem.user;
+                                    bool isMyContent = userId == currentUserId;
+                                    if (isMyContent)
+                                    {
+                                        string title = totalIllustrationsItem.title;
+                                        string desc = totalIllustrationsItem.desc;
+                                        StackPanel illustration = new StackPanel();
+                                        illustration.Width = 500;
+                                        illustration.Margin = new Thickness(15);
+                                        illustration.Background = System.Windows.Media.Brushes.LightGray;
+                                        TextBlock illustrationTitleLabel = new TextBlock();
+                                        illustrationTitleLabel.FontSize = 16;
+                                        illustrationTitleLabel.Margin = new Thickness(15);
+                                        illustrationTitleLabel.Text = title;
+                                        illustration.Children.Add(illustrationTitleLabel);
+                                        Image illustrationPhoto = new Image();
+                                        illustrationPhoto.Margin = new Thickness(15);
+                                        illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                        illustrationPhoto.Width = 50;
+                                        illustrationPhoto.Height = 50;
+                                        illustrationPhoto.BeginInit();
+                                        illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                        illustrationPhoto.EndInit();
+                                        illustration.Children.Add(illustrationPhoto);
+                                        TextBlock illustrationDescLabel = new TextBlock();
+                                        illustrationDescLabel.Margin = new Thickness(15);
+                                        illustrationDescLabel.Text = desc;
+                                        illustration.Children.Add(illustrationDescLabel);
+                                        contentIllustrations.Children.Add(illustration);
+                                        illustration.DataContext = id;
+                                        illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                StackPanel notFound = new StackPanel();
+                                notFound.Margin = new Thickness(0, 15, 0, 15);
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                string newLine = Environment.NewLine;
+                                notFoundLabel.Text = "На данный момент у вас нет иллюстраций, хранящихся в Steam" + newLine + "Cloud. Чтобы загрузить иллюстрацию, перейдите во вкладку" + newLine + "«Иллюстрации» в центре сообщества игры и найдите кнопку" + newLine + "«Загрузить иллюстрацию» справа вверху.";
+                                notFound.Children.Add(notFoundLabel);
+                                TextBlock notFoundSubLabel = new TextBlock();
+                                notFoundSubLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundSubLabel.TextAlignment = TextAlignment.Center;
+                                notFoundSubLabel.FontSize = 18;
+                                notFoundSubLabel.Text = "Или нажмите кнопку «Загрузить иллюстрацию» ниже.";
+                                notFound.Children.Add(notFoundSubLabel);
+                                Button uploadBtn = new Button();
+                                uploadBtn.Width = 175;
+                                uploadBtn.Height = 25;
+                                uploadBtn.Content = "Загрузить иллюстрацию";
+                                notFound.Children.Add(uploadBtn);
+                                contentIllustrations.HorizontalAlignment = HorizontalAlignment.Center;
+                                contentIllustrations.Children.Add(notFound);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetVideoContent()
+        {
+
+        }
+        public void GetStoreContent()
+        {
+
+        }
+        public void GetCollectionsContent()
+        {
+
+        }
+
+        public void GetManualsContent()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ManualsResponseInfo myobj = (ManualsResponseInfo)js.Deserialize(objText, typeof(ManualsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Manual> totalManuals = myobj.manuals;
+                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                            {
+                                string userId = content.user;
+                                bool isMyContent = userId == currentUserId;
+                                return isMyContent;
+                            }).ToList<Manual>();
+                            contentManuals.Children.Clear();
+                            int totalManualsCount = totalManuals.Count;
+                            bool isHaveManuals = totalManualsCount >= 1;
+                            if (isHaveManuals)
+                            {
+                                contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Manual totalManualsItem in totalManuals)
+                                {
+                                    string id = totalManualsItem._id;
+                                    string userId = totalManualsItem.user;
+                                    bool isMyContent = userId == currentUserId;
+                                    if (isMyContent)
+                                    {
+                                        string title = totalManualsItem.title;
+                                        string desc = totalManualsItem.desc;
+                                        StackPanel manual = new StackPanel();
+                                        manual.Width = 500;
+                                        manual.Margin = new Thickness(15);
+                                        manual.Background = System.Windows.Media.Brushes.LightGray;
+                                        TextBlock manualTitleLabel = new TextBlock();
+                                        manualTitleLabel.FontSize = 16;
+                                        manualTitleLabel.Margin = new Thickness(15);
+                                        manualTitleLabel.Text = title;
+                                        manual.Children.Add(manualTitleLabel);
+                                        Image manualPhoto = new Image();
+                                        manualPhoto.Margin = new Thickness(15);
+                                        manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                        manualPhoto.Width = 50;
+                                        manualPhoto.Height = 50;
+                                        manualPhoto.BeginInit();
+                                        manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                        manualPhoto.EndInit();
+                                        manual.Children.Add(manualPhoto);
+                                        TextBlock manualDescLabel = new TextBlock();
+                                        manualDescLabel.Margin = new Thickness(15);
+                                        manualDescLabel.Text = desc;
+                                        manual.Children.Add(manualDescLabel);
+                                        contentManuals.Children.Add(manual);
+                                        manual.DataContext = id;
+                                        manual.MouseLeftButtonUp += SelectManualHandler;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
+                                contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                contentManuals.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetExperiments ()
@@ -7784,6 +8000,7 @@ namespace GamaManager
             bool isDiscussions = index == 2;
             bool isWorkshop = index == 3;
             bool isPlatform = index == 4;
+            bool isBroadcasts = index == 5;
             if (isMain)
             {
                 mainControl.SelectedIndex = 20;
@@ -7803,6 +8020,12 @@ namespace GamaManager
             {
                 mainControl.SelectedIndex = 39;
                 AddHistoryRecord();
+            }
+            else if (isBroadcasts)
+            {
+                OpenCommunityInfo();
+                communityControl.SelectedIndex = 3;
+
             }
             ResetMenu();
         }
@@ -9154,8 +9377,22 @@ namespace GamaManager
             SetUserStatus(status);
         }
 
-        public void GetScreenShots(string filter, bool isInit)
+        public void ToggleScreenShotsSortHandler (object sender, SelectionChangedEventArgs e)
         {
+            if (isAppInit)
+            {
+                ToggleScreenShotsSort();
+            }
+        }
+
+        public void ToggleScreenShotsSort ()
+        {
+            GetScreenShots("", false);
+        }
+
+        public void GetScreenShots (string filter, bool isInit)
+        {
+            List<Image> unSortedScreenShots = new List<Image>();
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
@@ -9179,6 +9416,7 @@ namespace GamaManager
                     if (isScreenShot)
                     {
                         Image screenShot = new Image();
+                        screenShot.Margin = new Thickness(15);
                         screenShot.Width = 250;
                         screenShot.Height = 250;
                         screenShot.BeginInit();
@@ -9193,11 +9431,76 @@ namespace GamaManager
                         bool isFilterMatches = isWordsMatches || isNotFilter;
                         if (isFilterMatches)
                         {
-                            screenShots.Children.Add(screenShot);
+                            /*                          
+                            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+                            UIElement container = screenShotsContainerChildren[2];
+                            bool isWall = container is StackPanel;
+                            if (isWall)
+                            {
+                                StackPanel wallContainer = ((StackPanel)(container));
+                                wallContainer.Children.Add(screenShot);
+                            }
+                            else
+                            {
+                                WrapPanel gridContainer = ((WrapPanel)(container));
+                                gridContainer.Children.Add(screenShot);
+                            }
+                            */
+                            Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
+                            FileInfo info = new FileInfo(file);
+                            DateTime date = info.CreationTime;
+                            screenShotData.Add("date", date);
+                            screenShot.DataContext = screenShotData;
+                            unSortedScreenShots.Add(screenShot);
                         }
                     }
                 }
             }
+
+            List<Image> sortedScreenShots = new List<Image>();
+            sortedScreenShots = unSortedScreenShots;
+            int sortIndex = screenShotsSortBox.SelectedIndex;
+            bool isAsc = sortIndex == 1;
+            bool isDesc = sortIndex == 2;
+            if (isAsc)
+            {
+                sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
+                {
+                    object data = screenShot.DataContext;
+                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                    object rawDate = screenShotData["date"];
+                    DateTime date = ((DateTime)(rawDate));
+                    return date;
+                }).ToList<Image>();
+            }
+            else if (isDesc)
+            {
+                sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
+                {
+                    object data = screenShot.DataContext;
+                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                    object rawDate = screenShotData["date"];
+                    DateTime date = ((DateTime)(rawDate));
+                    return date;
+                }).ToList<Image>();
+            }
+            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+            UIElement container = screenShotsContainerChildren[2];
+            bool isWall = container is StackPanel;
+            foreach (UIElement screenShot in sortedScreenShots)
+            {
+                if (isWall)
+                {
+                    StackPanel wallContainer = ((StackPanel)(container));
+                    wallContainer.Children.Add(screenShot);
+                }
+                else
+                {
+                    WrapPanel gridContainer = ((WrapPanel)(container));
+                    gridContainer.Children.Add(screenShot);
+                }
+            }
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
@@ -10194,7 +10497,7 @@ namespace GamaManager
             SelectAccountSettingsItem(index);
         }
 
-        public void SelectAccountSettingsItem(int index)
+        public void SelectAccountSettingsItem (int index)
         {
             accountSettingsControl.SelectedIndex = index;
             foreach (StackPanel accountSettingsTab in accountSettingsTabs.Children)
@@ -11824,7 +12127,56 @@ namespace GamaManager
 
         public void OpenStoreSettings()
         {
-            accountSettingsControl.SelectedIndex = 1;
+            // accountSettingsControl.SelectedIndex = 1;
+            SelectAccountSettingsItem(1);
+        }
+
+        private void ToggleScreenShotsManagementHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleScreenShotsManagement();
+        }
+
+        public void ToggleScreenShotsDisplayHandler (object sender, RoutedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            ToggleScreenShotsDisplay(selector);
+        }
+
+        public void ToggleScreenShotsDisplay (ComboBox selector)
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = selector.SelectedIndex;
+                bool isWall = selectedIndex == 0;
+                screenShotsContainer.Children.RemoveAt(2);
+                if (isWall)
+                {
+                    StackPanel container = new StackPanel();
+                    container.Margin = new Thickness(25);
+                    screenShotsContainer.Children.Add(container);
+                }
+                else
+                {
+                    WrapPanel container = new WrapPanel();
+                    container.Margin = new Thickness(25);
+                    screenShotsContainer.Children.Add(container);
+                }
+                GetScreenShots("", false);
+            }
+        }
+
+        public void ToggleScreenShotsManagement ()
+        {
+            Visibility screenShotsManagementVisibility = screenShotsManagement.Visibility;
+            bool isVisible = screenShotsManagementVisibility == visible;
+            if (isVisible)
+            {
+                screenShotsManagement.Visibility = invisible;
+            }
+            else
+            {
+                screenShotsManagement.Visibility = visible;
+            }
         }
 
     }

@@ -6915,6 +6915,8 @@ namespace GamaManager
             bool isMyProfile = index == 1;
             bool isAboutAccount = index == 2;
             bool isExit = index == 3;
+            bool isStoreSettings = index == 4;
+            bool isWallet = index == 5;
             if (isMyProfile)
             {
                 ReturnToProfile();
@@ -6926,6 +6928,14 @@ namespace GamaManager
             else if (isExit)
             {
                 Logout();
+            }
+            else if (isStoreSettings)
+            {
+                OpenStoreSettings();
+            }
+            else if (isStoreSettings)
+            {
+                OpenIncreaseAmount();
             }
         }
 
@@ -12293,6 +12303,9 @@ namespace GamaManager
 
         public void OpenStoreSettings()
         {
+
+            mainControl.SelectedIndex = 15;
+            
             // accountSettingsControl.SelectedIndex = 1;
             SelectAccountSettingsItem(1);
         }

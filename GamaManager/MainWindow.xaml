@@ -503,6 +503,12 @@
                     <ComboBoxItem
                         Content="{x:Static p:Resources.logoutLabelContent}"    
                     />
+                    <ComboBoxItem
+                        Content="Настройки магазина"    
+                    />
+                    <ComboBoxItem
+                        Content="Мой кошелек"    
+                    />
                 </ComboBox>
                 <materialDesign:PackIcon
                     Kind="Rectangle"

@@ -3772,6 +3772,7 @@ namespace GamaManager
                         newGameData.Add("name", gamesListItemName);
                         newGameData.Add("url", "");
                         newGameData.Add("image", "");
+                        newGameData.Add("price", 0);
                         newGame.DataContext = newGameData;
                         Image newGamePhoto = new Image();
                         newGamePhoto.Margin = new Thickness(5);
@@ -3961,11 +3962,13 @@ namespace GamaManager
                         string firstGameName = firstGame.name;
                         string firstGameUrl = @"";
                         string firstGameImage = @"";
+                        int firstGamePrice = 0;
                         Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
                         firstGameData.Add("id", firstGameId);
                         firstGameData.Add("name", firstGameName);
                         firstGameData.Add("url", firstGameUrl);
                         firstGameData.Add("image", firstGameImage);
+                        firstGameData.Add("price", firstGamePrice);
                         SelectGame(firstGameData);
                     }
                     else
@@ -5824,11 +5827,13 @@ namespace GamaManager
                                         string gamesListItemUrl = @"http://localhost:4000/api/game/distributive/?name=" + gamesListItemName;
                                         // string gamesListItemImage = gamesListItem.image;
                                         string gamesListItemImage = @"http://localhost:4000/api/game/thumbnail/?name=" + gamesListItemName;
+                                        int gamesListItemPrice = gamesListItem.price;
                                         Dictionary<String, Object> newGameData = new Dictionary<String, Object>();
                                         newGameData.Add("id", gamesListItemId);
                                         newGameData.Add("name", gamesListItemName);
                                         newGameData.Add("url", gamesListItemUrl);
                                         newGameData.Add("image", gamesListItemImage);
+                                        newGameData.Add("price", gamesListItemPrice);
                                         newGame.DataContext = newGameData;
                                         Image newGamePhoto = new Image();
                                         newGamePhoto.Margin = new Thickness(5);
@@ -6032,12 +6037,13 @@ namespace GamaManager
                                         string firstGameImage = firstGame.image;*/
                                         string firstGameUrl = @"http://localhost:4000/api/game/distributive/?name=" + firstGameName;
                                         string firstGameImage = @"http://localhost:4000/api/game/thumbnail/?name=" + firstGameName;
-
+                                        int firstGamePrice = firstGame.price;
                                         Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
                                         firstGameData.Add("id", firstGameId);
                                         firstGameData.Add("name", firstGameName);
                                         firstGameData.Add("url", firstGameUrl);
                                         firstGameData.Add("image", firstGameImage);
+                                        firstGameData.Add("price", firstGamePrice);
                                         SelectGame(firstGameData);
                                     }
                                     else
@@ -6799,6 +6805,7 @@ namespace GamaManager
             string gameName = ((string)(dataParts["name"]));
             string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));
+            int gamePrice = ((int)(dataParts["price"]));
             bool isCustomGame = gameId == "mockId";
             bool isNotCustomGame = !isCustomGame;
             Application.Current.Dispatcher.Invoke(() =>
@@ -6832,12 +6839,18 @@ namespace GamaManager
             }
             else
             {
-                gameActionLabel.Content = Properties.Resources.installBtnLabelContent;
+                bool isFreeGame = gamePrice <= 0;
+                if (isFreeGame)
+                {
+                    gameActionLabel.Content = Properties.Resources.installBtnLabelContent;
+                }
+                else
+                {
+                    gameActionLabel.Content = "Купить";
+                }
                 gameActionLabel.DataContext = gameData;
                 removeGameBtn.Visibility = invisible;
-
                 gameDetails.Visibility = invisible;
-
             }
             gameNameLabel.Text = gameName;
 
@@ -6882,12 +6895,13 @@ namespace GamaManager
             }
         }
 
-        public void GameAction()
+        public void GameAction ()
         {
             object rawGameActionLabelContent = gameActionLabel.Content;
             string gameActionLabelContent = rawGameActionLabelContent.ToString();
             bool isPlayAction = gameActionLabelContent == Properties.Resources.playBtnLabelContent;
             bool isInstallAction = gameActionLabelContent == Properties.Resources.installBtnLabelContent;
+            bool isBuyAction = gameActionLabelContent == "Купить";
             if (isPlayAction)
             {
                 RunGame(gameNameLabel.Text);
@@ -6895,6 +6909,47 @@ namespace GamaManager
             else if (isInstallAction)
             {
                 InstallGame();
+            }
+            else if (isBuyAction)
+            {
+                object rawGameData = gameActionLabel.DataContext;
+                Dictionary<String, Object> gameData = ((Dictionary<String, Object>)(rawGameData));
+                int price = ((int)(gameData["price"]));
+                BuyGame(price);
+            }
+        }
+
+        public void BuyGame (int price)
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+            {
+                using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    string objText = reader.ReadToEnd();
+                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                    string status = myobj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        User user = myobj.user;
+                        int amount = user.amount;
+                        bool isCanBuy = amount >= price;
+                        string msgContent = "";
+                        if (isCanBuy)
+                        {
+                            msgContent = "Поздравляем с приобретением игры!";
+                        }
+                        else
+                        {
+                            msgContent = "На вашем счете недостаточно средств!";
+                        }
+                        MessageBox.Show(msgContent, "Внимание");
+                    }
+                }
             }
         }
 
@@ -13477,6 +13532,7 @@ namespace GamaManager
         public int users;
         public int maxUsers;
         public int likes;
+        public int price;
     }
 
     class UserResponseInfo

@@ -6840,13 +6840,52 @@ namespace GamaManager
             else
             {
                 bool isFreeGame = gamePrice <= 0;
-                if (isFreeGame)
+                bool isGamePayed = false;
+
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                        string status = myInnerObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameRelation> relations = myInnerObj.relations;
+                            List<GameRelation> myPayedGames = relations.Where<GameRelation>((GameRelation relation) =>
+                            {
+                                string localGameId = relation.game;
+                                string userId = relation.user;
+                                bool isMyGame = userId == currentUserId;
+                                bool isCurrentGame = localGameId == gameId;
+                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                return isLocalGamePayed;
+                            }).ToList<GameRelation>();
+                            int myPayedGamesCount = myPayedGames.Count;
+                            bool isHaveGames = myPayedGamesCount >= 1;
+                            if (isHaveGames)
+                            {
+                                isGamePayed = true;
+                            }
+                        }
+                    }
+                }
+
+                bool isCanInstall = isFreeGame || isGamePayed;
+                if (isCanInstall)
                 {
                     gameActionLabel.Content = Properties.Resources.installBtnLabelContent;
                 }
                 else
                 {
-                    gameActionLabel.Content = "Купить";
+                    string rawPrice = gamePrice.ToString();
+                    string measure = "Р";
+                    gameActionLabel.Content = "Купить " + rawPrice + " " + measure;
                 }
                 gameActionLabel.DataContext = gameData;
                 removeGameBtn.Visibility = invisible;
@@ -6876,9 +6915,7 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -6901,7 +6938,7 @@ namespace GamaManager
             string gameActionLabelContent = rawGameActionLabelContent.ToString();
             bool isPlayAction = gameActionLabelContent == Properties.Resources.playBtnLabelContent;
             bool isInstallAction = gameActionLabelContent == Properties.Resources.installBtnLabelContent;
-            bool isBuyAction = gameActionLabelContent == "Купить";
+            bool isBuyAction = gameActionLabelContent.StartsWith("Купить");
             if (isPlayAction)
             {
                 RunGame(gameNameLabel.Text);
@@ -6914,13 +6951,16 @@ namespace GamaManager
             {
                 object rawGameData = gameActionLabel.DataContext;
                 Dictionary<String, Object> gameData = ((Dictionary<String, Object>)(rawGameData));
-                int price = ((int)(gameData["price"]));
-                BuyGame(price);
+                BuyGame(gameData);
             }
         }
 
-        public void BuyGame (int price)
+        public void BuyGame (Dictionary<String, Object> gameData)
         {
+            object rawGameId = gameData["id"];
+            string gameId = ((string)(rawGameId));
+            object rawPrice = gameData["price"];
+            int price = ((int)(rawPrice));
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
@@ -6941,7 +6981,25 @@ namespace GamaManager
                         string msgContent = "";
                         if (isCanBuy)
                         {
-                            msgContent = "Поздравляем с приобретением игры!";
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/add/?id=" + gameId + @"&user=" + currentUserId + @"&price=" + price);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        SelectGame(gameData);
+                                        msgContent = "Поздравляем с приобретением игры!";
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -8101,6 +8159,15 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        public CustomPopupPlacement[] PointsStoreItemsPopupPlacementHandler (Size popupSize, Size targetSize, Point offset)
+        {
+            return new CustomPopupPlacement[]
+            {
+                new CustomPopupPlacement(new Point(0, 250), PopupPrimaryAxis.Vertical),
+                new CustomPopupPlacement(new Point(400, 20), PopupPrimaryAxis.Horizontal)
+            };
         }
 
         public CustomPopupPlacement[] FriendRequestPlacementHandler(Size popupSize, Size targetSize, Point offset)
@@ -12169,7 +12236,92 @@ namespace GamaManager
 
         public void OpenSmileys()
         {
-            pointsStoreControl.SelectedIndex = 13;
+            smileys.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isSmileys = type == "smileys";
+                                if (isSmileys)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    smileys.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 13;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenChatEffectsHandler (object sender, RoutedEventArgs e)
@@ -12179,7 +12331,92 @@ namespace GamaManager
 
         public void OpenChatEffects ()
         {
-            pointsStoreControl.SelectedIndex = 12;
+            chatEffects.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isChatEffects = type == "chatEffects";
+                                if (isChatEffects)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    chatEffects.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 12;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenStickersHandler(object sender, RoutedEventArgs e)
@@ -12189,7 +12426,92 @@ namespace GamaManager
 
         public void OpenStickers ()
         {
-            pointsStoreControl.SelectedIndex = 11;
+            stickers.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isSticker = type == "sticker";
+                                if (isSticker)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    stickers.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 11;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenShowCaseProfileHandler (object sender, RoutedEventArgs e)
@@ -12199,7 +12521,92 @@ namespace GamaManager
 
         public void OpenShowCaseProfile ()
         {
-            pointsStoreControl.SelectedIndex = 10;
+            profileShowCases.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isProfileShowCases = type == "profileShowCases";
+                                if (isProfileShowCases)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    profileShowCases.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 10;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenArtistProfilesHandler(object sender, RoutedEventArgs e)
@@ -12209,7 +12616,92 @@ namespace GamaManager
 
         public void OpenArtistProfiles ()
         {
-            pointsStoreControl.SelectedIndex = 9;
+            artistProfiles.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isArtistProfiles = type == "artistProfiles";
+                                if (isArtistProfiles)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    artistProfiles.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 9;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenGameProfilesHandler (object sender, RoutedEventArgs e)
@@ -12219,7 +12711,92 @@ namespace GamaManager
 
         public void OpenGameProfiles()
         {
-            pointsStoreControl.SelectedIndex = 8;
+            gameProfiles.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isGameProfiles = type == "gameProfiles";
+                                if (isGameProfiles)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    gameProfiles.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 8;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
 
         }
 
@@ -12230,7 +12807,92 @@ namespace GamaManager
 
         public void OpenSeasonIcon()
         {
-            pointsStoreControl.SelectedIndex = 7;
+            seasonPoints.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isSeasonIcon = type == "seasonIcon";
+                                if (isSeasonIcon)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    seasonPoints.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 7;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenBackgroundsHandler(object sender, RoutedEventArgs e)
@@ -12240,7 +12902,92 @@ namespace GamaManager
 
         public void OpenBackgrounds()
         {
-            pointsStoreControl.SelectedIndex = 6;
+            backgrounds.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isBackground = type == "background";
+                                if (isBackground)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    backgrounds.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 6;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenAvatarHandler (object sender, RoutedEventArgs e)
@@ -12250,7 +12997,227 @@ namespace GamaManager
 
         public void OpenAvatar()
         {
-            pointsStoreControl.SelectedIndex = 5;
+            accountItems.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isAvatar = type == "avatar";
+                                if (isAvatar)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    accountItems.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 5;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
+        }
+
+        public void OpenPointsStoreItemHandler (object sender, RoutedEventArgs e)
+        {
+            Border element = ((Border)(sender));
+            object elementData = element.DataContext;
+            string id = ((string)(elementData));
+            OpenPointsStoreItem(id);
+        }
+
+        public void OpenPointsStoreItem (string id)
+        {
+
+            pointsStorePopup.Placement = PlacementMode.Custom;
+            pointsStorePopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(PointsStoreItemsPopupPlacementHandler);
+            pointsStorePopup.PlacementTarget = this;
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemResponseInfo myobj = (PointsStoreItemResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            PointsStoreItem item = myobj.item;
+                            string title = item.title;
+                            string desc = item.desc;
+                            string type = item.type;
+                            int price = item.price;
+                            string rawPrice = price.ToString();
+                            pointsStorePopupTitleLabel.Text = title;
+                            pointsStorePopupDescLabel.Text = desc;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + currentUserId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User user = myInnerObj.user;
+                                        int points = user.points;
+                                        string rawPoints = points.ToString();
+                                        pointsStorePopupCountLabel.Text = rawPoints;
+                                        pointsStorePopupPreview.BeginInit();
+                                        pointsStorePopupPreview.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo?id=" + id));
+                                        pointsStorePopupPreview.EndInit();
+                                        string pointsStorePopupFooterLabelContent = "";
+                                        bool isAvatar = type == "avatar";
+                                        string newLine = Environment.NewLine;
+                                        if (isAvatar)
+                                        {
+                                            pointsStorePopupFooterLabelContent = "Приобретите этот анимированный аватар за очки Steam. Анимация всегда" + newLine + "воспроизводится в ваших профиле и мини-профиле, а также" + newLine + "ненадолго отображается при смене статуса или отправке сообщения в чате Steam.";
+                                        }
+                                        pointsStorePopupFooterLabel.Text = pointsStorePopupFooterLabelContent;
+                                        string pointsStorePopupNotPayedLabelContent = "";
+                                        bool isNotPoints = points < price;
+                                        if (isNotPoints)
+                                        {
+                                            buyPointsStoreItemBtn.Content = @"Как получить очки";
+                                            buyPointsStoreItemBtn.DataContext = "not points";
+                                            int leftPoints = price - points;
+                                            string rawLeftPoints = leftPoints.ToString();
+                                            pointsStorePopupNotPayedLabelContent = "Для получения этого предмета не хватает " + rawLeftPoints + " очк.";
+                                        }
+                                        else
+                                        {
+                                            buyPointsStoreItemBtn.Content = @"Купить";
+                                            buyPointsStoreItemBtn.DataContext = "have points";
+                                            string measure = "очков";
+                                            pointsStorePopupNotPayedLabelContent = "При покупке предмета будут потрачены " + rawPrice + " " + measure;
+                                        }
+                                        pointsStorePopupNotPayedLabel.Text = pointsStorePopupNotPayedLabelContent;
+                                        pointsStorePopup.IsOpen = true;
+                                        buyPointsStoreItemBtn.IsEnabled = true;
+                                        pointsStorePopup.DataContext = id;
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/all");
+                                        nestedWebRequest.Method = "GET";
+                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                        {
+                                            using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = nestedReader.ReadToEnd();
+                                                PointsStoreItemRelationsResponseInfo myNestedObj = (PointsStoreItemRelationsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemRelationsResponseInfo));
+                                                status = myobj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<PointsStoreItemRelation> relations = myNestedObj.relations;
+                                                    List<PointsStoreItemRelation> myPayedRelations = relations.Where<PointsStoreItemRelation>((PointsStoreItemRelation relation) =>
+                                                    {
+                                                        string userId = relation.user;
+                                                        string itemId = relation.item;
+                                                        bool isMyItem = currentUserId == userId;
+                                                        bool isCurrentItem = id == itemId;
+                                                        bool isMyPayedItem = isCurrentItem && isMyItem;
+                                                        return isMyPayedItem;
+                                                    }).ToList<PointsStoreItemRelation>();
+                                                    int myPayedRelationsCount = myPayedRelations.Count;
+                                                    bool isPayed = myPayedRelationsCount >= 1;
+                                                    if (isPayed)
+                                                    {
+                                                        buyPointsStoreItemBtn.IsEnabled = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenCommunityRewardsHandler(object sender, RoutedEventArgs e)
@@ -12260,7 +13227,92 @@ namespace GamaManager
 
         public void OpenCommunityRewards()
         {
-            pointsStoreControl.SelectedIndex = 4;
+            communityRewards.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isAvatar = type == "avatar";
+                                if (isAvatar)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    communityRewards.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 4;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenSubjectsSetHandler (object sender, RoutedEventArgs e)
@@ -12270,7 +13322,92 @@ namespace GamaManager
 
         public void OpenSubjectsSet()
         {
-            pointsStoreControl.SelectedIndex = 3;
+            subjectsSet.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isSubjectsSet = type == "subjectsSet";
+                                if (isSubjectsSet)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    subjectsSet.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 3;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenGameSubjectsHandler (object sender, RoutedEventArgs e)
@@ -12280,7 +13417,92 @@ namespace GamaManager
 
         public void OpenGameSubjects()
         {
-            pointsStoreControl.SelectedIndex = 2;
+            gameSubjects.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemsResponseInfo myobj = (PointsStoreItemsResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<PointsStoreItem> items = myobj.items;
+                            foreach (PointsStoreItem item in items)
+                            {
+                                string type = item.type;
+                                bool isGameSubject = type == "gameSubject";
+                                if (isGameSubject)
+                                {
+                                    string id = item._id;
+                                    string title = item.title;
+                                    string desc = item.desc;
+                                    int price = item.price;
+                                    string rawPrice = price.ToString();
+                                    Border element = new Border();
+                                    element.Background = System.Windows.Media.Brushes.LightGray;
+                                    element.Width = 175;
+                                    element.Height = 175;
+                                    element.Margin = new Thickness(15);
+                                    element.CornerRadius = new CornerRadius(5);
+                                    StackPanel elementBody = new StackPanel();
+                                    Image elementPhoto = new Image();
+                                    elementPhoto.Width = 80;
+                                    elementPhoto.Height = 80;
+                                    elementPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                    elementPhoto.BeginInit();
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.EndInit();
+                                    elementBody.Children.Add(elementPhoto);
+                                    Separator elementSeparator = new Separator();
+                                    elementSeparator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                    elementSeparator.BorderThickness = new Thickness(1);
+                                    elementBody.Children.Add(elementSeparator);
+                                    TextBlock elementTitleLabel = new TextBlock();
+                                    elementTitleLabel.Text = title;
+                                    elementTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementTitleLabel);
+                                    TextBlock elementDescLabel = new TextBlock();
+                                    elementDescLabel.Text = desc;
+                                    elementDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    elementBody.Children.Add(elementDescLabel);
+                                    StackPanel elementPrice = new StackPanel();
+                                    elementPrice.HorizontalAlignment = HorizontalAlignment.Right;
+                                    elementPrice.Orientation = Orientation.Horizontal;
+                                    elementPrice.Margin = new Thickness(0, 5, 0, 5);
+                                    PackIcon elementPriceIcon = new PackIcon();
+                                    elementPriceIcon.Kind = PackIconKind.Circle;
+                                    elementPriceIcon.Width = 15;
+                                    elementPriceIcon.Height = 15;
+                                    elementPriceIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceIcon);
+                                    TextBlock elementPriceLabel = new TextBlock();
+                                    elementPriceLabel.Text = rawPrice;
+                                    elementPriceLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    elementPrice.Children.Add(elementPriceLabel);
+                                    elementBody.Children.Add(elementPrice);
+                                    element.Child = elementBody;
+                                    accountItems.Children.Add(element);
+                                    element.DataContext = id;
+                                    element.MouseLeftButtonUp += OpenPointsStoreItemHandler;
+                                }
+                            }
+                            pointsStoreControl.SelectedIndex = 2;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+            }
         }
 
         public void OpenFavoriteSubjectsHandler(object sender, RoutedEventArgs e)
@@ -13467,6 +14689,88 @@ namespace GamaManager
             mainControl.SelectedIndex = 48;
         }
 
+        private void ClosePointsStorePopupHandler (object sender, RoutedEventArgs e)
+        {
+            ClosePointsStorePopup();
+        }
+
+        public void ClosePointsStorePopup ()
+        {
+            pointsStorePopup.IsOpen = false;
+        }
+
+        private void BuyPointsStoreItemHandler (object sender, RoutedEventArgs e)
+        {
+            BuyPointsStoreItem();
+        }
+
+        public void BuyPointsStoreItem ()
+        {
+            object pointsStorePopupData = pointsStorePopup.DataContext;
+            string id = ((string)(pointsStorePopupData));
+            object rawBtnData = buyPointsStoreItemBtn.DataContext;
+            string btnData = ((string)(rawBtnData));
+            bool isCanBuy = btnData == "have points";
+            if (isCanBuy)
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/get/?id=" + id);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            PointsStoreItemResponseInfo myobj = (PointsStoreItemResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                PointsStoreItem item = myobj.item;
+                                int price = item.price;
+                                string rawPrice = price.ToString();
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/add/?id=" + id + @"&user=" + currentUserId + @"&price=" + rawPrice);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myobj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            MessageBox.Show("Спасибо за приобретение!", "Внимание");
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удалось купить товар!", "Внимание");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            else
+            {
+                OpenPointsHelp();
+            }
+            ClosePointsStorePopup();
+        }
+
     }
 
     class SavedContent
@@ -13953,6 +15257,95 @@ namespace GamaManager
         public string icon;
         public string user;
         public string date;
+    }
+
+    class GameRelationsResponseInfo {
+        public string status;
+        public List<GameRelation> relations;
+    }
+
+    class GameRelation {
+        public string game;
+        public string user;
+    }
+
+    class PointsStoreItemsResponseInfo
+    {
+        public string status;
+        public List<PointsStoreItem> items;
+    }
+
+    class PointsStoreItemResponseInfo
+    {
+        public string status;
+        public PointsStoreItem item;
+    }
+
+    class PointsStoreItem
+    {
+        public string _id;
+        public string title;
+        public string desc;
+        public string type;
+        public int price;
+        public DateTime date;
+    }
+
+    class PointsStoreItemRelationsResponseInfo
+    {
+        public string status;
+        public List<PointsStoreItemRelation> relations;
+    }
+
+    class PointsStoreItemRelationResponseInfo
+    {
+        public string status;
+        public PointsStoreItemRelation relation;
+    }
+
+    class PointsStoreItemRelation
+    {
+        public string _id;
+        public string item;
+        public string user;
+        public DateTime date;
+    }
+    
+    class TalksResponseInfo
+    {
+        public List<Talk> talks;
+        public string status;
+    }
+
+    class TalkResponseInfo
+    {
+        public Talk talk;
+        public string status;
+    }
+
+    class Talk
+    {
+        public string _id;
+        public string title;
+        public string owner;
+    }
+
+    class TalkRelationsResponseInfo
+    {
+        public TalkRelation relations;
+        public string status;
+    }
+
+    class TalkRelationResponseInfo
+    {
+        public TalkRelation relation;
+        public string status;
+    }
+    class TalkRelation
+    {
+        public string _id;
+        public string talk;
+        public string user;
     }
 
 }

@@ -8823,15 +8823,101 @@
                         >
                             <Popup
                                 x:Name="pointsStorePopup"
-                                Width="500"
-                                Height="500"
+                                Width="650"
+                                Height="650"
                                 StaysOpen="False"
                             >
                                 <Popup.Child>
                                     <StackPanel
-                                        Background="Gray"    
+                                        Background="Gray"
                                     >
-                                        
+                                        <DockPanel>
+                                            <StackPanel>
+                                                <TextBlock
+                                                    x:Name="pointsStorePopupTitleLabel"
+                                                    FontSize="16"
+                                                    Margin="15 5"
+                                                    Text="Название"    
+                                                />
+                                                <TextBlock
+                                                    x:Name="pointsStorePopupDescLabel"
+                                                    Margin="15 5"
+                                                    Text="Описание"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Width="25"
+                                                    Height="25"
+                                                    Kind="Circle"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Margin="15"    
+                                                >
+                                                    <TextBlock
+                                                        Text="Ваши очки"    
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="pointsStorePopupCountLabel"
+                                                        Text="0"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <Image
+                                            x:Name="pointsStorePopupPreview"
+                                            Margin="15"
+                                            Width="125"    
+                                            Height="125"    
+                                        >
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                />
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock
+                                            x:Name="pointsStorePopupFooterLabel"
+                                            Foreground="White"
+                                            FontSize="14"
+                                            Margin="15"
+                                            Text="Приобретите этот анимированный аватар за очки Steam. Анимация всегда воспроизводится в ваших профиле и мини-профиле, а также ненадолго отображается при смене статуса или отправке сообщения в чате Steam."    
+                                        />
+                                        <TextBlock
+                                            x:Name="pointsStorePopupNotPayedLabel"
+                                            FontSize="14"
+                                            Margin="15"
+                                            Text="Для получения этого предмета не хватает 0 очк."    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Средства за этот предмет нельзя вернуть"    
+                                        />
+                                        <StackPanel
+                                            Margin="0 15"
+                                            Orientation="Horizontal"    
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <Button
+                                                x:Name="buyPointsStoreItemBtn"
+                                                Width="125"
+                                                Height="30"
+                                                Margin="15 0"
+                                                Content="Купить"    
+                                                Click="BuyPointsStoreItemHandler"
+                                            />
+                                            <Button
+                                                Width="125"
+                                                Height="30"
+                                                Margin="15 0"
+                                                Content="Отмена"    
+                                                Click="ClosePointsStorePopupHandler"
+                                            />
+                                        </StackPanel>
                                     </StackPanel>
                                 </Popup.Child>
                             </Popup>
@@ -9154,7 +9240,7 @@
                                                     Text="Приобретите фон или смайлик любимой игры, которая у вас уже есть."
                                                     Margin="15"
                                                 />
-                                                <StackPanel
+                                                <WrapPanel
                                                     x:Name="gameSubjects"    
                                                 />
                                             </StackPanel>
@@ -9429,7 +9515,7 @@
                                                         Margin="15"
                                                     />
                                                 </StackPanel>
-                                                <StackPanel
+                                                <WrapPanel
                                                     x:Name="profileShowCases"    
                                                 />
                                             </StackPanel>

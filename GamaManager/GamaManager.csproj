@@ -298,6 +298,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\CreateTalkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DownloadGameDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -350,6 +354,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\TalkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -393,6 +401,9 @@
     <Compile Include="Dialogs\ChatDialog.xaml.cs">
       <DependentUpon>ChatDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CreateTalkDialog.xaml.cs">
+      <DependentUpon>CreateTalkDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DownloadGameDialog.xaml.cs">
       <DependentUpon>DownloadGameDialog.xaml</DependentUpon>
     </Compile>
@@ -431,6 +442,9 @@
     </Compile>
     <Compile Include="Dialogs\SystemInfoDialog.xaml.cs">
       <DependentUpon>SystemInfoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TalkDialog.xaml.cs">
+      <DependentUpon>TalkDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameIntegrationManager.cs" />
     <Compile Include="GamePage.xaml.cs">

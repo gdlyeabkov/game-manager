@@ -1,0 +1,118 @@
+﻿<Window x:Class="GamaManager.Dialogs.CreateTalkDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:GamaManager.Dialogs"
+    mc:Ignorable="d"
+    Title="Создать чат"
+    Height="650"
+    Width="800"
+>
+    <StackPanel>
+        <TextBlock
+            Margin="15 5"
+            FontSize="24"
+            Text="Создать чат"    
+        />
+        <TextBlock
+            Margin="15 5"
+            FontSize="16"
+            Text="Название чата"    
+        />
+        <TextBox
+            x:Name="chatNameBox"
+            HorizontalAlignment="Left"
+            Margin="15 5"
+            Width="500"
+            Height="30"
+            TextChanged="DetectChatNameHandler"
+        />
+        <TextBlock
+            Margin="15 5"
+            FontSize="16"
+            Text="Пригласить в групповой чат"    
+        />
+        <ScrollViewer>
+            <StackPanel
+                x:Name="requests"
+                Margin="0 5"
+                Orientation="Horizontal"
+            />
+        </ScrollViewer>
+        <TextBox
+            x:Name="filterBox"
+            Margin="15 5"
+            HorizontalAlignment="Left"
+            Width="500"
+            Height="30"
+            VerticalContentAlignment="Center"
+            TextChanged="FilterFriendsHandler"
+        >
+            <TextBox.Resources>
+                <VisualBrush
+                    x:Key="hinttext"
+                    AlignmentX="Left"
+                    Stretch="None"
+                    TileMode="None"
+                >
+                    <VisualBrush.Visual>
+                        <DockPanel>
+                            <TextBlock
+                                Height="30"
+                                Width="500"
+                                Text="Начните набирать имя..."
+                                Foreground="#959595"
+                                Background="White"
+                            />
+                        </DockPanel>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </TextBox.Resources>
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="Width" Value="Auto" />
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <ScrollViewer>
+            <StackPanel
+                x:Name="friends"
+                Height="250"
+            />
+        </ScrollViewer>
+        <StackPanel
+            Margin="0 10"
+            Orientation="Horizontal"    
+        >
+            <Button
+                x:Name="createTalkBtn"
+                Width="275"
+                Height="30"
+                Margin="15 0"
+                IsEnabled="False"
+                Content="Создать чат"
+                Click="CreateTalkHandler"
+            />
+            <Button
+                Width="275"
+                Height="30"
+                Margin="15 0"
+                Content="Отмена"
+                Click="CancelHandler"
+            />
+
+        </StackPanel>
+    </StackPanel>
+</Window>

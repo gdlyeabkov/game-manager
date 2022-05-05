@@ -1,4 +1,5 @@
-﻿using SocketIOClient;
+﻿using MaterialDesignThemes.Wpf;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,6 +46,7 @@ namespace GamaManager.Dialogs
         {
             InitializeConstants(client, mainControl);
             GetFriends(currentUserId, "");
+            GetTalks();
         }
 
         public void InitializeConstants(SocketIO client, TabControl mainControl)
@@ -797,6 +799,81 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        private void OpenCreateTalkDialogHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenCreateTalkDialog();
+        }
+
+        public void OpenCreateTalkDialog ()
+        {
+            Dialogs.CreateTalkDialog dialog = new Dialogs.CreateTalkDialog(currentUserId);
+            dialog.Show();
+        }
+
+        public void GetTalks ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        TalksResponseInfo myobj = (TalksResponseInfo)js.Deserialize(objText, typeof(TalksResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Talk> totalTalks = myobj.talks;
+                            foreach (Talk talk in totalTalks)
+                            {
+                                string talkId = talk._id;
+                                string talkTitle = talk.title;
+                                StackPanel totalTalksItem = new StackPanel();
+                                totalTalksItem.Height = 50;
+                                totalTalksItem.Orientation = Orientation.Horizontal;
+                                PackIcon totalTalksItemIcon = new PackIcon();
+                                totalTalksItemIcon.Width = 24;
+                                totalTalksItemIcon.Height = 24;
+                                totalTalksItemIcon.Kind = PackIconKind.Circle;
+                                totalTalksItem.Children.Add(totalTalksItemIcon);
+                                TextBlock totalTalksItemLabel = new TextBlock();
+                                totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
+                                totalTalksItemLabel.Text = talkTitle;
+                                totalTalksItem.Children.Add(totalTalksItemLabel);
+                                totalTalksItem.DataContext = talkId;
+                                totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
+                                talks.Children.Add(totalTalksItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenTalkHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel talk = ((StackPanel)(sender));
+            object talkData = talk.DataContext;
+            string talkId = ((string)(talkData));
+            OpenTalk(talkId);
+        }
+
+        public void OpenTalk (string talkId)
+        {
+            Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId);
+            dialog.Show();
         }
 
     }

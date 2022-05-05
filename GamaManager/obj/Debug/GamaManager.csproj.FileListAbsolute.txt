@@ -847,3 +847,7 @@ C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\UWPHost.dll.config
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AboutManagerDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AboutManagerDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\ImapX.dll
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTalkDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTalkDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkDialog.baml

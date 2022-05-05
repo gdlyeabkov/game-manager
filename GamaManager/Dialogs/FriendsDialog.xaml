@@ -51,13 +51,35 @@
                 />
             </StackPanel>
             <ScrollViewer
-                Height="600"    
+                Height="575"    
             >
                 <StackPanel
                     x:Name="friends"    
-                >
-
-                </StackPanel>
+                />
+            </ScrollViewer>
+            <StackPanel
+                Orientation="Horizontal"
+                Margin="0 15"
+                Height="35"    
+            >
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                    Text="Групповые чаты"    
+                />
+                <materialDesign:PackIcon
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                    Kind="Add"
+                    Width="24"
+                    Height="24"
+                    MouseLeftButtonUp="OpenCreateTalkDialogHandler"
+                />
+            </StackPanel>
+            <ScrollViewer>
+                <StackPanel
+                    x:Name="talks"
+                />
             </ScrollViewer>
         </StackPanel>
     </DockPanel>

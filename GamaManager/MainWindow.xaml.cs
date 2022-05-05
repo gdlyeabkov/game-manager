@@ -15332,7 +15332,7 @@ namespace GamaManager
 
     class TalkRelationsResponseInfo
     {
-        public TalkRelation relations;
+        public List<TalkRelation> relations;
         public string status;
     }
 

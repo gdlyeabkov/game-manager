@@ -395,7 +395,7 @@ namespace GamaManager.Dialogs
             chatControl.SelectedIndex = activeChatIndex;
         }
 
-        private void SendMsgHandler(object sender, RoutedEventArgs e)
+        private void SendsgHandler(object sender, RoutedEventArgs e)
         {
             string newMsgContent = inputChatMsgBox.Text;
             SendMsg(newMsgContent);

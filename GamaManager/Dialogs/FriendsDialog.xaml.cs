@@ -831,25 +831,55 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             List<Talk> totalTalks = myobj.talks;
-                            foreach (Talk talk in totalTalks)
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                             {
-                                string talkId = talk._id;
-                                string talkTitle = talk.title;
-                                StackPanel totalTalksItem = new StackPanel();
-                                totalTalksItem.Height = 50;
-                                totalTalksItem.Orientation = Orientation.Horizontal;
-                                PackIcon totalTalksItemIcon = new PackIcon();
-                                totalTalksItemIcon.Width = 24;
-                                totalTalksItemIcon.Height = 24;
-                                totalTalksItemIcon.Kind = PackIconKind.Circle;
-                                totalTalksItem.Children.Add(totalTalksItemIcon);
-                                TextBlock totalTalksItemLabel = new TextBlock();
-                                totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
-                                totalTalksItemLabel.Text = talkTitle;
-                                totalTalksItem.Children.Add(totalTalksItemLabel);
-                                totalTalksItem.DataContext = talkId;
-                                totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
-                                talks.Children.Add(totalTalksItem);
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    TalkRelationsResponseInfo myInnerObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRelation> relations = myInnerObj.relations;
+                                        foreach (Talk talk in totalTalks)
+                                        {
+                                            string talkId = talk._id;
+                                            string talkTitle = talk.title;
+                                            bool isMyTalk = false;
+                                            List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
+                                            {
+                                                string relationTalk = relation.talk;
+                                                string relationUser = relation.user;
+                                                bool isCurrentTalk = relationTalk == talkId;
+                                                bool isCurrentUser = relationUser == currentUserId;
+                                                bool isLocalMyTalk = isCurrentUser && isCurrentTalk;
+                                                return isLocalMyTalk;
+                                            }).ToList<TalkRelation>();
+                                            int countResults = results.Count;
+                                            isMyTalk = countResults >= 1;
+                                            StackPanel totalTalksItem = new StackPanel();
+                                            totalTalksItem.Height = 50;
+                                            totalTalksItem.Orientation = Orientation.Horizontal;
+                                            PackIcon totalTalksItemIcon = new PackIcon();
+                                            totalTalksItemIcon.Width = 24;
+                                            totalTalksItemIcon.Height = 24;
+                                            totalTalksItemIcon.Kind = PackIconKind.Circle;
+                                            totalTalksItem.Children.Add(totalTalksItemIcon);
+                                            TextBlock totalTalksItemLabel = new TextBlock();
+                                            totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
+                                            totalTalksItemLabel.Text = talkTitle;
+                                            totalTalksItem.Children.Add(totalTalksItemLabel);
+                                            totalTalksItem.DataContext = talkId;
+                                            totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
+                                            talks.Children.Add(totalTalksItem);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -872,7 +902,7 @@ namespace GamaManager.Dialogs
 
         public void OpenTalk (string talkId)
         {
-            Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId);
+            Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
             dialog.Show();
         }
 

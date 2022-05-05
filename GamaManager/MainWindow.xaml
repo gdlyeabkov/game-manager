@@ -3293,6 +3293,7 @@
                                                         VerticalAlignment="Center"    
                                                     >
                                                         <TextBlock
+                                                            FontSize="16"
                                                             Text="Стол сообщества"    
                                                         />
                                                         <TextBlock
@@ -3304,10 +3305,12 @@
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <TextBlock
+                                                    x:Name="totalIconsCompletedLabel"
                                                     Text="Выполнено 0 из 0 заданий сообщества&#10;Office ware game manager. Завершите еще 0, чтобы получить&#10;значок 0 уровня"    
                                                 />
                                             </StackPanel>
                                             <WrapPanel
+                                                x:Name="icons"
                                                 Width="500"    
                                             >
                                                 <materialDesign:PackIcon
@@ -3484,9 +3487,10 @@
                                                 Margin="25"    
                                             >
                                                 <TextBlock
+                                                    x:Name="notCompletedIconsLabel"
                                                     TextAlignment="Right"
                                                     HorizontalAlignment="Right"
-                                                    Text="Заданий&#10;осталось: 13"    
+                                                    Text="Заданий&#10;осталось: 0"    
                                                 />
                                             </StackPanel>
                                         </DockPanel>
@@ -3833,7 +3837,17 @@
                                                 <Separator
                                                     Margin="15 5"
                                                 />
-                                                
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    VerticalAlignment="Center"
+                                                    Text="С этим аккаунтом не связаны никакие способы оплаты."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    VerticalAlignment="Center"
+                                                    Text="Добавить способ оплаты на этот аккаунт"    
+                                                    MouseLeftButtonUp="OpenAddPaymentVariantHandler"
+                                                />
                                                 <TextBlock
                                                     Margin="15 10"
                                                     Text="Изменить настройки магазина"    
@@ -3857,7 +3871,7 @@
                                                     Foreground="SkyBlue"
                                                     Text="Настройки эл. почты"    
                                                     Margin="15"
-                                                    MouseLeftButtonUp="OpenUpdateEmailHandler"
+                                                    MouseLeftButtonUp="OpenEmailSettingsHandler"
                                                 />
                                                 <StackPanel
                                                     Orientation="Horizontal"    
@@ -3865,10 +3879,10 @@
                                                     <TextBlock
                                                         Text="Статус"    
                                                         Margin="15"
-                                                        MouseLeftButtonUp="OpenUpdateEmailHandler"
                                                     />
                                                     <TextBlock
-                                                        Text="Подтвержден"    
+                                                        x:Name="emailConfirmedLabel"
+                                                        Text="Не подтвержден"    
                                                         Margin="15"
                                                         MouseLeftButtonUp="OpenUpdateEmailHandler"
                                                     />
@@ -8807,6 +8821,20 @@
                         <StackPanel
                             Background="Red"    
                         >
+                            <Popup
+                                x:Name="pointsStorePopup"
+                                Width="500"
+                                Height="500"
+                                StaysOpen="False"
+                            >
+                                <Popup.Child>
+                                    <StackPanel
+                                        Background="Gray"    
+                                    >
+                                        
+                                    </StackPanel>
+                                </Popup.Child>
+                            </Popup>
                             <TabControl
                                 x:Name="pointsStoreControl"    
                             >
@@ -10784,7 +10812,7 @@ E. Что произойдет, если положение Пункта 11 бу
                                                 />
                                                 <CheckBox
                                                     Margin="0 5"    
-                                                    Content=" Мой профиль в сети, скриншоты и достижения"    
+                                                    Content="Мой профиль в сети, скриншоты и достижения"    
                                                 />
                                             </StackPanel>
                                             <Button
@@ -11570,6 +11598,284 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Примечание: Steam подтвердит изменение номера телефона по СМС. Взимается стандартная плата,&#10;установленная вашим оператором."    
                             />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Главная > Аккаунт > Настройки рассылки"    
+                                Margin="15"
+                            />
+                            <TextBlock
+                                FontSize="20"
+                                Text="НАСТРОЙКИ РАССЫЛКИ"    
+                                Margin="15"
+                            />
+                            <Separator
+                              Margin="15"  
+                            />
+                            <TextBlock
+                                x:Name="emailSettingsLoginLabel"
+                                FontSize="20"
+                                Text="НАСТРОЙКИ РАССЫЛКИ ДЛЯ ПОЧТЫ:"    
+                                Margin="15"
+                            />
+                            <StackPanel
+                                Margin="15"
+                                Background="Gray"
+                            >
+                                <RadioButton
+                                    x:Name="notificationsEnabledCheckBox"
+                                    IsChecked="True"
+                                    Margin="15"
+                                    Content="Уведомлять меня по почте, когда:"    
+                                    Checked="AcceptEmailSubsHandler"
+                                />
+                                <StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsProductFromWantListWithDiscountCheckBox"
+                                            Margin="15"
+                                            Content="Товар из вашего списка желаемого получил скидку."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsProductFromWantListUpdateAcccessCheckBox"
+                                            Margin="15"
+                                            Content=" Товар из моего списка желаемого стал доступен в раннем доступе или полноценно, либо вышел из раннего доступа."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsProductFromSubsOrFavoritesUpdateAcccessCheckBox"
+                                            Margin="15"
+                                            Content="Продукт на который вы были подписаны или добавили в избранное,&#10;стал доступен в раннем доступе или полноценно, либо вышел из раннего доступа."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsProductFromDeveloperUpdateAcccessCheckBox"
+                                            Margin="15"
+                                            Content="Продукт от издателя или разработчика из моих подписок вышел полностью / в&#10;раннем доступе / из раннего доступа."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsStartYearlyDiscountCheckBox"
+                                            Margin="15"
+                                            Content="Начинается ежегодная акция."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsGroupUpdateGameReviewCheckBox"
+                                            Margin="15"
+                                            Content="Ваша группа в Office ware game manager получила на обзор копию игры или программы."    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsUpdateIconCheckBox"
+                                            Margin="15"
+                                            Content="Я получаю награду сообщества Office ware game manager"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="LightGray"
+                                        Margin="15"
+                                    >
+                                        <CheckBox
+                                            x:Name="notificationsUpdateGamesCheckBox"
+                                            Margin="15"
+                                        >
+                                            <CheckBox.Content>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Text="Уведомления о событиях отдельных игр"    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Иногда Steam отправляет уведомления о событиях в отдельных играх из вашей библиотеки&#10;или подписок. Вы можете отказаться от уведомлений отдельной игры, нажав «Скрыть» на её&#10;странице в магазине, либо добавив её в список ниже, либо нажав на ссылку для отказа от&#10;подписки."    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Скрыто продуктов: 0. Их список можно просмотреть здесь."    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Вы отказались получать письма о нескольких играх (0), а также о нескольких разработчиках,&#10;издателях или сериях игр (0)."    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Список этих игр, разработчиков, издателей и серий можно посмотреть здесь."    
+                                                    />
+                                                </StackPanel>
+                                            </CheckBox.Content>
+                                        </CheckBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <RadioButton
+                                    x:Name="notificationsDisabledCheckBox"
+                                    Margin="15"
+                                    Content="Полностью отказаться от рекламной почтовой рассылки"    
+                                    Checked="RejectEmailSubsHandler"
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                Margin="15"
+                                Text="Вы по-прежнему будете получать по почте квитанции за совершенные покупки, коды доступа Steam Guard&#10;и другие уведомления, касающиеся аккаунта."    
+                            />
+                            <Button
+                                HorizontalAlignment="Right"
+                                Margin="15"
+                                Width="125"
+                                Height="30"
+                                Content="Сохранить"    
+                                Click="SaveEmailSettigsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel
+                                Margin="15"
+                                Orientation="Horizontal"    
+                            >
+                                <StackPanel
+                                    Margin="15"
+                                >
+                                    <TextBlock
+                                        FontSize="16"
+                                        Margin="15"
+                                        Text="ОБНОВИТЬ СОХРАНЁННЫЙ МЕТОД ОПЛАТЫ"    
+                                    />
+                                    <StackPanel
+                                        Background="Gray"    
+                                    >
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Выберите способ оплаты из используемых ранее, либо введите информацию о новом способе&#10;для последующих покупок и платежей по подпискам."    
+                                        />
+                                        <ComboBox
+                                            VerticalContentAlignment="Center"
+                                            SelectedIndex="0"
+                                            HorizontalAlignment="Left"
+                                            Margin="15"
+                                            Width="175"
+                                            Height="30"
+                                        >
+                                            <ComboBoxItem
+                                                Content="Visa"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="MasterCard"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Amerian Express"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Мир"    
+                                            />
+                                        </ComboBox>
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="В данный момент покупка с помощью выбранного способа оплаты невозможна.&#10;Приносим извинения за доставленные неудобства."    
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel
+                                    Background="Gray"    
+                                >
+                                    <TextBlock
+                                        FontSize="16"
+                                        Margin="15"
+                                        Text="СПОСОБЫ ОПЛАТЫ"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Мы принимаем следующие безопасные способы оплаты:"    
+                                    />
+                                    <StackPanel
+                                        Margin="0 15"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <materialDesign:PackIcon
+                                            Kind="Card"
+                                            Width="25"
+                                            Height="25"
+                                            Margin="15 0"
+                                        />
+                                        <materialDesign:PackIcon
+                                            Kind="Card"
+                                            Width="25"
+                                            Height="25"
+                                            Margin="15 0"
+                                        />
+                                        <materialDesign:PackIcon
+                                            Kind="Card"
+                                            Width="25"
+                                            Height="25"
+                                            Margin="15 0"
+                                        />
+                                        <materialDesign:PackIcon
+                                            Kind="Card"
+                                            Width="25"
+                                            Height="25"
+                                            Margin="15 0"
+                                        />
+                                    </StackPanel>
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Предоставляемые вами при оплате сведения&#10;защищены по технологии Secure Socket Layer&#10;(SSL), имеющей цифровой сертификат."    
+                                    />
+                                </StackPanel>
+                            </StackPanel>                            
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

@@ -1557,7 +1557,8 @@ namespace GamaManager
             GetExperiments();
             GetAccountSettings();
             InitMail();
-            GetFamilyView(); /**/
+            GetFamilyView();
+            GetIcons();/**/
         }
 
         public void GetFamilyView ()
@@ -3013,6 +3014,7 @@ namespace GamaManager
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             Settings currentSettings = loadedContent.settings;
                             List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -3028,7 +3030,8 @@ namespace GamaManager
                                     games = currentGames,
                                     friends = updatedFriends,
                                     settings = currentSettings,
-                                    collections = currentCollections
+                                    collections = currentCollections,
+                                    notifications = currentNotifications
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                                 mainControl.DataContext = currentUserId;
@@ -3222,6 +3225,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> updatedCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -3255,7 +3259,8 @@ namespace GamaManager
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = updatedCollections
+                collections = updatedCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -3549,6 +3554,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -3581,7 +3587,8 @@ namespace GamaManager
                     games = updatedGames,
                     friends = currentFriends,
                     settings = currentSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetGameCollections();
@@ -3633,6 +3640,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             foreach (Game updatedGame in updatedGames)
             {
                 string updatedGameName = updatedGame.name;
@@ -3658,7 +3666,8 @@ namespace GamaManager
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -4889,6 +4898,7 @@ namespace GamaManager
                             List<Game> currentGames = loadedContent.games;
                             Settings currentSettings = loadedContent.settings;
                             List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = 0; i < updatedFriendsCount; i++)
@@ -4907,7 +4917,8 @@ namespace GamaManager
                                 games = currentGames,
                                 friends = updatedFriends,
                                 settings = currentSettings,
-                                collections = currentCollections
+                                collections = currentCollections,
+                                notifications = currentNotifications
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -6088,6 +6099,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -6103,7 +6115,8 @@ namespace GamaManager
                     games = updatedGames,
                     friends = currentFriends,
                     settings = currentSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications
                 });
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
@@ -6169,7 +6182,18 @@ namespace GamaManager
                         familyViewCode = "",
                         familyViewGames = new List<string>()
                     },
-                    collections = new List<string>() { }
+                    collections = new List<string>() { },
+                    notifications = new Notifications() {
+                        isNotificationsEnabled = true,
+                        notificationsProductFromWantListWithDiscount = true,
+                        notificationsProductFromWantListUpdateAcccess = true,
+                        notificationsProductFromSubsOrFavoritesUpdateAcccess = true,
+                        notificationsProductFromDeveloperUpdateAcccess = true,
+                        notificationsStartYearlyDiscount = true,
+                        notificationsGroupUpdateGameReview = true,
+                        notificationsUpdateIcon = true,
+                        notificationsUpdateGames = true
+                    }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6370,6 +6394,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -6412,7 +6437,8 @@ namespace GamaManager
                     games = updatedGames,
                     friends = currentFriends,
                     settings = currentSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6495,7 +6521,7 @@ namespace GamaManager
         }
 
 
-        public void GameSuccessDownloaded(string id)
+        public void GameSuccessDownloaded (string id)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -6514,6 +6540,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -6537,7 +6564,8 @@ namespace GamaManager
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
@@ -6583,6 +6611,161 @@ namespace GamaManager
             {
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
+            }
+
+            int countInstalledGames = updatedGames.Count;
+            bool isAddIconForInstalledGames = countInstalledGames >= 2;
+            if (isAddIconForInstalledGames)
+            {
+                bool isAlreadyExists = false;
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IconRelationsResponseInfo myobj = (IconRelationsResponseInfo)js.Deserialize(objText, typeof(IconRelationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<IconRelation> relations = myobj.relations;
+                            List<IconRelation> sameIcons = relations.Where<IconRelation>((IconRelation relation) =>
+                            {
+                                string userId = relation.user;
+                                string iconId = relation.icon;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/get/?id=" + iconId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        IconResponseInfo myInnerObj = (IconResponseInfo)js.Deserialize(objText, typeof(IconResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            Icon icon = myInnerObj.icon;
+                                            string title = icon.title;
+                                            bool isMyRelation = userId == currentUserId;
+                                            bool isRelationForInstalledGames = title == "Игроман";
+                                            isAlreadyExists = isMyRelation && isRelationForInstalledGames;
+                                        }
+                                    }
+                                }
+                                return isAlreadyExists;
+                            }).ToList<IconRelation>();
+                            int sameIconsCount = sameIcons.Count;
+                            bool isResultsNotFound = sameIconsCount <= 0;
+                            if (isResultsNotFound)
+                            {
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all");
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        IconsResponseInfo myInnerObj = (IconsResponseInfo)js.Deserialize(objText, typeof(IconsResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<Icon> icons = myInnerObj.icons;
+                                            List<Icon> results = icons.Where<Icon>((Icon icon) =>
+                                            {
+                                                string title = icon.title;
+                                                bool isRelationForInstalledGames = title == "Игроман";
+                                                return isRelationForInstalledGames;
+                                            }).ToList<Icon>();
+                                            int resultsCount = results.Count;
+                                            bool isHaveResults = resultsCount >= 1;
+                                            if (isHaveResults)
+                                            {
+                                                Icon result = results[0];
+                                                string resultId = result._id;
+                                                string desc = result.desc;
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/add/?id=" + resultId + @"&user=" + currentUserId);
+                                                nestedWebRequest.Method = "GET";
+                                                nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                {
+                                                    using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = nestedReader.ReadToEnd();
+                                                        UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myNestedObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            bool isNotificationsEnabled = currentNotifications.notificationsUpdateIcon;
+                                                            if (isNotificationsEnabled)
+                                                            {
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                                innerNestedWebRequest.Method = "GET";
+                                                                innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                {
+                                                                    using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                    {
+                                                                        js = new JavaScriptSerializer();
+                                                                        objText = innerNestedReader.ReadToEnd();
+                                                                        UserResponseInfo myInnerNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                        status = myInnerNestedObj.status;
+                                                                        isOkStatus = status == "OK";
+                                                                        if (isOkStatus)
+                                                                        {
+                                                                            User user = myInnerNestedObj.user;
+                                                                            string email = user.login;
+                                                                            try
+                                                                            {
+                                                                                MailMessage message = new MailMessage();
+                                                                                SmtpClient smtp = new SmtpClient();
+                                                                                message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                                                                                message.To.Add(new System.Net.Mail.MailAddress(email));
+                                                                                string subjectBoxContent = @"Уведомления Office ware game manager";
+                                                                                message.Subject = subjectBoxContent;
+                                                                                message.IsBodyHtml = true; //to make message body as html  
+                                                                                string messageBodyBoxContent = "<h3>Здравствуйте, " + email + "!</h3><p>Вы получили значок \"Игроман\"</p><p>Описание: " + desc + "</p>";
+                                                                                message.Body = messageBodyBoxContent;
+                                                                                smtp.Port = 587;
+                                                                                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                                                                                smtp.EnableSsl = true;
+                                                                                smtp.UseDefaultCredentials = false;
+                                                                                smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                                                                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                                                                smtp.Send(message);
+                                                                            }
+                                                                            catch (Exception)
+                                                                            {
+                                                                                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            GetIcons();
+                                                            MessageBox.Show("Вы получили значок \"Игроман\"", "Внимание");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
         }
@@ -6754,7 +6937,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
-
+            Notifications currentNotifications = loadedContent.notifications;
             List<Game> results = updatedGames.Where((Game someGame) =>
             {
 
@@ -6858,7 +7041,8 @@ namespace GamaManager
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;
@@ -6923,6 +7107,7 @@ namespace GamaManager
             }
             else if (isAboutAccount)
             {
+                GetAccountSettings();
                 mainControl.SelectedIndex = 15;
             }
             else if (isExit)
@@ -6933,9 +7118,99 @@ namespace GamaManager
             {
                 OpenStoreSettings();
             }
-            else if (isStoreSettings)
+            else if (isWallet)
             {
                 OpenIncreaseAmount();
+            }
+            ResetMenu();
+        }
+
+        public void GetIcons ()
+        {
+            icons.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IconsResponseInfo myobj = (IconsResponseInfo)js.Deserialize(objText, typeof(IconsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Icon> totalIcons = myobj.icons;
+                            foreach (Icon totalIconsItem in totalIcons)
+                            {
+                                string id = totalIconsItem._id;
+                                string title = totalIconsItem.title;
+                                /*PackIcon icon = new PackIcon();
+                                icon.Kind = PackIconKind.Circle;
+                                icon.Width = 50;
+                                icon.Height = 50;
+                                icon.Margin = new Thickness(10);
+                                icon.ToolTip = title;*/
+                                Ellipse icon = new Ellipse();
+                                icon.Width = 50;
+                                icon.Height = 50;
+                                icon.Margin = new Thickness(10);
+                                icon.ToolTip = title;
+                                Uri src = new Uri("http://localhost:4000/api/icon/photo/?id=" + id);
+                                BitmapImage iconBrushSrc = new BitmapImage(src);
+                                ImageBrush iconBrush = new ImageBrush(iconBrushSrc);
+                                icon.Fill = iconBrush;
+                                icons.Children.Add(icon);
+                            }
+                            int totalIconsCount = totalIcons.Count;
+                            string rawtotalIconsCount = totalIconsCount.ToString();
+                            string newLine = Environment.NewLine;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    IconRelationsResponseInfo myInnerObj = (IconRelationsResponseInfo)js.Deserialize(objText, typeof(IconRelationsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<IconRelation> relations = myInnerObj.relations;
+                                        List<IconRelation> myIconRelations = relations.Where<IconRelation>((IconRelation relation) =>
+                                        {
+                                            string userId = relation.user;
+                                            bool isMyIconRelation = userId == currentUserId;
+                                            return isMyIconRelation;
+                                        }).ToList<IconRelation>();
+                                        int myIconRelationsCount = myIconRelations.Count;
+                                        string rawMyIconRelationsCount = myIconRelationsCount.ToString();
+                                        int leftIconsCount = totalIconsCount - myIconRelationsCount;
+                                        string rawLeftIconsCount = leftIconsCount.ToString();
+                                        int iconLevel = myIconRelationsCount + 1;
+                                        string rawIconLevel = iconLevel.ToString();
+                                        string totalIconsCompletedLabelContent = @"Выполнено " + rawMyIconRelationsCount + " из " + rawtotalIconsCount + @" заданий сообщества " + newLine + "Office ware game manager. Завершите еще 0, чтобы получить" + newLine + "значок " + rawIconLevel + " уровня";
+                                        totalIconsCompletedLabel.Text = totalIconsCompletedLabelContent;
+                                        string notCompletedIconsLabelContent = @"Заданий" + newLine + "осталось: " + rawLeftIconsCount;
+                                        notCompletedIconsLabel.Text = notCompletedIconsLabelContent;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -7324,6 +7599,7 @@ namespace GamaManager
                                         Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
                                         List<string> currentCollections = loadedContent.collections;
+                                        Notifications currentNotifications = loadedContent.notifications; 
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -7341,7 +7617,8 @@ namespace GamaManager
                                             games = currentGames,
                                             friends = updatedFriends,
                                             settings = currentSettings,
-                                            collections = currentCollections
+                                            collections = currentCollections,
+                                            notifications = currentNotifications
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         GetFriendsSettings();
@@ -7658,6 +7935,7 @@ namespace GamaManager
                                         Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
                                         List<string> currentCollections = loadedContent.collections;
+                                        Notifications currentNotifications = loadedContent.notifications; 
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -7675,7 +7953,8 @@ namespace GamaManager
                                             games = currentGames,
                                             friends = updatedFriends,
                                             settings = currentSettings,
-                                            collections = currentCollections
+                                            collections = currentCollections,
+                                            notifications = currentNotifications
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -7898,6 +8177,7 @@ namespace GamaManager
                 libraryMenu.SelectedIndex = 0;
                 communityMenu.SelectedIndex = 0;
                 profileMenu.SelectedIndex = 0;
+                userMenu.SelectedIndex = 0;
             }
         }
 
@@ -8486,6 +8766,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications; 
             foreach (StackPanel profileTheme in profileThemes.Children)
             {
                 bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
@@ -8504,7 +8785,8 @@ namespace GamaManager
                         games = currentGames,
                         friends = currentFriends,
                         settings = updatedSettings,
-                        collections = currentCollections
+                        collections = currentCollections,
+                        notifications = currentNotifications
                     });
                     File.WriteAllText(saveDataFilePath, savedContent);
                     break;
@@ -9115,25 +9397,32 @@ namespace GamaManager
 
         public void DecreaseUserToStats()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
-            webRequest.Method = "GET";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+            try {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-
-                    string status = myobj.status;
-                    bool isErrorStatus = status == "Error";
-                    if (isErrorStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                        string status = myobj.status;
+                        bool isErrorStatus = status == "Error";
+                        if (isErrorStatus)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        }
                     }
                 }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -10477,6 +10766,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string gameName = game.name;
@@ -10496,7 +10786,8 @@ namespace GamaManager
                     games = updatedGames,
                     friends = currentFriends,
                     settings = currentSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -10690,12 +10981,21 @@ namespace GamaManager
                             User user = myobj.user;
                             string country = user.country;
                             int amount = user.amount;
+                            bool isEmailConfirmed = user.isEmailConfirmed;
                             string accountSettingsCountryLabelContent = "Страна: " + country;
                             accountSettingsCountryLabel.Text = accountSettingsCountryLabelContent;
                             string rawAmount = amount.ToString();
                             string amountMeasure = "руб.";
                             string accountSettingsAmountLabelContent = rawAmount + " " + amountMeasure;
                             accountSettingsAmountLabel.Text = accountSettingsAmountLabelContent;
+                            if (isEmailConfirmed)
+                            {
+                                emailConfirmedLabel.Text = "Подтвержден";
+                            }
+                            else
+                            {
+                                emailConfirmedLabel.Text = "Не подтвержден";
+                            }
                         }
                     }
                 }
@@ -10871,6 +11171,7 @@ namespace GamaManager
                                             List<FriendSettings> updatedFriends = loadedContent.friends;
                                             Settings currentSettings = loadedContent.settings;
                                             List<string> currentCollections = loadedContent.collections;
+                                            Notifications currentNotifications = loadedContent.notifications;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -10886,7 +11187,8 @@ namespace GamaManager
                                                     games = currentGames,
                                                     friends = updatedFriends,
                                                     settings = currentSettings,
-                                                    collections = currentCollections
+                                                    collections = currentCollections,
+                                                    notifications = currentNotifications
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                                 GetOnlineFriends();
@@ -10948,6 +11250,7 @@ namespace GamaManager
                                             List<FriendSettings> updatedFriends = loadedContent.friends;
                                             Settings currentSettings = loadedContent.settings;
                                             List<string> currentCollections = loadedContent.collections;
+                                            Notifications currentNotifications = loadedContent.notifications;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -10963,7 +11266,8 @@ namespace GamaManager
                                                     games = currentGames,
                                                     friends = updatedFriends,
                                                     settings = currentSettings,
-                                                    collections = currentCollections
+                                                    collections = currentCollections,
+                                                    notifications = currentNotifications
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                             }
@@ -11986,6 +12290,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -11998,7 +12303,8 @@ namespace GamaManager
                 games = currentGames,
                 friends = currentFriends,
                 settings = updatedSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();
@@ -12048,7 +12354,6 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         mainControl.SelectedIndex = 36;
-
                                         try
                                         {
                                             MailMessage message = new MailMessage();
@@ -12072,7 +12377,6 @@ namespace GamaManager
                                         {
                                             MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
                                         }
-
                                     }
                                 }
                             }
@@ -12603,6 +12907,7 @@ namespace GamaManager
                 List<FriendSettings> currentFriends = loadedContent.friends;
                 Settings updatedSettings = loadedContent.settings;
                 List<string> currentCollections = loadedContent.collections;
+                Notifications currentNotifications = loadedContent.notifications;
                 updatedSettings.familyView = true;
                 string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
                 updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -12633,7 +12938,8 @@ namespace GamaManager
                     games = currentGames,
                     friends = currentFriends,
                     settings = updatedSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFamilyView();
@@ -12738,6 +13044,7 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             updatedSettings.familyView = false;
             string familyViewPinCodeBoxContent = "";
             updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -12746,7 +13053,8 @@ namespace GamaManager
                 games = currentGames,
                 friends = currentFriends,
                 settings = updatedSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetFamilyView();
@@ -12947,6 +13255,163 @@ namespace GamaManager
             phoneBox.Text = "";
         }
 
+        private void OpenEmailSettingsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenEmailSettings();
+        }
+
+        public void OpenEmailSettings ()
+        {
+            GetEmailSettings();
+            mainControl.SelectedIndex = 47;
+        }
+
+        public void GetEmailSettings ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string email = user.login;
+                            string emailSettingsLoginLabelContent = "НАСТРОЙКИ РАССЫЛКИ ДЛЯ " + email + ":";
+                            emailSettingsLoginLabel.Text = emailSettingsLoginLabelContent;
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            Notifications currentNotifications = loadedContent.notifications;
+                            bool isNotificationsEnabled = currentNotifications.isNotificationsEnabled;
+                            if (isNotificationsEnabled)
+                            {
+                                notificationsEnabledCheckBox.IsChecked = isNotificationsEnabled;
+                            }
+                            else
+                            {
+                                bool isNotificationsDisabled = !isNotificationsEnabled;
+                                notificationsDisabledCheckBox.IsChecked = isNotificationsDisabled;
+                            }
+                            notificationsProductFromWantListWithDiscountCheckBox.IsChecked = currentNotifications.notificationsProductFromWantListWithDiscount;
+                            notificationsProductFromWantListUpdateAcccessCheckBox.IsChecked = currentNotifications.notificationsProductFromWantListUpdateAcccess;
+                            notificationsProductFromSubsOrFavoritesUpdateAcccessCheckBox.IsChecked = currentNotifications.notificationsProductFromSubsOrFavoritesUpdateAcccess;
+                            notificationsProductFromDeveloperUpdateAcccessCheckBox.IsChecked = currentNotifications.notificationsProductFromDeveloperUpdateAcccess;
+                            notificationsStartYearlyDiscountCheckBox.IsChecked = currentNotifications.notificationsStartYearlyDiscount;
+                            notificationsGroupUpdateGameReviewCheckBox.IsChecked = currentNotifications.notificationsGroupUpdateGameReview;
+                            notificationsUpdateIconCheckBox.IsChecked = currentNotifications.notificationsUpdateIcon;
+                            notificationsUpdateGamesCheckBox.IsChecked = currentNotifications.notificationsUpdateGames;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void RejectEmailSubsHandler (object sender, RoutedEventArgs e)
+        {
+            RejectEmailSubs();
+        }
+
+        public void RejectEmailSubs ()
+        {
+            if (isAppInit)
+            {
+                notificationsProductFromWantListWithDiscountCheckBox.IsEnabled = false;
+                notificationsProductFromWantListUpdateAcccessCheckBox.IsEnabled = false;
+                notificationsProductFromSubsOrFavoritesUpdateAcccessCheckBox.IsEnabled = false;
+                notificationsProductFromDeveloperUpdateAcccessCheckBox.IsEnabled = false;
+                notificationsStartYearlyDiscountCheckBox.IsEnabled = false;
+                notificationsGroupUpdateGameReviewCheckBox.IsEnabled = false;
+                notificationsUpdateIconCheckBox.IsEnabled = false;
+                notificationsUpdateGamesCheckBox.IsEnabled = false;
+            }
+        }
+
+        private void AcceptEmailSubsHandler (object sender, RoutedEventArgs e)
+        {
+            AcceptEmailSubs();
+        }
+
+        public void AcceptEmailSubs()
+        {
+            if (isAppInit)
+            {
+                notificationsProductFromWantListWithDiscountCheckBox.IsEnabled = true;
+                notificationsProductFromWantListUpdateAcccessCheckBox.IsEnabled = true;
+                notificationsProductFromSubsOrFavoritesUpdateAcccessCheckBox.IsEnabled = true;
+                notificationsProductFromDeveloperUpdateAcccessCheckBox.IsEnabled = true;
+                notificationsStartYearlyDiscountCheckBox.IsEnabled = true;
+                notificationsGroupUpdateGameReviewCheckBox.IsEnabled = true;
+                notificationsUpdateIconCheckBox.IsEnabled = true;
+                notificationsUpdateGamesCheckBox.IsEnabled = true;
+            }
+        }
+
+        private void SaveEmailSettigsHandler(object sender, RoutedEventArgs e)
+        {
+            SaveEmailSettigs();
+        }
+
+        public void SaveEmailSettigs ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications updatedNotifications = loadedContent.notifications;
+            updatedNotifications.isNotificationsEnabled = ((bool)(notificationsEnabledCheckBox.IsChecked));
+            updatedNotifications.notificationsProductFromWantListWithDiscount = ((bool)(notificationsProductFromWantListWithDiscountCheckBox.IsChecked));
+            updatedNotifications.notificationsProductFromWantListUpdateAcccess = ((bool)(notificationsProductFromWantListUpdateAcccessCheckBox.IsChecked));
+            updatedNotifications.notificationsProductFromSubsOrFavoritesUpdateAcccess = ((bool)(notificationsProductFromSubsOrFavoritesUpdateAcccessCheckBox.IsChecked));
+            updatedNotifications.notificationsProductFromDeveloperUpdateAcccess = ((bool)(notificationsProductFromDeveloperUpdateAcccessCheckBox.IsChecked));
+            updatedNotifications.notificationsStartYearlyDiscount = ((bool)(notificationsStartYearlyDiscountCheckBox.IsChecked));
+            updatedNotifications.notificationsGroupUpdateGameReview = ((bool)(notificationsGroupUpdateGameReviewCheckBox.IsChecked));
+            updatedNotifications.notificationsUpdateIcon = ((bool)(notificationsUpdateIconCheckBox.IsChecked));
+            updatedNotifications.notificationsUpdateGames = ((bool)(notificationsUpdateGamesCheckBox.IsChecked));
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = currentGames,
+                friends = currentFriends,
+                settings = currentSettings,
+                collections = currentCollections,
+                notifications = updatedNotifications
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+        }
+
+        private void OpenAddPaymentVariantHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenAddPaymentVariant();
+        }
+
+        public void OpenAddPaymentVariant ()
+        {
+            mainControl.SelectedIndex = 48;
+        }
+
     }
 
     class SavedContent
@@ -12955,6 +13420,20 @@ namespace GamaManager
         public List<FriendSettings> friends;
         public Settings settings;
         public List<String> collections;
+        public Notifications notifications;
+    }
+
+    class Notifications
+    {
+        public bool isNotificationsEnabled;
+        public bool notificationsProductFromWantListWithDiscount;
+        public bool notificationsProductFromWantListUpdateAcccess;
+        public bool notificationsProductFromSubsOrFavoritesUpdateAcccess;
+        public bool notificationsProductFromDeveloperUpdateAcccess;
+        public bool notificationsStartYearlyDiscount;
+        public bool notificationsGroupUpdateGameReview;
+        public bool notificationsUpdateIcon;
+        public bool notificationsUpdateGames;
     }
 
     class FriendSettings
@@ -13021,6 +13500,7 @@ namespace GamaManager
         public string commentsSettings;
         public int points;
         public int amount;
+        public bool isEmailConfirmed;
     }
 
     class FriendRequestsResponseInfo
@@ -13379,6 +13859,44 @@ namespace GamaManager
         public string _id;
         public string title;
         public string desc;
+    }
+
+    class IconsResponseInfo
+    {
+        public string status;
+        public List<Icon> icons;
+    }
+
+    class IconResponseInfo
+    {
+        public string status;
+        public Icon icon;
+    }
+
+    class Icon
+    {
+        public string _id;
+        public string title;
+        public string desc;
+    }
+
+    class IconRelationsResponseInfo
+    {
+        public string status;
+        public List<IconRelation> relations;
+    }
+
+    class IconRelationResponseInfo
+    {
+        public string status;
+        public IconRelation relation;
+    }
+
+    class IconRelation
+    {
+        public string icon;
+        public string user;
+        public string date;
     }
 
 }

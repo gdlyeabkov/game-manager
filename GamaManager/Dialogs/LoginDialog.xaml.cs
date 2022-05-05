@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -99,15 +100,35 @@ namespace GamaManager.Dialogs
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-                    
                         RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            // OpenManager(registerLoginFieldContent, registerPasswordFieldContent);
                             string id = myobj.id;
+                            try
+                            {
+                                MailMessage message = new MailMessage();
+                                SmtpClient smtp = new SmtpClient();
+                                message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                                message.To.Add(new System.Net.Mail.MailAddress(registerLoginFieldContent));
+                                string subjectBoxContent = @"Подтверждение аккаунта Office ware game manager";
+                                message.Subject = subjectBoxContent;
+                                message.IsBodyHtml = true; //to make message body as html  
+                                string messageBodyBoxContent = "<h3>Здравствуйте, " + registerLoginFieldContent + "!</h3><p>Подтвердите E-mail вашего аккаунта Office ware game manager</p><a href=\"http://localhost:4000/api/users/email/confirm/?id=" + id + "\">Подтвердить</a>";
+                                message.Body = messageBodyBoxContent;
+                                smtp.Port = 587;
+                                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                                smtp.EnableSsl = true;
+                                smtp.UseDefaultCredentials = false;
+                                smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                smtp.Send(message);
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                            }
                             OpenManager(id);
                         }
                         else

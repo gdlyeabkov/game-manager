@@ -182,6 +182,7 @@ namespace GamaManager.Dialogs
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -261,8 +262,9 @@ namespace GamaManager.Dialogs
                 games = currentGames,
                 friends = currentFriends,
                 settings = updatedSettings,
-                collections = currentCollections
-            });
+                collections = currentCollections,
+                notifications = currentNotifications
+        });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();
         }

@@ -178,6 +178,7 @@ namespace GamaManager.Dialogs
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string localGameName = game.name;
@@ -195,8 +196,9 @@ namespace GamaManager.Dialogs
                     games = updatedGames,
                     friends = currentFriends,
                     settings = currentSettings,
-                    collections = currentCollections
-                });
+                    collections = currentCollections,
+                    notifications = currentNotifications
+            });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
         }

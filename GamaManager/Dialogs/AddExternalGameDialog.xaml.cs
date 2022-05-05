@@ -160,6 +160,7 @@ namespace GamaManager.Dialogs
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
             object gameNameLabelData = path;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -183,7 +184,8 @@ namespace GamaManager.Dialogs
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = currentCollections
+                collections = currentCollections,
+                notifications = currentNotifications
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string gamePath = path;

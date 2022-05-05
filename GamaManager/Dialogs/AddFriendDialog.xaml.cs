@@ -262,6 +262,7 @@ namespace GamaManager.Dialogs
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         Settings currentSettings = loadedContent.settings;
                                         List<string> currentCollections = loadedContent.collections;
+                                        Notifications currentNotifications = loadedContent.notifications;
                                         updatedFriends.Add(new FriendSettings()
                                         {
                                             id = friendId,
@@ -278,7 +279,8 @@ namespace GamaManager.Dialogs
                                             games = currentGames,
                                             friends = updatedFriends,
                                             settings = currentSettings,
-                                            collections = currentCollections
+                                            collections = currentCollections,
+                                            notifications = currentNotifications
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         string eventData = currentUserId + "|" + friendId;

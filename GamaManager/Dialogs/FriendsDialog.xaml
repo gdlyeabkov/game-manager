@@ -51,7 +51,7 @@
                 />
             </StackPanel>
             <ScrollViewer
-                Height="575"    
+                Height="475"    
             >
                 <StackPanel
                     x:Name="friends"    
@@ -76,7 +76,11 @@
                     MouseLeftButtonUp="OpenCreateTalkDialogHandler"
                 />
             </StackPanel>
-            <ScrollViewer>
+            <ScrollViewer
+                x:Name="talksWrap"
+                Visibility="Collapsed"
+                Height="85"    
+            >
                 <StackPanel
                     x:Name="talks"
                 />

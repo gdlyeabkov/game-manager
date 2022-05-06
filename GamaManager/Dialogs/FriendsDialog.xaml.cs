@@ -433,9 +433,7 @@ namespace GamaManager.Dialogs
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -632,6 +630,7 @@ namespace GamaManager.Dialogs
             List<FriendSettings> currentFriends = loadedContent.friends;
             List<FriendSettings> updatedFriends = currentFriends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -646,7 +645,8 @@ namespace GamaManager.Dialogs
                 {
                     games = currentGames,
                     friends = updatedFriends,
-                    settings = currentSettings
+                    settings = currentSettings,
+                    collections = currentCollections
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -814,6 +814,7 @@ namespace GamaManager.Dialogs
 
         public void GetTalks ()
         {
+            talks.Children.Clear();
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
@@ -846,41 +847,127 @@ namespace GamaManager.Dialogs
                                     if (isOkStatus)
                                     {
                                         List<TalkRelation> relations = myInnerObj.relations;
-                                        foreach (Talk talk in totalTalks)
+
+                                        List<TalkRelation> myTalks = relations.Where<TalkRelation>((TalkRelation relation) =>
                                         {
-                                            string talkId = talk._id;
-                                            string talkTitle = talk.title;
-                                            bool isMyTalk = false;
-                                            List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
+                                            string relationTalk = relation.talk;
+                                            string relationUser = relation.user;
+                                            bool isCurrentUser = relationUser == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<TalkRelation>();
+                                        int countMyTalks = myTalks.Count;
+                                        bool isHaveTalks = countMyTalks >= 1;
+                                        if (isHaveTalks)
+                                        {
+                                            talksWrap.Visibility = Visibility.Visible;
+                                            foreach (Talk talk in totalTalks)
                                             {
-                                                string relationTalk = relation.talk;
-                                                string relationUser = relation.user;
-                                                bool isCurrentTalk = relationTalk == talkId;
-                                                bool isCurrentUser = relationUser == currentUserId;
-                                                bool isLocalMyTalk = isCurrentUser && isCurrentTalk;
-                                                return isLocalMyTalk;
-                                            }).ToList<TalkRelation>();
-                                            int countResults = results.Count;
-                                            isMyTalk = countResults >= 1;
-                                            StackPanel totalTalksItem = new StackPanel();
-                                            totalTalksItem.Height = 50;
-                                            totalTalksItem.Orientation = Orientation.Horizontal;
-                                            PackIcon totalTalksItemIcon = new PackIcon();
-                                            totalTalksItemIcon.Width = 24;
-                                            totalTalksItemIcon.Height = 24;
-                                            totalTalksItemIcon.Kind = PackIconKind.Circle;
-                                            totalTalksItem.Children.Add(totalTalksItemIcon);
-                                            TextBlock totalTalksItemLabel = new TextBlock();
-                                            totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
-                                            totalTalksItemLabel.Text = talkTitle;
-                                            totalTalksItem.Children.Add(totalTalksItemLabel);
-                                            totalTalksItem.DataContext = talkId;
-                                            totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
-                                            talks.Children.Add(totalTalksItem);
+                                                string talkId = talk._id;
+                                                string talkTitle = talk.title;
+                                                bool isMyTalk = false;
+                                                List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
+                                                {
+                                                    string relationTalk = relation.talk;
+                                                    string relationUser = relation.user;
+                                                    bool isCurrentTalk = relationTalk == talkId;
+                                                    bool isCurrentUser = relationUser == currentUserId;
+                                                    bool isLocalMyTalk = isCurrentUser && isCurrentTalk;
+                                                    return isLocalMyTalk;
+                                                }).ToList<TalkRelation>();
+                                                int countResults = results.Count;
+                                                isMyTalk = countResults >= 1;
+                                                if (isMyTalk)
+                                                {
+                                                    StackPanel totalTalksItem = new StackPanel();
+                                                    totalTalksItem.Height = 35;
+                                                    totalTalksItem.Orientation = Orientation.Horizontal;
+                                                    PackIcon totalTalksItemIcon = new PackIcon();
+                                                    totalTalksItemIcon.VerticalAlignment = VerticalAlignment.Center;
+                                                    totalTalksItemIcon.Width = 24;
+                                                    totalTalksItemIcon.Height = 24;
+                                                    totalTalksItemIcon.Kind = PackIconKind.Circle;
+                                                    totalTalksItem.Children.Add(totalTalksItemIcon);
+                                                    TextBlock totalTalksItemLabel = new TextBlock();
+                                                    totalTalksItemLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                    totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
+                                                    totalTalksItemLabel.Text = talkTitle;
+                                                    totalTalksItem.Children.Add(totalTalksItemLabel);
+                                                    totalTalksItem.DataContext = talkId;
+                                                    totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
+                                                    talks.Children.Add(totalTalksItem);
+                                                    ContextMenu totalTalksItemContextMenu = new ContextMenu();
+                                                    MenuItem totalTalksItemContextMenuItem = new MenuItem();
+                                                    totalTalksItemContextMenuItem.Header = "Выйти из группового чата";
+                                                    totalTalksItemContextMenuItem.DataContext = talkId;
+                                                    totalTalksItemContextMenuItem.Click += LogoutFromTalkHandler;
+                                                    totalTalksItemContextMenu.Items.Add(totalTalksItemContextMenuItem);
+                                                    totalTalksItemContextMenuItem = new MenuItem();
+                                                    totalTalksItemContextMenuItem.Header = "Добавить в избранное";
+                                                    totalTalksItemContextMenuItem.DataContext = talkId;
+                                                    totalTalksItemContextMenuItem.Click += AddTalkToFavoriteHandler;
+                                                    totalTalksItemContextMenu.Items.Add(totalTalksItemContextMenuItem);
+                                                    totalTalksItem.ContextMenu = totalTalksItemContextMenu;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            talksWrap.Visibility = Visibility.Collapsed;
                                         }
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void AddTalkToFavoriteHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string talkId = ((string)(menuItemData));
+            AddTalkToFavorite(talkId);
+        }
+
+        public void AddTalkToFavorite (string talkId)
+        {
+
+        }
+
+        public void LogoutFromTalkHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string talkId = ((string)(menuItemData));
+            LogoutFromTalk(talkId);
+        }
+
+        public void LogoutFromTalk (string talkId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/delete/?id=" + talkId + @"&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetTalks();
                         }
                     }
                 }
@@ -903,7 +990,13 @@ namespace GamaManager.Dialogs
         public void OpenTalk (string talkId)
         {
             Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+            dialog.Closed += GetTalksHandler;
             dialog.Show();
+        }
+
+        public void GetTalksHandler (object sender, EventArgs e)
+        {
+            GetTalks();
         }
 
     }

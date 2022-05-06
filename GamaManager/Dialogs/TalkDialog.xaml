@@ -36,6 +36,8 @@
                 />
             </StackPanel>
             <StackPanel
+                x:Name="ownerMenu"
+                Visibility="Collapsed"
                 Margin="25 0"
                 Orientation="Horizontal"    
                 HorizontalAlignment="Right"

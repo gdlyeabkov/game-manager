@@ -67,7 +67,22 @@ namespace GamaManager.Dialogs
             this.client = client;
             this.isStartBlink = isStartBlink;
             SetTalkNameLabel();
+            ToggleOwnerMenu();
+        }
 
+        public void ToggleOwnerMenu ()
+        {
+            Talk talk = GetTalkInfo();
+            string owner = talk.owner;
+            bool isOwner = owner == currentUserId;
+            if (isOwner)
+            {
+                ownerMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ownerMenu.Visibility = Visibility.Collapsed;
+            }
         }
 
         public void SetTalkNameLabel()
@@ -135,8 +150,9 @@ namespace GamaManager.Dialogs
                                     if (isMyFriendOnline)
                                     {*/
                                         string currentFriendId = this.talkId;
-                                        // bool isCurrentChat = currentFriendId == userId;
-                                        bool isCurrentChat = currentFriendId == cachedFriendId;
+                                        // bool isCurrentChat = currentFriendId == cachedFriendId;
+                                        bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
+                                        Debugger.Log(0, "debug", Environment.NewLine + "isCurrentChat: " + isCurrentChat.ToString() + Environment.NewLine);
                                         if (isCurrentChat)
                                         {
                                             this.Dispatcher.Invoke(() =>
@@ -425,8 +441,7 @@ namespace GamaManager.Dialogs
                                                 {
                                                     string newMsgUserId = msg.user;
                                                     string newMsgFriendId = msg.friend;
-                                                    // bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == talkId) || (newMsgUserId == talkId && newMsgFriendId == currentUserId);
-                                                    bool isCurrentChatMsg = (newMsgFriendId == talkId);
+                                                    bool isCurrentChatMsg = newMsgFriendId == talkId;
                                                     if (isCurrentChatMsg)
                                                     {
                                                         string senderName = "";
@@ -451,8 +466,9 @@ namespace GamaManager.Dialogs
                                                                 }
                                                             }
                                                         }
-                                                        User friend = myobj.user;
-                                                        string friendName = friend.name;
+                                                        /*User friend = myobj.user;
+                                                        string friendName = friend.name;*/
+                                                        string friendName = senderName;
                                                         ItemCollection chatControlItems = chatControl.Items;
                                                         object rawActiveChat = chatControlItems[activeChatIndex];
                                                         TabItem activeChat = ((TabItem)(rawActiveChat));
@@ -788,11 +804,9 @@ namespace GamaManager.Dialogs
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            if (isOkStatus)
-                            {
 
-                            }
                         }
                     }
                 }

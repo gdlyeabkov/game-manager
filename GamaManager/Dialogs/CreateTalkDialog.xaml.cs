@@ -354,6 +354,8 @@ namespace GamaManager.Dialogs
                         {
                             User user = myobj.user;
                             string email = user.login;
+                            /*
+                             * отправка приглашения на почту
                             MailMessage message = new MailMessage();
                             SmtpClient smtp = new SmtpClient();
                             message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
@@ -370,6 +372,28 @@ namespace GamaManager.Dialogs
                             smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
                             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                             smtp.Send(message);
+                            */
+                            string newMsgType = "link";
+                            // string newMsgCntent = "\"http://localhost:4000/api/talks/relations/add/?id=" + talkId + "&user=" + friendId + "\"";
+                            string newMsgCntent = talkId;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgCntent + "&type=" + newMsgType);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        Cancel();
+                                    }
+                                }
+                            }
                         }
                     }
                 }

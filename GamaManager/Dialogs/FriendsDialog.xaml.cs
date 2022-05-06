@@ -847,7 +847,6 @@ namespace GamaManager.Dialogs
                                     if (isOkStatus)
                                     {
                                         List<TalkRelation> relations = myInnerObj.relations;
-
                                         List<TalkRelation> myTalks = relations.Where<TalkRelation>((TalkRelation relation) =>
                                         {
                                             string relationTalk = relation.talk;

@@ -68,6 +68,124 @@ namespace GamaManager.Dialogs
             this.isStartBlink = isStartBlink;
             SetTalkNameLabel();
             ToggleOwnerMenu();
+            SetUsersCountLabel();
+            GetUsers();
+        }
+
+        public void SetUsersCountLabel ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRelationsResponseInfo myObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkRelation> relations = myObj.relations;
+                            List<TalkRelation> currentTalkUsers = relations.Where<TalkRelation>((TalkRelation relation) =>
+                            {
+                                string localTalkId = relation.talk;
+                                bool isCurrentTalk = talkId == localTalkId;
+                                return isCurrentTalk;
+                            }).ToList<TalkRelation>();
+                            int usersCount = currentTalkUsers.Count;
+                            int countOnlineCurrentTalkUsers = currentTalkUsers.Count((TalkRelation currentTalkUser) =>
+                            {
+                                bool isOnline = false;
+                                string userId = currentTalkUser.user;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string userStatus = user.status;
+                                            isOnline = userStatus == "online";
+                                        }
+                                    }
+                                }
+                                return isOnline;
+                            });
+                            string onlineUsersCountLabelContent = countOnlineCurrentTalkUsers.ToString();
+                            onlineUsersCountLabel.Text = onlineUsersCountLabelContent;
+                            string rawUsersCount = usersCount.ToString();
+                            string usersCountLabelContent = "Участников: " + rawUsersCount;
+                            usersCountLabel.Text = usersCountLabelContent;
+                            /*foreach (TalkRelation currentTalkUser in currentTalkUsers)
+                            {
+                                string userId = currentTalkUser.user;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string userName = user.name;
+                                            string userStatus = user.status;
+                                            StackPanel talkUser = new StackPanel();
+                                            talkUser.Orientation = Orientation.Horizontal;
+                                            talkUser.Height = 50;
+                                            Image talkUserAvatar = new Image();
+                                            talkUserAvatar.Width = 35;
+                                            talkUserAvatar.Height = 35;
+                                            talkUserAvatar.Margin = new Thickness(10);
+                                            talkUserAvatar.BeginInit();
+                                            talkUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                            talkUserAvatar.EndInit();
+                                            talkUserAvatar.ImageFailed += SetDefaultAvatarHandler;
+                                            talkUser.Children.Add(talkUserAvatar);
+                                            StackPanel talkUserAside = new StackPanel();
+                                            TextBlock talkUserNameLabel = new TextBlock();
+                                            talkUserNameLabel.FontSize = 14;
+                                            talkUserNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                            talkUserNameLabel.Text = userName;
+                                            talkUserAside.Children.Add(talkUserNameLabel);
+                                            TextBlock talkUserStatusLabel = new TextBlock();
+                                            talkUserStatusLabel.Margin = new Thickness(0, 5, 0, 5);
+                                            talkUserStatusLabel.Text = userStatus;
+                                            talkUserAside.Children.Add(talkUserStatusLabel);
+                                            talkUser.Children.Add(talkUserAside);
+                                            users.Children.Add(talkUser);
+                                        }
+                                    }
+                                }
+                            }*/
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void ToggleOwnerMenu ()
@@ -392,6 +510,7 @@ namespace GamaManager.Dialogs
             ReceiveMessages();
             GetMsgs();
             InitFlash();
+            this.DataContext = talkId;
         }
 
         public void InitConstants(string currentUserId, string talkId, SocketIO client)
@@ -1170,6 +1289,163 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
             return talk;
+        }
+
+        private void OpenTalkSettingsHandler(object sender, MouseButtonEventArgs e)
+        {
+            OpenTalkSettings();
+        }
+
+        private void OpenTalkNotificationsHandler(object sender, RoutedEventArgs e)
+        {
+            OpenTalkNotifications();
+        }
+
+
+        private void OpenTalkNotifications()
+        {
+            Dialogs.TalkNotificationsDialog dialog = new Dialogs.TalkNotificationsDialog();
+            dialog.Show();
+        }
+
+        private void OpenTalkSettingsHandler(object sender, RoutedEventArgs e)
+        {
+            OpenTalkSettings();
+        }
+
+        private void OpenTalkSettings ()
+        {
+            Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog();
+            dialog.Show();
+        }
+
+        private void SetDefaultAvatarHandler(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image avatar = ((Image)(sender));
+            SetDefaultAvatar(avatar);
+        }
+
+
+        public void SetDefaultAvatar(Image avatar)
+        {
+            avatar.BeginInit();
+            avatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+            avatar.EndInit();
+        }
+
+        private void GetUsersHandler(object sender, TextChangedEventArgs e)
+        {
+            GetUsers();
+        }
+
+        public void GetUsers ()
+        {
+            users.Children.Clear();
+            string keywords = usersBox.Text;
+            string insensitiveCaseKeywords = keywords.ToLower();
+            int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRelationsResponseInfo myObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkRelation> relations = myObj.relations;
+                            List<TalkRelation> currentTalkUsers = relations.Where<TalkRelation>((TalkRelation relation) =>
+                            {
+                                string localTalkId = relation.talk;
+                                bool isCurrentTalk = talkId == localTalkId;
+                                return isCurrentTalk;
+                            }).ToList<TalkRelation>();
+                            foreach (TalkRelation currentTalkUser in currentTalkUsers)
+                            {
+                                string userId = currentTalkUser.user;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string userName = user.name;
+                                            bool isKeywordsMatch = userName.Contains(insensitiveCaseKeywords);
+                                            bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                            bool isAddFriend = isFilterDisabled || isKeywordsMatch;
+                                            if (isAddFriend)
+                                            {
+                                                string userStatus = user.status;
+                                                StackPanel talkUser = new StackPanel();
+                                                talkUser.Orientation = Orientation.Horizontal;
+                                                talkUser.Height = 50;
+                                                Image talkUserAvatar = new Image();
+                                                talkUserAvatar.Width = 35;
+                                                talkUserAvatar.Height = 35;
+                                                talkUserAvatar.Margin = new Thickness(10);
+                                                talkUserAvatar.BeginInit();
+                                                talkUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                talkUserAvatar.EndInit();
+                                                talkUserAvatar.ImageFailed += SetDefaultAvatarHandler;
+                                                talkUser.Children.Add(talkUserAvatar);
+                                                StackPanel talkUserAside = new StackPanel();
+                                                TextBlock talkUserNameLabel = new TextBlock();
+                                                talkUserNameLabel.FontSize = 14;
+                                                talkUserNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                talkUserNameLabel.Text = userName;
+                                                talkUserAside.Children.Add(talkUserNameLabel);
+                                                TextBlock talkUserStatusLabel = new TextBlock();
+                                                talkUserStatusLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                talkUserStatusLabel.Text = userStatus;
+                                                talkUserAside.Children.Add(talkUserStatusLabel);
+                                                talkUser.Children.Add(talkUserAside);
+                                                users.Children.Add(talkUser);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            UIElementCollection filteredUsers = users.Children;
+                            int countUsers = filteredUsers.Count;
+                            string rawCountUsers = countUsers.ToString();
+                            filteredUsersCountLabel.Text = rawCountUsers;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+        }
+
+        private void CreateTextChannelHandler (object sender, MouseButtonEventArgs e)
+        {
+            CreateTextChannel();
+        }
+
+        public void CreateTextChannel ()
+        {
+            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(currentUserId);
+            dialog.Show();
         }
 
     }

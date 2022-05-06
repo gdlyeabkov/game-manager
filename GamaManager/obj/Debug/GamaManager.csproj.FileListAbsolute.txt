@@ -853,3 +853,9 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\InviteTalkDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\InviteTalkDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkNotificationsDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkSettingsDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkNotificationsDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkSettingsDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.baml

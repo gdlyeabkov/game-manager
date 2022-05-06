@@ -9256,9 +9256,7 @@ namespace GamaManager
                             {
                                 JavaScriptSerializer js = new JavaScriptSerializer();
                                 var objText = reader.ReadToEnd();
-
                                 FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-
                                 string status = myobj.status;
                                 bool isOkStatus = status == "OK";
                                 if (isOkStatus)
@@ -9407,6 +9405,187 @@ namespace GamaManager
                                                     this.Close();
                                                 }
                                             });
+                                        }
+                                    }
+
+                                    {
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
+                                        innerWebRequest.Method = "GET";
+                                        innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                        {
+                                            using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = innerReader.ReadToEnd();
+                                                TalksResponseInfo myInnerObj = (TalksResponseInfo)js.Deserialize(objText, typeof(TalksResponseInfo));
+                                                status = myobj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<Talk> totalTalks = myInnerObj.talks;
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                                                    nestedWebRequest.Method = "GET";
+                                                    nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                    {
+                                                        using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = nestedReader.ReadToEnd();
+                                                            TalkRelationsResponseInfo myNestedObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                                                            status = myNestedObj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                List<TalkRelation> relations = myNestedObj.relations;
+                                                                List<TalkRelation> myTalks = relations.Where<TalkRelation>((TalkRelation relation) =>
+                                                                {
+                                                                    string relationTalk = relation.talk;
+                                                                    string relationUser = relation.user;
+                                                                    bool isCurrentUser = relationUser == currentUserId;
+                                                                    return isCurrentUser;
+                                                                }).ToList<TalkRelation>();
+                                                                int countMyTalks = myTalks.Count;
+                                                                bool isHaveTalks = countMyTalks >= 1;
+                                                                if (isHaveTalks)
+                                                                {
+                                                                    Debugger.Log(0, "debug", Environment.NewLine + "Пришло сообщение проверяю беседы " + isHaveTalks.ToString() + Environment.NewLine);
+                                                                    /*foreach (Talk talk in totalTalks)
+                                                                    {
+                                                                        string talkId = talk._id;
+                                                                        bool isMyTalk = false;
+                                                                        List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
+                                                                        {
+                                                                            string relationTalk = relation.talk;
+                                                                            string relationUser = relation.user;
+                                                                            bool isCurrentTalk = relationTalk == talkId;
+                                                                            bool isCurrentUser = relationUser == currentUserId;
+                                                                            bool isLocalMyTalk = isCurrentUser && isCurrentTalk;
+                                                                            return isLocalMyTalk;
+                                                                        }).ToList<TalkRelation>();
+                                                                        int countResults = results.Count;
+                                                                        isMyTalk = countResults >= 1;
+                                                                        if (isMyTalk)
+                                                                        {
+
+                                                                        }
+    {                                                                    }*/
+                                                                    List<string> myTalkIds = new List<string>();
+                                                                    foreach (TalkRelation myTalkRelation in myTalks)
+                                                                    {
+                                                                        string talkId = myTalkRelation.talk;
+                                                                        myTalkIds.Add(talkId);
+                                                                    }
+                                                                    bool isMsgForMe = myTalkIds.Contains(chatId);
+                                                                    if (isMsgForMe)
+                                                                    {
+                                                                        Debugger.Log(0, "debug", Environment.NewLine + "Пришло сообщение из беседы" + Environment.NewLine);
+                                                                        Application.Current.Dispatcher.Invoke(async () =>
+                                                                        {
+
+                                                                            HttpWebRequest innserNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + chatId);
+                                                                            innserNestedWebRequest.Method = "GET";
+                                                                            innserNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                            using (HttpWebResponse innserNestedWebResponse = (HttpWebResponse)innserNestedWebRequest.GetResponse())
+                                                                            {
+                                                                                using (var innserNestedReader = new StreamReader(innserNestedWebResponse.GetResponseStream()))
+                                                                                {
+                                                                                    js = new JavaScriptSerializer();
+                                                                                    objText = innserNestedReader.ReadToEnd();
+                                                                                    TalkResponseInfo myInnserNestedObj = (TalkResponseInfo)js.Deserialize(objText, typeof(TalkResponseInfo));
+                                                                                    status = myInnserNestedObj.status;
+                                                                                    isOkStatus = status == "OK";
+                                                                                    if (isOkStatus)
+                                                                                    {
+                                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                                                        userWebRequest.Method = "GET";
+                                                                                        userWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                        using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
+                                                                                        {
+                                                                                            using (var userReader = new StreamReader(userWebResponse.GetResponseStream()))
+                                                                                            {
+                                                                                                js = new JavaScriptSerializer();
+                                                                                                objText = userReader.ReadToEnd();
+                                                                                                UserResponseInfo myUserObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                                status = myUserObj.status;
+                                                                                                isOkStatus = status == "OK";
+                                                                                                if (isOkStatus)
+                                                                                                {
+                                                                                                    Application localApp = Application.Current;
+                                                                                                    WindowCollection localWindows = localApp.Windows;
+                                                                                                    IEnumerable<Window> myWindows = localWindows.OfType<Window>();
+                                                                                                    int countTalkWindows = myWindows.Count(window =>
+                                                                                                    {
+                                                                                                        string windowTitle = window.Title;
+                                                                                                        bool isTalkWindow = windowTitle == "Беседа";
+                                                                                                        return isTalkWindow;
+                                                                                                    });
+                                                                                                    bool isNotOpenedTalkWindows = countTalkWindows <= 0;
+                                                                                                    bool isMock = true;
+                                                                                                    if (isNotOpenedTalkWindows || isMock)
+                                                                                                    {   User user = myUserObj.user;
+                                                                                                        string userName = user.name;
+                                                                                                        Talk talk = myInnserNestedObj.talk;
+                                                                                                        string talkTitle = talk.title;
+                                                                                                        Popup talkNotification = new Popup();
+                                                                                                        talkNotification.DataContext = chatId;
+                                                                                                        talkNotification.MouseLeftButtonUp += OpenTalkFromPopupHandler;
+                                                                                                        talkNotification.Placement = PlacementMode.Custom;
+                                                                                                        talkNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                                                                        talkNotification.PlacementTarget = this;
+                                                                                                        talkNotification.Width = 225;
+                                                                                                        talkNotification.Height = 275;
+                                                                                                        StackPanel talkNotificationBody = new StackPanel();
+                                                                                                        talkNotificationBody.Background = friendRequestBackground;
+                                                                                                        Image talkNotificationBodySenderAvatar = new Image();
+                                                                                                        talkNotificationBodySenderAvatar.Width = 100;
+                                                                                                        talkNotificationBodySenderAvatar.Height = 100;
+                                                                                                        talkNotificationBodySenderAvatar.BeginInit();
+                                                                                                        Uri talkNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                                                        BitmapImage talkNotificationBodySenderAvatarImg = new BitmapImage(talkNotificationBodySenderAvatarUri);
+                                                                                                        talkNotificationBodySenderAvatar.Source = talkNotificationBodySenderAvatarImg;
+                                                                                                        talkNotificationBodySenderAvatar.EndInit();
+                                                                                                        talkNotificationBody.Children.Add(talkNotificationBodySenderAvatar);
+                                                                                                        TextBlock talkNotificationBodySenderLoginLabel = new TextBlock();
+                                                                                                        talkNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                                                                        talkNotificationBodySenderLoginLabel.Text = userName + " в" + Environment.NewLine + "беседе " + talkTitle + Environment.NewLine + "оставил вам сообщение";
+                                                                                                        talkNotificationBody.Children.Add(talkNotificationBodySenderLoginLabel);
+                                                                                                        talkNotification.Child = talkNotificationBody;
+                                                                                                        friendRequests.Children.Add(talkNotification);
+                                                                                                        talkNotification.IsOpen = true;
+                                                                                                        talkNotification.StaysOpen = false;
+                                                                                                        talkNotification.PopupAnimation = PopupAnimation.Fade;
+                                                                                                        talkNotification.AllowsTransparency = true;
+                                                                                                        DispatcherTimer timer = new DispatcherTimer();
+                                                                                                        timer.Interval = TimeSpan.FromSeconds(3);
+                                                                                                        timer.Tick += delegate
+                                                                                                        {
+                                                                                                            talkNotification.IsOpen = false;
+                                                                                                            timer.Stop();
+                                                                                                        };
+                                                                                                        timer.Start();
+                                                                                                        talkNotifications.Children.Add(talkNotification);
+
+                                                                                                        mainAudio.LoadedBehavior = MediaState.Play;
+                                                                                                        mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
+                                                                                                    
+                                                                                                    }
+
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -9736,6 +9915,43 @@ namespace GamaManager
         {
             Dialogs.PlayerDialog dialog = new Dialogs.PlayerDialog(currentUserId);
             dialog.Show();
+        }
+
+        public void OpenTalkFromPopupHandler (object sender, RoutedEventArgs e)
+        {
+            Popup popup = ((Popup)(sender));
+            object popupData = popup.DataContext;
+            string talkId = ((string)(popupData));
+            OpenTalkFromPopup(talkId, popup);
+        }
+
+        public void OpenTalkFromPopup (string id, Popup popup)
+        {
+            Application app = Application.Current;
+            WindowCollection windows = app.Windows;
+            IEnumerable<Window> myWindows = windows.OfType<Window>();
+            List<Window> chatWindows = myWindows.Where<Window>(window =>
+            {
+                string windowTitle = window.Title;
+                bool isChatWindow = windowTitle == "Беседа";
+                object windowData = window.DataContext;
+                bool isWindowDataExists = windowData != null;
+                bool isChatExists = true;
+                if (isWindowDataExists && isChatWindow)
+                {
+                    string localFriend = ((string)(windowData));
+                    isChatExists = id == localFriend;
+                }
+                return isWindowDataExists && isChatWindow && isChatExists;
+            }).ToList<Window>();
+            int countChatWindows = chatWindows.Count;
+            bool isNotOpenedChatWindows = countChatWindows <= 0;
+            if (isNotOpenedChatWindows)
+            {
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false);
+                dialog.Show();
+                popup.IsOpen = false;
+            }
         }
 
         public void OpenChatFromPopupHandler(object sender, RoutedEventArgs e)
@@ -15352,6 +15568,6 @@ namespace GamaManager
     {
         public string id;
         public string status;
-    }
 
+    }
 }

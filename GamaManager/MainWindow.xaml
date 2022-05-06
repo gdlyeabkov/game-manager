@@ -35,6 +35,10 @@
             Source="/Sounds/notification.wav"
         />
         <StackPanel
+            x:Name="talkNotifications"    
+            DockPanel.Dock="Top"
+        />
+        <StackPanel
             x:Name="friendNotifications"    
             DockPanel.Dock="Top"
         >

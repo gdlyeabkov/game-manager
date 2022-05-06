@@ -15348,4 +15348,10 @@ namespace GamaManager
         public string user;
     }
 
+    class TalkCreateResponseInfo
+    {
+        public string id;
+        public string status;
+    }
+
 }

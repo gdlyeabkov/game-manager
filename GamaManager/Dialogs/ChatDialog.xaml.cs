@@ -691,6 +691,12 @@ namespace GamaManager.Dialogs
             return image;
         }
 
+        private void SendMsgHandler(object sender, RoutedEventArgs e)
+        {
+            string newMsgContent = inputChatMsgBox.Text;
+            SendMsg(newMsgContent);
+        }
+
         async public void SendMsg (string newMsgContent)
         {
             try

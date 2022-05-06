@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:GamaManager.Dialogs"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     Title="Беседа"
     Height="550"
@@ -12,6 +13,57 @@
     GotFocus="StopBlinkWindowHandler"
 >
     <StackPanel>
+        <DockPanel
+            Height="50"    
+        >
+            <StackPanel
+                Margin="25 0"
+                Orientation="Horizontal"    
+            >
+                <materialDesign:PackIcon
+                    Kind="Circle"
+                    Width="24"
+                    Height="24"
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                />
+                <TextBlock
+                    x:Name="talkTitleLabel"
+                    FontSize="16"
+                    Text="Название беседы"
+                    Margin="15 0"
+                    VerticalAlignment="Center"
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="25 0"
+                Orientation="Horizontal"    
+                HorizontalAlignment="Right"
+            >
+                <materialDesign:PackIcon
+                    Kind="Notifications"
+                    Width="24"
+                    Height="24"
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                />
+                <materialDesign:PackIcon
+                    Kind="Invite"
+                    Width="24"
+                    Height="24"
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                    MouseLeftButtonUp="InviteFriendsToTalkHandler"
+                />
+                <materialDesign:PackIcon
+                    Kind="Settings"
+                    Width="24"
+                    Height="24"
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                />
+            </StackPanel>
+        </DockPanel>
         <TabControl
             x:Name="chatControl"    
             Height="375"

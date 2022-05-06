@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -306,11 +307,13 @@ namespace GamaManager.Dialogs
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        TalkCreateResponseInfo myobj = (TalkCreateResponseInfo)js.Deserialize(objText, typeof(TalkCreateResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            string talkId = myobj.id;
+                            SendInvites(talkId);
                             Cancel();
                         }
                     }
@@ -327,6 +330,50 @@ namespace GamaManager.Dialogs
         {
             Image avatar = ((Image)(sender));
             SetDefaultAvatar(avatar);
+        }
+
+        public void SendInvites (string talkId)
+        {
+            foreach (Border request in requests.Children)
+            {
+                object requestData = request.DataContext;
+                string friendId = ((string)(requestData));
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string email = user.login;
+                            MailMessage message = new MailMessage();
+                            SmtpClient smtp = new SmtpClient();
+                            message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                            message.To.Add(new System.Net.Mail.MailAddress(email));
+                            string subjectBoxContent = @"Приглашение в беседу Office ware game manager";
+                            message.Subject = subjectBoxContent;
+                            message.IsBodyHtml = true; //to make message body as html  
+                            string messageBodyBoxContent = "<h3>Здравствуйте, " + email + "!</h3><p>Вам предлагают вступить в беседу \"\"</p><a href=\"http://localhost:4000/api/talks/relations/add/?id=" + talkId + "&user=" + friendId + "\">Вступить</a>\"";
+                            message.Body = messageBodyBoxContent;
+                            smtp.Port = 587;
+                            smtp.Host = "smtp.gmail.com"; //for gmail host  
+                            smtp.EnableSsl = true;
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            smtp.Send(message);
+                        }
+                    }
+                }
+            }
         }
 
 

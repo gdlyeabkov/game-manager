@@ -66,6 +66,15 @@ namespace GamaManager.Dialogs
             this.talkId = talkId;
             this.client = client;
             this.isStartBlink = isStartBlink;
+            SetTalkNameLabel();
+
+        }
+
+        public void SetTalkNameLabel()
+        {
+            Talk talk = GetTalkInfo();
+            string talkTitle = talk.title;
+            talkTitleLabel.Text = talkTitle;
         }
 
         public void InitializeHandler(object sender, RoutedEventArgs e)
@@ -77,8 +86,8 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                // client = new SocketIO("http://localhost:4000/");
-                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
+                client = new SocketIO("http://localhost:4000/");
+                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
                 {
@@ -90,7 +99,7 @@ namespace GamaManager.Dialogs
                     string msgType = result[3];
                     string cachedId = result[4];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
-                    try
+                    /*try
                     {
                         HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                         webRequest.Method = "GET";
@@ -124,27 +133,28 @@ namespace GamaManager.Dialogs
                                     Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
-                                    {
+                                    {*/
                                         string currentFriendId = this.talkId;
-                                        bool isCurrentChat = currentFriendId == userId;
+                                        // bool isCurrentChat = currentFriendId == userId;
+                                        bool isCurrentChat = currentFriendId == cachedFriendId;
                                         if (isCurrentChat)
                                         {
                                             this.Dispatcher.Invoke(() =>
                                             {
                                                 try
                                                 {
-                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + talkId);
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
                                                     innerWebRequest.Method = "GET";
                                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                                     {
                                                         using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                                         {
-                                                            js = new JavaScriptSerializer();
-                                                            objText = innerReader.ReadToEnd();
+                                                            JavaScriptSerializer js = new JavaScriptSerializer();
+                                                            var objText = innerReader.ReadToEnd();
                                                             UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                                            status = myobj.status;
-                                                            isOkStatus = status == "OK";
+                                                            string status = myInnerObj.status;
+                                                            bool isOkStatus = status == "OK";
                                                             if (isOkStatus)
                                                             {
                                                                 User friend = myInnerObj.user;
@@ -230,7 +240,7 @@ namespace GamaManager.Dialogs
                                                 }
                                             });
                                         }
-                                    }
+                                    /*}
                                 }
                             }
                         }
@@ -239,7 +249,7 @@ namespace GamaManager.Dialogs
                     {
                         MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                         this.Close();
-                    }
+                    }*/
                 });
                 client.On("friend_write_msg", async response =>
                 {
@@ -652,6 +662,28 @@ namespace GamaManager.Dialogs
         {
             string newMsgContent = inputChatMsgBox.Text;
             SendMsg(newMsgContent);
+        }
+
+        private void StopBlinkWindowHandler(object sender, RoutedEventArgs e)
+        {
+            StopBlinkWindow();
+        }
+
+        public void StopBlinkWindow()
+        {
+            StopFlashingWindow(this);
+        }
+
+        public void StopFlashingWindow(Window win)
+        {
+            WindowInteropHelper h = new WindowInteropHelper(win);
+            FLASHWINFO info = new FLASHWINFO();
+            info.hwnd = h.Handle;
+            info.cbSize = Convert.ToUInt32(Marshal.SizeOf(info));
+            info.dwFlags = FLASHW_STOP;
+            info.uCount = UInt32.MaxValue;
+            info.dwTimeout = 0;
+            FlashWindowEx(ref info);
         }
 
         async public void SendMsg(string newMsgContent)
@@ -1086,6 +1118,49 @@ namespace GamaManager.Dialogs
             fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
             fs.Close();
             return bytes;
+        }
+
+        private void InviteFriendsToTalkHandler (object sender, MouseButtonEventArgs e)
+        {
+            InviteFriendsToTalk();
+        }
+
+        public void InviteFriendsToTalk ()
+        {
+            Dialogs.InviteTalkDialog dialog = new Dialogs.InviteTalkDialog(currentUserId, talkId);
+            dialog.Show();
+        }
+
+        private Talk GetTalkInfo()
+        {
+            Talk talk = null;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        TalkResponseInfo myobj = (TalkResponseInfo)js.Deserialize(objText, typeof(TalkResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            talk = myobj.talk;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            return talk;
         }
 
     }

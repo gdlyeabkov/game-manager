@@ -996,9 +996,7 @@ namespace GamaManager.Dialogs
                         {
                             JavaScriptSerializer js = new JavaScriptSerializer();
                             string objText = innerReader.ReadToEnd();
-
                             UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                             string status = myobj.status;
                             bool isOkStatus = status == "OK";
                             if (isOkStatus)
@@ -1020,10 +1018,7 @@ namespace GamaManager.Dialogs
                                 newMsgHeaderAvatar.Width = 25;
                                 newMsgHeaderAvatar.Height = 25;
                                 newMsgHeaderAvatar.BeginInit();
-
-                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                 Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-
                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                 newMsgHeaderAvatar.EndInit();
                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);

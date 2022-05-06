@@ -88,20 +88,22 @@
                     Content="Отправить"
                     Width="85"
                     Height="25"
+                    Click="SendMsgHandler"
                 />
                 <Button
                     Content="Эмоджи"
                     Width="85"
                     Height="25"    
+                    Click="OpenEmojiPopupHandler"
                 />
                 <Popup
-                        x:Name="emojiPopup"
-                        Width="225"
-                        Height="75"
-                        IsOpen="False"
-                        Placement="Mouse"
-                        StaysOpen="False"
-                    >
+                    x:Name="emojiPopup"
+                    Width="225"
+                    Height="75"
+                    IsOpen="False"
+                    Placement="Mouse"
+                    StaysOpen="False"
+                >
                     <Popup.Child>
                         <StackPanel
                                 Background="LightGray"
@@ -112,6 +114,7 @@
                                 Width="35"
                                 Height="35"
                                 DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
                             >
                                 <Image.Source>
                                     <BitmapImage
@@ -124,6 +127,7 @@
                                 Width="35"
                                 Height="35"
                                 DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-21-512.png"
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
                             >
                                 <Image.Source>
                                     <BitmapImage
@@ -136,6 +140,7 @@
                                 Width="35"
                                 Height="35"
                                 DataContext="https://cdn4.iconfinder.com/data/icons/emoji-18/61/14-512.png"    
+                                MouseLeftButtonUp="AddEmojiMsgHandler"
                             >
                                 <Image.Source>
                                     <BitmapImage
@@ -150,6 +155,7 @@
                     Content="Прикрепить"
                     Width="85"
                     Height="25"
+                    Click="AttachFileHandler"
                 />
                 <Button
                     Content="Голосовой чат"

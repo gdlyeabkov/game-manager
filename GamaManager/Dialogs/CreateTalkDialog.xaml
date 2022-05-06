@@ -18,7 +18,7 @@
         <TextBlock
             Margin="15 5"
             FontSize="16"
-            Text="Выбрать из списка друзей"    
+            Text="Название чата"    
         />
         <TextBox
             x:Name="chatNameBox"

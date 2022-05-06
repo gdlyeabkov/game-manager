@@ -15544,6 +15544,7 @@ namespace GamaManager
         public string _id;
         public string title;
         public string owner;
+        public string slogan;
     }
 
     class TalkRelationsResponseInfo

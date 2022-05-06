@@ -192,7 +192,7 @@ namespace GamaManager.Dialogs
         {
             Talk talk = GetTalkInfo();
             string owner = talk.owner;
-            bool isOwner = owner == currentUserId;
+            /*bool isOwner = owner == currentUserId;
             if (isOwner)
             {
                 ownerMenu.Visibility = Visibility.Visible;
@@ -200,7 +200,7 @@ namespace GamaManager.Dialogs
             else
             {
                 ownerMenu.Visibility = Visibility.Collapsed;
-            }
+            }*/
         }
 
         public void SetTalkNameLabel()
@@ -1315,7 +1315,7 @@ namespace GamaManager.Dialogs
 
         private void OpenTalkSettings ()
         {
-            Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog();
+            Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog(currentUserId, talkId);
             dialog.Show();
         }
 
@@ -1444,7 +1444,7 @@ namespace GamaManager.Dialogs
 
         public void CreateTextChannel ()
         {
-            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(currentUserId);
+            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
             dialog.Show();
         }
 

@@ -809,6 +809,7 @@ namespace GamaManager.Dialogs
         public void OpenCreateTalkDialog ()
         {
             Dialogs.CreateTalkDialog dialog = new Dialogs.CreateTalkDialog(currentUserId);
+            dialog.Closed += GetTalksHandler;
             dialog.Show();
         }
 

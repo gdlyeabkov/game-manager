@@ -233,6 +233,7 @@ namespace GamaManager.Dialogs
                     string cachedFriendId = result[2];
                     string msgType = result[3];
                     string cachedId = result[4];
+                    string msgChannelId = result[5];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     /*try
                     {
@@ -298,10 +299,37 @@ namespace GamaManager.Dialogs
                                                                 ItemCollection chatControlItems = chatControl.Items;
                                                                 object rawActiveChat = chatControlItems[activeChatIndex];
                                                                 TabItem activeChat = ((TabItem)(rawActiveChat));
-                                                                object rawActiveChatScrollContent = activeChat.Content;
+
+                                                                /*object rawActiveChatScrollContent = activeChat.Content;
+                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
+
+                                                                object rawActiveChatControlContent = activeChat.Content;
+                                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+
+                                                                // int channelIndex = activeChatControlContent.SelectedIndex;
+                                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                                foreach (TabItem activeChatControlContentItem in activeChatControlContentItems)
+                                                                {
+                                                                    object rawChannelId = activeChatControlContentItem.DataContext;
+                                                                    string channelId = ((string)(rawChannelId));
+                                                                    bool isChannelFound = channelId == msgChannelId;
+                                                                    if (isChannelFound)
+                                                                    {
+                                                                        channelIndex = activeChatControlContentItems.IndexOf(activeChatControlContentItem);
+                                                                        break;
+                                                                    }
+                                                                }
+
+                                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                                object rawActiveChatScrollContent = activeChannel.Content;
                                                                 ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
                                                                 object rawActiveChatContent = activeChatScrollContent.Content;
                                                                 StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
                                                                 StackPanel newMsg = new StackPanel();
                                                                 StackPanel newMsgHeader = new StackPanel();
                                                                 newMsgHeader.Orientation = Orientation.Horizontal;
@@ -1086,7 +1114,22 @@ namespace GamaManager.Dialogs
             {
                 string newMsgType = "text";
                 string newMsgId = "mock";
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId);
+
+                ItemCollection chatControlItems = chatControl.Items;
+                object rawActiveChat = chatControlItems[activeChatIndex];
+                TabItem activeChat = ((TabItem)(rawActiveChat));
+                object rawActiveChatControlContent = activeChat.Content;
+                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                int channelIndex = activeChatControlContent.SelectedIndex;
+                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                object rawChannelId = activeChannel.DataContext;
+                string channelId = ((string)(rawChannelId));
+
+                string newMsgChannel = channelId;
+
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
 
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -1317,7 +1360,10 @@ namespace GamaManager.Dialogs
                     string newMsgId = myobj.id;
                     string ext = myobj.content;
                     Debugger.Log(0, "debug", Environment.NewLine + "id: " + newMsgId + ", ext: " + ext + ", sd: " + sd + Environment.NewLine);
-                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId);
+
+                    string newMsgChannel = channelId;
+
+                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
                 }
                 catch (System.Net.WebSockets.WebSocketException)
                 {
@@ -1449,7 +1495,22 @@ namespace GamaManager.Dialogs
             {
                 string newMsgType = "emoji";
                 string newMsgId = "mock";
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId);
+
+                ItemCollection chatControlItems = chatControl.Items;
+                object rawActiveChat = chatControlItems[activeChatIndex];
+                TabItem activeChat = ((TabItem)(rawActiveChat));
+                object rawActiveChatControlContent = activeChat.Content;
+                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                int channelIndex = activeChatControlContent.SelectedIndex;
+                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                object rawChannelId = activeChannel.DataContext;
+                string channelId = ((string)(rawChannelId));
+
+                string newMsgChannel = channelId;
+
+                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
             }
             catch (System.Net.WebSockets.WebSocketException)
             {

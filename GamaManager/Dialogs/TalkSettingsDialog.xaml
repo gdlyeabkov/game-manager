@@ -273,6 +273,9 @@
                             Text="Канал Home"    
                         />
                     </DockPanel>
+                    <StackPanel
+                        x:Name="channels"    
+                    />
                 </StackPanel>
             </TabItem>
             <TabItem

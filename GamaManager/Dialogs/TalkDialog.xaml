@@ -114,6 +114,7 @@
                     FontSize="14"
                     MouseLeftButtonUp="CreateTextChannelHandler"
                 />
+                <!--
                 <StackPanel
                     Margin="20 5"
                     Orientation="Horizontal"    
@@ -127,6 +128,7 @@
                         Text="Основной"    
                     />
                 </StackPanel>
+                -->
                 <StackPanel
                     x:Name="textChannels"    
                 />

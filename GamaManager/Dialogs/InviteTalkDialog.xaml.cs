@@ -391,7 +391,7 @@ namespace GamaManager.Dialogs
                                 string newMsgType = "link";
                                 // string newMsgCntent = "\"http://localhost:4000/api/talks/relations/add/?id=" + talkId + "&user=" + friendId + "\"";
                                 string newMsgCntent = talkId;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgCntent + "&type=" + newMsgType);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + newMsgCntent + "&type=" + newMsgType + "&channel=mockChannelId");
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())

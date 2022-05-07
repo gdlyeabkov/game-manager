@@ -15580,6 +15580,7 @@ namespace GamaManager
 
     class TalkChannel
     {
+        public string _id;
         public string title;
         public string talk;
     }

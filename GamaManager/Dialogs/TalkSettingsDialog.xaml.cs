@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -117,7 +118,79 @@ namespace GamaManager.Dialogs
 
         public void SelectSettingsItem (int index)
         {
+            bool isChannels = index == 1;
+            if (isChannels)
+            {
+                GetChannels();
+            }
             settingsControl.SelectedIndex = index;
+        }
+
+        public void GetChannels ()
+        {
+            channels.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        TalkChannelsResponseInfo myobj = (TalkChannelsResponseInfo)js.Deserialize(objText, typeof(TalkChannelsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkChannel> totalChannels = myobj.channels;
+                            foreach (TalkChannel channel in totalChannels)
+                            {
+                                string channelTalkId = channel.talk;
+                                string channelId = channel._id;
+                                string channelTitle = channel.title;
+                                bool isMainChannel = channelTitle == "Основной";
+                                bool isNotMainChannel = !isMainChannel;
+                                bool isCurrentTalkChannel = channelTalkId == talkId;
+                                bool isAddChannel = isNotMainChannel && isCurrentTalkChannel;
+                                if (isAddChannel)
+                                {
+                                    DockPanel channelsItem = new DockPanel();
+                                    channelsItem.Background = System.Windows.Media.Brushes.LightGray;
+                                    StackPanel channelsItemAside = new StackPanel();
+                                    channelsItemAside.Orientation = Orientation.Horizontal;
+                                    channelsItemAside.Margin = new Thickness(10);
+                                    PackIcon channelsItemAsideIcon = new PackIcon();
+                                    channelsItemAsideIcon.Margin = new Thickness(15, 0, 15, 0);
+                                    channelsItemAsideIcon.Kind = PackIconKind.FormatAlignLeft;
+                                    channelsItemAside.Children.Add(channelsItemAsideIcon);
+                                    TextBlock channelsItemAsideTitleLabel = new TextBlock();
+                                    channelsItemAsideTitleLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    channelsItemAsideTitleLabel.Text = channelTitle;
+                                    channelsItemAside.Children.Add(channelsItemAsideTitleLabel);
+                                    channelsItem.Children.Add(channelsItemAside);
+                                    TextBlock channelsItemRemoveLabel = new TextBlock();
+                                    channelsItemRemoveLabel.Margin = new Thickness(15, 0, 15, 0);
+                                    channelsItemRemoveLabel.Text = "Удалить";
+                                    channelsItemRemoveLabel.HorizontalAlignment = HorizontalAlignment.Right;
+                                    channelsItemRemoveLabel.VerticalAlignment = VerticalAlignment.Center;
+                                    channelsItem.Children.Add(channelsItemRemoveLabel);
+                                    channels.Children.Add(channelsItem);
+                                    channelsItemRemoveLabel.DataContext = channelId;
+                                    channelsItemRemoveLabel.MouseLeftButtonUp += RemoveChannelHandler;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void SetDefaultAvatarHandler(object sender, ExceptionRoutedEventArgs e)
@@ -251,7 +324,13 @@ namespace GamaManager.Dialogs
         public void CreateTextChannel ()
         {
             Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+            dialog.Closed += GetChannelsHandler;
             dialog.Show();
+        }
+
+        public void GetChannelsHandler (object sender, EventArgs e)
+        {
+            GetChannels();
         }
 
         private void AddIconHandler (object sender, RoutedEventArgs e)
@@ -275,5 +354,44 @@ namespace GamaManager.Dialogs
                 talkAvatar.EndInit();
             }
         }
+
+        public void RemoveChannelHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock label = ((TextBlock)(sender));
+            object labelData = label.DataContext;
+            string id = ((string)(labelData));
+            RemoveChannel(id);
+        }
+
+        public void RemoveChannel (string id)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/remove/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetChannels();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
     }
 }

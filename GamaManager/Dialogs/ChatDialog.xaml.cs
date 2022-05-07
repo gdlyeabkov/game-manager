@@ -1056,7 +1056,7 @@ namespace GamaManager.Dialogs
             MicroDataAvailable(buffer, recordedBytes);
         }
 
-        public void MicroDataAvailable(byte[] buffer, int recordedBytes)
+        public void MicroDataAvailable (byte[] buffer, int recordedBytes)
         {
             if (waveFile != null)
             {

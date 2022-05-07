@@ -833,6 +833,7 @@
                                 Width="175"
                                 Height="30"
                                 Content="Начать проверку микрофона"    
+                                Click="ToggleMicroCheckHandler"
                             />
                         </StackPanel>
                         <TextBlock
@@ -936,7 +937,8 @@
                         <StackPanel
                             x:Name="auxVoiceChatSettings"
                             Visibility="Collapsed"
-                            Background="LightGray"    
+                            Background="LightGray"
+                            Height="100"    
                         >
                             <TextBlock
                                 Margin="15 5"

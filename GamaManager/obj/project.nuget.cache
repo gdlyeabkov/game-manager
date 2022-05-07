@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "/WfpJaTcTQ/AypNp16xU3iPPyVDZywLM5szKW4sC6+2HkHB7raQc45ARfh3/l2DCRj4BrHhWpsgcixWwag6H4Q==",
+  "dgSpecHash": "3YcjrL3TgUL1rz7sbS5W1L3QT/F1PET7zG4HqPF5HQ9YKft1zydMdBKbXYE8mzD6j5zP7lUbHY4R0wj74+CeqQ==",
   "success": true,
   "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ПК\\.nuget\\packages\\extended.wpf.toolkit\\4.3.0\\extended.wpf.toolkit.4.3.0.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\imapx\\2.0.0.18\\imapx.2.0.0.18.nupkg.sha512",
-    "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512"
+    "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\toggleswitch\\1.2.0\\toggleswitch.1.2.0.nupkg.sha512"
   ],
   "logs": []
 }

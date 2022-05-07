@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NAudio.CoreAudioApi;
+using NAudio.Wave;
 
 namespace GamaManager.Dialogs
 {
@@ -23,6 +24,9 @@ namespace GamaManager.Dialogs
 
         public string currentUserId = "";
         public bool isAuxVoiceSettingsOpened = false;
+        public bool isStartMicroCheck = false;
+        public WaveIn waveSource = null;
+        public WaveFileWriter waveFile;
 
         public FriendsSettingsDialog(string currentUserId)
         {
@@ -116,6 +120,85 @@ namespace GamaManager.Dialogs
             {
                 auxVoiceChatSettingsBtnLabel.Text = "Дополнительные настройки";
                 auxVoiceChatSettings.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ToggleMicroCheckHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleMicroCheck();
+        }
+
+        public void ToggleMicroCheck ()
+        {
+            isStartMicroCheck = !isStartMicroCheck;
+            if (isStartMicroCheck)
+            {
+                waveSource = new WaveIn();
+                waveSource.WaveFormat = new WaveFormat(44100, 1);
+                waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(MicroDataAvailableHandler);
+                waveSource.RecordingStopped += new EventHandler<StoppedEventArgs>(MicroRecordingStoppedHandler);
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string tempRecordFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\record.wav";
+                waveFile = new WaveFileWriter(tempRecordFilePath, waveSource.WaveFormat);
+                waveSource.StartRecording();
+            }
+            else
+            {
+                waveSource.StopRecording();
+            }
+        }
+
+        public void MicroRecordingStoppedHandler(object sender, StoppedEventArgs e)
+        {
+            MicroRecordingStopped();
+        }
+
+        public void MicroRecordingStopped()
+        {
+            if (waveSource != null)
+            {
+                waveSource.Dispose();
+                waveSource = null;
+            }
+            if (waveFile != null)
+            {
+                waveFile.Dispose();
+                waveFile = null;
+            }
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string tempRecordFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\record.wav";
+            WaveFileReader waveFileReader = new WaveFileReader(tempRecordFilePath);
+            IWavePlayer player = new WaveOut(WaveCallbackInfo.FunctionCallback());
+            player.Volume = 1.0f;
+            player.Init(waveFileReader);
+            player.Play();
+            while (true)
+            {
+                if (player.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
+                {
+                    player.Dispose();
+                    waveFileReader.Close();
+                    waveFileReader.Dispose();
+                    break;
+                }
+            };
+        }
+
+        public void MicroDataAvailableHandler(object sender, WaveInEventArgs e)
+        {
+            byte[] buffer = e.Buffer;
+            int recordedBytes = e.BytesRecorded;
+            MicroDataAvailable(buffer, recordedBytes);
+        }
+
+        public void MicroDataAvailable (byte[] buffer, int recordedBytes)
+        {
+            if (waveFile != null)
+            {
+                waveFile.Write(buffer, 0, recordedBytes);
+                waveFile.Flush();
             }
         }
 

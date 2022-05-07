@@ -859,3 +859,4 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkNotificationsD
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkSettingsDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\ToggleSwitch.dll

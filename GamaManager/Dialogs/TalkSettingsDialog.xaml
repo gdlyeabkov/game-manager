@@ -330,6 +330,7 @@
                         Margin="0 10"
                     >
                         <TextBox
+                            x:Name="mainLinkBox"
                             Margin="10 5"
                             Height="30"
                             Width="250"
@@ -341,6 +342,7 @@
                             Height="30"
                             Background="SkyBlue"
                             Foreground="White"
+                            Click="CopyLinkHandler"
                         />
                     </StackPanel>
                     <StackPanel
@@ -431,11 +433,16 @@
                         Text="Приглашенные пользователи"
                         FontSize="24"
                     />
+                    <StackPanel
+                        x:Name="invitedUsers"    
+                    />
+                    <!--
                     <TextBlock
                         Margin="15"
                         Text="Никто не приглашён"
                         FontSize="14"
                     />
+                    -->
                 </StackPanel>
             </TabItem>
             <TabItem

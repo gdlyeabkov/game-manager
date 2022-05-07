@@ -534,6 +534,7 @@ namespace GamaManager.Dialogs
                                         {
                                             string channelId = channel._id;
                                             TabItem newChatControlContentItem = new TabItem();
+                                            newChatControlContentItem.Visibility = Visibility.Collapsed;
                                             ScrollViewer newChatScrollContent = new ScrollViewer();
                                             StackPanel newChatContent = new StackPanel();
                                             newChatScrollContent.Content = newChatContent;

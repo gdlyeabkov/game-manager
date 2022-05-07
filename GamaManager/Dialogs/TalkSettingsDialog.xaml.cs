@@ -45,6 +45,111 @@ namespace GamaManager.Dialogs
             SetTalkTitleSlogan();
             SetTalkAvatar();
             SetOwnerInfo();
+            GetInvitedUsers();
+            GenerateLink();
+        }
+
+        public void GetInvitedUsers ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        MsgsResponseInfo myObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Msg> msgs = myObj.msgs;
+                            int countInvites = msgs.Count<Msg>((Msg localMsg) =>
+                            {
+                                string localMsgType = localMsg.type;
+                                bool isLocalLink = localMsgType == "link";
+                                string localMsgContent = localMsg.content;
+                                bool isCurrentTalk = talkId == localMsgContent;
+                                bool isInvite = isLocalLink && isCurrentTalk;
+                                return isInvite;
+                            });
+                            bool isHaveInvites = countInvites >= 1;
+                            invitedUsers.Children.Clear();
+                            if (isHaveInvites)
+                            {
+                                foreach (Msg msg in msgs)
+                                {
+                                    string msgType = msg.type;
+                                    bool isLink = msgType == "link";
+                                    if (isLink)
+                                    {
+                                        string msgContent = msg.content;
+                                        bool isCurrentTalk = talkId == msgContent;
+                                        if (isCurrentTalk)
+                                        {
+                                            string userId = msg.friend;
+                                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                            innerWebRequest.Method = "GET";
+                                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                            {
+                                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = innerReader.ReadToEnd();
+                                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myInnerObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User user = myInnerObj.user;
+                                                        string userName = user.name;
+                                                        StackPanel invitedUser = new StackPanel();
+                                                        invitedUser.Orientation = Orientation.Horizontal;
+                                                        invitedUser.Height = 65;
+                                                        Image invitedUserAvatar = new Image();
+                                                        invitedUserAvatar.Width = 25;
+                                                        invitedUserAvatar.Height = 25;
+                                                        invitedUserAvatar.Margin = new Thickness(15);
+                                                        invitedUserAvatar.VerticalAlignment = VerticalAlignment.Center;
+                                                        invitedUserAvatar.BeginInit();
+                                                        invitedUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar?id=" + userId));
+                                                        invitedUserAvatar.EndInit();
+                                                        invitedUser.Children.Add(invitedUserAvatar);
+                                                        TextBlock invitedUserNameLabel = new TextBlock();
+                                                        invitedUserNameLabel.Margin = new Thickness(15);
+                                                        invitedUserNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                        invitedUserNameLabel.Text = userName;
+                                                        invitedUser.Children.Add(invitedUserNameLabel);
+                                                        invitedUsers.Children.Add(invitedUser);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.Text = "Никто не приглашён";
+                                notFoundLabel.Margin = new Thickness(15);
+                                notFoundLabel.FontSize = 14;
+                                invitedUsers.Children.Add(notFoundLabel);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void SetTalkAvatar ()
@@ -391,6 +496,25 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        private void CopyLinkHandler (object sender, RoutedEventArgs e)
+        {
+            CopyLink();
+            mainLinkBox.Copy();
+        }
+
+        public void CopyLink ()
+        {
+            mainLinkBox.SelectAll();
+            mainLinkBox.Copy();
+            mainLinkBox.Select(0, 0);
+        }
+
+        public void GenerateLink ()
+        {
+            // mainLinkBox.Text = "http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + talkId + "&type=" + "link" + "&channel=mockChannelId";
+            mainLinkBox.Text = "http://localhost:4000/api/talks/relations/add/?id=" + talkId + "&user=" + currentUserId + "&msg=" + "mockMsgId";
         }
 
     }

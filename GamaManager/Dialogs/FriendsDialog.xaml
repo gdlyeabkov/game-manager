@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:p="clr-namespace:GamaManager.Properties"
         Title="{x:Static p:Resources.friendsLabelContent}"
-        Height="800"
+        Height="750"
         Width="450"
         Loaded="InitSocketsHandler"
     >
@@ -183,7 +183,7 @@
                 />
             </StackPanel>
             <ScrollViewer
-                Height="475"    
+                Height="350"    
             >
                 <StackPanel>
                     <StackPanel

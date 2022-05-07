@@ -5,8 +5,117 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GamaManager.Dialogs"
         mc:Ignorable="d"
-        Title="TalkNotificationsDialog" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Уведомления"
+        Height="500"
+        Width="800"
+    >
+    <StackPanel>
+        <TextBlock
+            Margin="15"
+            FontSize="24"
+            Text="Уведомления"    
+        />
+        <TextBlock
+            x:Name="forTalkLabel"
+            Margin="15"
+            FontSize="16"
+            Text="Для чата "    
+        />
+        <TextBlock
+            Margin="15"
+            FontSize="16"
+            Text="Уведомлять меня:"    
+        />
+        <ComboBox
+            Margin="15"
+            Width="275"
+            HorizontalAlignment="Left"
+            VerticalContentAlignment="Center"
+            SelectedIndex="0"    
+        >
+            <ComboBoxItem
+                Content="Обо всех сообщениях"
+            />
+            <ComboBoxItem
+                Content="Только об @all, @online или упоминаниях"
+            />
+            <ComboBoxItem
+                Content="Только об упоминаниях"
+            />
+            <ComboBoxItem
+                Content="Никогда"
+            />
+        </ComboBox>
+        <Separator
+            Margin="15"
+        />
+        <Grid
+            x:Name="channels"
+            Margin="15"
+        >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="50"    
+                />
+                <!--
+                <RowDefinition
+                    Height="50"    
+                />
+                -->
+            </Grid.RowDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Текстовые каналы"
+                Grid.Row="0"
+                Grid.Column="0"
+            />
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Заменять настройки"
+                Grid.Row="0"
+                Grid.Column="1"
+            />
+            <!--
+            <TextBlock
+                Text="Основной"
+                Grid.Row="1"
+                Grid.Column="0"
+            />
+            <ComboBox
+                HorizontalAlignment="Left"
+                SelectedIndex="0"
+                Width="150"
+                Height="30"
+                VerticalContentAlignment="Center"
+                Grid.Row="1"
+                Grid.Column="1"
+            >
+                <ComboBoxItem
+                    Content="Не заменять настройки"
+                />
+                <ComboBoxItem
+                    Content="Обо всех сообщениях"
+                />
+                <ComboBoxItem
+                    Content="Только об @all, @online или упоминаниях"
+                />
+                <ComboBoxItem
+                    Content="Только об упоминаниях"
+                />
+                <ComboBoxItem
+                    Content="Никогда"
+                />
+            </ComboBox>
+            -->
+        </Grid>
+        <TextBlock
+            Margin="15"
+            FontSize="16"
+            Text="Изменить типы уведомлений можно в меню Настройки друзей"    
+        />        
+    </StackPanel>
 </Window>

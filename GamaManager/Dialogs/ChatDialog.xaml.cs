@@ -414,9 +414,7 @@ namespace GamaManager.Dialogs
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         string objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         {
@@ -433,9 +431,7 @@ namespace GamaManager.Dialogs
                                         {
                                             js = new JavaScriptSerializer();
                                             objText = innerReader.ReadToEnd();
-
                                             MsgsResponseInfo myInnerObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
-
                                             status = myInnerObj.status;
                                             isOkStatus = status == "OK";
                                             if (isOkStatus)
@@ -460,9 +456,7 @@ namespace GamaManager.Dialogs
                                                             {
                                                                 js = new JavaScriptSerializer();
                                                                 objText = nestedReader.ReadToEnd();
-
                                                                 UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                                                                 status = myNestedObj.status;
                                                                 isOkStatus = status == "OK";
                                                                 {
@@ -474,7 +468,6 @@ namespace GamaManager.Dialogs
                                                                 }
                                                             }
                                                         }
-
                                                         User friend = myobj.user;
                                                         string friendName = friend.name;
                                                         ItemCollection chatControlItems = chatControl.Items;
@@ -484,7 +477,6 @@ namespace GamaManager.Dialogs
                                                         ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
                                                         object rawActiveChatContent = activeChatScrollContent.Content;
                                                         StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-
                                                         DateTime msgDate = msg.date;
                                                         string rawMsgDate = msgDate.ToLongDateString();
                                                         msgsCursor++;
@@ -528,7 +520,6 @@ namespace GamaManager.Dialogs
                                                                 }
                                                             }
                                                         }
-
                                                         string newMsgType = msg.type;
                                                         string newMsgContent = msg.content;
                                                         string newMsgId = msg._id;
@@ -546,19 +537,13 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            
-                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                                             Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
-
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
                                                             TextBlock newMsgFriendNameLabel = new TextBlock();
                                                             newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            
-                                                            // newMsgFriendNameLabel.Text = friendName;
                                                             newMsgFriendNameLabel.Text = senderName;
-                                                            
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
@@ -571,7 +556,6 @@ namespace GamaManager.Dialogs
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
                                                             activeChatContent.Children.Add(newMsg);
-
                                                         }
                                                         else if (isEmojiMsg)
                                                         {
@@ -583,10 +567,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-
-                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                                             Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
-
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -621,10 +602,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-
-                                                            // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                                             Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
-
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -652,47 +630,119 @@ namespace GamaManager.Dialogs
                                                         }
                                                         else if (isLinkMsg)
                                                         {
-                                                            StackPanel newMsg = new StackPanel();
-                                                            StackPanel newMsgHeader = new StackPanel();
-                                                            newMsgHeader.Orientation = Orientation.Horizontal;
-                                                            Image newMsgHeaderAvatar = new Image();
-                                                            newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgHeaderAvatar.Width = 25;
-                                                            newMsgHeaderAvatar.Height = 25;
-                                                            newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
-                                                            newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                                            newMsgHeaderAvatar.EndInit();
-                                                            newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                                            TextBlock newMsgFriendNameLabel = new TextBlock();
-                                                            newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgFriendNameLabel.Text = senderName;
-                                                            newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                                            TextBlock newMsgDateLabel = new TextBlock();
-                                                            newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgDateLabel.Text = rawMsgDate;
-                                                            newMsgHeader.Children.Add(newMsgDateLabel);
-                                                            newMsg.Children.Add(newMsgHeader);
-                                                            TextBlock newMsgLabel = new TextBlock();
-                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                            newMsgLabel.Text = "Принять приглашение в беседу";
-                                                            newMsg.Children.Add(newMsgLabel);
-                                                            activeChatContent.Children.Add(newMsg);
-                                                            bool isLinkForMe = newMsgFriendId == currentUserId;
-                                                            if (isLinkForMe)
+                                                            nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                                                            nestedWebRequest.Method = "GET";
+                                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
                                                             {
-                                                                // newMsg.DataContext = newMsgContent;
-                                                                newMsgLabel.TextDecorations = TextDecorations.Underline;
-                                                                Dictionary<String, Object> newMsgData = new Dictionary<String, Object>();
-                                                                newMsgData.Add("msg", newMsgId);
-                                                                newMsgData.Add("talk", newMsgContent);
-                                                                newMsgData.Add("label", newMsgLabel);
-                                                                newMsg.DataContext = newMsgData;
-                                                                newMsg.MouseLeftButtonUp += OpenLinkHandler;
-                                                            }
-                                                            else
-                                                            {
-                                                                newMsgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
+                                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                                {
+                                                                    js = new JavaScriptSerializer();
+                                                                    objText = nestedReader.ReadToEnd();
+                                                                    TalkRelationsResponseInfo myNestedObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                                                                    status = myNestedObj.status;
+                                                                    isOkStatus = status == "OK";
+                                                                    if (isOkStatus)
+                                                                    {
+                                                                        List<TalkRelation> relations = myNestedObj.relations;
+                                                                        Talk talk = GetTalkInfo(newMsgContent);
+                                                                        string talkId = talk._id;
+                                                                        List<string> talkRelationIds = new List<string>();
+                                                                        foreach (TalkRelation relation in relations)
+                                                                        {
+                                                                            string relationUserId = relation.user;
+                                                                            string relationTalkId = relation.talk;
+                                                                            bool isCurrentTalk = relationTalkId == talkId;
+                                                                            if (isCurrentTalk)
+                                                                            {
+                                                                                talkRelationIds.Add(relationUserId);
+                                                                            }
+                                                                        }
+                                                                        bool isFriendInTalk = talkRelationIds.Contains(newMsgFriendId);
+                                                                        bool isFriendNotInTalk = !isFriendInTalk;
+                                                                        if (isFriendNotInTalk)
+                                                                        {
+                                                                            // приглашение не принято можно вывести ссылку на добавление в беседу
+                                                                            string talkTitle = talk.title;
+                                                                            StackPanel newMsg = new StackPanel();
+                                                                            StackPanel newMsgHeader = new StackPanel();
+                                                                            newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                            Image newMsgHeaderAvatar = new Image();
+                                                                            newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgHeaderAvatar.Width = 25;
+                                                                            newMsgHeaderAvatar.Height = 25;
+                                                                            newMsgHeaderAvatar.BeginInit();
+                                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
+                                                                            newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                            newMsgHeaderAvatar.EndInit();
+                                                                            newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                            TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                            newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgFriendNameLabel.Text = senderName;
+                                                                            newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                            TextBlock newMsgDateLabel = new TextBlock();
+                                                                            newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgDateLabel.Text = rawMsgDate;
+                                                                            newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                            newMsg.Children.Add(newMsgHeader);
+                                                                            TextBlock newMsgLabel = new TextBlock();
+                                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                            string newMsgLabelContent = "Принять приглашение в беседу " + talkTitle;
+                                                                            newMsgLabel.Text = newMsgLabelContent;
+                                                                            newMsg.Children.Add(newMsgLabel);
+                                                                            activeChatContent.Children.Add(newMsg);
+                                                                            bool isLinkForMe = newMsgFriendId == currentUserId;
+                                                                            if (isLinkForMe)
+                                                                            {
+                                                                                newMsgLabel.TextDecorations = TextDecorations.Underline;
+                                                                                Dictionary<String, Object> newMsgData = new Dictionary<String, Object>();
+                                                                                newMsgData.Add("msg", newMsgId);
+                                                                                newMsgData.Add("talk", newMsgContent);
+                                                                                newMsgData.Add("label", newMsgLabel);
+                                                                                newMsg.DataContext = newMsgData;
+                                                                                newMsg.MouseLeftButtonUp += OpenLinkHandler;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                newMsgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            // приглашение уже принято нужно блокировать ссылки на добавление в беседу, чтобы не создавать лишних связей
+                                                                            string talkTitle = talk.title;
+                                                                            StackPanel newMsg = new StackPanel();
+                                                                            StackPanel newMsgHeader = new StackPanel();
+                                                                            newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                            Image newMsgHeaderAvatar = new Image();
+                                                                            newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgHeaderAvatar.Width = 25;
+                                                                            newMsgHeaderAvatar.Height = 25;
+                                                                            newMsgHeaderAvatar.BeginInit();
+                                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
+                                                                            newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                            newMsgHeaderAvatar.EndInit();
+                                                                            newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                            TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                            newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgFriendNameLabel.Text = senderName;
+                                                                            newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                            TextBlock newMsgDateLabel = new TextBlock();
+                                                                            newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                            newMsgDateLabel.Text = rawMsgDate;
+                                                                            newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                            newMsg.Children.Add(newMsgHeader);
+                                                                            TextBlock newMsgLabel = new TextBlock();
+                                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                            string newMsgLabelContent = "Приглашение в беседу " + talkTitle + " было принято.";
+                                                                            newMsgLabel.Text = newMsgLabelContent;
+                                                                            newMsg.Children.Add(newMsgLabel);
+                                                                            activeChatContent.Children.Add(newMsg);
+                                                                            newMsgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
+                                                                            // вы уже приняли это приглашение
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -722,9 +772,6 @@ namespace GamaManager.Dialogs
         public void OpenLinkHandler (object sender, RoutedEventArgs e)
         {
             StackPanel msg = ((StackPanel)(sender));
-            // object msgData = msg.DataContext;
-            // string talkId = ((string)(msgData));
-            // OpenLink(talkId, msg);
             object rawMsgData = msg.DataContext;
             Dictionary<String, Object> msgData = ((Dictionary<String, Object>)(rawMsgData));
             string msgId = ((string)(msgData["msg"]));
@@ -744,11 +791,11 @@ namespace GamaManager.Dialogs
                 {
                     using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        /*UIElement label = msg.Children[1];
-                        TextBlock msgLabel = ((TextBlock)(label));*/
                         msgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
                         msgLabel.TextDecorations = null;
                         msg.MouseLeftButtonUp -= OpenLinkHandler;
+                        // закрываем окно чтобы в случае если было несколько приглашений в 1 беседу обновить сообщения при следующем открытии окна и заблокировать такие ссылки
+                        this.Close();
                     }
                 }
             }
@@ -1364,6 +1411,38 @@ namespace GamaManager.Dialogs
             fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
             fs.Close();
             return bytes;
+        }
+
+        private Talk GetTalkInfo(string talkId)
+        {
+            Talk talk = null;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        TalkResponseInfo myobj = (TalkResponseInfo)js.Deserialize(objText, typeof(TalkResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            talk = myobj.talk;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            return talk;
         }
 
     }

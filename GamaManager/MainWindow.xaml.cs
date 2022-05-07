@@ -15571,4 +15571,17 @@ namespace GamaManager
         public string status;
 
     }
+
+    class TalkChannelsResponseInfo
+    {
+        public string status;
+        public List<TalkChannel> channels;
+    }
+
+    class TalkChannel
+    {
+        public string title;
+        public string talk;
+    }
+
 }

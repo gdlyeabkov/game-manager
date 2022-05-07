@@ -1304,7 +1304,7 @@ namespace GamaManager.Dialogs
 
         private void OpenTalkNotifications()
         {
-            Dialogs.TalkNotificationsDialog dialog = new Dialogs.TalkNotificationsDialog();
+            Dialogs.TalkNotificationsDialog dialog = new Dialogs.TalkNotificationsDialog(currentUserId, talkId);
             dialog.Show();
         }
 

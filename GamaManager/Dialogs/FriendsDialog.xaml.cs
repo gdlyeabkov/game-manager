@@ -885,6 +885,7 @@ namespace GamaManager.Dialogs
                                                     totalTalksItemIcon.VerticalAlignment = VerticalAlignment.Center;
                                                     totalTalksItemIcon.Width = 24;
                                                     totalTalksItemIcon.Height = 24;
+                                                    totalTalksItemIcon.Margin = new Thickness(15, 0, 15, 0);
                                                     totalTalksItemIcon.Kind = PackIconKind.Circle;
                                                     totalTalksItem.Children.Add(totalTalksItemIcon);
                                                     TextBlock totalTalksItemLabel = new TextBlock();

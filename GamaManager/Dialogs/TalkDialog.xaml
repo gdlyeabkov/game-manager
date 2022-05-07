@@ -167,7 +167,7 @@
                                 <VisualBrush.Visual>
                                     <DockPanel>
                                         <TextBlock
-                                            Height="35"
+                                            Height="25"
                                             Width="750"
                                             Text="Найти по имени"
                                             Foreground="#959595"

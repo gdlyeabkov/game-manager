@@ -99,7 +99,6 @@ namespace GamaManager.Dialogs
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -139,7 +138,12 @@ namespace GamaManager.Dialogs
                                                     foreach (TalkRelation relation in relations)
                                                     {
                                                         string relationUserId = relation.user;
-                                                        talkRelationIds.Add(relationUserId);
+                                                        string relationTalkId = relation.talk;
+                                                        bool isCurrentTalk = relationTalkId == talkId;
+                                                        if (isCurrentTalk)
+                                                        {
+                                                            talkRelationIds.Add(relationUserId);
+                                                        }
                                                     }
                                                     List<Friend> receivedFriends = myInnerObj.friends;
                                                     List<Friend> myFriends = receivedFriends.Where<Friend>((Friend friend) =>

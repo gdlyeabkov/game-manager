@@ -13,6 +13,140 @@
         Loaded="InitSocketsHandler"
     >
     <DockPanel>
+        <StackPanel
+            Orientation="Horizontal"    
+            DockPanel.Dock="Top"
+        >
+            <Image
+                x:Name="userProfileAvatar"
+                Margin="15"
+                Width="50"    
+                Height="50"    
+                VerticalAlignment="Center"
+                ImageFailed="SetDefaultAvatarHandler"
+            >
+                <Image.Source>
+                    <BitmapImage
+                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                    />
+                </Image.Source>
+            </Image>
+            <StackPanel
+                VerticalAlignment="Center"        
+            >
+                <StackPanel
+                    Orientation="Horizontal"    
+                >
+                    <TextBlock
+                        x:Name="userProfileNameLabel"
+                        Margin="15 0"
+                        FontSize="16"
+                        Text="Имя пользователя"    
+                        VerticalAlignment="Center"
+                    />
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Margin="15 0"
+                        Kind="ChevronDown"    
+                        VerticalAlignment="Center"
+                        MouseLeftButtonUp="OpenProfilePopupHandler"
+                    />
+                </StackPanel>
+                <TextBlock
+                    x:Name="userProfileStatusLabel"
+                    Margin="15 0"
+                    Text="Статус пользователя"    
+                />
+            </StackPanel>
+            <materialDesign:PackIcon
+                Width="24"
+                Height="24"
+                Kind="Settings"
+                VerticalAlignment="Bottom"
+                MouseLeftButtonUp="OpenFriendSettingsHandler"
+            />
+            <Popup
+                x:Name="userProfilePopup"
+                StaysOpen="False"
+                Width="450"
+                Height="275"
+                Placement="Mouse"
+            >
+                <Popup.Child>
+                    <StackPanel
+                        Background="LightGray"    
+                    >
+                        <TextBlock
+                            x:Name="onlineStatusLabel"
+                            FontSize="14"
+                            Margin="15 10"
+                            Text="В сети"    
+                            DataContext="online"
+                            MouseLeftButtonUp="SetUserStatusHandler"
+                        />
+                        <TextBlock
+                            FontSize="14"
+                            Margin="15 10"
+                            Text="Нет на месте"    
+                        />
+                        <StackPanel
+                            Margin="15 0"    
+                        >
+                            <TextBlock
+                                x:Name="invisibleStatusLabel"
+                                FontSize="14"
+                                Text="Невидимка"    
+                            />
+                            <TextBlock
+                                Foreground="Gray"
+                                Margin="0 5"
+                                Text="Вы будуте показываться как не в сети, но по-прежнему&#10;сможете пользоваться чатом. друзей и чатов"    
+                            />
+                        </StackPanel>
+                        <StackPanel
+                            Margin="15 0"    
+                        >
+                            <TextBlock
+                                x:Name="offlineStatusLabel"
+                                FontSize="14"
+                                Text="Не в сети"    
+                                DataContext="offline"
+                                MouseLeftButtonUp="SetUserStatusHandler"
+                            />
+                            <TextBlock
+                                Foreground="Gray"
+                                Margin="0 5"
+                                Text="Выйти из системы друзей и чатов"    
+                            />
+                        </StackPanel>
+                        <Separator />
+                        <StackPanel
+                            Orientation="Horizontal"    
+                        >
+                            <CheckBox
+                                VerticalAlignment="Center"
+                                Margin="15 0"
+                                Content="Не беспокоить"
+                            />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Margin="15 10"
+                                Text="Отключает все уведомления в чатах"    
+                            />
+                        </StackPanel>
+                        <Separator />
+                        <TextBlock
+                            FontSize="14"
+                            Margin="15 10"
+                            Text="Изменить имя профиля"    
+                        />
+                    </StackPanel>
+                </Popup.Child>
+            </Popup>
+        </StackPanel>
+        <Separator />
         <ScrollViewer
             x:Name="favoriteFriendsWrap"
             HorizontalScrollBarVisibility="Visible"
@@ -23,9 +157,7 @@
             <StackPanel
                 x:Name="favoriteFriends"    
                 Orientation="Horizontal"    
-            >
-
-            </StackPanel>
+            />
         </ScrollViewer>
         <StackPanel>
             <StackPanel
@@ -53,9 +185,32 @@
             <ScrollViewer
                 Height="475"    
             >
-                <StackPanel
-                    x:Name="friends"    
-                />
+                <StackPanel>
+                    <StackPanel
+                        x:Name="friends"    
+                    />
+                    <TextBlock
+                        x:Name="onlineFriendsCountLabel"
+                        FontSize="14"
+                        Text="Друзья в сети (0)"
+                        Margin="15"
+                    />
+                    <StackPanel
+                        x:Name="onlineFriends"    
+                    />
+                    <Separator
+                        
+                    />
+                    <TextBlock
+                        x:Name="offlineFriendsCountLabel"
+                        Text="Не в сети (0)"
+                        FontSize="14"
+                        Margin="15"
+                    />
+                    <StackPanel
+                        x:Name="offlineFriends"    
+                    />
+                </StackPanel>
             </ScrollViewer>
             <StackPanel
                 Orientation="Horizontal"

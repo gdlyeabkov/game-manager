@@ -47,6 +47,44 @@ namespace GamaManager.Dialogs
             InitializeConstants(client, mainControl);
             GetFriends(currentUserId, "");
             GetTalks();
+            GetUserInfo();
+        }
+
+        public void GetUserInfo ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            string userStatus = user.status;
+                            userProfileAvatar.BeginInit();
+                            userProfileAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            userProfileAvatar.EndInit();
+                            userProfileNameLabel.Text = userName;
+                            userProfileStatusLabel.Text = userStatus;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void InitializeConstants(SocketIO client, TabControl mainControl)
@@ -80,6 +118,8 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            onlineFriends.Children.Clear();
+                            offlineFriends.Children.Clear();
                             friends.Children.Clear();
                             User currentUser = myobj.user;
 
@@ -108,6 +148,8 @@ namespace GamaManager.Dialogs
                                             string friendId = friendInfo.friend;
                                             friendsIds.Add(friendId);
                                         }
+                                        int friendsOnlineCursor = 0;
+                                        int friendsOfflineCursor = 0;
                                         foreach (Friend friendInfo in myFriends)
                                         {
                                             string friendId = friendInfo.friend;
@@ -122,9 +164,7 @@ namespace GamaManager.Dialogs
                                                     {
                                                         js = new JavaScriptSerializer();
                                                         objText = innerReader.ReadToEnd();
-
                                                         myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                                                         status = myobj.status;
                                                         isOkStatus = status == "OK";
                                                         if (isOkStatus)
@@ -142,7 +182,6 @@ namespace GamaManager.Dialogs
                                                                 friendsItem.Height = 35;
                                                                 friendsItem.Orientation = Orientation.Horizontal;
                                                                 Image friendAvatar = new Image();
-
                                                                 Setter effectSetter = new Setter();
                                                                 effectSetter.Property = ScrollViewer.EffectProperty;
                                                                 effectSetter.Value = new DropShadowEffect
@@ -156,7 +195,6 @@ namespace GamaManager.Dialogs
                                                                 Style dropShadowScrollViewerStyle = new Style(typeof(ScrollViewer));
                                                                 dropShadowScrollViewerStyle.Setters.Add(effectSetter);
                                                                 friendAvatar.Resources.Add(typeof(ScrollViewer), dropShadowScrollViewerStyle);
-
                                                                 friendAvatar.Width = 25;
                                                                 friendAvatar.Height = 25;
                                                                 friendAvatar.Margin = new Thickness(5);
@@ -175,16 +213,18 @@ namespace GamaManager.Dialogs
                                                                 friendStatusLabel.Height = 25;
                                                                 friendStatusLabel.VerticalAlignment = VerticalAlignment.Center;
                                                                 friendStatusLabel.Margin = new Thickness(10, 5, 10, 5);
-                                                                friendStatusLabel.Text = "не в сети";
+                                                                friendStatusLabel.Text = "Не в сети";
                                                                 bool isFriendOnline = friendStatus == "online";
                                                                 bool isFriendPlayed = friendStatus == "played";
                                                                 bool isFriendOffline = friendStatus == "offline";
                                                                 friendStatusLabel.Foreground = offlineBrush;
                                                                 if (isFriendOnline)
                                                                 {
+                                                                    friendsOnlineCursor++;
                                                                     friendLoginLabel.Foreground = onlineBrush;
                                                                     friendStatusLabel.Foreground = onlineBrush;
                                                                     friendStatusLabel.Text = "в сети";
+                                                                    onlineFriends.Children.Add(friendsItem);
                                                                 }
                                                                 else if (isFriendPlayed)
                                                                 {
@@ -194,12 +234,14 @@ namespace GamaManager.Dialogs
                                                                 }
                                                                 else if (isFriendOffline)
                                                                 {
+                                                                    friendsOfflineCursor++;
                                                                     friendLoginLabel.Foreground = offlineBrush;
                                                                     friendStatusLabel.Foreground = offlineBrush;
                                                                     friendStatusLabel.Text = "не в сети";
+                                                                    offlineFriends.Children.Add(friendsItem);
                                                                 }
                                                                 friendsItem.Children.Add(friendStatusLabel);
-                                                                friends.Children.Add(friendsItem);
+                                                                // friends.Children.Add(friendsItem);
                                                                 ContextMenu friendsItemContextMenu = new ContextMenu();
                                                                 MenuItem friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Присоединиться к игре";
@@ -227,7 +269,6 @@ namespace GamaManager.Dialogs
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
-
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 bool isFavoriteFriend = false;
@@ -263,13 +304,11 @@ namespace GamaManager.Dialogs
                                                                     innerFriendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
                                                                 }
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
-
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.Header = "Уведомления";
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 innerFriendsItemContextMenuItem.Click += OpenFriendNotificationsDialogHandler;
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
-
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 try
                                                                 {
@@ -305,7 +344,6 @@ namespace GamaManager.Dialogs
                                                                                     innerFriendsItemContextMenuItem.Header = "Добавить в черный список";
                                                                                     innerFriendsItemContextMenuItem.Click += AddToBlackListHandler;
                                                                                 }
-
                                                                             }
                                                                         }
                                                                     }
@@ -392,12 +430,17 @@ namespace GamaManager.Dialogs
                                                                 }
                                                                 favoriteFriends.Children.Add(favoriteFriendsItem);
                                                             }
-
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                        string rawCountOfflineFriends = friendsOfflineCursor.ToString();
+                                        string rawCountOnlineFriends = friendsOnlineCursor.ToString();
+                                        string onlineFriendsCountLabelContent = "Друзья в сети (" + rawCountOnlineFriends + ")";
+                                        onlineFriendsCountLabel.Text = onlineFriendsCountLabelContent;
+                                        string offlineFriendsCountLabelContent = "Друзья не в сети (" + rawCountOfflineFriends + ")";
+                                        offlineFriendsCountLabel.Text = offlineFriendsCountLabelContent;
                                     }
                                 }
                             }
@@ -998,6 +1041,129 @@ namespace GamaManager.Dialogs
         public void GetTalksHandler (object sender, EventArgs e)
         {
             GetTalks();
+        }
+
+        private void SetDefaultAvatarHandler(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image avatar = ((Image)(sender));
+            SetDefaultAvatar (avatar);
+        }
+
+        public void SetDefaultAvatar (Image avatar)
+        {
+            avatar.BeginInit();
+            avatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+            avatar.EndInit();
+        }
+
+        private void OpenFriendSettingsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenFriendSettings();
+        }
+
+        public void OpenFriendSettings ()
+        {
+            Dialogs.FriendsSettingsDialog dialog = new Dialogs.FriendsSettingsDialog(currentUserId);
+            dialog.Show();
+        }
+
+        private void OpenProfilePopupHandler(object sender, MouseButtonEventArgs e)
+        {
+            OpenProfilePopup();
+        }
+
+        public void OpenProfilePopup ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userStatus = user.status;
+                            userProfilePopup.IsOpen = true;
+                            bool isOnline = userStatus == "online";
+                            bool isOffline = userStatus == "offline";
+                            bool isInvisible = userStatus == "";
+                            if (isOnline)
+                            {
+                                onlineStatusLabel.Foreground = System.Windows.Media.Brushes.SkyBlue;
+                                offlineStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                                invisibleStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                            }
+                            else if (isOffline)
+                            {
+                                onlineStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                                offlineStatusLabel.Foreground = System.Windows.Media.Brushes.SkyBlue;
+                                invisibleStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                            }
+                            else if (isInvisible)
+                            {
+                                onlineStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                                offlineStatusLabel.Foreground = System.Windows.Media.Brushes.Black;
+                                invisibleStatusLabel.Foreground = System.Windows.Media.Brushes.SkyBlue;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+        }
+
+        private void SetUserStatusHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock label = ((TextBlock)(sender));
+            object rawStatus = label.DataContext;
+            string status = rawStatus.ToString();
+            SetUserStatus(status);
+        }
+
+        public void SetUserStatus (string userStatus)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/status/set/?id=" + currentUserId + @"&status=" + userStatus);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            // OpenProfilePopup();
+                            userProfilePopup.IsOpen = false;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
     }

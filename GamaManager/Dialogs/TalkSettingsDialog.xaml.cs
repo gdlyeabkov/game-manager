@@ -513,8 +513,7 @@ namespace GamaManager.Dialogs
 
         public void GenerateLink ()
         {
-            // mainLinkBox.Text = "http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + talkId + "&type=" + "link" + "&channel=mockChannelId";
-            mainLinkBox.Text = "http://localhost:4000/api/talks/relations/add/?id=" + talkId + "&user=" + currentUserId + "&msg=" + "mockMsgId";
+            mainLinkBox.Text = "http://localhost:4000/?talk=" + talkId;
         }
 
     }

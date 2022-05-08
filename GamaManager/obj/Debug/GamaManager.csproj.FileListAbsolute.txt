@@ -860,3 +860,9 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\TalkSettingsDialog
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateTextChannelDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\ToggleSwitch.dll
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategoryManagementDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategorySettingsDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateCategoryDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategoryManagementDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategorySettingsDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateCategoryDialog.baml

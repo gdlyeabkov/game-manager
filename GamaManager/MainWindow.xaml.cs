@@ -3015,6 +3015,7 @@ namespace GamaManager
                             Settings currentSettings = loadedContent.settings;
                             List<string> currentCollections = loadedContent.collections;
                             Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories; 
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -3031,7 +3032,8 @@ namespace GamaManager
                                     friends = updatedFriends,
                                     settings = currentSettings,
                                     collections = currentCollections,
-                                    notifications = currentNotifications
+                                    notifications = currentNotifications,
+                                    categories = currentCategories
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                                 mainControl.DataContext = currentUserId;
@@ -3226,6 +3228,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> updatedCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -3260,7 +3263,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = currentSettings,
                 collections = updatedCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -3555,6 +3559,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -3588,7 +3593,8 @@ namespace GamaManager
                     friends = currentFriends,
                     settings = currentSettings,
                     collections = currentCollections,
-                    notifications = currentNotifications
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetGameCollections();
@@ -3641,6 +3647,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             foreach (Game updatedGame in updatedGames)
             {
                 string updatedGameName = updatedGame.name;
@@ -3667,7 +3674,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = currentSettings,
                 collections = currentCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -4902,6 +4910,7 @@ namespace GamaManager
                             Settings currentSettings = loadedContent.settings;
                             List<string> currentCollections = loadedContent.collections;
                             Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = 0; i < updatedFriendsCount; i++)
@@ -4921,7 +4930,8 @@ namespace GamaManager
                                 friends = updatedFriends,
                                 settings = currentSettings,
                                 collections = currentCollections,
-                                notifications = currentNotifications
+                                notifications = currentNotifications,
+                                categories = currentCategories
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -6106,6 +6116,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -6122,7 +6133,8 @@ namespace GamaManager
                     friends = currentFriends,
                     settings = currentSettings,
                     collections = currentCollections,
-                    notifications = currentNotifications
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
@@ -6199,7 +6211,8 @@ namespace GamaManager
                         notificationsGroupUpdateGameReview = true,
                         notificationsUpdateIcon = true,
                         notificationsUpdateGames = true
-                    }
+                    },
+                    categories = new List<string>() { }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6401,6 +6414,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -6444,7 +6458,8 @@ namespace GamaManager
                     friends = currentFriends,
                     settings = currentSettings,
                     collections = currentCollections,
-                    notifications = currentNotifications
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6547,6 +6562,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -6571,7 +6587,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = currentSettings,
                 collections = currentCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
@@ -7051,6 +7068,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<Game> results = updatedGames.Where((Game someGame) =>
             {
 
@@ -7155,7 +7173,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = currentSettings,
                 collections = currentCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;
@@ -7712,7 +7731,8 @@ namespace GamaManager
                                         Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
                                         List<string> currentCollections = loadedContent.collections;
-                                        Notifications currentNotifications = loadedContent.notifications; 
+                                        Notifications currentNotifications = loadedContent.notifications;
+                                        List<string> currentCategories = loadedContent.categories;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -7723,7 +7743,8 @@ namespace GamaManager
                                             isFriendPlayedSound = true,
                                             isFriendSendMsgNotification = true,
                                             isFriendSendMsgSound = true,
-                                            isFavoriteFriend = false
+                                            isFavoriteFriend = false,
+                                            categories = new List<string>()
                                         });
                                         string savedContent = js.Serialize(new SavedContent
                                         {
@@ -7731,7 +7752,8 @@ namespace GamaManager
                                             friends = updatedFriends,
                                             settings = currentSettings,
                                             collections = currentCollections,
-                                            notifications = currentNotifications
+                                            notifications = currentNotifications,
+                                            categories = currentCategories
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         GetFriendsSettings();
@@ -8048,7 +8070,8 @@ namespace GamaManager
                                         Settings currentSettings = loadedContent.settings;
                                         List<FriendSettings> currentFriends = loadedContent.friends;
                                         List<string> currentCollections = loadedContent.collections;
-                                        Notifications currentNotifications = loadedContent.notifications; 
+                                        Notifications currentNotifications = loadedContent.notifications;
+                                        List<string> currentCategories = loadedContent.categories;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -8059,7 +8082,8 @@ namespace GamaManager
                                             isFriendPlayedSound = true,
                                             isFriendSendMsgNotification = true,
                                             isFriendSendMsgSound = true,
-                                            isFavoriteFriend = false
+                                            isFavoriteFriend = false,
+                                            categories = new List<string>()
                                         });
                                         string savedContent = js.Serialize(new SavedContent
                                         {
@@ -8067,7 +8091,8 @@ namespace GamaManager
                                             friends = updatedFriends,
                                             settings = currentSettings,
                                             collections = currentCollections,
-                                            notifications = currentNotifications
+                                            notifications = currentNotifications,
+                                            categories = currentCategories
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -8888,7 +8913,8 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
-            Notifications currentNotifications = loadedContent.notifications; 
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             foreach (StackPanel profileTheme in profileThemes.Children)
             {
                 bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
@@ -8908,7 +8934,8 @@ namespace GamaManager
                         friends = currentFriends,
                         settings = updatedSettings,
                         collections = currentCollections,
-                        notifications = currentNotifications
+                        notifications = currentNotifications,
+                        categories = currentCategories
                     });
                     File.WriteAllText(saveDataFilePath, savedContent);
                     break;
@@ -10777,6 +10804,8 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> updatedCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -10811,7 +10840,9 @@ namespace GamaManager
                 games = updatedGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = updatedCollections
+                collections = updatedCollections,
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -11105,6 +11136,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string gameName = game.name;
@@ -11125,7 +11157,8 @@ namespace GamaManager
                     friends = currentFriends,
                     settings = currentSettings,
                     collections = currentCollections,
-                    notifications = currentNotifications
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -11510,6 +11543,7 @@ namespace GamaManager
                                             Settings currentSettings = loadedContent.settings;
                                             List<string> currentCollections = loadedContent.collections;
                                             Notifications currentNotifications = loadedContent.notifications;
+                                            List<string> currentCategories = loadedContent.categories;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -11526,7 +11560,8 @@ namespace GamaManager
                                                     friends = updatedFriends,
                                                     settings = currentSettings,
                                                     collections = currentCollections,
-                                                    notifications = currentNotifications
+                                                    notifications = currentNotifications,
+                                                    categories = currentCategories
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                                 GetOnlineFriends();
@@ -11589,6 +11624,7 @@ namespace GamaManager
                                             Settings currentSettings = loadedContent.settings;
                                             List<string> currentCollections = loadedContent.collections;
                                             Notifications currentNotifications = loadedContent.notifications;
+                                            List<string> currentCategories = loadedContent.categories; 
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -11605,7 +11641,8 @@ namespace GamaManager
                                                     friends = updatedFriends,
                                                     settings = currentSettings,
                                                     collections = currentCollections,
-                                                    notifications = currentNotifications
+                                                    notifications = currentNotifications,
+                                                    categories = currentCategories
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                             }
@@ -13784,6 +13821,7 @@ namespace GamaManager
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -13797,7 +13835,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = updatedSettings,
                 collections = currentCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();
@@ -14401,6 +14440,7 @@ namespace GamaManager
                 Settings updatedSettings = loadedContent.settings;
                 List<string> currentCollections = loadedContent.collections;
                 Notifications currentNotifications = loadedContent.notifications;
+                List<string> currentCategories = loadedContent.categories; 
                 updatedSettings.familyView = true;
                 string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
                 updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -14432,7 +14472,8 @@ namespace GamaManager
                     friends = currentFriends,
                     settings = updatedSettings,
                     collections = currentCollections,
-                    notifications = currentNotifications
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFamilyView();
@@ -14538,6 +14579,7 @@ namespace GamaManager
             Settings updatedSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories; 
             updatedSettings.familyView = false;
             string familyViewPinCodeBoxContent = "";
             updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -14547,7 +14589,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = updatedSettings,
                 collections = currentCollections,
-                notifications = currentNotifications
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetFamilyView();
@@ -14788,6 +14831,7 @@ namespace GamaManager
                             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                             Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
                             bool isNotificationsEnabled = currentNotifications.isNotificationsEnabled;
                             if (isNotificationsEnabled)
                             {
@@ -14875,6 +14919,7 @@ namespace GamaManager
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
             Notifications updatedNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             updatedNotifications.isNotificationsEnabled = ((bool)(notificationsEnabledCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListWithDiscount = ((bool)(notificationsProductFromWantListWithDiscountCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListUpdateAcccess = ((bool)(notificationsProductFromWantListUpdateAcccessCheckBox.IsChecked));
@@ -14890,7 +14935,8 @@ namespace GamaManager
                 friends = currentFriends,
                 settings = currentSettings,
                 collections = currentCollections,
-                notifications = updatedNotifications
+                notifications = updatedNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
         }
@@ -14996,6 +15042,7 @@ namespace GamaManager
         public Settings settings;
         public List<String> collections;
         public Notifications notifications;
+        public List<String> categories;
     }
 
     class Notifications
@@ -15021,6 +15068,7 @@ namespace GamaManager
         public bool isFriendSendMsgNotification;
         public bool isFriendSendMsgSound;
         public bool isFavoriteFriend;
+        public List<string> categories;
     }
 
     class Game

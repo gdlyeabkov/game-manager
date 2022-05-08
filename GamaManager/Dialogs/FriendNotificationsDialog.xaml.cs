@@ -48,6 +48,9 @@ namespace GamaManager.Dialogs
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> updatedFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -79,7 +82,10 @@ namespace GamaManager.Dialogs
                 {
                     games = currentGames,
                     friends = updatedFriends,
-                    settings = currentSettings
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 MessageBox.Show("Уведомления для друга были обновлены", "Внимание");

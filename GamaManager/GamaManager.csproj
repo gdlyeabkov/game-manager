@@ -294,7 +294,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\CategoryManagementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\CategorySettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ChatDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\CreateCategoryDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -414,8 +426,17 @@
     <Compile Include="Dialogs\AddGroupRequestDialog.xaml.cs">
       <DependentUpon>AddGroupRequestDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CategoryManagementDialog.xaml.cs">
+      <DependentUpon>CategoryManagementDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\CategorySettingsDialog.xaml.cs">
+      <DependentUpon>CategorySettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ChatDialog.xaml.cs">
       <DependentUpon>ChatDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\CreateCategoryDialog.xaml.cs">
+      <DependentUpon>CreateCategoryDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CreateTalkDialog.xaml.cs">
       <DependentUpon>CreateTalkDialog.xaml</DependentUpon>

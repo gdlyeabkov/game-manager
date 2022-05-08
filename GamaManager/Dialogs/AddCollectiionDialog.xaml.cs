@@ -54,6 +54,8 @@ namespace GamaManager.Dialogs
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             List<string> updatedCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             string collectionNameBoxContent = collectionNameBox.Text;
             updatedCollections.Add(collectionNameBoxContent);
             string savedContent = js.Serialize(new SavedContent
@@ -61,7 +63,9 @@ namespace GamaManager.Dialogs
                 games = currentGames,
                 friends = currentFriends,
                 settings = currentSettings,
-                collections = updatedCollections
+                collections = updatedCollections,
+                notifications = currentNotifications,
+                categories = currentCategories
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();

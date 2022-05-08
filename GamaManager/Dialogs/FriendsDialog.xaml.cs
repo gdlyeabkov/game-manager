@@ -48,6 +48,243 @@ namespace GamaManager.Dialogs
             GetFriends(currentUserId, "");
             GetTalks();
             GetUserInfo();
+            GetCategories();
+        }
+
+        public void GetCategories ()
+        {
+            categories.Children.Clear();
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            List<string> currentCategories = loadedContent.categories;
+            foreach (string currentCategory in currentCategories)
+            {
+                StackPanel category = new StackPanel();
+                foreach (FriendSettings friend in currentFriends)
+                {
+                    TextBlock categoryLabel = new TextBlock();
+                    categoryLabel.FontSize = 14;
+                    categoryLabel.Margin = new Thickness(15);
+                    categoryLabel.Text = currentCategory;
+                    categories.Children.Add(categoryLabel);
+                    List<string> friendCategories = friend.categories;
+                    bool isHaveCategory = friendCategories.Contains(currentCategory);
+                    if (isHaveCategory)
+                    {
+                        string friendId = friend.id;
+                        try
+                        {
+                            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest.Method = "GET";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    var objText = reader.ReadToEnd();
+                                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    string status = myobj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User user = myobj.user;
+                                        string friendLogin = user.login;
+                                        string friendStatus = user.status;
+                                        StackPanel friendsItem = new StackPanel();
+                                        friendsItem.Height = 35;
+                                        friendsItem.Orientation = Orientation.Horizontal;
+                                        Image friendAvatar = new Image();
+                                        Setter effectSetter = new Setter();
+                                        effectSetter.Property = ScrollViewer.EffectProperty;
+                                        effectSetter.Value = new DropShadowEffect
+                                        {
+                                            ShadowDepth = 4,
+                                            Direction = 330,
+                                            Color = Colors.Green,
+                                            Opacity = 0.5,
+                                            BlurRadius = 4
+                                        };
+                                        Style dropShadowScrollViewerStyle = new Style(typeof(ScrollViewer));
+                                        dropShadowScrollViewerStyle.Setters.Add(effectSetter);
+                                        friendAvatar.Resources.Add(typeof(ScrollViewer), dropShadowScrollViewerStyle);
+                                        friendAvatar.Width = 25;
+                                        friendAvatar.Height = 25;
+                                        friendAvatar.Margin = new Thickness(5);
+                                        friendAvatar.BeginInit();
+                                        Uri friendAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                        friendAvatar.Source = new BitmapImage(friendAvatarUri);
+                                        friendAvatar.EndInit();
+                                        friendsItem.Children.Add(friendAvatar);
+                                        TextBlock friendLoginLabel = new TextBlock();
+                                        friendLoginLabel.Height = 25;
+                                        friendLoginLabel.VerticalAlignment = VerticalAlignment.Center;
+                                        friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
+                                        friendLoginLabel.Text = friendLogin;
+                                        friendsItem.Children.Add(friendLoginLabel);
+                                        TextBlock friendStatusLabel = new TextBlock();
+                                        friendStatusLabel.Height = 25;
+                                        friendStatusLabel.VerticalAlignment = VerticalAlignment.Center;
+                                        friendStatusLabel.Margin = new Thickness(10, 5, 10, 5);
+                                        friendStatusLabel.Text = "Не в сети";
+                                        bool isFriendOnline = friendStatus == "online";
+                                        bool isFriendPlayed = friendStatus == "played";
+                                        bool isFriendOffline = friendStatus == "offline";
+                                        friendStatusLabel.Foreground = offlineBrush;
+                                        if (isFriendOnline)
+                                        {
+                                            friendLoginLabel.Foreground = onlineBrush;
+                                            friendStatusLabel.Foreground = onlineBrush;
+                                            friendStatusLabel.Text = "в сети";
+                                        }
+                                        else if (isFriendPlayed)
+                                        {
+                                            friendLoginLabel.Foreground = playedBrush;
+                                            friendStatusLabel.Foreground = playedBrush;
+                                            friendStatusLabel.Text = "играет";
+                                        }
+                                        else if (isFriendOffline)
+                                        {
+                                            friendLoginLabel.Foreground = offlineBrush;
+                                            friendStatusLabel.Foreground = offlineBrush;
+                                            friendStatusLabel.Text = "не в сети";
+                                        }
+                                        friendsItem.Children.Add(friendStatusLabel);
+                                        ContextMenu friendsItemContextMenu = new ContextMenu();
+                                        MenuItem friendsItemContextMenuItem = new MenuItem();
+                                        friendsItemContextMenuItem.Header = "Присоединиться к игре";
+                                        friendsItemContextMenuItem.DataContext = friend.id;
+                                        friendsItemContextMenuItem.Click += JoinToGameHandler;
+                                        bool isGameSameForMe = true;
+                                        if (isGameSameForMe)
+                                        {
+                                            friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                        }
+                                        friendsItemContextMenuItem = new MenuItem();
+                                        friendsItemContextMenuItem.Header = "Отправить сообщение";
+                                        friendsItemContextMenuItem.DataContext = friendId;
+                                        friendsItemContextMenuItem.Click += OpenChatHandler;
+                                        friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                        friendsItemContextMenuItem = new MenuItem();
+                                        friendsItemContextMenuItem.Header = "Открыть профиль";
+                                        friendsItemContextMenuItem.DataContext = friendId;
+                                        friendsItemContextMenuItem.Click += OpenFriendProfileHandler;
+                                        friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                        friendsItemContextMenuItem = new MenuItem();
+                                        friendsItemContextMenuItem.Header = "Управление";
+                                        MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                        innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
+                                        innerFriendsItemContextMenuItem.DataContext = friendId;
+                                        innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
+                                        friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                        innerFriendsItemContextMenuItem = new MenuItem();
+                                        innerFriendsItemContextMenuItem.DataContext = friendId;
+                                        bool isFavoriteFriend = false;
+                                        List<Game> currentGames = loadedContent.games;
+                                        List<FriendSettings> updatedFriends = currentFriends;
+                                        List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
+                                        {
+                                            return localFriend.id == friendId;
+                                        }).ToList();
+                                        int countCachedFriends = cachedFriends.Count;
+                                        bool isCachedFriendsExists = countCachedFriends >= 1;
+                                        if (isCachedFriendsExists)
+                                        {
+                                            FriendSettings cachedFriend = cachedFriends[0];
+                                            isFavoriteFriend = cachedFriend.isFavoriteFriend;
+                                        }
+                                        bool isFriendInFavorites = isFavoriteFriend;
+                                        if (isFriendInFavorites)
+                                        {
+                                            innerFriendsItemContextMenuItem.Header = "Удалить из избранных";
+                                            innerFriendsItemContextMenuItem.Click += RemoveFriendFromFavoriteHandler;
+                                        }
+                                        else
+                                        {
+                                            innerFriendsItemContextMenuItem.Header = "Добавить в избранные";
+                                            innerFriendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
+                                        }
+                                        friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
+                                        innerFriendsItemContextMenuItem = new MenuItem();
+                                        innerFriendsItemContextMenuItem.Header = "Добавить в категорию";
+                                        innerFriendsItemContextMenuItem.DataContext = friendId;
+                                        innerFriendsItemContextMenuItem.Click += OpenCategoryDialogHandler;
+                                        friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
+                                        innerFriendsItemContextMenuItem = new MenuItem();
+                                        innerFriendsItemContextMenuItem.Header = "Уведомления";
+                                        innerFriendsItemContextMenuItem.DataContext = friendId;
+                                        innerFriendsItemContextMenuItem.Click += OpenFriendNotificationsDialogHandler;
+                                        friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                        innerFriendsItemContextMenuItem = new MenuItem();
+                                        try
+                                        {
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/all");
+                                            innerNestedWebRequest.Method = "GET";
+                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                            {
+                                                using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = innerNestedReader.ReadToEnd();
+                                                    BlackListRelationsResponseInfo myInnerNestedObj = (BlackListRelationsResponseInfo)js.Deserialize(objText, typeof(BlackListRelationsResponseInfo));
+                                                    status = myInnerNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        List<BlackListRelation> relations = myInnerNestedObj.relations;
+                                                        List<BlackListRelation> results = relations.Where<BlackListRelation>((BlackListRelation relation) =>
+                                                        {
+                                                            bool isMyFriendInBlackList = relation.user == currentUserId && relation.friend == friendId;
+                                                            return isMyFriendInBlackList;
+                                                        }).ToList<BlackListRelation>();
+                                                        int countResults = results.Count;
+                                                        bool isHaveResults = countResults >= 1;
+                                                        if (isHaveResults)
+                                                        {
+                                                            innerFriendsItemContextMenuItem.Header = "Удалить из черного списка";
+                                                            innerFriendsItemContextMenuItem.Click += RemoveFromBlackListHandler;
+                                                        }
+                                                        else
+                                                        {
+                                                            innerFriendsItemContextMenuItem.Header = "Добавить в черный список";
+                                                            innerFriendsItemContextMenuItem.Click += AddToBlackListHandler;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        catch (System.Net.WebException)
+                                        {
+                                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                            this.Close();
+                                        }
+                                        innerFriendsItemContextMenuItem.DataContext = friend.id;
+                                        friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
+                                        friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+                                        friendsItem.ContextMenu = friendsItemContextMenu;
+                                        category.Children.Add(friendsItem);
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Net.WebException)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            this.Close();
+                        }
+                    }
+                }
+                categories.Children.Add(category);
+            }
         }
 
         public void GetUserInfo ()
@@ -304,6 +541,13 @@ namespace GamaManager.Dialogs
                                                                     innerFriendsItemContextMenuItem.Click += AddFriendToFavoriteHandler;
                                                                 }
                                                                 friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Добавить в категорию";
+                                                                innerFriendsItemContextMenuItem.DataContext = friendId;
+                                                                innerFriendsItemContextMenuItem.Click += OpenCategoryDialogHandler;
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.Header = "Уведомления";
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
@@ -493,6 +737,7 @@ namespace GamaManager.Dialogs
                             Settings currentSettings = loadedContent.settings;
                             List<string> currentCollections = loadedContent.collections;
                             Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -509,7 +754,8 @@ namespace GamaManager.Dialogs
                                     friends = updatedFriends,
                                     settings = currentSettings,
                                     collections = currentCollections,
-                                    notifications = currentNotifications
+                                    notifications = currentNotifications,
+                                    categories = currentCategories
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }
@@ -674,6 +920,8 @@ namespace GamaManager.Dialogs
             List<FriendSettings> updatedFriends = currentFriends;
             Settings currentSettings = loadedContent.settings;
             List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -689,7 +937,9 @@ namespace GamaManager.Dialogs
                     games = currentGames,
                     friends = updatedFriends,
                     settings = currentSettings,
-                    collections = currentCollections
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -715,6 +965,9 @@ namespace GamaManager.Dialogs
             List<Game> currentGames = loadedContent.games;
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -730,7 +983,10 @@ namespace GamaManager.Dialogs
                 {
                     games = currentGames,
                     friends = updatedFriends,
-                    settings = currentSettings
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1166,5 +1422,64 @@ namespace GamaManager.Dialogs
 
         }
 
+        public void OpenCategoryDialogHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            OpenCategoryDialog(friendId);
+        }
+
+        public void OpenCategoryDialog (string friendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<FriendSettings> currentFriendSettings = loadedContent.friends;
+            List<FriendSettings> results = currentFriendSettings.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                string localFriendId = friend.id;
+                List<string> friendCategories = friend.categories;
+                bool isAddFriend = localFriendId == friendId;
+                return isAddFriend;
+            }).ToList<FriendSettings>();
+            int countResults = results.Count;
+            bool isHaveResults = countResults >= 1;
+            if (isHaveResults)
+            {
+                FriendSettings result = results[0];
+                List<string> categories = result.categories;
+                int countCategories = categories.Count;
+                bool isHaveCategories = countCategories >= 1;
+                if (isHaveCategories)
+                {
+                    Dialogs.CategoryManagementDialog dialog = new Dialogs.CategoryManagementDialog(currentUserId, friendId);
+                    dialog.Closed += GetCategoriesHandler;
+                    dialog.Show();
+                }
+                else
+                {
+                    List<string> friendIds = new List<string>() {
+                        friendId
+                    };
+                    Dialogs.CreateCategoryDialog dialog = new Dialogs.CreateCategoryDialog(currentUserId, friendIds);
+                    dialog.Closed += GetCategoriesHandler;
+                    dialog.Show();
+                }
+            }
+        }
+
+        public void GetCategoriesHandler (object sender, EventArgs e)
+        {
+            GetCategories();
+        }
+
+
     }
+
+
+
 }

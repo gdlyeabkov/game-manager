@@ -71,6 +71,7 @@ namespace GamaManager
         public System.Windows.Xps.Packaging.XpsDocument document = null;
         public ImapClient mailClient = null;
         public bool isFamilyViewMode = false;
+        public List<string> chats = new List<string>();
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -299,7 +300,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
                 dialog.Show();
             }
         }
@@ -9975,7 +9976,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
                 dialog.Show();
                 popup.IsOpen = false;
             }
@@ -10012,7 +10013,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
                 dialog.Show();
                 popup.IsOpen = false;
             }

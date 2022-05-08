@@ -40,6 +40,7 @@ namespace GamaManager.Dialogs
         public WaveIn waveSource;
         public WaveFileWriter waveFile;
         public Brush msgsSeparatorBrush = null;
+        public List<string> chats;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -62,12 +63,13 @@ namespace GamaManager.Dialogs
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink)
+        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats)
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
             this.friendId = friendId;
             this.isStartBlink = isStartBlink;
+            this.chats = chats;
         }
 
         async public void ReceiveMessages()
@@ -122,7 +124,8 @@ namespace GamaManager.Dialogs
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        string currentFriendId = this.friendId;
+                                        string currentFriendId = this.chats[chatControl.SelectedIndex];
+                                        // string currentFriendId = this.friendId;
                                         bool isCurrentChat = currentFriendId == userId;
                                         if (isCurrentChat)
                                         {
@@ -130,7 +133,7 @@ namespace GamaManager.Dialogs
                                             {
                                                 try
                                                 {
-                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + this.chats[chatControl.SelectedIndex]);
                                                     innerWebRequest.Method = "GET";
                                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -353,10 +356,13 @@ namespace GamaManager.Dialogs
         public void AddChat()
         {
             TabItem newChat = new TabItem();
-            newChat.Header = friendId;
+            
+            // newChat.Header = friendId;
+            newChat.Header = this.chats[this.chats.Count - 1];
+            
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + this.chats[this.chats.Count - 1]);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())

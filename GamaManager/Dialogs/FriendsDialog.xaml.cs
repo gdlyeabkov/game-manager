@@ -33,6 +33,7 @@ namespace GamaManager.Dialogs
         public Brush playedBrush;
         public Brush offlineBrush;
         public TabControl mainControl;
+        public List<string> chats = new List<string>();
 
         public FriendsDialog(string currentUserId, SocketIO client, TabControl mainControl)
         {
@@ -828,11 +829,31 @@ namespace GamaManager.Dialogs
             }).ToList<Window>();
             int countChatWindows = chatWindows.Count;
             bool isNotOpenedChatWindows = countChatWindows <= 0;
+            
+            chats.Add(friend); 
+            
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false);
-                dialog.DataContext = friend;
-                dialog.Show();
+                chatWindows = myWindows.Where<Window>(window =>
+                {
+                    string windowTitle = window.Title;
+                    bool isChatWindow = windowTitle == "Чат";
+                    return isChatWindow;
+                }).ToList<Window>();
+                countChatWindows = chatWindows.Count;
+                isNotOpenedChatWindows = countChatWindows <= 0;
+                if (isNotOpenedChatWindows)
+                {
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats);
+                    dialog.DataContext = friend;
+                    dialog.Show();
+                }
+                else
+                {
+                    Dialogs.ChatDialog chatWindow = ((ChatDialog)(chatWindows[0]));
+                    chatWindow.Focus();
+                    chatWindow.AddChat();
+                }
             }
             else
             {

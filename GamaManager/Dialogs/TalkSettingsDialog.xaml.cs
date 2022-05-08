@@ -47,6 +47,7 @@ namespace GamaManager.Dialogs
             SetOwnerInfo();
             GetInvitedUsers();
             GenerateLink();
+            GetRoles();
         }
 
         public void GetInvitedUsers ()
@@ -187,6 +188,17 @@ namespace GamaManager.Dialogs
                             talkOwnerAvatar.EndInit();
                             talkOwnerNameLabel.Text = ownerName;
                             talkOwnerStatusLabel.Text = ownerStatus;
+
+                            bool isOwner = currentUserId == talkOwner;
+                            if (isOwner)
+                            {
+                                permissionsControl.SelectedIndex = 1;
+                            }
+                            else
+                            {
+                                permissionsControl.SelectedIndex = 0;
+                            }
+
                         }
                     }
                 }
@@ -516,14 +528,45 @@ namespace GamaManager.Dialogs
             mainLinkBox.Text = "http://localhost:4000/?talk=" + talkId;
         }
 
-        private void UpdateRoleHandler (object sender, MouseButtonEventArgs e)
+        private void UpdateRoleHandler (object sender, RoutedEventArgs e)
         {
-            UpdateRole();
+            DockPanel role = ((DockPanel)(sender));
+            object roleData = role.DataContext;
+            string id = ((string)(roleData));
+            UpdateRole(id);
         }
 
-        public void UpdateRole ()
+        public void UpdateRole (string id)
         {
-            permissionsControl.SelectedIndex = 2;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/get/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRoleResponseInfo myObj = (TalkRoleResponseInfo)js.Deserialize(objText, typeof(TalkRoleResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Role role = myObj.role;
+                            string roleTitle = role.title;
+                            mainRoleTitleLabel.Text = roleTitle;
+                            permissionsControl.SelectedIndex = 2;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void CancelUpdateRolesHandler(object sender, MouseButtonEventArgs e)
@@ -533,7 +576,116 @@ namespace GamaManager.Dialogs
 
         public void CancelUpdateRoles()
         {
+            permissionsControl.SelectedIndex = 1;
+        }
 
+        private void OpenCreatePermissionPopupHandler (object sender, RoutedEventArgs e)
+        {
+            OpenCreatePermissionPopup();
+        }
+
+        public void OpenCreatePermissionPopup ()
+        {
+            createPermissionPopup.IsOpen = true;
+        }
+
+        private void CloseCreatePermissionPopupHandler(object sender, RoutedEventArgs e)
+        {
+            CloseCreatePermissionPopup();
+        }
+
+        public void CloseCreatePermissionPopup()
+        {
+            createPermissionPopup.IsOpen = false;
+        }
+
+        private void CreatePermissionHandler (object sender, RoutedEventArgs e)
+        {
+            CreatePermission();
+        }
+
+        public void GetRoles ()
+        {
+            roles.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRolesResponseInfo myObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Role> talkRoles = myObj.roles;
+                            foreach (Role talkRole in talkRoles)
+                            {
+                                string roleId = talkRole._id;
+                                string roleTitle = talkRole.title;
+                                DockPanel role = new DockPanel();
+                                role.Background = System.Windows.Media.Brushes.LightGray;
+                                role.Margin = new Thickness(0, 15, 0, 15);
+                                TextBlock roleTitleLabel = new TextBlock();
+                                roleTitleLabel.Text = roleTitle;
+                                roleTitleLabel.Margin = new Thickness(15);
+                                role.Children.Add(roleTitleLabel);
+                                TextBlock updateRoleLabel = new TextBlock();
+                                updateRoleLabel.HorizontalAlignment = HorizontalAlignment.Right;
+                                updateRoleLabel.Text = "Изменить";
+                                updateRoleLabel.Margin = new Thickness(15);
+                                role.Children.Add(updateRoleLabel);
+                                role.DataContext = roleId;
+                                role.MouseLeftButtonUp += UpdateRoleHandler;
+                                roles.Children.Add(role);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void CreatePermission ()
+        {
+            string talkRoleTitleBoxContent = talkRoleTitleBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/create/?title=" + talkRoleTitleBoxContent + @"&id=" + talkId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        MsgsResponseInfo myObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            talkRoleTitleBox.Text = "";
+                            CloseCreatePermissionPopup();
+                            GetRoles();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
     }

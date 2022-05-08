@@ -290,7 +290,9 @@
                     <TabControl
                         x:Name="permissionsControl"    
                     >
-                        <TabItem>
+                        <TabItem
+                            Visibility="Collapsed"    
+                        >
                             <StackPanel>
                                 <StackPanel
                                     Margin="0 10"
@@ -315,7 +317,9 @@
                                 />
                             </StackPanel>
                         </TabItem>
-                        <TabItem>
+                        <TabItem
+                            Visibility="Collapsed"    
+                        >
                             <StackPanel>
                                 <TextBlock
                                     Margin="10 0"
@@ -347,35 +351,35 @@
                                         />
                                     </StackPanel>
                                 </DockPanel>
+                                <DockPanel
+                                    Background="LightGray"
+                                    Margin="0 15"
+                                    MouseLeftButtonUp="UpdateRoleHandler"
+                                >
+                                    <StackPanel
+                                        VerticalAlignment="Center"
+                                        Margin="15"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <materialDesign:PackIcon
+                                            Kind="ChessQueen"    
+                                            Margin="15 0"
+                                        />
+                                        <TextBlock
+                                            Text="Владелец"    
+                                            Margin="15 0"
+                                        />
+                                    </StackPanel>
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Margin="15 0"
+                                        Text="У владельца есть все разрешения"    
+                                    />
+                                </DockPanel>
                                 <StackPanel
                                     x:Name="roles"    
                                 >
-                                    <DockPanel
-                                        Background="LightGray"
-                                        Margin="0 15"
-                                        MouseLeftButtonUp="UpdateRoleHandler"
-                                    >
-                                        <StackPanel
-                                            VerticalAlignment="Center"
-                                            Margin="15"
-                                            Orientation="Horizontal"    
-                                        >
-                                            <materialDesign:PackIcon
-                                                Kind="ChessQueen"    
-                                                Margin="15 0"
-                                            />
-                                            <TextBlock
-                                                Text="Владелец"    
-                                                Margin="15 0"
-                                            />
-                                        </StackPanel>
-                                        <TextBlock
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Margin="15 0"
-                                            Text="У владельца есть все разрешения"    
-                                        />
-                                    </DockPanel>
                                     <DockPanel
                                         Background="LightGray"
                                         Margin="0 15"
@@ -389,20 +393,69 @@
                                             Margin="15"
                                             HorizontalAlignment="Right"
                                             Text="Изменить"
-                                            
                                         />
                                     </DockPanel>
                                 </StackPanel>
+                                <Popup
+                                    x:Name="createPermissionPopup"
+                                    StaysOpen="False"
+                                    Placement="Mouse"
+                                    Width="500"
+                                    Height="250"
+                                >
+                                    <Popup.Child>
+                                        <StackPanel
+                                            Background="LightGray"    
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="24"
+                                                Text="Добавить новую роль"
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Название роли"    
+                                            />
+                                            <TextBox
+                                                x:Name="talkRoleTitleBox"
+                                                Height="30"
+                                                Margin="15"
+                                            />
+                                            <StackPanel
+                                                Margin="0 10"
+                                                Orientation="Horizontal"
+                                            >
+                                                <Button
+                                                    Width="125"
+                                                    Height="30"
+                                                    Margin="15 0"
+                                                    Content="Подтвердить"    
+                                                    Click="CreatePermissionHandler"
+                                                />
+                                                <Button
+                                                    Width="125"
+                                                    Height="30"
+                                                    Margin="15 0"
+                                                    Content="Отмена"
+                                                    Click="CloseCreatePermissionPopupHandler"
+                                                />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Popup.Child>
+                                </Popup>
                                 <Button
                                     Margin="15"
                                     Width="175"
                                     Height="30"
                                     Content="Добавить новую роль"
                                     HorizontalAlignment="Right"    
+                                    Click="OpenCreatePermissionPopupHandler"
                                 />
                             </StackPanel>
                         </TabItem>
-                        <TabItem>
+                        <TabItem
+                            Visibility="Collapsed"    
+                        >
                             <ScrollViewer>
                                 <StackPanel>
                                     <StackPanel
@@ -428,6 +481,7 @@
                                         FontSize="14"
                                     />
                                     <TextBlock
+                                        x:Name="mainRoleTitleLabel"
                                         Margin="15"
                                         Text="Все участники"
                                         FontSize="24"

@@ -15634,4 +15634,23 @@ namespace GamaManager
         public string talk;
     }
 
+    class TalkRolesResponseInfo
+    {
+        public List<Role> roles;
+        public string status;
+    }
+
+    class TalkRoleResponseInfo
+    {
+        public Role role;
+        public string status;
+    }
+
+    class Role
+    {
+        public string _id;
+        public string title;
+        public string talk;
+    }
+
 }

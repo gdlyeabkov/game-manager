@@ -273,7 +273,8 @@ namespace GamaManager.Dialogs
                                             isFriendPlayedSound = true,
                                             isFriendSendMsgNotification = true,
                                             isFriendSendMsgSound = true,
-                                            isFavoriteFriend = false
+                                            isFavoriteFriend = false,
+                                            categories = new List<string>() { }
                                         });
                                         string savedContent = js.Serialize(new SavedContent
                                         {

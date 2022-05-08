@@ -127,10 +127,10 @@ namespace GamaManager.Dialogs
                                     {
                                         this.Dispatcher.Invoke(() =>
                                         {
-                                            // string currentFriendId = this.friendId;
                                             string currentFriendId = this.chats[chatControl.SelectedIndex];
                                             // bool isCurrentChat = currentFriendId == userId;
-                                            bool isCurrentChat = currentFriendId == userId && currentUserId == cachedFriendId;
+                                            // bool isCurrentChat = currentFriendId == userId && currentUserId == cachedFriendId;
+                                            bool isCurrentChat = currentUserId == cachedFriendId;
                                             if (isCurrentChat)
                                             {
                                                 this.Dispatcher.Invoke(() =>
@@ -146,9 +146,7 @@ namespace GamaManager.Dialogs
                                                             {
                                                                 js = new JavaScriptSerializer();
                                                                 objText = innerReader.ReadToEnd();
-
                                                                 UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                                                                 status = myobj.status;
                                                                 isOkStatus = status == "OK";
                                                                 if (isOkStatus)
@@ -157,76 +155,90 @@ namespace GamaManager.Dialogs
                                                                     string friendName = friend.name;
 
                                                                     ItemCollection chatControlItems = chatControl.Items;
-                                                                    object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
-                                                                    TabItem activeChat = ((TabItem)(rawActiveChat));
-                                                                    object rawActiveChatScrollContent = activeChat.Content;
-                                                                    ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                                    object rawActiveChatContent = activeChatScrollContent.Content;
-                                                                    StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-                                                                    StackPanel newMsg = new StackPanel();
-                                                                    StackPanel newMsgHeader = new StackPanel();
-                                                                    newMsgHeader.Orientation = Orientation.Horizontal;
-                                                                    Image newMsgHeaderAvatar = new Image();
-                                                                    newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                                                    newMsgHeaderAvatar.Width = 25;
-                                                                    newMsgHeaderAvatar.Height = 25;
-                                                                    newMsgHeaderAvatar.BeginInit();
 
-                                                                    // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                                    Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
+                                                                    // object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+                                                                    int chatIndex = chatControl.SelectedIndex;
+                                                                    chatIndex = chats.FindIndex((string chatId) =>
+                                                                    {
+                                                                        bool isChatForUser = userId == chatId;
+                                                                        return isChatForUser;
+                                                                    });
+                                                                    bool isChatFound = chatIndex >= 0;
+                                                                    if (isChatFound)
+                                                                    {
+                                                                        object rawActiveChat = chatControlItems[chatIndex];
 
-                                                                    newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                                                    newMsgHeaderAvatar.EndInit();
-                                                                    newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                                                    TextBlock newMsgFriendNameLabel = new TextBlock();
-                                                                    newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                    newMsgFriendNameLabel.Text = friendName;
-                                                                    newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                                                    TextBlock newMsgDateLabel = new TextBlock();
-                                                                    newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                    DateTime currentDate = DateTime.Now;
-                                                                    string rawCurrentDate = currentDate.ToLongTimeString();
-                                                                    newMsgDateLabel.Text = rawCurrentDate;
-                                                                    newMsgHeader.Children.Add(newMsgDateLabel);
-                                                                    newMsg.Children.Add(newMsgHeader);
-                                                                    if (msgType == "text")
-                                                                    {
-                                                                        TextBlock newMsgLabel = new TextBlock();
-                                                                        string newMsgContent = msg;
-                                                                        newMsgLabel.Text = newMsgContent;
-                                                                        newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                        inputChatMsgBox.Text = "";
-                                                                        newMsg.Children.Add(newMsgLabel);
-                                                                        activeChatContent.Children.Add(newMsg);
-                                                                    }
-                                                                    else if (msgType == "emoji")
-                                                                    {
-                                                                        Image newMsgLabel = new Image();
-                                                                        newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                        newMsgLabel.Width = 35;
-                                                                        newMsgLabel.Height = 35;
-                                                                        newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                                                        newMsgLabel.BeginInit();
-                                                                        newMsgLabel.Source = new BitmapImage(new Uri(msg));
-                                                                        newMsgLabel.EndInit();
-                                                                        inputChatMsgBox.Text = "";
-                                                                        newMsg.Children.Add(newMsgLabel);
-                                                                        activeChatContent.Children.Add(newMsg);
-                                                                    }
-                                                                    else if (msgType == "file")
-                                                                    {
-                                                                        Image newMsgLabel = new Image();
-                                                                        newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                        newMsgLabel.Width = 35;
-                                                                        newMsgLabel.Height = 35;
-                                                                        newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                                                        newMsgLabel.BeginInit();
-                                                                        Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
-                                                                        newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
-                                                                        newMsgLabel.EndInit();
-                                                                        inputChatMsgBox.Text = "";
-                                                                        newMsg.Children.Add(newMsgLabel);
-                                                                        activeChatContent.Children.Add(newMsg);
+                                                                        TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                                        object rawActiveChatScrollContent = activeChat.Content;
+                                                                        ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                                        object rawActiveChatContent = activeChatScrollContent.Content;
+                                                                        StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                                                        StackPanel newMsg = new StackPanel();
+                                                                        StackPanel newMsgHeader = new StackPanel();
+                                                                        newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                        Image newMsgHeaderAvatar = new Image();
+                                                                        newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                        newMsgHeaderAvatar.Width = 25;
+                                                                        newMsgHeaderAvatar.Height = 25;
+                                                                        newMsgHeaderAvatar.BeginInit();
+                                                                        Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
+                                                                        newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                        newMsgHeaderAvatar.EndInit();
+                                                                        newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                        TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                        newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                        newMsgFriendNameLabel.Text = friendName;
+                                                                        newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                        TextBlock newMsgDateLabel = new TextBlock();
+                                                                        newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                        DateTime currentDate = DateTime.Now;
+                                                                        string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                        newMsgDateLabel.Text = rawCurrentDate;
+                                                                        newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                        newMsg.Children.Add(newMsgHeader);
+                                                                        bool isTextMsg = msgType == "text";
+                                                                        bool isEmojiMsg = msgType == "emoji";
+                                                                        bool isFileMsg = msgType == "file";
+                                                                        if (isTextMsg)
+                                                                        {
+                                                                            TextBlock newMsgLabel = new TextBlock();
+                                                                            string newMsgContent = msg;
+                                                                            newMsgLabel.Text = newMsgContent;
+                                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                            inputChatMsgBox.Text = "";
+                                                                            newMsg.Children.Add(newMsgLabel);
+                                                                            activeChatContent.Children.Add(newMsg);
+                                                                        }
+                                                                        else if (isEmojiMsg)
+                                                                        {
+                                                                            Image newMsgLabel = new Image();
+                                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                            newMsgLabel.Width = 35;
+                                                                            newMsgLabel.Height = 35;
+                                                                            newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                            newMsgLabel.BeginInit();
+                                                                            newMsgLabel.Source = new BitmapImage(new Uri(msg));
+                                                                            newMsgLabel.EndInit();
+                                                                            inputChatMsgBox.Text = "";
+                                                                            newMsg.Children.Add(newMsgLabel);
+                                                                            activeChatContent.Children.Add(newMsg);
+                                                                        }
+                                                                        else if (isFileMsg)
+                                                                        {
+                                                                            Image newMsgLabel = new Image();
+                                                                            newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                            newMsgLabel.Width = 35;
+                                                                            newMsgLabel.Height = 35;
+                                                                            newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                            newMsgLabel.BeginInit();
+                                                                            Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                                            newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
+                                                                            newMsgLabel.EndInit();
+                                                                            inputChatMsgBox.Text = "";
+                                                                            newMsg.Children.Add(newMsgLabel);
+                                                                            activeChatContent.Children.Add(newMsg);
+                                                                        }
+                                                                        activeChatScrollContent.ScrollToBottom();
                                                                     }
                                                                 }
                                                             }
@@ -299,16 +311,36 @@ namespace GamaManager.Dialogs
                                     {
                                         this.Dispatcher.Invoke(async () =>
                                         {
-                                            // string currentFriendId = this.friendId;
                                             string currentFriendId = this.chats[chatControl.SelectedIndex];
                                             bool isCurrentChat = currentFriendId == userId && recepientId == currentUserId;
                                             if (isCurrentChat)
                                             {
                                                 this.Dispatcher.Invoke(async () =>
                                                 {
-                                                    userIsWritingLabel.Visibility = Visibility.Visible;
-                                                    await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(true);
-                                                    userIsWritingLabel.Visibility = Visibility.Hidden;
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                    innerWebRequest.Method = "GET";
+                                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                    {
+                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerReader.ReadToEnd();
+                                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                            status = myInnerObj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                User user = myInnerObj.user;
+                                                                string friendName = user.name;
+                                                                string userIsWritingLabelContent = friendName + " печатает...";
+                                                                userIsWritingLabel.Text = userIsWritingLabelContent;
+                                                                userIsWritingLabel.Visibility = Visibility.Visible;
+                                                                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(true);
+                                                                userIsWritingLabel.Visibility = Visibility.Hidden;
+                                                            }
+                                                        }
+                                                    }
                                                 });
                                             }
                                         });
@@ -351,7 +383,7 @@ namespace GamaManager.Dialogs
             InitConstants();
             AddChat();
             ReceiveMessages();
-            GetMsgs();
+            // GetMsgs();
             InitFlash();
         }
 
@@ -367,7 +399,6 @@ namespace GamaManager.Dialogs
         {
             TabItem newChat = new TabItem();
 
-            // newChat.Header = friendId;
             newChat.Header = this.chats[this.chats.Count - 1];
 
             try
@@ -390,8 +421,8 @@ namespace GamaManager.Dialogs
                             string friendName = friend.name;
                             newChat.Header = friendName;
 
-                            string userIsWritingLabelContent = friendName + " печатает...";
-                            userIsWritingLabel.Text = userIsWritingLabelContent;
+                            /*string userIsWritingLabelContent = friendName + " печатает...";
+                            userIsWritingLabel.Text = userIsWritingLabelContent;*/
 
                         }
                     }
@@ -409,6 +440,9 @@ namespace GamaManager.Dialogs
             newChat.Content = newChatScrollContent;
             activeChatIndex++;
             chatControl.SelectedIndex = activeChatIndex;
+
+            GetMsgs();
+
         }
 
         private void SendsgHandler(object sender, RoutedEventArgs e)
@@ -417,7 +451,7 @@ namespace GamaManager.Dialogs
             SendMsg(newMsgContent);
         }
 
-        public void GetMsgs()
+        public void GetMsgs ()
         {
             try
             {
@@ -510,7 +544,6 @@ namespace GamaManager.Dialogs
                                                                 int previousMsgDateDay = previousMsgDate.DayOfYear;
                                                                 int msgDateDay = msgDate.DayOfYear;
                                                                 bool isDaysNotCompared = msgDateDay != previousMsgDateDay;
-                                                                // bool isMock = true;
                                                                 bool isAddMsgSeparator = isDaysNotCompared;
                                                                 if (isAddMsgSeparator)
                                                                 {
@@ -886,10 +919,7 @@ namespace GamaManager.Dialogs
                                 newMsgHeaderAvatar.Width = 25;
                                 newMsgHeaderAvatar.Height = 25;
                                 newMsgHeaderAvatar.BeginInit();
-
-                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
                                 Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-
                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                 newMsgHeaderAvatar.EndInit();
                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1010,6 +1040,32 @@ namespace GamaManager.Dialogs
         public void StopBlinkWindow()
         {
             StopFlashingWindow(this);
+            /*int chatIndex = chatControl.SelectedIndex;
+            chatIndex = chats.FindIndex((string chatId) =>
+            {
+                bool isChatForUser = friendId == chatId;
+                return isChatForUser;
+            });
+            bool isChatFound = chatIndex >= 0;
+            if (isChatFound)
+            {
+                chatControl.SelectedIndex = chatIndex;
+            }*/
+        }
+
+        public void SelectChat (string localFriendId)
+        {
+            int chatIndex = chatControl.SelectedIndex;
+            chatIndex = chats.FindIndex((string chatId) =>
+            {
+                bool isChatForUser = localFriendId == chatId;
+                return isChatForUser;
+            });
+            bool isChatFound = chatIndex >= 0;
+            if (isChatFound)
+            {
+                chatControl.SelectedIndex = chatIndex;
+            }
         }
 
         private void InputToChatFieldHandler(object sender, TextChangedEventArgs e)

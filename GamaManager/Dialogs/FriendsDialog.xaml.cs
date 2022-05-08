@@ -823,7 +823,8 @@ namespace GamaManager.Dialogs
                 if (isWindowDataExists && isChatWindow)
                 {
                     string localFriend = ((string)(windowData));
-                    isChatExists = friend == localFriend;
+                    // isChatExists = friend == localFriend;
+                    isChatExists = chats.Contains(friend);
                 }
                 return isWindowDataExists && isChatWindow && isChatExists;
             }).ToList<Window>();
@@ -859,6 +860,7 @@ namespace GamaManager.Dialogs
             {
                 Dialogs.ChatDialog chatWindow = ((ChatDialog)(chatWindows[0]));
                 chatWindow.Focus();
+                chatWindow.SelectChat(friend);
             }
         }
 

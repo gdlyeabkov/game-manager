@@ -65,14 +65,14 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             foreach (string currentCategory in currentCategories)
             {
+                TextBlock categoryLabel = new TextBlock();
+                categoryLabel.FontSize = 14;
+                categoryLabel.Margin = new Thickness(15);
+                categoryLabel.Text = currentCategory;
+                categories.Children.Add(categoryLabel);
                 StackPanel category = new StackPanel();
                 foreach (FriendSettings friend in currentFriends)
                 {
-                    TextBlock categoryLabel = new TextBlock();
-                    categoryLabel.FontSize = 14;
-                    categoryLabel.Margin = new Thickness(15);
-                    categoryLabel.Text = currentCategory;
-                    categories.Children.Add(categoryLabel);
                     List<string> friendCategories = friend.categories;
                     bool isHaveCategory = friendCategories.Contains(currentCategory);
                     if (isHaveCategory)
@@ -1220,6 +1220,11 @@ namespace GamaManager.Dialogs
                                                     talks.Children.Add(totalTalksItem);
                                                     ContextMenu totalTalksItemContextMenu = new ContextMenu();
                                                     MenuItem totalTalksItemContextMenuItem = new MenuItem();
+                                                    totalTalksItemContextMenuItem.Header = "Открыть окно чата";
+                                                    totalTalksItemContextMenuItem.DataContext = talkId;
+                                                    totalTalksItemContextMenuItem.Click += OpenTalkFromMenuHandler;
+                                                    totalTalksItemContextMenu.Items.Add(totalTalksItemContextMenuItem);
+                                                    totalTalksItemContextMenuItem = new MenuItem();
                                                     totalTalksItemContextMenuItem.Header = "Выйти из группового чата";
                                                     totalTalksItemContextMenuItem.DataContext = talkId;
                                                     totalTalksItemContextMenuItem.Click += LogoutFromTalkHandler;
@@ -1300,6 +1305,14 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+        }
+
+        public void OpenTalkFromMenuHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object talkData = menuItem.DataContext;
+            string talkId = ((string)(talkData));
+            OpenTalk(talkId);
         }
 
         public void OpenTalkHandler (object sender, RoutedEventArgs e)

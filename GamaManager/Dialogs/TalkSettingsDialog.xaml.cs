@@ -516,5 +516,25 @@ namespace GamaManager.Dialogs
             mainLinkBox.Text = "http://localhost:4000/?talk=" + talkId;
         }
 
+        private void UpdateRoleHandler (object sender, MouseButtonEventArgs e)
+        {
+            UpdateRole();
+        }
+
+        public void UpdateRole ()
+        {
+            permissionsControl.SelectedIndex = 2;
+        }
+
+        private void CancelUpdateRolesHandler(object sender, MouseButtonEventArgs e)
+        {
+            CancelUpdateRoles();
+        }
+
+        public void CancelUpdateRoles()
+        {
+
+        }
+
     }
 }

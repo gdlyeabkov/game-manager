@@ -141,7 +141,76 @@
                             FontSize="14"
                             Margin="15 10"
                             Text="Изменить имя профиля"    
+                            MouseLeftButtonUp="OpenUpdateProfileNameHandler"
                         />
+                        <Popup
+                            x:Name="updateProfilePopup"
+                            Width="500"
+                            Height="250"
+                            Placement="Mouse"
+                        >
+                            <Popup.Child>
+                                <StackPanel
+                                    Background="LightGray"
+                                >
+                                    <TextBlock
+                                        FontSize="24"
+                                    />
+                                    <TextBlock
+                                        Text="Другие пользователи видят ваши аватар и имя профиляю"    
+                                    />
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Image
+                                            x:Name="updateProfilePopupAvatar"
+                                            Margin="15"
+                                            Width="50"    
+                                            Height="50"    
+                                            ImageFailed="SetDefaultAvatarHandler"
+                                        >
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                />
+                                            </Image.Source>
+                                        </Image>
+                                        <StackPanel
+                                            Margin="15 0"    
+                                        >
+                                            <TextBlock
+                                                Margin="0 5"
+                                                Text="Изменить имя профиля на"    
+                                            />
+                                            <TextBox
+                                                x:Name="updateProfilePopupNameBox"
+                                                Margin="0 5"
+                                                Width="275"
+                                                Height="30"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Button
+                                            Margin="15 0"
+                                            Height="30"
+                                            Width="125"
+                                            Content="Подтвердить"
+                                            Click="UpdateProfileNameHandler"
+                                        />
+                                        <Button
+                                            Margin="15 0"
+                                            Height="30"
+                                            Width="125"
+                                            Content="Отмена"    
+                                            Click="CancelUpdateProfilePopupHandler"
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Popup.Child>
+                        </Popup>
                     </StackPanel>
                 </Popup.Child>
             </Popup>

@@ -236,9 +236,14 @@ namespace GamaManager.Dialogs
         public void SelectSettingsItem (int index)
         {
             bool isChannels = index == 1;
+            bool isPermissions = index == 2;
             if (isChannels)
             {
                 GetChannels();
+            }
+            else if (isPermissions)
+            {
+                GetRoles();
             }
             settingsControl.SelectedIndex = index;
         }
@@ -556,7 +561,39 @@ namespace GamaManager.Dialogs
                         {
                             Role role = myObj.role;
                             string roleTitle = role.title;
+                            bool isSendMsgs = role.sendMsgs;
+                            bool isNotifyAllUsers = role.notifyAllUsers;
+                            bool isBindAndUnbindStreams = role.bindAndUnbindStreams;
+                            bool isKick = role.kick;
+                            bool isBlock = role.block;
+                            bool isInvite = role.invite;
+                            bool isUpdateRoles = role.updateRoles;
+                            bool isAssignRoles = role.assignRoles;
+                            bool isUpdateTalkTitleSloganAndAvatar = role.updateTalkTitleSloganAndAvatar;
+                            bool isCreateAndUpdateChannels = role.createAndUpdateChannels;
+                            bool isCustomRole = role.isCustom;
                             mainRoleTitleLabel.Text = roleTitle;
+                            mainRoleSendMsgsCheckBox.IsChecked = isSendMsgs;
+                            mainRoleNotifyAllUsersCheckBox.IsChecked = isNotifyAllUsers;
+                            mainRoleBindAndUnbindStreamsCheckBox.IsChecked = isBindAndUnbindStreams;
+                            mainRoleKickCheckBox.IsChecked = isKick;
+                            mainRoleBlockCheckBox.IsChecked = isBlock;
+                            mainRoleInviteCheckBox.IsChecked = isInvite;
+                            mainRoleUpdateRolesCheckBox.IsChecked = isUpdateRoles;
+                            mainRoleAssignRolesCheckBox.IsChecked = isAssignRoles;
+                            mainRoleUpdateTalkTitleSloganAndAvatarCheckBox.IsChecked = isUpdateTalkTitleSloganAndAvatar;
+                            mainRoleCreateAndUpdateChannelsCheckBox.IsChecked = isCreateAndUpdateChannels;
+
+                            mainRoleTabItem.DataContext = id;
+                            if (isCustomRole)
+                            {
+                                removeRoleBtn.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                removeRoleBtn.Visibility = Visibility.Collapsed;
+                            }
+
                             permissionsControl.SelectedIndex = 2;
                         }
                     }
@@ -628,21 +665,26 @@ namespace GamaManager.Dialogs
                             {
                                 string roleId = talkRole._id;
                                 string roleTitle = talkRole.title;
-                                DockPanel role = new DockPanel();
-                                role.Background = System.Windows.Media.Brushes.LightGray;
-                                role.Margin = new Thickness(0, 15, 0, 15);
-                                TextBlock roleTitleLabel = new TextBlock();
-                                roleTitleLabel.Text = roleTitle;
-                                roleTitleLabel.Margin = new Thickness(15);
-                                role.Children.Add(roleTitleLabel);
-                                TextBlock updateRoleLabel = new TextBlock();
-                                updateRoleLabel.HorizontalAlignment = HorizontalAlignment.Right;
-                                updateRoleLabel.Text = "Изменить";
-                                updateRoleLabel.Margin = new Thickness(15);
-                                role.Children.Add(updateRoleLabel);
-                                role.DataContext = roleId;
-                                role.MouseLeftButtonUp += UpdateRoleHandler;
-                                roles.Children.Add(role);
+                                string roleTalk = talkRole.talk;
+                                bool isCurrentTalk = roleTalk == talkId;
+                                if (isCurrentTalk)
+                                {
+                                    DockPanel role = new DockPanel();
+                                    role.Background = System.Windows.Media.Brushes.LightGray;
+                                    role.Margin = new Thickness(0, 15, 0, 15);
+                                    TextBlock roleTitleLabel = new TextBlock();
+                                    roleTitleLabel.Text = roleTitle;
+                                    roleTitleLabel.Margin = new Thickness(15);
+                                    role.Children.Add(roleTitleLabel);
+                                    TextBlock updateRoleLabel = new TextBlock();
+                                    updateRoleLabel.HorizontalAlignment = HorizontalAlignment.Right;
+                                    updateRoleLabel.Text = "Изменить";
+                                    updateRoleLabel.Margin = new Thickness(15);
+                                    role.Children.Add(updateRoleLabel);
+                                    role.DataContext = roleId;
+                                    role.MouseLeftButtonUp += UpdateRoleHandler;
+                                    roles.Children.Add(role);
+                                }
                             }
                         }
                     }
@@ -677,6 +719,44 @@ namespace GamaManager.Dialogs
                             talkRoleTitleBox.Text = "";
                             CloseCreatePermissionPopup();
                             GetRoles();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void RemoveRoleHandler (object sender, RoutedEventArgs e)
+        {
+            object roleData = mainRoleTabItem.DataContext;
+            string id = ((string)(roleData));
+            RemoveRole(id);
+        }
+
+        public void RemoveRole (string id)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/remove/?id=" + id);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        MsgsResponseInfo myObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetRoles();
+                            CancelUpdateRoles();
                         }
                     }
                 }

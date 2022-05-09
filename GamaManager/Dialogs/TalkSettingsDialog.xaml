@@ -281,182 +281,19 @@
             <TabItem
                 Visibility="Collapsed"    
             >
-                <StackPanel>
-                    <TextBlock
-                        Margin="15"
-                        Text="Разрешения"
-                        FontSize="24"
-                    />
-                    <TabControl
-                        x:Name="permissionsControl"    
-                    >
-                        <TabItem
-                            Visibility="Collapsed"    
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock
+                            Margin="15"
+                            Text="Разрешения"
+                            FontSize="24"
+                        />
+                        <TabControl
+                            x:Name="permissionsControl"    
                         >
-                            <StackPanel>
-                                <StackPanel
-                                    Margin="0 10"
-                                    Orientation="Horizontal"    
-                                >
-                                    <materialDesign:PackIcon
-                                        Margin="10 0"
-                                        Kind="Lock"    
-                                        VerticalAlignment="Center"
-                                    />
-                                    <TextBlock
-                                        Margin="10 0"
-                                        Text="ВЫ МОЖЕТЕ ТОЛЬКО ПРОСМАТРИВАТЬ РОЛИ"
-                                        FontSize="14"
-                                        VerticalAlignment="Center"
-                                    />
-                                </StackPanel>
-                                <TextBlock
-                                    Margin="15"
-                                    Text="Указанные здесь роли назначаются владельцам группы и&#10;пользователями у которых есть разрешения."
-                                    FontSize="14"
-                                />
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem
-                            Visibility="Collapsed"    
-                        >
-                            <StackPanel>
-                                <TextBlock
-                                    Margin="10 0"
-                                    Text="Чтобы назначить роли, нажмите правой кнопкой мыши на&#10;пользователе в списке участников группы и отметьте нужные роли.&#10;Одному пользователю можно назначить несколько ролей."
-                                    FontSize="14"
-                                    VerticalAlignment="Center"
-                                />
-                                <DockPanel
-                                    Margin="0 15"
-                                >
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Margin="15 0"
-                                        Text="Роли"    
-                                    />
-                                    <StackPanel
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Right"
-                                        Margin="15"
-                                        Orientation="Horizontal"    
-                                    >
-                                        <materialDesign:PackIcon
-                                            Kind="ChessQueen"    
-                                            Margin="15 0"
-                                        />
-                                        <TextBlock
-                                            Text="Вы - владелец этого группового чата"    
-                                            Margin="15 0"
-                                        />
-                                    </StackPanel>
-                                </DockPanel>
-                                <DockPanel
-                                    Background="LightGray"
-                                    Margin="0 15"
-                                    MouseLeftButtonUp="UpdateRoleHandler"
-                                >
-                                    <StackPanel
-                                        VerticalAlignment="Center"
-                                        Margin="15"
-                                        Orientation="Horizontal"    
-                                    >
-                                        <materialDesign:PackIcon
-                                            Kind="ChessQueen"    
-                                            Margin="15 0"
-                                        />
-                                        <TextBlock
-                                            Text="Владелец"    
-                                            Margin="15 0"
-                                        />
-                                    </StackPanel>
-                                    <TextBlock
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Margin="15 0"
-                                        Text="У владельца есть все разрешения"    
-                                    />
-                                </DockPanel>
-                                <StackPanel
-                                    x:Name="roles"    
-                                >
-                                    <DockPanel
-                                        Background="LightGray"
-                                        Margin="0 15"
-                                        MouseLeftButtonUp="UpdateRoleHandler"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Все участники"    
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            HorizontalAlignment="Right"
-                                            Text="Изменить"
-                                        />
-                                    </DockPanel>
-                                </StackPanel>
-                                <Popup
-                                    x:Name="createPermissionPopup"
-                                    StaysOpen="False"
-                                    Placement="Mouse"
-                                    Width="500"
-                                    Height="250"
-                                >
-                                    <Popup.Child>
-                                        <StackPanel
-                                            Background="LightGray"    
-                                        >
-                                            <TextBlock
-                                                Margin="15"
-                                                FontSize="24"
-                                                Text="Добавить новую роль"
-                                            />
-                                            <TextBlock
-                                                Margin="15"
-                                                Text="Название роли"    
-                                            />
-                                            <TextBox
-                                                x:Name="talkRoleTitleBox"
-                                                Height="30"
-                                                Margin="15"
-                                            />
-                                            <StackPanel
-                                                Margin="0 10"
-                                                Orientation="Horizontal"
-                                            >
-                                                <Button
-                                                    Width="125"
-                                                    Height="30"
-                                                    Margin="15 0"
-                                                    Content="Подтвердить"    
-                                                    Click="CreatePermissionHandler"
-                                                />
-                                                <Button
-                                                    Width="125"
-                                                    Height="30"
-                                                    Margin="15 0"
-                                                    Content="Отмена"
-                                                    Click="CloseCreatePermissionPopupHandler"
-                                                />
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Popup.Child>
-                                </Popup>
-                                <Button
-                                    Margin="15"
-                                    Width="175"
-                                    Height="30"
-                                    Content="Добавить новую роль"
-                                    HorizontalAlignment="Right"    
-                                    Click="OpenCreatePermissionPopupHandler"
-                                />
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem
-                            Visibility="Collapsed"    
-                        >
-                            <ScrollViewer>
+                            <TabItem
+                                Visibility="Collapsed"    
+                            >
                                 <StackPanel>
                                     <StackPanel
                                         Margin="0 10"
@@ -464,178 +301,363 @@
                                     >
                                         <materialDesign:PackIcon
                                             Margin="10 0"
-                                            Kind="ChevronDoubleLeft"    
+                                            Kind="Lock"    
                                             VerticalAlignment="Center"
                                         />
                                         <TextBlock
                                             Margin="10 0"
-                                            Text="Назад"
+                                            Text="ВЫ МОЖЕТЕ ТОЛЬКО ПРОСМАТРИВАТЬ РОЛИ"
                                             FontSize="14"
                                             VerticalAlignment="Center"
-                                            MouseLeftButtonUp="CancelUpdateRolesHandler"
                                         />
                                     </StackPanel>
                                     <TextBlock
                                         Margin="15"
-                                        Text="Название роли"
+                                        Text="Указанные здесь роли назначаются владельцам группы и&#10;пользователями у которых есть разрешения."
                                         FontSize="14"
                                     />
-                                    <TextBlock
-                                        x:Name="mainRoleTitleLabel"
-                                        Margin="15"
-                                        Text="Все участники"
-                                        FontSize="24"
-                                    />
-                                    <TextBlock
-                                        Margin="15"
-                                        Text="Общие настройки"
-                                        FontSize="14"
-                                    />
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Отправлять сообщения"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Упоминать всех участников с помощью @all и @online"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Привязывать и отвязывать трансляции"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <TextBlock
-                                        Margin="15"
-                                        Text="Участники и роли"
-                                        FontSize="14"
-                                    />
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Выгонять участников"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Блокировать участников"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Приглашать новых участников"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Изменять роли"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Назначать роли"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <TextBlock
-                                        Margin="15"
-                                        Text="Управление комнатами чата"
-                                        FontSize="14"
-                                    />
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Изменять название, слоган и аватар группы"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
-                                    <DockPanel
-                                        Margin="15 5"
-                                        Background="LightGray"
-                                    >
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Создавать и удалять каналы"    
-                                        />
-                                        <CheckBox
-                                            Margin="15"
-                                            HorizontalAlignment="Right"  
-                                        />
-                                    </DockPanel>
                                 </StackPanel>
-                            </ScrollViewer>
-                        </TabItem>
-                    </TabControl>
-                </StackPanel>
+                            </TabItem>
+                            <TabItem
+                                Visibility="Collapsed"    
+                            >
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="10 0"
+                                        Text="Чтобы назначить роли, нажмите правой кнопкой мыши на&#10;пользователе в списке участников группы и отметьте нужные роли.&#10;Одному пользователю можно назначить несколько ролей."
+                                        FontSize="14"
+                                        VerticalAlignment="Center"
+                                    />
+                                    <DockPanel
+                                        Margin="0 15"
+                                    >
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Margin="15 0"
+                                            Text="Роли"    
+                                        />
+                                        <StackPanel
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            Margin="15"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <materialDesign:PackIcon
+                                                Kind="ChessQueen"    
+                                                Margin="15 0"
+                                            />
+                                            <TextBlock
+                                                Text="Вы - владелец этого группового чата"    
+                                                Margin="15 0"
+                                            />
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <DockPanel
+                                        Background="LightGray"
+                                        Margin="0 15"
+                                        MouseLeftButtonUp="UpdateRoleHandler"
+                                    >
+                                        <StackPanel
+                                            VerticalAlignment="Center"
+                                            Margin="15"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <materialDesign:PackIcon
+                                                Kind="ChessQueen"    
+                                                Margin="15 0"
+                                            />
+                                            <TextBlock
+                                                Text="Владелец"    
+                                                Margin="15 0"
+                                            />
+                                        </StackPanel>
+                                        <TextBlock
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Margin="15 0"
+                                            Text="У владельца есть все разрешения"    
+                                        />
+                                    </DockPanel>
+                                    <StackPanel
+                                        x:Name="roles"    
+                                    >
+                                        <DockPanel
+                                            Background="LightGray"
+                                            Margin="0 15"
+                                            MouseLeftButtonUp="UpdateRoleHandler"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Все участники"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                HorizontalAlignment="Right"
+                                                Text="Изменить"
+                                            />
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <Popup
+                                        x:Name="createPermissionPopup"
+                                        StaysOpen="False"
+                                        Placement="Mouse"
+                                        Width="500"
+                                        Height="250"
+                                    >
+                                        <Popup.Child>
+                                            <StackPanel
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Margin="15"
+                                                    FontSize="24"
+                                                    Text="Добавить новую роль"
+                                                />
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="Название роли"    
+                                                />
+                                                <TextBox
+                                                    x:Name="talkRoleTitleBox"
+                                                    Height="30"
+                                                    Margin="15"
+                                                />
+                                                <StackPanel
+                                                    Margin="0 10"
+                                                    Orientation="Horizontal"
+                                                >
+                                                    <Button
+                                                        Width="125"
+                                                        Height="30"
+                                                        Margin="15 0"
+                                                        Content="Подтвердить"    
+                                                        Click="CreatePermissionHandler"
+                                                    />
+                                                    <Button
+                                                        Width="125"
+                                                        Height="30"
+                                                        Margin="15 0"
+                                                        Content="Отмена"
+                                                        Click="CloseCreatePermissionPopupHandler"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Popup.Child>
+                                    </Popup>
+                                    <Button
+                                        Margin="15"
+                                        Width="175"
+                                        Height="30"
+                                        Content="Добавить новую роль"
+                                        HorizontalAlignment="Right"    
+                                        Click="OpenCreatePermissionPopupHandler"
+                                    />
+                                </StackPanel>
+                            </TabItem>
+                            <TabItem
+                                x:Name="mainRoleTabItem"
+                                Visibility="Collapsed"    
+                            >
+                                <ScrollViewer>
+                                    <StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="CancelUpdateRolesHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="10 0"
+                                                Kind="ChevronDoubleLeft"    
+                                                VerticalAlignment="Center"
+                                            />
+                                            <TextBlock
+                                                Margin="10 0"
+                                                Text="Назад"
+                                                FontSize="14"
+                                                VerticalAlignment="Center"
+                                            />
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Название роли"
+                                            FontSize="14"
+                                        />
+                                        <TextBlock
+                                            x:Name="mainRoleTitleLabel"
+                                            Margin="15"
+                                            Text="Все участники"
+                                            FontSize="24"
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Общие настройки"
+                                            FontSize="14"
+                                        />
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Отправлять сообщения"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleSendMsgsCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Упоминать всех участников с помощью @all и @online"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleNotifyAllUsersCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Привязывать и отвязывать трансляции"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleBindAndUnbindStreamsCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Участники и роли"
+                                            FontSize="14"
+                                        />
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Выгонять участников"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleKickCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Блокировать участников"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleBlockCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Приглашать новых участников"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleInviteCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Изменять роли"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleUpdateRolesCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Назначать роли"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleAssignRolesCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Управление комнатами чата"
+                                            FontSize="14"
+                                        />
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Изменять название, слоган и аватар группы"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleUpdateTalkTitleSloganAndAvatarCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <DockPanel
+                                            Margin="15 5"
+                                            Background="LightGray"
+                                        >
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Создавать и удалять каналы"    
+                                            />
+                                            <CheckBox
+                                                x:Name="mainRoleCreateAndUpdateChannelsCheckBox"
+                                                Margin="15"
+                                                HorizontalAlignment="Right"  
+                                            />
+                                        </DockPanel>
+                                        <Button
+                                            x:Name="removeRoleBtn"
+                                            Margin="15"
+                                            Content="Удалить роль"
+                                            Background="Red"
+                                            Foreground="White"
+                                            Height="30"
+                                            Click="RemoveRoleHandler"
+                                        />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+                        </TabControl>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem
                 Visibility="Collapsed"    

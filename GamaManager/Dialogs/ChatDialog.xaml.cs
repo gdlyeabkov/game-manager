@@ -192,7 +192,24 @@ namespace GamaManager.Dialogs
                                                                         TextBlock newMsgDateLabel = new TextBlock();
                                                                         newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                                                         DateTime currentDate = DateTime.Now;
-                                                                        string rawCurrentDate = currentDate.ToLongTimeString();
+
+                                                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                                        js = new JavaScriptSerializer();
+                                                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                        Settings currentSettings = loadedContent.settings;
+                                                                        bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                                        bool isShowTimeIn12 = !isShowTimeIn24;
+                                                                        string rawCurrentDate = currentDate.ToLongTimeString(); 
+                                                                        if (isShowTimeIn12)
+                                                                        {
+                                                                            string rawDate = currentDate.ToString("h:mm");
+                                                                            DateTime dt = DateTime.Parse(rawDate);
+                                                                            rawCurrentDate = dt.ToLongTimeString();
+                                                                        }
+
                                                                         newMsgDateLabel.Text = rawCurrentDate;
                                                                         newMsgHeader.Children.Add(newMsgDateLabel);
                                                                         newMsg.Children.Add(newMsgHeader);
@@ -385,6 +402,21 @@ namespace GamaManager.Dialogs
             ReceiveMessages();
             // GetMsgs();
             InitFlash();
+            GetChatSettings();
+        }
+
+        public void GetChatSettings ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            bool isDisableSpellCheck = currentSettings.isDisableSpellCheck;
+            bool isEnableSpellCheck = !isDisableSpellCheck;
+            inputChatMsgBox.SpellCheck.IsEnabled = isEnableSpellCheck;
         }
 
         public void InitFlash()
@@ -1195,21 +1227,33 @@ namespace GamaManager.Dialogs
             AttachFile();
         }
 
-        public void AttachFile()
+        public void AttachFile ()
         {
-            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.Title = "Выберите изображение";
-            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff";
-            bool? res = ofd.ShowDialog();
-            bool isOpened = res != false;
-            if (isOpened)
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            bool isNotIncludeImagesAndMediaFiles = currentSettings.isNotIncludeImagesAndMediaFiles;
+            bool isIncludeImagesAndMediaFiles = !isNotIncludeImagesAndMediaFiles;
+            if (isIncludeImagesAndMediaFiles)
             {
-                string filePath = ofd.FileName;
-                SendFileMsg(filePath);
+                Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+                ofd.Title = "Выберите изображение";
+                ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff";
+                bool? res = ofd.ShowDialog();
+                bool isOpened = res != false;
+                if (isOpened)
+                {
+                    string filePath = ofd.FileName;
+                    SendFileMsg(filePath);
+                }
             }
         }
 
-        async public void SendFileMsg(string filePath)
+        async public void SendFileMsg (string filePath)
         {
             byte[] rawImage = ImageFileToByteArray(filePath);
             string newMsgContent = "";
@@ -1352,73 +1396,128 @@ namespace GamaManager.Dialogs
 
         async public void AddEmojiMsg(string emojiData)
         {
-            try
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            bool isNotIncludeImagesAndMediaFiles = currentSettings.isNotIncludeImagesAndMediaFiles;
+            bool isIncludeImagesAndMediaFiles = !isNotIncludeImagesAndMediaFiles;
+            if (isIncludeImagesAndMediaFiles)
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                    try
+                    {
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                        webRequest.Method = "GET";
+                        webRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                        {
+                            using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                            {
+                                js = new JavaScriptSerializer();
+                                string objText = innerReader.ReadToEnd();
+                                UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
+                                {
+                                    User friend = myobj.user;
+                                    string friendName = friend.name;
+                                    ItemCollection chatControlItems = chatControl.Items;
+                                    object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+                                    TabItem activeChat = ((TabItem)(rawActiveChat));
+                                    object rawActiveChatScrollContent = activeChat.Content;
+                                    ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                    object rawActiveChatContent = activeChatScrollContent.Content;
+                                    StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+                                    StackPanel newMsg = new StackPanel();
+                                    StackPanel newMsgHeader = new StackPanel();
+                                    newMsgHeader.Orientation = Orientation.Horizontal;
+                                    Image newMsgHeaderAvatar = new Image();
+                                    newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                    newMsgHeaderAvatar.Width = 25;
+                                    newMsgHeaderAvatar.Height = 25;
+                                    newMsgHeaderAvatar.BeginInit();
+                                    Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                    newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                    newMsgHeaderAvatar.EndInit();
+                                    newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                    TextBlock newMsgFriendNameLabel = new TextBlock();
+                                    newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                    newMsgFriendNameLabel.Text = friendName;
+                                    newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                    TextBlock newMsgDateLabel = new TextBlock();
+                                    newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                    DateTime currentDate = DateTime.Now;
+                                    string rawCurrentDate = currentDate.ToLongTimeString();
+                                    newMsgDateLabel.Text = rawCurrentDate;
+                                    newMsgHeader.Children.Add(newMsgDateLabel);
+                                    newMsg.Children.Add(newMsgHeader);
+                                    Image newMsgLabel = new Image();
+                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                    newMsgLabel.Width = 35;
+                                    newMsgLabel.Height = 35;
+                                    newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                    newMsgLabel.BeginInit();
+                                    newMsgLabel.Source = new BitmapImage(new Uri(emojiData));
+                                    newMsgLabel.EndInit();
+                                    inputChatMsgBox.Text = "";
+                                    newMsg.Children.Add(newMsgLabel);
+                                    activeChatContent.Children.Add(newMsg);
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                        this.Close();
+                    }
+                }
+                catch (Exception)
+                {
+                    Debugger.Log(0, "debug", "поток занят");
+                }
+                try
+                {
+                    string newMsgType = "emoji";
+                    string newMsgId = "mock";
+                    // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
+                    await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId);
+                }
+                catch (System.Net.WebSockets.WebSocketException)
+                {
+                    Debugger.Log(0, "debug", "Ошибка сокетов");
+                }
+                catch (InvalidOperationException)
+                {
+                    Debugger.Log(0, "debug", "Нельзя отправить повторно");
+                }
+                try
+                {
+                    string newMsgType = "emoji";
+                    // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=mockChannelId");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + this.chatControl.SelectedIndex + "&content=" + emojiData + "&type=" + newMsgType + "&channel=mockChannelId");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
                     {
                         using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                         {
-                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            js = new JavaScriptSerializer();
                             string objText = innerReader.ReadToEnd();
-
                             UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                             string status = myobj.status;
                             bool isOkStatus = status == "OK";
-                            if (isOkStatus)
                             {
-                                User friend = myobj.user;
-                                string friendName = friend.name;
-                                ItemCollection chatControlItems = chatControl.Items;
-                                object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
-                                TabItem activeChat = ((TabItem)(rawActiveChat));
-                                object rawActiveChatScrollContent = activeChat.Content;
-                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-                                StackPanel newMsg = new StackPanel();
-                                StackPanel newMsgHeader = new StackPanel();
-                                newMsgHeader.Orientation = Orientation.Horizontal;
-                                Image newMsgHeaderAvatar = new Image();
-                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgHeaderAvatar.Width = 25;
-                                newMsgHeaderAvatar.Height = 25;
-                                newMsgHeaderAvatar.BeginInit();
+                                if (isOkStatus)
+                                {
 
-                                // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-
-                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                newMsgHeaderAvatar.EndInit();
-                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                TextBlock newMsgFriendNameLabel = new TextBlock();
-                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgFriendNameLabel.Text = friendName;
-                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                TextBlock newMsgDateLabel = new TextBlock();
-                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                DateTime currentDate = DateTime.Now;
-                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                newMsgDateLabel.Text = rawCurrentDate;
-                                newMsgHeader.Children.Add(newMsgDateLabel);
-                                newMsg.Children.Add(newMsgHeader);
-                                Image newMsgLabel = new Image();
-                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                newMsgLabel.Width = 35;
-                                newMsgLabel.Height = 35;
-                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                newMsgLabel.BeginInit();
-                                newMsgLabel.Source = new BitmapImage(new Uri(emojiData));
-                                newMsgLabel.EndInit();
-                                inputChatMsgBox.Text = "";
-                                newMsg.Children.Add(newMsgLabel);
-                                activeChatContent.Children.Add(newMsg);
-                                emojiPopup.IsOpen = false;
+                                }
                             }
                         }
                     }
@@ -1429,57 +1528,7 @@ namespace GamaManager.Dialogs
                     this.Close();
                 }
             }
-            catch (Exception)
-            {
-                Debugger.Log(0, "debug", "поток занят");
-            }
-            try
-            {
-                string newMsgType = "emoji";
-                string newMsgId = "mock";
-                // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId);
-            }
-            catch (System.Net.WebSockets.WebSocketException)
-            {
-                Debugger.Log(0, "debug", "Ошибка сокетов");
-            }
-            catch (InvalidOperationException)
-            {
-                Debugger.Log(0, "debug", "Нельзя отправить повторно");
-            }
-            try
-            {
-                string newMsgType = "emoji";
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + friendId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=mockChannelId");
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + this.chatControl.SelectedIndex + "&content=" + emojiData + "&type=" + newMsgType + "&channel=mockChannelId");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        string objText = innerReader.ReadToEnd();
-
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        {
-                            if (isOkStatus)
-                            {
-
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
-            }
+            emojiPopup.IsOpen = false;
         }
 
         public byte[] ImageFileToByteArray(string fullFilePath)

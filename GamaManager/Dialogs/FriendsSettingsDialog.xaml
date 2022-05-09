@@ -1,15 +1,16 @@
 ﻿<Window x:Class="GamaManager.Dialogs.FriendsSettingsDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GamaManager.Dialogs"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
-        Title="Настройки"
-        Height="800"
-        Width="800"
-    >
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:GamaManager.Dialogs"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    Title="Настройки"
+    Height="800"
+    Width="800"
+    Closed="SaveSettingsHandler"
+>
     <DockPanel>
         <StackPanel
             Width="175"    
@@ -59,7 +60,9 @@
             x:Name="settingsControl"
             SelectedIndex="0"
         >
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <StackPanel>
                     <TextBlock
                         Text="Список друзей"
@@ -112,16 +115,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="notAddNickAfterFriendNameBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleAddNickAfterFriendNameHandler"
                             />
                             <ToggleButton
+                                x:Name="addNickAfterFriendNameBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleAddNickAfterFriendNameHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -139,16 +146,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="notGroupFriendsByGameBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleGroupFriendsByGameHandler"
                             />
                             <ToggleButton
+                                x:Name="groupFriendsByGameBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleGroupFriendsByGameHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -166,16 +177,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="showOfflineFriendsFromCategoriesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleHideOfflineFriendsFromCategoriesHandler"
                             />
                             <ToggleButton
+                                x:Name="hideOfflineFriendsFromCategoriesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleHideOfflineFriendsFromCategoriesHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -193,16 +208,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="showFriendsFromCategoriesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleHideFriendsFromCategoriesHandler"
                             />
                             <ToggleButton
+                                x:Name="hideFriendsFromCategoriesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleHideFriendsFromCategoriesHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -220,16 +239,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="notIgnoreNotHereStatusWithSortBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleIgnoreNotHereStatusWithSortHandler"
                             />
                             <ToggleButton
+                                x:Name="ignoreNotHereStatusWithSortBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleIgnoreNotHereStatusWithSortHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -247,16 +270,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="notLoginInFriendSystemAfterClientLoadedBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleLoginInFriendSystemAfterClientLoadedHandler"
                             />
                             <ToggleButton
+                                x:Name="loginInFriendSystemAfterClientLoadedBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleLoginInFriendSystemAfterClientLoadedHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -274,22 +301,28 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="disableAnimationAvatarsBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleEnableAnimationAvatarsHandler"
                             />
                             <ToggleButton
+                                x:Name="enableAnimationAvatarsBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleEnableAnimationAvatarsHandler"
                             />
                         </StackPanel>
                     </DockPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <StackPanel>
                     <TextBlock
                         Text="Чат"
@@ -310,16 +343,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="attachChatToFriendListBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleAttachChatToFriendListHandler"
                             />
                             <ToggleButton
+                                x:Name="notAttachChatToFriendListBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleAttachChatToFriendListHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -337,16 +374,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="openNewChatInNewTabBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleOpenNewChatInNewWindowHandler"
                             />
                             <ToggleButton
+                                x:Name="openNewChatInNewWindowBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleOpenNewChatInNewWindowHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -364,16 +405,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="includeImagesAndMediaFilesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleNotIncludeImagesAndMediaFilesHandler"
                             />
                             <ToggleButton
+                                x:Name="notIncludeImagesAndMediaFilesBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleNotIncludeImagesAndMediaFilesHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -397,16 +442,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="forgetChatsBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleRememberChatsHandler"
                             />
                             <ToggleButton
+                                x:Name="rememberChatsBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleRememberChatsHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -424,16 +473,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="showTimeIn12Btn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleShowTimeIn24Handler"
                             />
                             <ToggleButton
+                                x:Name="showTimeIn24Btn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleShowTimeIn24Handler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -451,16 +504,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="enableSpellCheckBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleDisableSpellCheckHandler"
                             />
                             <ToggleButton
+                                x:Name="disableSpellCheckBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleDisableSpellCheckHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -478,16 +535,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="enableAnimationBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleDisableAnimationHandler"
                             />
                             <ToggleButton
+                                x:Name="disableAnimationBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleDisableAnimationHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -508,7 +569,9 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <StackPanel>
                     <TextBlock
                         Text="Размер и масштаб"
@@ -529,16 +592,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="friendListAndChatsUnCompactViewBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleFriendListAndChatsCompactViewHandler"
                             />
                             <ToggleButton
+                                x:Name="friendListAndChatsCompactViewBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleFriendListAndChatsCompactViewHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -556,16 +623,20 @@
                             Margin="15 0"
                         >
                             <ToggleButton
+                                x:Name="favoriteUnCompactViewBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Выкл"
                                 IsChecked="False"
+                                Click="ToggleFavoriteCompactViewHandler"
                             />
                             <ToggleButton
+                                x:Name="favoriteCompactViewBtn"
                                 Width="75"
                                 Height="30"
                                 Content="Вкл"  
                                 IsChecked="True"
+                                Click="ToggleFavoriteCompactViewHandler"
                             />
                         </StackPanel>
                     </DockPanel>
@@ -602,7 +673,9 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <StackPanel>
                     <TextBlock
                         Text="Уведомления"
@@ -787,7 +860,9 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <StackPanel>
                         <TextBlock

@@ -1533,33 +1533,36 @@ namespace GamaManager
 
         public void Initialize(string id)
         {
-            GetUser(id);
-            InitConstants();
-            ShowOffers();
-            GetGamesList("");
-            GetFriendRequests();
-            GetGamesInfo();
-            GetUserInfo(currentUserId, true);
-            GetEditInfo();
-            GetGamesStats();
-            CheckFriendsCache();
-            LoadStartWindow();
-            GetOnlineFriends();
-            GetDownloads();
-            GetContent();
-            GetForums("");
-            GetGameCollections();
-            GetFriendsSettings();
-            GetGroupRequests();
-            GetRequestsCount();
-            GetComments(currentUserId);
-            GetCommunityInfo();
-            InitializeTray();
-            GetExperiments();
-            GetAccountSettings();
-            InitMail();
-            GetFamilyView();
-            GetIcons();/**/
+            bool isContinue = GetUser(id);
+            if (isContinue)
+            {
+                InitConstants();
+                ShowOffers();
+                GetGamesList("");
+                GetFriendRequests();
+                GetGamesInfo();
+                GetUserInfo(currentUserId, true);
+                GetEditInfo();
+                GetGamesStats();
+                CheckFriendsCache();
+                LoadStartWindow();
+                GetOnlineFriends();
+                GetDownloads();
+                GetContent();
+                GetForums("");
+                GetGameCollections();
+                GetFriendsSettings();
+                GetGroupRequests();
+                GetRequestsCount();
+                GetComments(currentUserId);
+                GetCommunityInfo();
+                InitializeTray();
+                GetExperiments();
+                GetAccountSettings();
+                InitMail();
+                GetFamilyView();
+                GetIcons();/**/
+            }
         }
 
         public void GetFamilyView ()
@@ -5395,9 +5398,7 @@ namespace GamaManager
                     {
                         js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -5412,9 +5413,7 @@ namespace GamaManager
                                 {
                                     js = new JavaScriptSerializer();
                                     objText = innerReader.ReadToEnd();
-
                                     FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-
                                     status = myInnerObj.status;
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
@@ -5430,8 +5429,6 @@ namespace GamaManager
                                         countFriendsLabel.Text = rawCountFriends;
                                         string currentUserName = user.name;
                                         userProfileNameLabel.Text = currentUserName;
-                                        // string currentUserCountry = user.country;
-                                        // userProfileAboutLabel.Text = currentUserCountry;
                                         string currentUserAbout = user.about;
                                         userProfileAboutLabel.Text = currentUserAbout;
 
@@ -5666,8 +5663,11 @@ namespace GamaManager
             }
         }
 
-        public void GetUser(string userId)
+        public bool GetUser (string userId)
         {
+
+            bool result = false;
+
             currentUserId = userId;
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
             try
@@ -5681,9 +5681,7 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -5701,6 +5699,7 @@ namespace GamaManager
                                 ComboBoxItem mainProfileMenuItem = ((ComboBoxItem)(rawMainProfileMenuItem));
                                 mainProfileMenuItem.Content = userName;
                                 InitCache(userId);
+                                result = true;
                             }
                             else
                             {
@@ -5720,6 +5719,9 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            return result;
+
         }
 
         public void CloseManager()
@@ -6199,7 +6201,12 @@ namespace GamaManager
                         showOverlay = true,
                         familyView = false,
                         familyViewCode = "",
-                        familyViewGames = new List<string>()
+                        familyViewGames = new List<string>(),
+                        isHideOfflineFriendsFromCategories = false,
+                        isOpenNewChatInNewWindow = false,
+                        isNotIncludeImagesAndMediaFiles = false,
+                        isShowTimeIn24 = true,
+                        isDisableSpellCheck = true
                     },
                     collections = new List<string>() { },
                     notifications = new Notifications() {
@@ -9716,12 +9723,15 @@ namespace GamaManager
 
         public void ClientClosed()
         {
-            DecreaseUserToStats();
+            if (isAppInit)
+            {
+                DecreaseUserToStats();
 
-            // SetUserStatus("offline");
-            UpdateUserStatus("offline");
+                // SetUserStatus("offline");
+                UpdateUserStatus("offline");
 
-            client.EmitAsync("user_is_toggle_status", "offline");
+                client.EmitAsync("user_is_toggle_status", "offline");
+            }
         }
 
         public void DecreaseUserToStats()
@@ -15164,6 +15174,11 @@ namespace GamaManager
         public bool familyView;
         public string familyViewCode;
         public List<string> familyViewGames;
+        public bool isHideOfflineFriendsFromCategories;
+        public bool isOpenNewChatInNewWindow;
+        public bool isNotIncludeImagesAndMediaFiles;
+        public bool isShowTimeIn24;
+        public bool isDisableSpellCheck;
     }
 
     public class MusicSettings
@@ -15651,6 +15666,17 @@ namespace GamaManager
         public string _id;
         public string title;
         public string talk;
+        public bool sendMsgs;
+        public bool notifyAllUsers;
+        public bool bindAndUnbindStreams;
+        public bool kick;
+        public bool block;
+        public bool invite;
+        public bool updateRoles;
+        public bool assignRoles;
+        public bool updateTalkTitleSloganAndAvatar;
+        public bool createAndUpdateChannels;
+        public bool isCustom;
     }
 
 }

@@ -114,6 +114,7 @@
                             </Image.Source>
                         </Image>
                         <Button
+                            x:Name="addIconBtn"
                             Content="Добавить иконку"
                             Height="30"
                             Width="125"

@@ -1101,12 +1101,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void InputToChatFieldHandler(object sender, TextChangedEventArgs e)
+        private void InputToChatFieldHandler (object sender, TextChangedEventArgs e)
         {
             InputToChatField();
         }
 
-        public void InputToChatField()
+        public void InputToChatField ()
         {
             DateTime currentDateTime = DateTime.Now;
             TimeSpan diff = currentDateTime.Subtract(lastInputTimeStamp);
@@ -1118,6 +1118,92 @@ namespace GamaManager.Dialogs
                 client.EmitAsync("user_write_msg", eventData);
             }
             lastInputTimeStamp = currentDateTime;
+
+            try
+            {
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
+                {
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isLocalCanNotify = talkRole.notifyAllUsers;
+                                            bool isRoleMatch = isRoleFound && isLocalCanNotify;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanNotify = isHaveRoles || isOwner;
+                                        if (isCanNotify)
+                                        {
+                                            string inputChatMsgBoxContent = inputChatMsgBox.Text;
+                                            bool isShowPopup = inputChatMsgBoxContent.Contains(@" @") || inputChatMsgBoxContent.StartsWith(@"@"); ;
+                                            if (isShowPopup)
+                                            {
+                                                inputChatMsgPopup.PlacementTarget = inputChatMsgBox;
+                                                inputChatMsgPopup.IsOpen = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         private void AttachFileHandler(object sender, RoutedEventArgs e)

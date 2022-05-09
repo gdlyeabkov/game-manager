@@ -234,6 +234,33 @@
             <StackPanel
                 Orientation="Horizontal"    
             >
+                <Popup
+                    x:Name="inputChatMsgPopup"
+                    StaysOpen="False"
+                    Width="445"
+                    Height="125"
+                    IsOpen="True"
+                    Placement="Top"
+                >
+                    <Popup.Child>
+                        <StackPanel
+                            Background="LightGray"    
+                        >
+                            <TextBlock
+                                Margin="15 10"
+                                Text="Участники чата совпадающие с"    
+                            />
+                            <TextBlock
+                                Margin="15 10"
+                                Text="@all"    
+                            />
+                            <TextBlock
+                                Margin="15 10"
+                                Text="@online"     
+                            />
+                        </StackPanel>
+                    </Popup.Child>
+                </Popup>
                 <TextBox
                     x:Name="inputChatMsgBox"    
                     Margin="15 0"

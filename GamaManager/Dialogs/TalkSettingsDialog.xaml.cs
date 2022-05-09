@@ -514,9 +514,90 @@ namespace GamaManager.Dialogs
 
         public void CreateTextChannel ()
         {
-            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
-            dialog.Closed += GetChannelsHandler;
-            dialog.Show();
+            try
+            {
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
+                {
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isLocalCanCreateChannels = talkRole.createAndUpdateChannels;
+                                            bool isRoleMatch = isRoleFound && isLocalCanCreateChannels;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanCreateChannels = isHaveRoles || isOwner;
+                                        if (isCanCreateChannels)
+                                        {
+                                            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+                                            dialog.Closed += GetChannelsHandler;
+                                            dialog.Show();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("У вас нет разрешения создавать каналы. Обратитесь к владельцу беседы.", "Внимание");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetChannelsHandler (object sender, EventArgs e)
@@ -558,21 +639,102 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/remove/?id=" + id);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
                 {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                        string status = myobj.status;
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            GetChannels();
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isLocalCanRemoveChannels = talkRole.createAndUpdateChannels;
+                                            bool isRoleMatch = isRoleFound && isLocalCanRemoveChannels;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanRemoveChannels = isHaveRoles || isOwner;
+                                        if (isCanRemoveChannels)
+                                        {
+                                            try
+                                            {
+                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/remove/?id=" + id);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = reader.ReadToEnd();
+                                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            GetChannels();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            catch (System.Net.WebException)
+                                            {
+                                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                this.Close();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("У вас нет разрешения обновлять каналы. Обратитесь к владельцу беседы.", "Внимание");
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -753,8 +915,9 @@ namespace GamaManager.Dialogs
             CancelUpdateRoles();
         }
 
-        public void CancelUpdateRoles()
+        public void CancelUpdateRoles ()
         {
+            GetRoles();
             permissionsControl.SelectedIndex = 1;
         }
 
@@ -866,6 +1029,7 @@ namespace GamaManager.Dialogs
 
         public void GetRoles ()
         {
+            MenuItem roleInnerContextMenuItem;
             roles.Children.Clear();
             try
             {
@@ -925,80 +1089,152 @@ namespace GamaManager.Dialogs
                                                 ContextMenu roleContextMenu = new ContextMenu();
                                                 MenuItem roleContextMenuItem = new MenuItem();
                                                 roleContextMenuItem.Header = "Добавить";
-                                                foreach (TalkRelation relation in relations)
+                                                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                                                rolesRequest.Method = "GET";
+                                                rolesRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
                                                 {
-                                                    string talkRelationTalkId = relation.talk;
-                                                    bool isUserForCurrentTalk = talkRelationTalkId == talkId;
-                                                    if (isUserForCurrentTalk)
+                                                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
                                                     {
-                                                        Talk talk = GetTalkInfo();
-                                                        string talkOwner = talk.owner;
-                                                        string talkRelationUserId = relation.user;
-                                                        bool isNotOwner = talkOwner != talkRelationUserId;
-                                                        if (isNotOwner)
+                                                        js = new JavaScriptSerializer();
+                                                        objText = rolesReader.ReadToEnd();
+                                                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                                                        status = myRolesObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
                                                         {
-                                                            bool isNotMe = currentUserId != talkRelationUserId;
-                                                            if (isNotMe)
+                                                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                                                            roleRelationsWebRequest.Method = "GET";
+                                                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                                                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
                                                             {
-                                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
-                                                                nestedWebRequest.Method = "GET";
-                                                                nestedWebRequest.UserAgent = ".NET Framework Test Client";
-                                                                using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
                                                                 {
-                                                                    using (StreamReader nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                                    js = new JavaScriptSerializer();
+                                                                    objText = roleRelationsReader.ReadToEnd();
+                                                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                                                    status = myRoleRelationsObj.status;
+                                                                    isOkStatus = status == "OK";
+                                                                    if (isOkStatus)
                                                                     {
-                                                                        js = new JavaScriptSerializer();
-                                                                        objText = nestedReader.ReadToEnd();
-                                                                        TalkRoleRelationsResponseInfo myNestedObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
-                                                                        status = myNestedObj.status;
-                                                                        isOkStatus = status == "OK";
-                                                                        if (isOkStatus)
+                                                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
                                                                         {
-                                                                            List<TalkRoleRelation> roleRelations = myNestedObj.relations;
-                                                                            List<TalkRoleRelation> currentRoleRelations = roleRelations.Where<TalkRoleRelation>((TalkRoleRelation roleRelation) =>
+                                                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                                                            bool isLocalCurrentTalk = talkRoleRelationTalkId == talkId;
+                                                                            bool isCurrentTalkRoleRelation = isCurrentUser && isLocalCurrentTalk;
+                                                                            return isCurrentTalkRoleRelation;
+                                                                        }).ToList<TalkRoleRelation>();
+                                                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                                                        {
+                                                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                                                        }
+                                                                        List<Role> myRoles = talkRoles.Where<Role>((Role localTalkRole) =>
+                                                                        {
+                                                                            string talkRoleId = localTalkRole._id;
+                                                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                                                            bool isCanInvite = localTalkRole.invite;
+                                                                            bool isRoleMatch = isRoleFound && isCanInvite;
+                                                                            return isRoleMatch;
+                                                                        }).ToList<Role>();
+                                                                        int myRolesCount = myRoles.Count;
+                                                                        bool isHaveRoles = myRolesCount >= 1;
+                                                                        Talk talk = GetTalkInfo();
+                                                                        string talkOwner = talk.owner;
+                                                                        bool isOwner = currentUserId == talkOwner;
+                                                                        bool isCanInviteUsers = isHaveRoles || isOwner;
+                                                                        if (isCanInviteUsers)
+                                                                        {
+                                                                            foreach (TalkRelation relation in relations)
                                                                             {
-                                                                                string localRoleId = roleRelation.role;
-                                                                                bool isCurrentRoleRelation = localRoleId == roleId;
-                                                                                return isCurrentRoleRelation;
-                                                                            }).ToList<TalkRoleRelation>();
-                                                                            List<string> currentRoleRelationUsers = new List<string>();
-                                                                            foreach (TalkRoleRelation currentRoleRelation in currentRoleRelations)
-                                                                            {
-                                                                                string currentRoleRelationUserId = currentRoleRelation.user;
-                                                                                currentRoleRelationUsers.Add(currentRoleRelationUserId);
-                                                                            }
-                                                                            bool isUserAlreadyHaveRole = currentRoleRelationUsers.Contains(talkRelationUserId);
-                                                                            bool isUserNotHaveRole = !isUserAlreadyHaveRole;
-                                                                            if (isUserNotHaveRole)
-                                                                            {
-                                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + talkRelationUserId);
-                                                                                innerNestedWebRequest.Method = "GET";
-                                                                                innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
-                                                                                using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                                string talkRelationTalkId = relation.talk;
+                                                                                bool isUserForCurrentTalk = talkRelationTalkId == talkId;
+                                                                                if (isUserForCurrentTalk)
                                                                                 {
-                                                                                    using (StreamReader innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                                    talk = GetTalkInfo();
+                                                                                    talkOwner = talk.owner;
+                                                                                    string talkRelationUserId = relation.user;
+                                                                                    bool isNotOwner = talkOwner != talkRelationUserId;
+                                                                                    if (isNotOwner)
                                                                                     {
-                                                                                        js = new JavaScriptSerializer();
-                                                                                        objText = innerNestedReader.ReadToEnd();
-                                                                                        UserResponseInfo myInnerNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                                                                        status = myInnerNestedObj.status;
-                                                                                        isOkStatus = status == "OK";
-                                                                                        if (isOkStatus)
+                                                                                        bool isNotMe = currentUserId != talkRelationUserId;
+                                                                                        if (isNotMe)
                                                                                         {
-                                                                                            User user = myInnerNestedObj.user;
-                                                                                            string userName = user.name;
-                                                                                            MenuItem roleInnerContextMenuItem = new MenuItem();
-                                                                                            roleInnerContextMenuItem.Header = userName;
-                                                                                            Dictionary<String, Object> roleInnerContextMenuItemData = new Dictionary<String, Object>();
-                                                                                            roleInnerContextMenuItemData.Add("role", roleId);
-                                                                                            roleInnerContextMenuItemData.Add("user", talkRelationUserId);
-                                                                                            roleInnerContextMenuItem.DataContext = roleInnerContextMenuItemData;
-                                                                                            roleInnerContextMenuItem.Click += AssignRoleToUserHandler;
-                                                                                            roleContextMenuItem.Items.Add(roleInnerContextMenuItem);
+                                                                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                                                                                            nestedWebRequest.Method = "GET";
+                                                                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                                                            {
+                                                                                                using (StreamReader nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                                                                {
+                                                                                                    js = new JavaScriptSerializer();
+                                                                                                    objText = nestedReader.ReadToEnd();
+                                                                                                    TalkRoleRelationsResponseInfo myNestedObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                                                                                    status = myNestedObj.status;
+                                                                                                    isOkStatus = status == "OK";
+                                                                                                    if (isOkStatus)
+                                                                                                    {
+                                                                                                        List<TalkRoleRelation> roleRelations = myNestedObj.relations;
+                                                                                                        List<TalkRoleRelation> currentRoleRelations = roleRelations.Where<TalkRoleRelation>((TalkRoleRelation roleRelation) =>
+                                                                                                        {
+                                                                                                            string localRoleId = roleRelation.role;
+                                                                                                            bool isCurrentRoleRelation = localRoleId == roleId;
+                                                                                                            return isCurrentRoleRelation;
+                                                                                                        }).ToList<TalkRoleRelation>();
+                                                                                                        List<string> currentRoleRelationUsers = new List<string>();
+                                                                                                        foreach (TalkRoleRelation currentRoleRelation in currentRoleRelations)
+                                                                                                        {
+                                                                                                            string currentRoleRelationUserId = currentRoleRelation.user;
+                                                                                                            currentRoleRelationUsers.Add(currentRoleRelationUserId);
+                                                                                                        }
+                                                                                                        bool isUserAlreadyHaveRole = currentRoleRelationUsers.Contains(talkRelationUserId);
+                                                                                                        bool isUserNotHaveRole = !isUserAlreadyHaveRole;
+                                                                                                        if (isUserNotHaveRole)
+                                                                                                        {
+                                                                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + talkRelationUserId);
+                                                                                                            innerNestedWebRequest.Method = "GET";
+                                                                                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                                                            {
+                                                                                                                using (StreamReader innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                                                                {
+                                                                                                                    js = new JavaScriptSerializer();
+                                                                                                                    objText = innerNestedReader.ReadToEnd();
+                                                                                                                    UserResponseInfo myInnerNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                                                    status = myInnerNestedObj.status;
+                                                                                                                    isOkStatus = status == "OK";
+                                                                                                                    if (isOkStatus)
+                                                                                                                    {
+                                                                                                                        User user = myInnerNestedObj.user;
+                                                                                                                        string userName = user.name;
+                                                                                                                        roleInnerContextMenuItem = new MenuItem();
+                                                                                                                        roleInnerContextMenuItem.Header = userName;
+                                                                                                                        Dictionary<String, Object> roleInnerContextMenuItemData = new Dictionary<String, Object>();
+                                                                                                                        roleInnerContextMenuItemData.Add("role", roleId);
+                                                                                                                        roleInnerContextMenuItemData.Add("user", talkRelationUserId);
+                                                                                                                        roleInnerContextMenuItem.DataContext = roleInnerContextMenuItemData;
+                                                                                                                        roleInnerContextMenuItem.Click += AssignRoleToUserHandler;
+                                                                                                                        roleContextMenuItem.Items.Add(roleInnerContextMenuItem);
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
                                                                                         }
                                                                                     }
                                                                                 }
                                                                             }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            roleContextMenuItem.IsEnabled = false;
                                                                         }
                                                                     }
                                                                 }
@@ -1009,8 +1245,7 @@ namespace GamaManager.Dialogs
                                                 roleContextMenu.Items.Add(roleContextMenuItem);
                                                 roleContextMenuItem = new MenuItem();
                                                 roleContextMenuItem.Header = "Удалить";
-
-                                                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                                                rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
                                                 rolesRequest.Method = "GET";
                                                 rolesRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
@@ -1142,7 +1377,7 @@ namespace GamaManager.Dialogs
                                                                                                                         {
                                                                                                                             User user = myInnerNestedObj.user;
                                                                                                                             string userName = user.name;
-                                                                                                                            MenuItem roleInnerContextMenuItem = new MenuItem();
+                                                                                                                            roleInnerContextMenuItem = new MenuItem();
                                                                                                                             roleInnerContextMenuItem.Header = userName;
                                                                                                                             Dictionary<String, Object> roleInnerContextMenuItemData = new Dictionary<String, Object>();
                                                                                                                             roleInnerContextMenuItemData.Add("relation", relationId);
@@ -1161,14 +1396,11 @@ namespace GamaManager.Dialogs
                                                                                     }
                                                                                 }
                                                                             }
-
                                                                         }
                                                                         else
                                                                         {
                                                                             roleContextMenuItem.IsEnabled = false;
                                                                         }
-
-                                                                        
                                                                     }
                                                                 }
                                                             }
@@ -1177,8 +1409,17 @@ namespace GamaManager.Dialogs
                                                 }
 
                                                 roleContextMenu.Items.Add(roleContextMenuItem);
+                                                roleContextMenuItem = new MenuItem();
+                                                roleContextMenuItem.Header = "Блокировать";
+                                                
+                                                /*roleInnerContextMenuItem = new MenuItem();
+                                                roleInnerContextMenuItem.Header = "userName";
+                                                roleInnerContextMenuItem.DataContext = "";
+                                                roleInnerContextMenuItem.Click += RemoveRoleFromUserHandler;
+                                                roleContextMenuItem.Items.Add(roleInnerContextMenuItem);*/
+                                                
+                                                roleContextMenu.Items.Add(roleContextMenuItem);
                                                 role.ContextMenu = roleContextMenu;
-
                                             }
                                         }
                                     }
@@ -1193,6 +1434,86 @@ namespace GamaManager.Dialogs
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            try
+            {
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
+                {
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isCanEditInfo = talkRole.updateTalkTitleSloganAndAvatar;
+                                            bool isRoleMatch = isRoleFound && isCanEditInfo;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanEdit = isHaveRoles || isOwner;
+                                        talkTitleBox.IsEnabled = isCanEdit;
+                                        talkSloganBox.IsEnabled = isCanEdit;
+                                        talkSloganBox.IsEnabled = isCanEdit;
+                                        addIconBtn.IsEnabled = isCanEdit;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         public void RemoveRoleFromUserHandler (object sender, RoutedEventArgs e)

@@ -505,6 +505,7 @@
                                                 x:Name="mainRoleSendMsgsCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -519,6 +520,7 @@
                                                 x:Name="mainRoleNotifyAllUsersCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -533,6 +535,7 @@
                                                 x:Name="mainRoleBindAndUnbindStreamsCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <TextBlock
@@ -552,6 +555,7 @@
                                                 x:Name="mainRoleKickCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -566,6 +570,7 @@
                                                 x:Name="mainRoleBlockCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -580,6 +585,7 @@
                                                 x:Name="mainRoleInviteCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -594,6 +600,7 @@
                                                 x:Name="mainRoleUpdateRolesCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -608,6 +615,7 @@
                                                 x:Name="mainRoleAssignRolesCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <TextBlock
@@ -627,6 +635,7 @@
                                                 x:Name="mainRoleUpdateTalkTitleSloganAndAvatarCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <DockPanel
@@ -641,6 +650,7 @@
                                                 x:Name="mainRoleCreateAndUpdateChannelsCheckBox"
                                                 Margin="15"
                                                 HorizontalAlignment="Right"  
+                                                Click="ToggleMainRoleSettingsHandler"
                                             />
                                         </DockPanel>
                                         <Button

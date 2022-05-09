@@ -63,6 +63,7 @@ namespace GamaManager.Dialogs
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+        
         public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats)
         {
             InitializeComponent();
@@ -427,8 +428,10 @@ namespace GamaManager.Dialogs
             }
         }
 
+        // public void AddChat()
         public void AddChat()
         {
+
             TabItem newChat = new TabItem();
 
             newChat.Header = this.chats[this.chats.Count - 1];

@@ -15679,4 +15679,18 @@ namespace GamaManager
         public bool isCustom;
     }
 
+    public class TalkRoleRelationsResponseInfo
+    {
+        public string status;
+        public List<TalkRoleRelation> relations;
+    }
+
+    public class TalkRoleRelation
+    {
+        public string _id;
+        public string role;
+        public string user;
+        public string talk;
+    }
+
 }

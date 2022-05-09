@@ -235,185 +235,139 @@ namespace GamaManager.Dialogs
                     string cachedId = result[4];
                     string msgChannelId = result[5];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
-                    /*try
+                    string currentFriendId = this.talkId;
+                    bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
+                    Debugger.Log(0, "debug", Environment.NewLine + "isCurrentChat: " + isCurrentChat.ToString() + Environment.NewLine);
+                    if (isCurrentChat)
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
-                        webRequest.Method = "GET";
-                        webRequest.UserAgent = ".NET Framework Test Client";
-                        using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                        this.Dispatcher.Invoke(() =>
                         {
-                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            try
                             {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
-                                var objText = reader.ReadToEnd();
-                                FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
-                                string status = myobj.status;
-                                bool isOkStatus = status == "OK";
-                                if (isOkStatus)
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                 {
-                                    List<Friend> friends = myobj.friends;
-                                    List<Friend> myFriends = friends.Where<Friend>((Friend joint) =>
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                     {
-                                        string localUserId = joint.user;
-                                        bool isMyFriend = localUserId == currentUserId;
-                                        return isMyFriend;
-                                    }).ToList<Friend>();
-                                    List<string> friendsIds = new List<string>();
-                                    foreach (Friend myFriend in myFriends)
-                                    {
-                                        string friendId = myFriend.friend;
-                                        friendsIds.Add(friendId);
-                                    }
-                                    bool isMyFriendOnline = friendsIds.Contains(userId);
-                                    Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
-                                    Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
-                                    Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
-                                    if (isMyFriendOnline)
-                                    {*/
-                                        string currentFriendId = this.talkId;
-                                        // bool isCurrentChat = currentFriendId == cachedFriendId;
-                                        bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
-                                        Debugger.Log(0, "debug", Environment.NewLine + "isCurrentChat: " + isCurrentChat.ToString() + Environment.NewLine);
-                                        if (isCurrentChat)
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myInnerObj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
                                         {
-                                            this.Dispatcher.Invoke(() =>
+                                            User friend = myInnerObj.user;
+                                            string friendName = friend.name;
+                                            ItemCollection chatControlItems = chatControl.Items;
+                                            object rawActiveChat = chatControlItems[activeChatIndex];
+                                            TabItem activeChat = ((TabItem)(rawActiveChat));
+
+                                            /*object rawActiveChatScrollContent = activeChat.Content;
+                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                            object rawActiveChatContent = activeChatScrollContent.Content;
+                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
+
+                                            object rawActiveChatControlContent = activeChat.Content;
+                                            TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                            ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+
+                                            // int channelIndex = activeChatControlContent.SelectedIndex;
+                                            int channelIndex = activeChatControlContent.SelectedIndex;
+                                            foreach (TabItem activeChatControlContentItem in activeChatControlContentItems)
                                             {
-                                                try
+                                                object rawChannelId = activeChatControlContentItem.DataContext;
+                                                string channelId = ((string)(rawChannelId));
+                                                bool isChannelFound = channelId == msgChannelId;
+                                                if (isChannelFound)
                                                 {
-                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
-                                                    innerWebRequest.Method = "GET";
-                                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
-                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
-                                                    {
-                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                                                        {
-                                                            JavaScriptSerializer js = new JavaScriptSerializer();
-                                                            var objText = innerReader.ReadToEnd();
-                                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                                            string status = myInnerObj.status;
-                                                            bool isOkStatus = status == "OK";
-                                                            if (isOkStatus)
-                                                            {
-                                                                User friend = myInnerObj.user;
-                                                                string friendName = friend.name;
-                                                                ItemCollection chatControlItems = chatControl.Items;
-                                                                object rawActiveChat = chatControlItems[activeChatIndex];
-                                                                TabItem activeChat = ((TabItem)(rawActiveChat));
-
-                                                                /*object rawActiveChatScrollContent = activeChat.Content;
-                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
-
-                                                                object rawActiveChatControlContent = activeChat.Content;
-                                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-
-                                                                // int channelIndex = activeChatControlContent.SelectedIndex;
-                                                                int channelIndex = activeChatControlContent.SelectedIndex;
-                                                                foreach (TabItem activeChatControlContentItem in activeChatControlContentItems)
-                                                                {
-                                                                    object rawChannelId = activeChatControlContentItem.DataContext;
-                                                                    string channelId = ((string)(rawChannelId));
-                                                                    bool isChannelFound = channelId == msgChannelId;
-                                                                    if (isChannelFound)
-                                                                    {
-                                                                        channelIndex = activeChatControlContentItems.IndexOf(activeChatControlContentItem);
-                                                                        break;
-                                                                    }
-                                                                }
-
-                                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                                                                object rawActiveChatScrollContent = activeChannel.Content;
-                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-
-                                                                StackPanel newMsg = new StackPanel();
-                                                                StackPanel newMsgHeader = new StackPanel();
-                                                                newMsgHeader.Orientation = Orientation.Horizontal;
-                                                                Image newMsgHeaderAvatar = new Image();
-                                                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                                                newMsgHeaderAvatar.Width = 25;
-                                                                newMsgHeaderAvatar.Height = 25;
-                                                                newMsgHeaderAvatar.BeginInit();
-                                                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
-                                                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                                                newMsgHeaderAvatar.EndInit();
-                                                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                                                TextBlock newMsgFriendNameLabel = new TextBlock();
-                                                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                newMsgFriendNameLabel.Text = friendName;
-                                                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                                                TextBlock newMsgDateLabel = new TextBlock();
-                                                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                DateTime currentDate = DateTime.Now;
-                                                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                                                newMsgDateLabel.Text = rawCurrentDate;
-                                                                newMsgHeader.Children.Add(newMsgDateLabel);
-                                                                newMsg.Children.Add(newMsgHeader);
-                                                                if (msgType == "text")
-                                                                {
-                                                                    TextBlock newMsgLabel = new TextBlock();
-                                                                    string newMsgContent = msg;
-                                                                    newMsgLabel.Text = newMsgContent;
-                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                    inputChatMsgBox.Text = "";
-                                                                    newMsg.Children.Add(newMsgLabel);
-                                                                    activeChatContent.Children.Add(newMsg);
-                                                                }
-                                                                else if (msgType == "emoji")
-                                                                {
-                                                                    Image newMsgLabel = new Image();
-                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                    newMsgLabel.Width = 35;
-                                                                    newMsgLabel.Height = 35;
-                                                                    newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                                                    newMsgLabel.BeginInit();
-                                                                    newMsgLabel.Source = new BitmapImage(new Uri(msg));
-                                                                    newMsgLabel.EndInit();
-                                                                    inputChatMsgBox.Text = "";
-                                                                    newMsg.Children.Add(newMsgLabel);
-                                                                    activeChatContent.Children.Add(newMsg);
-                                                                }
-                                                                else if (msgType == "file")
-                                                                {
-                                                                    Image newMsgLabel = new Image();
-                                                                    newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                                                    newMsgLabel.Width = 35;
-                                                                    newMsgLabel.Height = 35;
-                                                                    newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                                                    newMsgLabel.BeginInit();
-                                                                    Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
-                                                                    newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
-                                                                    newMsgLabel.EndInit();
-                                                                    inputChatMsgBox.Text = "";
-                                                                    newMsg.Children.Add(newMsgLabel);
-                                                                    activeChatContent.Children.Add(newMsg);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    FlashWindow(this);
+                                                    channelIndex = activeChatControlContentItems.IndexOf(activeChatControlContentItem);
+                                                    break;
                                                 }
-                                                catch (System.Net.WebException)
-                                                {
-                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                                                    this.Close();
-                                                }
-                                            });
+                                            }
+
+                                            object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                            TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                            object rawActiveChatScrollContent = activeChannel.Content;
+                                            ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                            object rawActiveChatContent = activeChatScrollContent.Content;
+                                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                                            StackPanel newMsg = new StackPanel();
+                                            StackPanel newMsgHeader = new StackPanel();
+                                            newMsgHeader.Orientation = Orientation.Horizontal;
+                                            Image newMsgHeaderAvatar = new Image();
+                                            newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                            newMsgHeaderAvatar.Width = 25;
+                                            newMsgHeaderAvatar.Height = 25;
+                                            newMsgHeaderAvatar.BeginInit();
+                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
+                                            newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                            newMsgHeaderAvatar.EndInit();
+                                            newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                            TextBlock newMsgFriendNameLabel = new TextBlock();
+                                            newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                            newMsgFriendNameLabel.Text = friendName;
+                                            newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                            TextBlock newMsgDateLabel = new TextBlock();
+                                            newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                            DateTime currentDate = DateTime.Now;
+                                            string rawCurrentDate = currentDate.ToLongTimeString();
+                                            newMsgDateLabel.Text = rawCurrentDate;
+                                            newMsgHeader.Children.Add(newMsgDateLabel);
+                                            newMsg.Children.Add(newMsgHeader);
+                                            if (msgType == "text")
+                                            {
+                                                TextBlock newMsgLabel = new TextBlock();
+                                                string newMsgContent = msg;
+                                                newMsgLabel.Text = newMsgContent;
+                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                inputChatMsgBox.Text = "";
+                                                newMsg.Children.Add(newMsgLabel);
+                                                activeChatContent.Children.Add(newMsg);
+                                            }
+                                            else if (msgType == "emoji")
+                                            {
+                                                Image newMsgLabel = new Image();
+                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                newMsgLabel.Width = 35;
+                                                newMsgLabel.Height = 35;
+                                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                newMsgLabel.BeginInit();
+                                                newMsgLabel.Source = new BitmapImage(new Uri(msg));
+                                                newMsgLabel.EndInit();
+                                                inputChatMsgBox.Text = "";
+                                                newMsg.Children.Add(newMsgLabel);
+                                                activeChatContent.Children.Add(newMsg);
+                                            }
+                                            else if (msgType == "file")
+                                            {
+                                                Image newMsgLabel = new Image();
+                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                newMsgLabel.Width = 35;
+                                                newMsgLabel.Height = 35;
+                                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                newMsgLabel.BeginInit();
+                                                Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
+                                                newMsgLabel.EndInit();
+                                                inputChatMsgBox.Text = "";
+                                                newMsg.Children.Add(newMsgLabel);
+                                                activeChatContent.Children.Add(newMsg);
+                                            }
                                         }
-                                    /*}
+                                    }
                                 }
+                                FlashWindow(this);
                             }
-                        }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        });
                     }
-                    catch (System.Net.WebException)
-                    {
-                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                        this.Close();
-                    }*/
                 });
                 client.On("friend_write_msg", async response =>
                 {
@@ -911,273 +865,231 @@ namespace GamaManager.Dialogs
             FlashWindowEx(ref info);
         }
 
-        /*        async public void SendMsg(string newMsgContent)
-                {
-                    try
-                    {
-                        try
-                        {
-                            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
-                            webRequest.Method = "GET";
-                            webRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                            {
-                                using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                                {
-                                    JavaScriptSerializer js = new JavaScriptSerializer();
-                                    string objText = innerReader.ReadToEnd();
-                                    UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                    string status = myobj.status;
-                                    bool isOkStatus = status == "OK";
-                                    if (isOkStatus)
-                                    {
-                                        User friend = myobj.user;
-                                        string friendName = friend.name;
-                                        ItemCollection chatControlItems = chatControl.Items;
-                                        object rawActiveChat = chatControlItems[activeChatIndex];
-                                        TabItem activeChat = ((TabItem)(rawActiveChat));
-                                        object rawActiveChatScrollContent = activeChat.Content;
-                                        ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                        object rawActiveChatContent = activeChatScrollContent.Content;
-                                        StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-                                        StackPanel newMsg = new StackPanel();
-                                        StackPanel newMsgHeader = new StackPanel();
-                                        newMsgHeader.Orientation = Orientation.Horizontal;
-                                        Image newMsgHeaderAvatar = new Image();
-                                        newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                        newMsgHeaderAvatar.Width = 25;
-                                        newMsgHeaderAvatar.Height = 25;
-                                        newMsgHeaderAvatar.BeginInit();
-                                        Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-                                        newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                        newMsgHeaderAvatar.EndInit();
-                                        newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                        TextBlock newMsgFriendNameLabel = new TextBlock();
-                                        newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                        newMsgFriendNameLabel.Text = friendName;
-                                        newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                        TextBlock newMsgDateLabel = new TextBlock();
-                                        newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                        DateTime currentDate = DateTime.Now;
-                                        string rawCurrentDate = currentDate.ToLongTimeString();
-                                        newMsgDateLabel.Text = rawCurrentDate;
-                                        newMsgHeader.Children.Add(newMsgDateLabel);
-                                        newMsg.Children.Add(newMsgHeader);
-                                        TextBlock newMsgLabel = new TextBlock();
-                                        newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                        newMsgLabel.Text = newMsgContent;
-                                        inputChatMsgBox.Text = "";
-                                        newMsg.Children.Add(newMsgLabel);
-                                        activeChatContent.Children.Add(newMsg);
-                                    }
-                                }
-                            }
-                        }
-                        catch (System.Net.WebException)
-                        {
-                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                            this.Close();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Debugger.Log(0, "debug", "поток занят");
-                    }
-                    try
-                    {
-                        string newMsgType = "text";
-                        string newMsgId = "mock";
-                        await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId);
-
-                    }
-                    catch (System.Net.WebSockets.WebSocketException)
-                    {
-                        Debugger.Log(0, "debug", "Ошибка сокетов");
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        Debugger.Log(0, "debug", "Нельзя отправить повторно");
-                    }
-                    try
-                    {
-                        string newMsgType = "text";
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + newMsgContent + "&type=" + newMsgType);
-                        webRequest.Method = "GET";
-                        webRequest.UserAgent = ".NET Framework Test Client";
-                        using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                        {
-                            using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                            {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
-                                string objText = innerReader.ReadToEnd();
-                                UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                string status = myobj.status;
-                                bool isOkStatus = status == "OK";
-                                if (isOkStatus)
-                                {
-
-                                }
-                            }
-                        }
-                    }
-                    catch (System.Net.WebException)
-                    {
-                        MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                        this.Close();
-                    }
-                }*/
-
         async public void SendMsg(string newMsgContent)
         {
+
             try
             {
-                try
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
-                    webRequest.Method = "GET";
-                    webRequest.UserAgent = ".NET Framework Test Client";
-                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                    {
-                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                        {
-                            JavaScriptSerializer js = new JavaScriptSerializer();
-                            string objText = innerReader.ReadToEnd();
-                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                            string status = myobj.status;
-                            bool isOkStatus = status == "OK";
-                            if (isOkStatus)
-                            {
-                                User friend = myobj.user;
-                                string friendName = friend.name;
-                                ItemCollection chatControlItems = chatControl.Items;
-                                object rawActiveChat = chatControlItems[activeChatIndex];
-                                TabItem activeChat = ((TabItem)(rawActiveChat));
-                                // object rawActiveChatScrollContent = activeChat.Content;
-                                // ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                // object rawActiveChatContent = activeChatScrollContent.Content;
-                                // StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-
-                                object rawActiveChatControlContent = activeChat.Content;
-                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                                int channelIndex = activeChatControlContent.SelectedIndex;
-                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                                object rawActiveChatScrollContent = activeChannel.Content;
-                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-
-                                StackPanel newMsg = new StackPanel();
-                                StackPanel newMsgHeader = new StackPanel();
-                                newMsgHeader.Orientation = Orientation.Horizontal;
-                                Image newMsgHeaderAvatar = new Image();
-                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgHeaderAvatar.Width = 25;
-                                newMsgHeaderAvatar.Height = 25;
-                                newMsgHeaderAvatar.BeginInit();
-                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                newMsgHeaderAvatar.EndInit();
-                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                TextBlock newMsgFriendNameLabel = new TextBlock();
-                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgFriendNameLabel.Text = friendName;
-                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                TextBlock newMsgDateLabel = new TextBlock();
-                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                DateTime currentDate = DateTime.Now;
-                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                newMsgDateLabel.Text = rawCurrentDate;
-                                newMsgHeader.Children.Add(newMsgDateLabel);
-                                newMsg.Children.Add(newMsgHeader);
-                                TextBlock newMsgLabel = new TextBlock();
-                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                newMsgLabel.Text = newMsgContent;
-                                inputChatMsgBox.Text = "";
-                                newMsg.Children.Add(newMsgLabel);
-                                activeChatContent.Children.Add(newMsg);
-                            }
-                        }
-                    }
-                }
-                catch (System.Net.WebException)
-                {
-                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                    this.Close();
-                }
-            }
-            catch (Exception)
-            {
-                Debugger.Log(0, "debug", "поток занят");
-            }
-            try
-            {
-                string newMsgType = "text";
-                string newMsgId = "mock";
-
-                ItemCollection chatControlItems = chatControl.Items;
-                object rawActiveChat = chatControlItems[activeChatIndex];
-                TabItem activeChat = ((TabItem)(rawActiveChat));
-                object rawActiveChatControlContent = activeChat.Content;
-                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                int channelIndex = activeChatControlContent.SelectedIndex;
-                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                object rawChannelId = activeChannel.DataContext;
-                string channelId = ((string)(rawChannelId));
-
-                string newMsgChannel = channelId;
-
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
-
-            }
-            catch (System.Net.WebSockets.WebSocketException)
-            {
-                Debugger.Log(0, "debug", "Ошибка сокетов");
-            }
-            catch (InvalidOperationException)
-            {
-                Debugger.Log(0, "debug", "Нельзя отправить повторно");
-            }
-            try
-            {
-
-                ItemCollection chatControlItems = chatControl.Items;
-                object rawActiveChat = chatControlItems[activeChatIndex];
-                TabItem activeChat = ((TabItem)(rawActiveChat));
-
-                /*object rawActiveChatScrollContent = activeChat.Content;
-                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                object rawActiveChatContent = activeChatScrollContent.Content;
-                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
-
-                object rawActiveChatControlContent = activeChat.Content;
-                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                int channelIndex = activeChatControlContent.SelectedIndex;
-                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                object rawChannelId = activeChannel.DataContext;
-                string channelId = ((string)(rawChannelId));
-
-                string newMsgType = "text";
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + newMsgContent + "&type=" + newMsgType + @"&channel=" + channelId);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
-                        string objText = innerReader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                        string status = myobj.status;
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isCanSendMsgs = talkRole.sendMsgs;
+                                            bool isRoleMatch = isRoleFound && isCanSendMsgs;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        if (isCanSendMsg)
+                                        {
 
+                                            try
+                                            {
+                                                try
+                                                {
+                                                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                    webRequest.Method = "GET";
+                                                    webRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                    {
+                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerReader.ReadToEnd();
+                                                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                            status = myobj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                User friend = myobj.user;
+                                                                string friendName = friend.name;
+                                                                ItemCollection chatControlItems = chatControl.Items;
+                                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                                object rawActiveChatControlContent = activeChat.Content;
+                                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                                object rawActiveChatScrollContent = activeChannel.Content;
+                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                                                                StackPanel newMsg = new StackPanel();
+                                                                StackPanel newMsgHeader = new StackPanel();
+                                                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                Image newMsgHeaderAvatar = new Image();
+                                                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgHeaderAvatar.Width = 25;
+                                                                newMsgHeaderAvatar.Height = 25;
+                                                                newMsgHeaderAvatar.BeginInit();
+                                                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                newMsgHeaderAvatar.EndInit();
+                                                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgFriendNameLabel.Text = friendName;
+                                                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                TextBlock newMsgDateLabel = new TextBlock();
+                                                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                DateTime currentDate = DateTime.Now;
+                                                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                newMsgDateLabel.Text = rawCurrentDate;
+                                                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                newMsg.Children.Add(newMsgHeader);
+                                                                TextBlock newMsgLabel = new TextBlock();
+                                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                newMsgLabel.Text = newMsgContent;
+                                                                inputChatMsgBox.Text = "";
+                                                                newMsg.Children.Add(newMsgLabel);
+                                                                activeChatContent.Children.Add(newMsg);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                catch (System.Net.WebException)
+                                                {
+                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                    this.Close();
+                                                }
+                                            }
+                                            catch (Exception)
+                                            {
+                                                Debugger.Log(0, "debug", "поток занят");
+                                            }
+                                            try
+                                            {
+                                                string newMsgType = "text";
+                                                string newMsgId = "mock";
+
+                                                ItemCollection chatControlItems = chatControl.Items;
+                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                object rawActiveChatControlContent = activeChat.Content;
+                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                object rawChannelId = activeChannel.DataContext;
+                                                string channelId = ((string)(rawChannelId));
+
+                                                string newMsgChannel = channelId;
+
+                                                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
+
+                                            }
+                                            catch (System.Net.WebSockets.WebSocketException)
+                                            {
+                                                Debugger.Log(0, "debug", "Ошибка сокетов");
+                                            }
+                                            catch (InvalidOperationException)
+                                            {
+                                                Debugger.Log(0, "debug", "Нельзя отправить повторно");
+                                            }
+                                            try
+                                            {
+
+                                                ItemCollection chatControlItems = chatControl.Items;
+                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+
+                                                object rawActiveChatControlContent = activeChat.Content;
+                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                object rawChannelId = activeChannel.DataContext;
+                                                string channelId = ((string)(rawChannelId));
+
+                                                string newMsgType = "text";
+                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + newMsgContent + "&type=" + newMsgType + @"&channel=" + channelId);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            catch (System.Net.WebException)
+                                            {
+                                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                this.Close();
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("У вас нет разрешения отправлять сообщения. Обратитесь к владельцу беседы.", "Внимание");
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1215,15 +1127,96 @@ namespace GamaManager.Dialogs
 
         public void AttachFile()
         {
-            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.Title = "Выберите изображение";
-            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff";
-            bool? res = ofd.ShowDialog();
-            bool isOpened = res != false;
-            if (isOpened)
+            try
             {
-                string filePath = ofd.FileName;
-                SendFileMsg(filePath);
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
+                {
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
+                            {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isCanSendMsgs = talkRole.sendMsgs;
+                                            bool isRoleMatch = isRoleFound && isCanSendMsgs;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        if (isCanSendMsg)
+                                        {
+                                            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+                                            ofd.Title = "Выберите изображение";
+                                            ofd.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff";
+                                            bool? res = ofd.ShowDialog();
+                                            bool isOpened = res != false;
+                                            if (isOpened)
+                                            {
+                                                string filePath = ofd.FileName;
+                                                SendFileMsg(filePath);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("У вас нет разрешения отправлять сообщения. Обратитесь к владельцу беседы.", "Внимание");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -1256,11 +1249,6 @@ namespace GamaManager.Dialogs
                                 ItemCollection chatControlItems = chatControl.Items;
                                 object rawActiveChat = chatControlItems[activeChatIndex];
                                 TabItem activeChat = ((TabItem)(rawActiveChat));
-
-                                /*object rawActiveChatScrollContent = activeChat.Content;
-                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
 
                                 object rawActiveChatControlContent = activeChat.Content;
                                 TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
@@ -1331,11 +1319,6 @@ namespace GamaManager.Dialogs
                 object rawActiveChat = chatControlItems[activeChatIndex];
                 TabItem activeChat = ((TabItem)(rawActiveChat));
 
-                /*object rawActiveChatScrollContent = activeChat.Content;
-                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                object rawActiveChatContent = activeChatScrollContent.Content;
-                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
-
                 object rawActiveChatControlContent = activeChat.Content;
                 TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
                 int channelIndex = activeChatControlContent.SelectedIndex;
@@ -1401,166 +1384,236 @@ namespace GamaManager.Dialogs
             AddEmojiMsg(emojiData);
         }
 
-        async public void AddEmojiMsg(string emojiData)
+        async public void AddEmojiMsg (string emojiData)
         {
             try
             {
-                try
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                rolesRequest.Method = "GET";
+                rolesRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
-                    webRequest.Method = "GET";
-                    webRequest.UserAgent = ".NET Framework Test Client";
-                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                    {
-                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                        {
-                            JavaScriptSerializer js = new JavaScriptSerializer();
-                            string objText = innerReader.ReadToEnd();
-                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                            string status = myobj.status;
-                            bool isOkStatus = status == "OK";
-                            if (isOkStatus)
-                            {
-                                User friend = myobj.user;
-                                string friendName = friend.name;
-                                ItemCollection chatControlItems = chatControl.Items;
-                                object rawActiveChat = chatControlItems[activeChatIndex];
-                                TabItem activeChat = ((TabItem)(rawActiveChat));
-
-                                /*object rawActiveChatScrollContent = activeChat.Content;
-                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
-
-                                object rawActiveChatControlContent = activeChat.Content;
-                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                                int channelIndex = activeChatControlContent.SelectedIndex;
-                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                                object rawActiveChatScrollContent = activeChannel.Content;
-                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                object rawActiveChatContent = activeChatScrollContent.Content;
-                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
-
-                                StackPanel newMsg = new StackPanel();
-                                StackPanel newMsgHeader = new StackPanel();
-                                newMsgHeader.Orientation = Orientation.Horizontal;
-                                Image newMsgHeaderAvatar = new Image();
-                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgHeaderAvatar.Width = 25;
-                                newMsgHeaderAvatar.Height = 25;
-                                newMsgHeaderAvatar.BeginInit();
-                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
-                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
-                                newMsgHeaderAvatar.EndInit();
-                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
-                                TextBlock newMsgFriendNameLabel = new TextBlock();
-                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                newMsgFriendNameLabel.Text = friendName;
-                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
-                                TextBlock newMsgDateLabel = new TextBlock();
-                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                DateTime currentDate = DateTime.Now;
-                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                newMsgDateLabel.Text = rawCurrentDate;
-                                newMsgHeader.Children.Add(newMsgDateLabel);
-                                newMsg.Children.Add(newMsgHeader);
-                                Image newMsgLabel = new Image();
-                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
-                                newMsgLabel.Width = 35;
-                                newMsgLabel.Height = 35;
-                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
-                                newMsgLabel.BeginInit();
-                                newMsgLabel.Source = new BitmapImage(new Uri(emojiData));
-                                newMsgLabel.EndInit();
-                                inputChatMsgBox.Text = "";
-                                newMsg.Children.Add(newMsgLabel);
-                                activeChatContent.Children.Add(newMsg);
-                                emojiPopup.IsOpen = false;
-                            }
-                        }
-                    }
-                }
-                catch (System.Net.WebException)
-                {
-                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                    this.Close();
-                }
-            }
-            catch (Exception)
-            {
-                Debugger.Log(0, "debug", "поток занят");
-            }
-            try
-            {
-                string newMsgType = "emoji";
-                string newMsgId = "mock";
-
-                ItemCollection chatControlItems = chatControl.Items;
-                object rawActiveChat = chatControlItems[activeChatIndex];
-                TabItem activeChat = ((TabItem)(rawActiveChat));
-                object rawActiveChatControlContent = activeChat.Content;
-                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                int channelIndex = activeChatControlContent.SelectedIndex;
-                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                object rawChannelId = activeChannel.DataContext;
-                string channelId = ((string)(rawChannelId));
-
-                string newMsgChannel = channelId;
-
-                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
-            }
-            catch (System.Net.WebSockets.WebSocketException)
-            {
-                Debugger.Log(0, "debug", "Ошибка сокетов");
-            }
-            catch (InvalidOperationException)
-            {
-                Debugger.Log(0, "debug", "Нельзя отправить повторно");
-            }
-            try
-            {
-                string newMsgType = "emoji";
-
-                ItemCollection chatControlItems = chatControl.Items;
-                object rawActiveChat = chatControlItems[activeChatIndex];
-                TabItem activeChat = ((TabItem)(rawActiveChat));
-
-                /*object rawActiveChatScrollContent = activeChat.Content;
-                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                object rawActiveChatContent = activeChatScrollContent.Content;
-                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));*/
-
-                object rawActiveChatControlContent = activeChat.Content;
-                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
-                int channelIndex = activeChatControlContent.SelectedIndex;
-                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
-                object rawActiveChannel = activeChatControlContentItems[channelIndex];
-                TabItem activeChannel = ((TabItem)(rawActiveChannel));
-                object rawChannelId = activeChannel.DataContext;
-                string channelId = ((string)(rawChannelId));
-
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=" + channelId);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
-                        string objText = innerReader.ReadToEnd();
-
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
-                        string status = myobj.status;
+                        string objText = rolesReader.ReadToEnd();
+                        TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
+                        string status = myRolesObj.status;
                         bool isOkStatus = status == "OK";
+                        if (isOkStatus)
                         {
-                            if (isOkStatus)
+                            List<Role> talkRoles = myRolesObj.roles;
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            roleRelationsWebRequest.Method = "GET";
+                            roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
                             {
+                                using (StreamReader roleRelationsReader = new StreamReader(roleRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = roleRelationsReader.ReadToEnd();
+                                    TalkRoleRelationsResponseInfo myRoleRelationsObj = (TalkRoleRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRoleRelationsResponseInfo));
+                                    status = myRoleRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRoleRelation> talkRoleRelations = myRoleRelationsObj.relations;
+                                        List<TalkRoleRelation> currentTalkRoleRelations = talkRoleRelations.Where<TalkRoleRelation>((TalkRoleRelation talkRoleRelation) =>
+                                        {
+                                            string talkRoleRelationRoleId = talkRoleRelation.role;
+                                            string talkRoleRelationTalkId = talkRoleRelation.talk;
+                                            string talkRoleRelationUserId = talkRoleRelation.user;
+                                            bool isCurrentUser = talkRoleRelationUserId == currentUserId;
+                                            bool isCurrentTalk = talkRoleRelationTalkId == talkId;
+                                            bool isCurrentTalkRoleRelation = isCurrentUser && isCurrentTalk;
+                                            return isCurrentTalkRoleRelation;
+                                        }).ToList<TalkRoleRelation>();
+                                        List<string> currentTalkRoleRelationsRoles = new List<string>();
+                                        foreach (TalkRoleRelation currentTalkRoleRelation in currentTalkRoleRelations)
+                                        {
+                                            string currentTalkRoleRelationRoleId = currentTalkRoleRelation.role;
+                                            currentTalkRoleRelationsRoles.Add(currentTalkRoleRelationRoleId);
+                                        }
+                                        List<Role> myRoles = talkRoles.Where<Role>((Role talkRole) =>
+                                        {
+                                            string talkRoleId = talkRole._id;
+                                            bool isRoleFound = currentTalkRoleRelationsRoles.Contains(talkRoleId);
+                                            bool isCanSendMsgs = talkRole.sendMsgs;
+                                            bool isRoleMatch = isRoleFound && isCanSendMsgs;
+                                            return isRoleMatch;
+                                        }).ToList<Role>();
+                                        int myRolesCount = myRoles.Count;
+                                        bool isHaveRoles = myRolesCount >= 1;
+                                        Talk talk = GetTalkInfo();
+                                        string owner = talk.owner;
+                                        bool isOwner = owner == currentUserId;
+                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        if (isCanSendMsg)
+                                        {
+                                            try
+                                            {
+                                                try
+                                                {
+                                                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                    webRequest.Method = "GET";
+                                                    webRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                    {
+                                                        using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerReader.ReadToEnd();
+                                                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                            status = myobj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                User friend = myobj.user;
+                                                                string friendName = friend.name;
+                                                                ItemCollection chatControlItems = chatControl.Items;
+                                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                                TabItem activeChat = ((TabItem)(rawActiveChat));
 
+
+                                                                object rawActiveChatControlContent = activeChat.Content;
+                                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                                object rawActiveChatScrollContent = activeChannel.Content;
+                                                                ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
+                                                                object rawActiveChatContent = activeChatScrollContent.Content;
+                                                                StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                                                                StackPanel newMsg = new StackPanel();
+                                                                StackPanel newMsgHeader = new StackPanel();
+                                                                newMsgHeader.Orientation = Orientation.Horizontal;
+                                                                Image newMsgHeaderAvatar = new Image();
+                                                                newMsgHeaderAvatar.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgHeaderAvatar.Width = 25;
+                                                                newMsgHeaderAvatar.Height = 25;
+                                                                newMsgHeaderAvatar.BeginInit();
+                                                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                                                newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
+                                                                newMsgHeaderAvatar.EndInit();
+                                                                newMsgHeader.Children.Add(newMsgHeaderAvatar);
+                                                                TextBlock newMsgFriendNameLabel = new TextBlock();
+                                                                newMsgFriendNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                newMsgFriendNameLabel.Text = friendName;
+                                                                newMsgHeader.Children.Add(newMsgFriendNameLabel);
+                                                                TextBlock newMsgDateLabel = new TextBlock();
+                                                                newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                DateTime currentDate = DateTime.Now;
+                                                                string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                newMsgDateLabel.Text = rawCurrentDate;
+                                                                newMsgHeader.Children.Add(newMsgDateLabel);
+                                                                newMsg.Children.Add(newMsgHeader);
+                                                                Image newMsgLabel = new Image();
+                                                                newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+                                                                newMsgLabel.Width = 35;
+                                                                newMsgLabel.Height = 35;
+                                                                newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                newMsgLabel.BeginInit();
+                                                                newMsgLabel.Source = new BitmapImage(new Uri(emojiData));
+                                                                newMsgLabel.EndInit();
+                                                                inputChatMsgBox.Text = "";
+                                                                newMsg.Children.Add(newMsgLabel);
+                                                                activeChatContent.Children.Add(newMsg);
+                                                                emojiPopup.IsOpen = false;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                catch (System.Net.WebException)
+                                                {
+                                                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                    this.Close();
+                                                }
+                                            }
+                                            catch (Exception)
+                                            {
+                                                Debugger.Log(0, "debug", "поток занят");
+                                            }
+                                            try
+                                            {
+                                                string newMsgType = "emoji";
+                                                string newMsgId = "mock";
+
+                                                ItemCollection chatControlItems = chatControl.Items;
+                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                                object rawActiveChatControlContent = activeChat.Content;
+                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                object rawChannelId = activeChannel.DataContext;
+                                                string channelId = ((string)(rawChannelId));
+
+                                                string newMsgChannel = channelId;
+
+                                                await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
+                                            }
+                                            catch (System.Net.WebSockets.WebSocketException)
+                                            {
+                                                Debugger.Log(0, "debug", "Ошибка сокетов");
+                                            }
+                                            catch (InvalidOperationException)
+                                            {
+                                                Debugger.Log(0, "debug", "Нельзя отправить повторно");
+                                            }
+                                            try
+                                            {
+                                                string newMsgType = "emoji";
+
+                                                ItemCollection chatControlItems = chatControl.Items;
+                                                object rawActiveChat = chatControlItems[activeChatIndex];
+                                                TabItem activeChat = ((TabItem)(rawActiveChat));
+
+                                                object rawActiveChatControlContent = activeChat.Content;
+                                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                                int channelIndex = activeChatControlContent.SelectedIndex;
+                                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                                object rawActiveChannel = activeChatControlContentItems[channelIndex];
+                                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                                object rawChannelId = activeChannel.DataContext;
+                                                string channelId = ((string)(rawChannelId));
+
+                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=" + channelId);
+                                                webRequest.Method = "GET";
+                                                webRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
+                                                {
+                                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                        status = myobj.status;
+                                                        isOkStatus = status == "OK";
+                                                        {
+                                                            if (isOkStatus)
+                                                            {
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            catch (System.Net.WebException)
+                                            {
+                                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                                this.Close();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("У вас нет разрешения отправлять сообщения. Обратитесь к владельцу беседы.", "Внимание");
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -41,6 +41,7 @@ namespace GamaManager.Dialogs
         public WaveFileWriter waveFile;
         public Brush msgsSeparatorBrush = null;
         public List<string> chats;
+        public MainWindow mainWindow;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -64,13 +65,14 @@ namespace GamaManager.Dialogs
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
         
-        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats)
+        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats, MainWindow mainWindow)
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
             this.friendId = friendId;
             this.isStartBlink = isStartBlink;
             this.chats = chats;
+            this.mainWindow = mainWindow;
         }
 
         async public void ReceiveMessages()
@@ -477,6 +479,8 @@ namespace GamaManager.Dialogs
         public void AddChat()
         {
 
+            JavaScriptSerializer js = null;
+
             TabItem newChat = new TabItem();
 
             int countChats = this.chats.Count;
@@ -493,7 +497,7 @@ namespace GamaManager.Dialogs
                 {
                     using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        js = new JavaScriptSerializer();
                         string objText = innerReader.ReadToEnd();
                         var myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                         string status = myobj.status;
@@ -531,6 +535,136 @@ namespace GamaManager.Dialogs
             newChatContextMenuItem.Header = "Закрыть вкладку";
             newChatContextMenuItem.DataContext = lastChatId;
             newChatContextMenuItem.Click += CloseChatHandler;
+            newChatContextMenu.Items.Add(newChatContextMenuItem);
+            newChatContextMenuItem = new MenuItem();
+            newChatContextMenuItem.Header = "Открыть профиль";
+            newChatContextMenuItem.DataContext = lastChatId;
+            newChatContextMenuItem.Click += OpenUserProfileHandler;
+            newChatContextMenu.Items.Add(newChatContextMenuItem);
+            newChatContextMenuItem = new MenuItem();
+            newChatContextMenuItem.Header = "Обмен";
+            newChatContextMenuItem.DataContext = lastChatId;
+            newChatContextMenuItem.Click += OpenUserProfileHandler;
+            MenuItem newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Открыть инвентарь";
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Отправить предложение обмена";
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatContextMenu.Items.Add(newChatContextMenuItem);
+            newChatContextMenuItem = new MenuItem();
+            newChatContextMenuItem.Header = "Управление";
+            newChatContextMenuItem.DataContext = lastChatId;
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Добавить ник";
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+
+            bool isFavoriteFriend = false;
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<FriendSettings> updatedFriends = loadedContent.friends;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
+            {
+                return localFriend.id == friendId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                isFavoriteFriend = cachedFriend.isFavoriteFriend;
+            }
+            bool isFriendInFavorites = isFavoriteFriend;
+            if (isFriendInFavorites)
+            {
+                newChatInnerContextMenuItem.Header = "Убрать из избранных";
+                newChatInnerContextMenuItem.Click += RemoveFriendFromFavoriteHandler;
+            }
+            else
+            {
+                newChatInnerContextMenuItem.Header = "Добавить в избранные";
+                newChatInnerContextMenuItem.Click += AddFriendToFavoriteHandler;
+            }
+
+
+
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Добавить в категорию";
+            newChatInnerContextMenuItem.Click += OpenCategoryDialogHandler;
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Уведомления";
+            newChatInnerContextMenuItem.Click += OpenFriendNotificationsDialogHandler;
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Удалить из друзей";
+            newChatInnerContextMenuItem.Click += RemoveFriendHandler;
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+            newChatInnerContextMenuItem = new MenuItem();
+            newChatInnerContextMenuItem.Header = "Предыдущие имена";
+            for (int i = 0; i < 10;  i++)
+            {
+                string nickName = i.ToString();
+                MenuItem newChatNestedContextMenuItem = new MenuItem();
+                newChatNestedContextMenuItem.Header = nickName;
+                newChatInnerContextMenuItem.Items.Add(newChatNestedContextMenuItem);
+            }
+            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+
+            try
+            {
+                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/all");
+                innerNestedWebRequest.Method = "GET";
+                innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                {
+                    using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        string objText = innerNestedReader.ReadToEnd();
+                        BlackListRelationsResponseInfo myInnerNestedObj = (BlackListRelationsResponseInfo)js.Deserialize(objText, typeof(BlackListRelationsResponseInfo));
+                        string status = myInnerNestedObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            
+                            newChatInnerContextMenuItem = new MenuItem();
+                            newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+
+                            List<BlackListRelation> relations = myInnerNestedObj.relations;
+                            List<BlackListRelation> results = relations.Where<BlackListRelation>((BlackListRelation relation) =>
+                            {
+                                bool isMyFriendInBlackList = relation.user == currentUserId && relation.friend == friendId;
+                                return isMyFriendInBlackList;
+                            }).ToList<BlackListRelation>();
+                            int countResults = results.Count;
+                            bool isHaveResults = countResults >= 1;
+                            if (isHaveResults)
+                            {
+                                newChatInnerContextMenuItem.Header = "Удалить из черного списка";
+                                newChatInnerContextMenuItem.Click += RemoveFromBlackListHandler;
+                            }
+                            else
+                            {
+                                newChatInnerContextMenuItem.Header = "Добавить в черный список";
+                                newChatInnerContextMenuItem.Click += AddToBlackListHandler;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
             newChatContextMenu.Items.Add(newChatContextMenuItem);
             newChat.ContextMenu = newChatContextMenu;
 
@@ -1893,6 +2027,334 @@ namespace GamaManager.Dialogs
                 {
                     chatControlItemContextMenuItem.IsEnabled = isManyTabs;
                 }
+            }
+        }
+
+        public void OpenUserProfileHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            OpenUserProfile(id);
+        }
+
+        public void OpenUserProfile (string id)
+        {
+            mainWindow.mainControl.DataContext = id;
+            mainWindow.ReturnToProfile();
+        }
+
+        public void OpenFriendNotificationsDialogHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            OpenFriendNotificationsDialog(friendId);
+        }
+
+        public void OpenFriendNotificationsDialog(string friendId)
+        {
+            Dialogs.FriendNotificationsDialog dialog = new Dialogs.FriendNotificationsDialog(currentUserId);
+            dialog.DataContext = friendId;
+            dialog.Show();
+        }
+
+        public void OpenCategoryDialogHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            OpenCategoryDialog(friendId);
+        }
+
+        public void OpenCategoryDialog (string friendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<FriendSettings> currentFriendSettings = loadedContent.friends;
+            List<FriendSettings> results = currentFriendSettings.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                string localFriendId = friend.id;
+                List<string> friendCategories = friend.categories;
+                bool isAddFriend = localFriendId == friendId;
+                return isAddFriend;
+            }).ToList<FriendSettings>();
+            int countResults = results.Count;
+            bool isHaveResults = countResults >= 1;
+            if (isHaveResults)
+            {
+                FriendSettings result = results[0];
+                List<string> categories = result.categories;
+                int countCategories = categories.Count;
+                bool isHaveCategories = countCategories >= 1;
+                if (isHaveCategories)
+                {
+                    Dialogs.CategoryManagementDialog dialog = new Dialogs.CategoryManagementDialog(currentUserId, friendId);
+                    dialog.Show();
+                }
+                else
+                {
+                    List<string> friendIds = new List<string>() {
+                        friendId
+                    };
+                    Dialogs.CreateCategoryDialog dialog = new Dialogs.CreateCategoryDialog(currentUserId, friendIds);
+                    dialog.Show();
+                }
+            }
+        }
+
+        public void AddFriendToFavoriteHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            AddFriendToFavorite(friend);
+        }
+
+        public void AddFriendToFavorite(string currentFriendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            List<FriendSettings> updatedFriends = currentFriends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == currentFriendId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = true;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends,
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+            }
+        }
+
+        public void RemoveFriendFromFavoriteHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friend = ((string)(menuItemData));
+            RemoveFriendFromFavorite(friend);
+        }
+
+        public void RemoveFriendFromFavorite(string currentFriendId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            List<FriendSettings> updatedFriends = currentFriends;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == currentFriendId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = false;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends,
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+            }
+        }
+
+        public void AddToBlackListHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            AddToBlackList(friendId);
+        }
+
+        public void AddToBlackList(string friendId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/add/?id=" + currentUserId + @"&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            MessageBox.Show("Друг был добавлен в черный список", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RemoveFromBlackListHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            RemoveFromBlackList(friendId);
+        }
+
+        public void RemoveFromBlackList(string friendId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/remove/?id=" + currentUserId + @"&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            MessageBox.Show("Друг был удален из черного списка", "Внимание");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void RemoveFriendHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string friendId = ((string)(menuItemData));
+            RemoveFriend(friendId);
+        }
+
+        public void RemoveFriend(string friendId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                            Settings currentSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
+                            List<string> currentRecentChats = loadedContent.recentChats;
+                            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+                            {
+                                return friend.id == friendId;
+                            }).ToList();
+                            int countCachedFriends = cachedFriends.Count;
+                            bool isCachedFriendsExists = countCachedFriends >= 1;
+                            if (isCachedFriendsExists)
+                            {
+                                FriendSettings cachedFriend = cachedFriends[0];
+                                updatedFriends.Remove(cachedFriend);
+                                string savedContent = js.Serialize(new SavedContent
+                                {
+                                    games = currentGames,
+                                    friends = updatedFriends,
+                                    settings = currentSettings,
+                                    collections = currentCollections,
+                                    notifications = currentNotifications,
+                                    categories = currentCategories,
+                                    recentChats = currentRecentChats
+                                });
+                                File.WriteAllText(saveDataFilePath, savedContent);
+                            }
+
+                            MessageBox.Show("Друг был удален", "Внимание");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 

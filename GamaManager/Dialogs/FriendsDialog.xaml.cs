@@ -34,18 +34,19 @@ namespace GamaManager.Dialogs
         public Brush offlineBrush;
         public TabControl mainControl;
         public List<string> chats = new List<string>();
+        public MainWindow mainWindow;
 
-        public FriendsDialog(string currentUserId, SocketIO client, TabControl mainControl)
+        public FriendsDialog(string currentUserId, SocketIO client, TabControl mainControl, MainWindow mainWindow)
         {
             InitializeComponent();
 
-            Initialize(currentUserId, client, mainControl);
+            Initialize(currentUserId, client, mainControl, mainWindow);
 
         }
 
-        public void Initialize(string currentUserId, SocketIO client, TabControl mainControl)
+        public void Initialize (string currentUserId, SocketIO client, TabControl mainControl, MainWindow mainWindow)
         {
-            InitializeConstants(client, mainControl);
+            InitializeConstants(client, mainControl, mainWindow);
             GetFriends(currentUserId, "");
             GetTalks();
             GetUserInfo();
@@ -335,7 +336,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void InitializeConstants(SocketIO client, TabControl mainControl)
+        public void InitializeConstants (SocketIO client, TabControl mainControl, MainWindow mainWindow)
         {
             this.DataContext = null;
             this.client = client;
@@ -343,6 +344,7 @@ namespace GamaManager.Dialogs
             playedBrush = System.Windows.Media.Brushes.Green;
             offlineBrush = System.Windows.Media.Brushes.LightGray;
             this.mainControl = mainControl;
+            this.mainWindow = mainWindow;
         }
 
         public void GetFriends(string currentUserId, string keywords)
@@ -908,7 +910,7 @@ namespace GamaManager.Dialogs
                 isNotOpenedChatWindows = countChatWindows <= 0;
                 if (isNotOpenedChatWindows)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
                     dialog.DataContext = friend;
                     dialog.Show();
 
@@ -947,7 +949,7 @@ namespace GamaManager.Dialogs
                 {
                     if (isOpenNewChatInNewWindow)
                     {
-                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats);
+                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
                         dialog.DataContext = friend;
                         dialog.Show();
                     }
@@ -963,7 +965,7 @@ namespace GamaManager.Dialogs
             {
                 if (isOpenNewChatInNewWindow)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
                     dialog.DataContext = friend;
                     dialog.Show();
                 }
@@ -981,7 +983,7 @@ namespace GamaManager.Dialogs
             InitSockets();
         }
 
-        public void OpenFriendNotificationsDialogHandler(object sender, RoutedEventArgs e)
+        public void OpenFriendNotificationsDialogHandler (object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -989,7 +991,7 @@ namespace GamaManager.Dialogs
             OpenFriendNotificationsDialog(friendId);
         }
 
-        public void OpenFriendNotificationsDialog(string friendId)
+        public void OpenFriendNotificationsDialog (string friendId)
         {
             Dialogs.FriendNotificationsDialog dialog = new Dialogs.FriendNotificationsDialog(currentUserId);
             dialog.DataContext = friendId;

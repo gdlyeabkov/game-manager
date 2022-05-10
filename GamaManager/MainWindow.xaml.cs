@@ -300,7 +300,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
                 dialog.Show();
             }
         }
@@ -6397,6 +6397,25 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/games/last/set/?id=" + currentUserId + @"&game=" + gameId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = reader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+
+                                    }
+                                }
+                            }
+
                         }
                     }
                 }
@@ -7407,7 +7426,7 @@ namespace GamaManager
 
         public void OpenFriendsDialog()
         {
-            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl);
+            Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl, this);
             dialog.Closed += JoinToGameHandler;
             dialog.Show();
         }
@@ -8852,7 +8871,7 @@ namespace GamaManager
             SaveUserInfo();
         }
 
-        async public void SaveUserInfo()
+        async public void SaveUserInfo ()
         {
 
             string userNameBoxContent = userNameBox.Text;
@@ -10113,7 +10132,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
                 dialog.Show();
                 popup.IsOpen = false;
             }
@@ -10150,7 +10169,7 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
                 dialog.Show();
                 popup.IsOpen = false;
             }
@@ -10224,7 +10243,7 @@ namespace GamaManager
             UpdateUserStatus(status);
         }
 
-        public void UpdateUserStatus(string status)
+        public void UpdateUserStatus (string status)
         {
             bool isOnlineStatus = status == "online";
             bool isOfflineStatus = status == "offline";

@@ -33,7 +33,7 @@ namespace GamaManager.Dialogs
         public string talkId = "";
         public SocketIO client = null;
         public int activeChatIndex = -1;
-        public DateTime lastInputTimeStamp; 
+        public DateTime lastInputTimeStamp;
         public Brush msgsSeparatorBrush = null;
         public bool isStartBlink;
 
@@ -74,7 +74,7 @@ namespace GamaManager.Dialogs
             GetTextChannels();
         }
 
-        public void SetUsersCountLabel ()
+        public void SetUsersCountLabel()
         {
             try
             {
@@ -190,7 +190,58 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void ToggleOwnerMenu ()
+        public bool GetBlockedInfo ()
+        {
+            bool isRelationBlocked = false;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRelationsResponseInfo myObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkRelation> relations = myObj.relations;
+                            List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
+                            {
+                                string relationUserId = relation.user;
+                                string relationTalkId = relation.talk;
+                                bool isCurrentUser = currentUserId == relationUserId;
+                                bool isCurrentTalk = talkId == relationTalkId;
+                                bool isRelationMatch = isCurrentUser && isCurrentTalk;
+                                return isRelationMatch;
+                            }).ToList<TalkRelation>();
+                            int resultsCount = results.Count;
+                            bool isHaveResults = resultsCount >= 1;
+                            if (isHaveResults)
+                            {
+                                TalkRelation result = results[0];
+                                bool isBlocked = result.isBlocked;
+                                bool isNotBlocked = !isBlocked;
+                                inputChatMsgBox.IsEnabled = isNotBlocked;
+                                isRelationBlocked = isBlocked;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            return isRelationBlocked;
+        }
+
+        public void ToggleOwnerMenu()
         {
             Talk talk = GetTalkInfo();
             string owner = talk.owner;
@@ -441,7 +492,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void AddChat ()
+        public void AddChat()
         {
             TabItem newChat = new TabItem();
             newChat.Header = talkId;
@@ -516,13 +567,14 @@ namespace GamaManager.Dialogs
 
         }
 
-        public void Initialize ()
+        public void Initialize()
         {
             InitConstants(currentUserId, talkId, client);
             AddChat();
             ReceiveMessages();
             GetMsgs();
             InitFlash();
+            GetBlockedInfo();
             this.DataContext = talkId;
         }
 
@@ -532,7 +584,7 @@ namespace GamaManager.Dialogs
             lastInputTimeStamp = DateTime.Now;
         }
 
-        public void GetMsgs ()
+        public void GetMsgs()
         {
             try
             {
@@ -576,9 +628,9 @@ namespace GamaManager.Dialogs
                                                     bool isCurrentChatMsg = newMsgFriendId == talkId;
                                                     if (isCurrentChatMsg)
                                                     {
-                                                        
+
                                                         string newMsgChannelId = msg.channel;
-                                                        
+
                                                         string senderName = "";
                                                         HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + newMsgUserId);
                                                         nestedWebRequest.Method = "GET";
@@ -610,7 +662,7 @@ namespace GamaManager.Dialogs
 
                                                         // object rawActiveChatScrollContent = activeChat.Content;
                                                         // ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
-                                                        
+
                                                         object rawActiveChatControlContent = activeChat.Content;
                                                         TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
                                                         ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
@@ -629,12 +681,12 @@ namespace GamaManager.Dialogs
                                                             }
                                                         }
                                                         // int channelIndex = activeChatControlContentItems.IndexOf();
-                                                        
+
                                                         object rawActiveChannel = activeChatControlContentItems[channelIndex];
                                                         TabItem activeChannel = ((TabItem)(rawActiveChannel));
                                                         object rawActiveChannelScrollContent = activeChannel.Content;
                                                         ScrollViewer activeChannelScrollContent = ((ScrollViewer)(rawActiveChannelScrollContent));
-                                                        
+
                                                         // object rawActiveChatContent = activeChatScrollContent.Content;
                                                         object rawActiveChatContent = activeChannelScrollContent.Content;
 
@@ -929,7 +981,9 @@ namespace GamaManager.Dialogs
                                         Talk talk = GetTalkInfo();
                                         string owner = talk.owner;
                                         bool isOwner = owner == currentUserId;
-                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        bool isBlocked = GetBlockedInfo();
+                                        bool isNotBlocked = !isBlocked;
+                                        bool isCanSendMsg = (isHaveRoles || isOwner) && isNotBlocked;
                                         if (isCanSendMsg)
                                         {
 
@@ -1101,12 +1155,12 @@ namespace GamaManager.Dialogs
             }
         }
 
-        private void InputToChatFieldHandler (object sender, TextChangedEventArgs e)
+        private void InputToChatFieldHandler(object sender, TextChangedEventArgs e)
         {
             InputToChatField();
         }
 
-        public void InputToChatField ()
+        public void InputToChatField()
         {
             DateTime currentDateTime = DateTime.Now;
             TimeSpan diff = currentDateTime.Subtract(lastInputTimeStamp);
@@ -1180,7 +1234,9 @@ namespace GamaManager.Dialogs
                                         Talk talk = GetTalkInfo();
                                         string owner = talk.owner;
                                         bool isOwner = owner == currentUserId;
-                                        bool isCanNotify = isHaveRoles || isOwner;
+                                        bool isBlocked = GetBlockedInfo();
+                                        bool isNotBlocked = !isBlocked;
+                                        bool isCanNotify = (isHaveRoles || isOwner) && isNotBlocked;
                                         if (isCanNotify)
                                         {
                                             string inputChatMsgBoxContent = inputChatMsgBox.Text;
@@ -1274,7 +1330,9 @@ namespace GamaManager.Dialogs
                                         Talk talk = GetTalkInfo();
                                         string owner = talk.owner;
                                         bool isOwner = owner == currentUserId;
-                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        bool isBlocked = GetBlockedInfo();
+                                        bool isNotBlocked = !isBlocked;
+                                        bool isCanSendMsg = (isHaveRoles || isOwner) && isNotBlocked;
                                         if (isCanSendMsg)
                                         {
                                             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -1470,7 +1528,7 @@ namespace GamaManager.Dialogs
             AddEmojiMsg(emojiData);
         }
 
-        async public void AddEmojiMsg (string emojiData)
+        async public void AddEmojiMsg(string emojiData)
         {
             try
             {
@@ -1533,7 +1591,9 @@ namespace GamaManager.Dialogs
                                         Talk talk = GetTalkInfo();
                                         string owner = talk.owner;
                                         bool isOwner = owner == currentUserId;
-                                        bool isCanSendMsg = isHaveRoles || isOwner;
+                                        bool isBlocked = GetBlockedInfo();
+                                        bool isNotBlocked = !isBlocked;
+                                        bool isCanSendMsg = (isHaveRoles || isOwner) && isNotBlocked;
                                         if (isCanSendMsg)
                                         {
                                             try
@@ -1721,12 +1781,12 @@ namespace GamaManager.Dialogs
             return bytes;
         }
 
-        private void InviteFriendsToTalkHandler (object sender, MouseButtonEventArgs e)
+        private void InviteFriendsToTalkHandler(object sender, MouseButtonEventArgs e)
         {
             InviteFriendsToTalk();
         }
 
-        public void InviteFriendsToTalk ()
+        public void InviteFriendsToTalk()
         {
             Dialogs.InviteTalkDialog dialog = new Dialogs.InviteTalkDialog(currentUserId, talkId);
             dialog.Show();
@@ -1786,7 +1846,7 @@ namespace GamaManager.Dialogs
             OpenTalkSettings();
         }
 
-        private void OpenTalkSettings ()
+        private void OpenTalkSettings()
         {
             Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog(currentUserId, talkId);
             dialog.Closed += GetTextChannelsHandler;
@@ -1812,7 +1872,7 @@ namespace GamaManager.Dialogs
             GetUsers();
         }
 
-        public void GetUsers ()
+        public void GetUsers()
         {
             users.Children.Clear();
             string keywords = usersBox.Text;
@@ -1911,12 +1971,12 @@ namespace GamaManager.Dialogs
 
         }
 
-        private void CreateTextChannelHandler (object sender, MouseButtonEventArgs e)
+        private void CreateTextChannelHandler(object sender, MouseButtonEventArgs e)
         {
             CreateTextChannel();
         }
 
-        public void CreateTextChannel ()
+        public void CreateTextChannel()
         {
             Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
             dialog.Closed += GetTextChannelsHandler;
@@ -1926,6 +1986,12 @@ namespace GamaManager.Dialogs
         public void GetTextChannelsHandler (object sender, EventArgs e)
         {
             GetTextChannels();
+        }
+
+        public void RefreshDataHandler(object sender, EventArgs e)
+        {
+            GetTextChannels();
+            GetBlockedInfo();
         }
 
         public void GetTextChannels()

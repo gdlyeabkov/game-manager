@@ -815,26 +815,15 @@
                         FontSize="24"
                     />
                     <StackPanel
-                        Margin="0 10"
-                        Orientation="Horizontal"    
-                    >
-                        <materialDesign:PackIcon
-                            Margin="10 0"
-                            Kind="Lock"    
-                            VerticalAlignment="Center"
-                        />
-                        <TextBlock
-                            Margin="10 0"
-                            Text="У ВАС НЕТ ПРАВ ДЛЯ ИЗМЕНЕНИЯ ЭТОЙ СТРАНИЦЫ"
-                            FontSize="14"
-                            VerticalAlignment="Center"
-                        />
-                    </StackPanel>
+                        x:Name="blocks"    
+                    />
+                    <!--
                     <TextBlock
                         Margin="15"
-                        Text="Просмотр чёрного списка недоступен, поскольку у вас нет&#10;разрешения блокировать людей в этом групповом чате."
+                        Text="Никто не заблокирован"
                         FontSize="14"
                     />
+                    -->
                 </StackPanel>
             </TabItem>
         </TabControl>

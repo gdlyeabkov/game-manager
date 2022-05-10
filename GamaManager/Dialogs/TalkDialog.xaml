@@ -239,7 +239,6 @@
                     StaysOpen="False"
                     Width="445"
                     Height="125"
-                    IsOpen="True"
                     Placement="Top"
                 >
                     <Popup.Child>

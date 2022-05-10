@@ -15627,6 +15627,7 @@ namespace GamaManager
         public string _id;
         public string talk;
         public string user;
+        public bool isBlocked;
     }
 
     class TalkCreateResponseInfo

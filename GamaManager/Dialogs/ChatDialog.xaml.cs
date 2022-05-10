@@ -75,6 +75,13 @@ namespace GamaManager.Dialogs
 
         async public void ReceiveMessages()
         {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
             try
             {
                 // client = new SocketIO("http://localhost:4000/");
@@ -100,7 +107,7 @@ namespace GamaManager.Dialogs
                         {
                             using (var reader = new StreamReader(webResponse.GetResponseStream()))
                             {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                js = new JavaScriptSerializer();
                                 var objText = reader.ReadToEnd();
                                 FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                                 string status = myobj.status;
@@ -194,13 +201,6 @@ namespace GamaManager.Dialogs
                                                                         newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                                                         DateTime currentDate = DateTime.Now;
 
-                                                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-                                                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-                                                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-                                                                        js = new JavaScriptSerializer();
-                                                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-                                                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-                                                                        Settings currentSettings = loadedContent.settings;
                                                                         bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
                                                                         bool isShowTimeIn12 = !isShowTimeIn24;
                                                                         string rawCurrentDate = currentDate.ToLongTimeString(); 
@@ -261,7 +261,26 @@ namespace GamaManager.Dialogs
                                                                 }
                                                             }
                                                         }
-                                                        FlashWindow(this);
+
+                                                        string blinkType = currentSettings.sendMsgBlinkWindowType;
+                                                        bool isAlwaysBlinkType = blinkType == "always";
+                                                        bool isMinimizeBlinkType = blinkType == "minimize";
+                                                        if (isAlwaysBlinkType)
+                                                        {
+                                                            FlashWindow(this);
+                                                        }
+                                                        else if (isMinimizeBlinkType)
+                                                        {
+                                                            WindowState windowState = this.WindowState;
+                                                            WindowState minimizedWindow = WindowState.Minimized;
+                                                            bool isWindowMinimized = minimizedWindow == windowState;
+                                                            if (isWindowMinimized)
+                                                            {
+                                                                FlashWindow(this);
+                                                            }
+                                                        }
+
+
                                                     }
                                                     catch (System.Net.WebException)
                                                     {
@@ -301,7 +320,7 @@ namespace GamaManager.Dialogs
                         {
                             using (var reader = new StreamReader(webResponse.GetResponseStream()))
                             {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                js = new JavaScriptSerializer();
                                 var objText = reader.ReadToEnd();
                                 FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                                 string status = myobj.status;

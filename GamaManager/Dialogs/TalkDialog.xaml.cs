@@ -2071,6 +2071,25 @@ namespace GamaManager.Dialogs
             activeChatControlContent.SelectedIndex = channelIndex;
         }
 
+        public void ToggleAsideHandler (object sender, RoutedEventArgs e) {
+            ToogleAside();
+        }
+
+        public void ToogleAside ()
+        {
+            Visibility visible = Visibility.Visible;
+            Visibility invisible = Visibility.Collapsed;
+            Visibility talkAsideVisibility = talkAside.Visibility;
+            bool isVisible = talkAsideVisibility == visible;
+            if (isVisible)
+            {
+                talkAside.Visibility = invisible;
+            }
+            else
+            {
+                talkAside.Visibility = visible;
+            }
+        }
 
     }
 }

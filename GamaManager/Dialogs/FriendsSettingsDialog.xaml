@@ -739,12 +739,14 @@
                             Grid.Column="0"
                         />
                         <CheckBox
+                            x:Name="friendPlayedNotificationCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="1"
                             Grid.Column="1"
                         />
                         <CheckBox
+                            x:Name="friendPlayedSoundCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="1"
@@ -758,12 +760,14 @@
                             Grid.Column="0"
                         />
                         <CheckBox
+                            x:Name="friendOnlineNotificationCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="2"
                             Grid.Column="1"
                         />
                         <CheckBox
+                            x:Name="friendOnlineSoundCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="2"
@@ -777,12 +781,14 @@
                             Grid.Column="0"
                         />
                         <CheckBox
+                            x:Name="friendSendMsgNotificationCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="3"
                             Grid.Column="1"
                         />
                         <CheckBox
+                            x:Name="friendSendMsgSoundCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="3"
@@ -796,12 +802,14 @@
                             Grid.Column="0"
                         />
                         <CheckBox
+                            x:Name="friendSendTalkMsgNotificationCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="4"
                             Grid.Column="1"
                         />
                         <CheckBox
+                            x:Name="friendSendTalkMsgSoundCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="4"
@@ -815,12 +823,14 @@
                             Grid.Column="0"
                         />
                         <CheckBox
+                            x:Name="friendSendTalkEventNotificationCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="5"
                             Grid.Column="1"
                         />
                         <CheckBox
+                            x:Name="friendSendTalkEventSoundCheckBox"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Row="5"
@@ -833,29 +843,39 @@
                         FontSize="14"
                     />
                     <StackPanel
+                        x:Name="blinkTypePanel"
                         Margin="0 15"
                         Orientation="Horizontal"    
                     >
                         <Button
+                            x:Name="alwaysSendMsgBlinkWindowTypeBtn"
                             Height="30"
                             Width="125"
                             Margin="15 0"
                             FontSize="14"
                             Content="Всегда"
+                            DataContext="always"
+                            Click="ToggleSendMsgBlinkWindowTypeHandler"
                         />
                         <Button
+                            x:Name="minimizeSendMsgBlinkWindowTypeBtn"
                             Height="30"
                             Width="175"
                             Margin="15 0"
                             FontSize="14"
                             Content="Только в свернутом виде"
+                            DataContext="minimize"
+                            Click="ToggleSendMsgBlinkWindowTypeHandler"
                         />
                         <Button
+                            x:Name="neverSendMsgBlinkWindowTypeBtn"
                             Height="30"
                             Width="125"
                             Margin="15 0"
                             FontSize="14"
                             Content="Никогда"
+                            DataContext="never"
+                            Click="ToggleSendMsgBlinkWindowTypeHandler"
                         />
                     </StackPanel>
                 </StackPanel>

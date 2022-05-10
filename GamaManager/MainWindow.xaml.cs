@@ -6206,7 +6206,18 @@ namespace GamaManager
                         isOpenNewChatInNewWindow = false,
                         isNotIncludeImagesAndMediaFiles = false,
                         isShowTimeIn24 = true,
-                        isDisableSpellCheck = true
+                        isDisableSpellCheck = true,
+                        isFriendOnlineNotification = false,
+                        isFriendOnlineSound = false,
+                        isFriendPlayedNotification = true,
+                        isFriendPlayedSound = false,
+                        isFriendSendMsgNotification = true,
+                        isFriendSendMsgSound = true,
+                        isFriendSendTalkMsgNotification = true,
+                        isFriendSendTalkMsgSound = true,
+                        isFriendSendTalkEventNotification = true,
+                        isFriendSendTalkEventSound = false,
+                        sendMsgBlinkWindowType = "always"
                     },
                     collections = new List<string>() { },
                     notifications = new Notifications() {
@@ -9047,6 +9058,7 @@ namespace GamaManager
                                                     SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                                     List<Game> currentGames = loadedContent.games;
                                                     List<FriendSettings> updatedFriends = loadedContent.friends;
+                                                    Settings currentSettings = loadedContent.settings;
                                                     List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                                     {
                                                         return friend.id == userId;
@@ -9056,7 +9068,9 @@ namespace GamaManager
                                                     if (isCachedFriendsExists)
                                                     {
                                                         FriendSettings cachedFriend = cachedFriends[0];
-                                                        bool isNotificationEnabled = cachedFriend.isFriendPlayedNotification;
+                                                        bool isLocalNotificationEnabled = cachedFriend.isFriendPlayedNotification;
+                                                        bool isGlobalNotificationEnabled = currentSettings.isFriendPlayedNotification;
+                                                        bool isNotificationEnabled = isLocalNotificationEnabled && isGlobalNotificationEnabled;
                                                         if (isNotificationEnabled)
                                                         {
                                                             this.Dispatcher.Invoke(async () =>
@@ -9194,6 +9208,7 @@ namespace GamaManager
                                                     SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                                     List<Game> currentGames = loadedContent.games;
                                                     List<FriendSettings> updatedFriends = loadedContent.friends;
+                                                    Settings currentSettings = loadedContent.settings;
                                                     List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                                     {
                                                         return friend.id == result;
@@ -9203,7 +9218,9 @@ namespace GamaManager
                                                     if (isCachedFriendsExists)
                                                     {
                                                         FriendSettings cachedFriend = cachedFriends[0];
-                                                        bool isNotificationEnabled = cachedFriend.isFriendOnlineNotification;
+                                                        bool isLocalNotificationEnabled = cachedFriend.isFriendOnlineNotification;
+                                                        bool isGlobalNotificationEnabled = currentSettings.isFriendOnlineNotification;
+                                                        bool isNotificationEnabled = isLocalNotificationEnabled && isGlobalNotificationEnabled;
                                                         if (isNotificationEnabled)
                                                         {
 
@@ -9362,6 +9379,7 @@ namespace GamaManager
                                                                     SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                                                     List<Game> currentGames = loadedContent.games;
                                                                     List<FriendSettings> updatedFriends = loadedContent.friends;
+                                                                    Settings currentSettings = loadedContent.settings;
                                                                     List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
                                                                     {
                                                                         return localFriend.id == userId;
@@ -9371,7 +9389,9 @@ namespace GamaManager
                                                                     if (isCachedFriendsExists)
                                                                     {
                                                                         FriendSettings cachedFriend = cachedFriends[0];
-                                                                        bool isNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
+                                                                        bool isLocalNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
+                                                                        bool isGlobalNotificationEnabled = currentSettings.isFriendSendMsgNotification;
+                                                                        bool isNotificationEnabled = isLocalNotificationEnabled && isGlobalNotificationEnabled;
                                                                         if (isNotificationEnabled)
                                                                         {
                                                                             Application.Current.Dispatcher.Invoke(async () =>
@@ -15179,6 +15199,17 @@ namespace GamaManager
         public bool isNotIncludeImagesAndMediaFiles;
         public bool isShowTimeIn24;
         public bool isDisableSpellCheck;
+        public bool isFriendOnlineNotification;
+        public bool isFriendOnlineSound;
+        public bool isFriendPlayedNotification;
+        public bool isFriendPlayedSound;
+        public bool isFriendSendMsgNotification;
+        public bool isFriendSendMsgSound;
+        public bool isFriendSendTalkMsgNotification;
+        public bool isFriendSendTalkMsgSound;
+        public bool isFriendSendTalkEventNotification;
+        public bool isFriendSendTalkEventSound;
+        public string sendMsgBlinkWindowType;
     }
 
     public class MusicSettings

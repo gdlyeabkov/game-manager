@@ -627,6 +627,39 @@ namespace GamaManager.Dialogs
             rawIsChecked = disableSpellCheckBtn.IsChecked;
             isChecked = ((bool)(rawIsChecked));
             updatedSettings.isDisableSpellCheck = isChecked;
+            rawIsChecked = friendPlayedNotificationCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendPlayedNotification = isChecked;
+            rawIsChecked = friendPlayedSoundCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendPlayedSound = isChecked;
+            rawIsChecked = friendOnlineNotificationCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendOnlineNotification = isChecked;
+            rawIsChecked = friendOnlineSoundCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendOnlineSound = isChecked;
+            rawIsChecked = friendSendMsgNotificationCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendMsgNotification = isChecked;
+            rawIsChecked = friendSendMsgSoundCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendMsgSound = isChecked;
+            rawIsChecked = friendSendTalkMsgNotificationCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendTalkMsgNotification = isChecked;
+            rawIsChecked = friendSendTalkMsgSoundCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendTalkMsgSound = isChecked;
+            rawIsChecked = friendSendTalkEventNotificationCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendTalkEventNotification = isChecked;
+            rawIsChecked = friendSendTalkEventSoundCheckBox.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendSendTalkEventSound = isChecked;
+            object blinkTypePanelData = blinkTypePanel.DataContext;
+            string blinkType = ((string)(blinkTypePanelData));
+            updatedSettings.sendMsgBlinkWindowType = blinkType;
             string savedContent = js.Serialize(new SavedContent
             {
                 games = currentGames,
@@ -663,6 +696,59 @@ namespace GamaManager.Dialogs
             bool isDisableSpellCheck = currentSettings.isDisableSpellCheck;
             disableSpellCheckBtn.IsChecked = isDisableSpellCheck;
             enableSpellCheckBtn.IsChecked = !isDisableSpellCheck;
+            bool isFriendPlayedNotification = currentSettings.isFriendPlayedNotification;
+            friendPlayedNotificationCheckBox.IsChecked = isFriendPlayedNotification;
+            bool isFriendPlayedSound = currentSettings.isFriendPlayedSound;
+            friendPlayedSoundCheckBox.IsChecked = isFriendPlayedSound;
+            bool isFriendOnlineNotification = currentSettings.isFriendOnlineNotification;
+            friendOnlineNotificationCheckBox.IsChecked = isFriendOnlineNotification;
+            bool isFriendOnlineSound = currentSettings.isFriendOnlineSound;
+            friendOnlineSoundCheckBox.IsChecked = isFriendOnlineSound;
+            bool isFriendSendMsgNotification = currentSettings.isFriendSendMsgNotification;
+            friendSendMsgNotificationCheckBox.IsChecked = isFriendSendMsgNotification;
+            bool isFriendSendMsgSound = currentSettings.isFriendSendMsgSound;
+            friendSendMsgSoundCheckBox.IsChecked = isFriendSendMsgSound;
+            bool isFriendSendTalkMsgNotification = currentSettings.isFriendSendTalkMsgNotification;
+            friendSendTalkMsgNotificationCheckBox.IsChecked = isFriendSendTalkMsgNotification;
+            bool isFriendSendTalkMsgSound = currentSettings.isFriendSendTalkMsgSound;
+            friendSendTalkMsgSoundCheckBox.IsChecked = isFriendSendTalkMsgSound;
+            bool isFriendSendTalkEventNotification = currentSettings.isFriendSendTalkEventNotification;
+            friendSendTalkEventNotificationCheckBox.IsChecked = isFriendSendTalkEventNotification;
+            bool isFriendSendTalkEventSound = currentSettings.isFriendSendTalkEventSound;
+            friendSendTalkEventSoundCheckBox.IsChecked = isFriendSendTalkEventSound;
+            string blinkType = currentSettings.sendMsgBlinkWindowType;
+            bool isAlwaysBlinkType = blinkType == "always";
+            bool isMinimizeBlinkType = blinkType == "minimize";
+            bool isNeverBlinkType = blinkType == "never";
+            if (isAlwaysBlinkType)
+            {
+                ToggleSendMsgBlinkWindowType(alwaysSendMsgBlinkWindowTypeBtn);
+            }
+            else if (isMinimizeBlinkType)
+            {
+                ToggleSendMsgBlinkWindowType(minimizeSendMsgBlinkWindowTypeBtn);
+            }
+            else if (isNeverBlinkType)
+            {
+                ToggleSendMsgBlinkWindowType(neverSendMsgBlinkWindowTypeBtn);
+            }
+        }
+
+        private void ToggleSendMsgBlinkWindowTypeHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            ToggleSendMsgBlinkWindowType(btn);
+        }
+
+        public void ToggleSendMsgBlinkWindowType (Button btn)
+        {
+            object btnData = btn.DataContext;
+            string blinkType = btnData.ToString();
+            alwaysSendMsgBlinkWindowTypeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            minimizeSendMsgBlinkWindowTypeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            neverSendMsgBlinkWindowTypeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            btn.Background = System.Windows.Media.Brushes.SkyBlue;
+            blinkTypePanel.DataContext = blinkType;
         }
 
     }

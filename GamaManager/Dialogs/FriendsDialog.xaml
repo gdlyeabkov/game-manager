@@ -10,6 +10,7 @@
     Title="{x:Static p:Resources.friendsLabelContent}"
     Height="750"
     Width="450"
+    Topmost="True"
     Loaded="InitSocketsHandler"
 >
     <DockPanel>

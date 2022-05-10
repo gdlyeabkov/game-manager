@@ -8,7 +8,10 @@ FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddCollectiionDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddExternalGameDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddFriendDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddGroupRequestDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategoryManagementDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategorySettingsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ChatDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CreateCategoryDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CreateTalkDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CreateTextChannelDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\DownloadGameDialog.xaml;;
@@ -31,7 +34,4 @@ FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\TalkSettingsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GamePage.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GameWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategoryManagementDialog.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategorySettingsDialog.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CreateCategoryDialog.xaml;;
 

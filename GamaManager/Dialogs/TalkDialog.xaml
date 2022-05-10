@@ -142,6 +142,7 @@
                 />
             </StackPanel>
             <StackPanel
+                x:Name="talkAside"
                 DockPanel.Dock="Right"    
                 Width="175"
             >
@@ -149,7 +150,8 @@
                     <materialDesign:PackIcon
                         Margin="5 0"
                         VerticalAlignment="Center"
-                        Kind="ArrowRight"    
+                        Kind="ChevronDoubleRight"    
+                        MouseLeftButtonUp="ToggleAsideHandler"
                     />
                     <TextBox
                         x:Name="usersBox"

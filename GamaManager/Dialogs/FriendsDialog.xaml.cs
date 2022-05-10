@@ -347,6 +347,15 @@ namespace GamaManager.Dialogs
 
         public void GetFriends(string currentUserId, string keywords)
         {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+
             this.currentUserId = currentUserId;
             try
             {
@@ -357,7 +366,7 @@ namespace GamaManager.Dialogs
                 {
                     using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
 
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
@@ -428,7 +437,20 @@ namespace GamaManager.Dialogs
                                                             if (isFriendMatch)
                                                             {
                                                                 StackPanel friendsItem = new StackPanel();
-                                                                friendsItem.Height = 35;
+
+                                                                int friendsItemHeight = 35;
+                                                                bool isFriendlistAndChatsCompactView = currentSettings.isFriendListAndChatsCompactView;
+                                                                if (isFriendlistAndChatsCompactView)
+                                                                {
+                                                                    friendsItemHeight = 35;
+                                                                }
+                                                                else
+                                                                {
+                                                                    friendsItemHeight = 50;
+                                                                }
+                                                                friendsItem.Height = friendsItemHeight;
+                                                                
+                                                                
                                                                 friendsItem.Orientation = Orientation.Horizontal;
                                                                 Image friendAvatar = new Image();
                                                                 Setter effectSetter = new Setter();
@@ -523,12 +545,7 @@ namespace GamaManager.Dialogs
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 bool isFavoriteFriend = false;
-                                                                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-                                                                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-                                                                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-                                                                js = new JavaScriptSerializer();
-                                                                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-                                                                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                
                                                                 List<Game> currentGames = loadedContent.games;
                                                                 List<FriendSettings> currentFriends = loadedContent.friends;
                                                                 List<FriendSettings> updatedFriends = currentFriends;
@@ -642,7 +659,19 @@ namespace GamaManager.Dialogs
                                                             {
                                                                 favoriteFriendsWrap.Visibility = Visibility.Visible;
                                                                 StackPanel favoriteFriendsItem = new StackPanel();
-                                                                favoriteFriendsItem.Height = 65;
+
+                                                                int favoriteFriendsItemHeight = 65;
+                                                                bool isFavoriteCompactView = currentSettings.isFavoriteCompactView;
+                                                                if (isFavoriteCompactView)
+                                                                {
+                                                                    favoriteFriendsItemHeight = 50;
+                                                                }
+                                                                else
+                                                                {
+                                                                    favoriteFriendsItemHeight = 65;
+                                                                }
+                                                                favoriteFriendsItem.Height = favoriteFriendsItemHeight;
+                                                                
                                                                 Image favoriteFriendAvatar = new Image();
                                                                 Setter favoriteEffectSetter = new Setter();
                                                                 favoriteEffectSetter.Property = ScrollViewer.EffectProperty;
@@ -755,6 +784,7 @@ namespace GamaManager.Dialogs
                             List<string> currentCollections = loadedContent.collections;
                             Notifications currentNotifications = loadedContent.notifications;
                             List<string> currentCategories = loadedContent.categories;
+                            List<string> currentRecentChats = loadedContent.recentChats;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -772,7 +802,8 @@ namespace GamaManager.Dialogs
                                     settings = currentSettings,
                                     collections = currentCollections,
                                     notifications = currentNotifications,
-                                    categories = currentCategories
+                                    categories = currentCategories,
+                                    recentChats = currentRecentChats
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }
@@ -833,7 +864,13 @@ namespace GamaManager.Dialogs
             JavaScriptSerializer js = new JavaScriptSerializer();
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> updatedRecentChats = loadedContent.recentChats;
             bool isOpenNewChatInNewWindow = currentSettings.isOpenNewChatInNewWindow;
 
             Application app = Application.Current;
@@ -874,6 +911,37 @@ namespace GamaManager.Dialogs
                     Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats);
                     dialog.DataContext = friend;
                     dialog.Show();
+
+                    // восстанавливаем окна чата из кеша
+                    bool isResoreChats = currentSettings.isRestoreChats;
+                    if (isResoreChats)
+                    {
+                        foreach (string updatedRecentChat in updatedRecentChats)
+                        {
+                            bool isChatExists = chats.Contains(updatedRecentChat);
+                            bool isChatNotExists = !isChatExists;
+                            if (isChatNotExists)
+                            {
+                                chats.Add(updatedRecentChat);
+                                dialog.Focus();
+                                dialog.AddChat();
+                            }
+                        }
+                        updatedRecentChats.Clear();
+                        string savedContent = js.Serialize(new SavedContent
+                        {
+                            games = currentGames,
+                            friends = currentFriends,
+                            settings = currentSettings,
+                            collections = currentCollections,
+                            notifications = currentNotifications,
+                            categories = currentCategories,
+                            recentChats = updatedRecentChats
+                        });
+                        File.WriteAllText(saveDataFilePath, savedContent);
+                        dialog.SelectChat(friend);
+                    }
+
                 }
                 else
                 {
@@ -989,6 +1057,7 @@ namespace GamaManager.Dialogs
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -1006,7 +1075,8 @@ namespace GamaManager.Dialogs
                     settings = currentSettings,
                     collections = currentCollections,
                     notifications = currentNotifications,
-                    categories = currentCategories
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1035,6 +1105,7 @@ namespace GamaManager.Dialogs
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -1053,7 +1124,8 @@ namespace GamaManager.Dialogs
                     settings = currentSettings,
                     collections = currentCollections,
                     notifications = currentNotifications,
-                    categories = currentCategories
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1245,7 +1317,11 @@ namespace GamaManager.Dialogs
                                                 if (isMyTalk)
                                                 {
                                                     StackPanel totalTalksItem = new StackPanel();
+                                                    
+
                                                     totalTalksItem.Height = 35;
+                                                    
+                                                    
                                                     totalTalksItem.Orientation = Orientation.Horizontal;
                                                     PackIcon totalTalksItemIcon = new PackIcon();
                                                     totalTalksItemIcon.VerticalAlignment = VerticalAlignment.Center;

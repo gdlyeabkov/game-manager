@@ -612,6 +612,7 @@ namespace GamaManager.Dialogs
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
             object rawIsChecked = hideOfflineFriendsFromCategoriesBtn.IsChecked;
             bool isChecked = ((bool)(rawIsChecked));
             updatedSettings.isHideOfflineFriendsFromCategories = isChecked;
@@ -621,6 +622,11 @@ namespace GamaManager.Dialogs
             rawIsChecked = notIncludeImagesAndMediaFilesBtn.IsChecked;
             isChecked = ((bool)(rawIsChecked)); 
             updatedSettings.isNotIncludeImagesAndMediaFiles = isChecked;
+
+            rawIsChecked = rememberChatsBtn.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isRestoreChats = isChecked;
+
             rawIsChecked = showTimeIn24Btn.IsChecked;
             isChecked = ((bool)(rawIsChecked));
             updatedSettings.isShowTimeIn24 = isChecked;
@@ -678,7 +684,8 @@ namespace GamaManager.Dialogs
                 settings = updatedSettings,
                 collections = currentCollections,
                 notifications = currentNotifications,
-                categories = currentCategories
+                categories = currentCategories,
+                recentChats = currentRecentChats
             });
             File.WriteAllText(saveDataFilePath, savedContent);
         }
@@ -701,6 +708,11 @@ namespace GamaManager.Dialogs
             bool isNotIncludeImagesAndMediaFiles = currentSettings.isNotIncludeImagesAndMediaFiles;
             notIncludeImagesAndMediaFilesBtn.IsChecked = isNotIncludeImagesAndMediaFiles;
             includeImagesAndMediaFilesBtn.IsChecked = !isNotIncludeImagesAndMediaFiles;
+
+            bool isRestoreChats = currentSettings.isRestoreChats;
+            rememberChatsBtn.IsChecked = isRestoreChats;
+            forgetChatsBtn.IsChecked = !isRestoreChats;
+
             bool isShowTimeIn24 = currentSettings.isDisableSpellCheck;
             showTimeIn24Btn.IsChecked = isShowTimeIn24;
             showTimeIn12Btn.IsChecked = !isShowTimeIn24;

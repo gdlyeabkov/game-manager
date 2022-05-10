@@ -66,6 +66,7 @@ namespace GamaManager.Dialogs
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> updatedCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.categories;
             int countCategories = updatedCategories.Count;
             int countFriends = updatedFriends.Count;
             for (int i = 0; i < countCategories; i++)
@@ -141,7 +142,8 @@ namespace GamaManager.Dialogs
                 settings = currentSettings,
                 collections = currentCollections,
                 notifications = currentNotifications,
-                categories = updatedCategories
+                categories = updatedCategories,
+                recentChats = currentRecentChats
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             Cancel();

@@ -51,6 +51,7 @@ namespace GamaManager.Dialogs
             List<string> currentCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -85,7 +86,8 @@ namespace GamaManager.Dialogs
                     settings = currentSettings,
                     collections = currentCollections,
                     notifications = currentNotifications,
-                    categories = currentCategories
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 MessageBox.Show("Уведомления для друга были обновлены", "Внимание");

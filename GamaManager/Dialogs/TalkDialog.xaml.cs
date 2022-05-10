@@ -270,6 +270,15 @@ namespace GamaManager.Dialogs
 
         async public void ReceiveMessages()
         {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+
             try
             {
                 client = new SocketIO("http://localhost:4000/");
@@ -302,7 +311,7 @@ namespace GamaManager.Dialogs
                                 {
                                     using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                     {
-                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        js = new JavaScriptSerializer();
                                         var objText = innerReader.ReadToEnd();
                                         UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                                         string status = myInnerObj.status;
@@ -374,6 +383,26 @@ namespace GamaManager.Dialogs
                                                 string newMsgContent = msg;
                                                 newMsgLabel.Text = newMsgContent;
                                                 newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
+
+                                                int fontSize = 12;
+                                                string chatFontSize = currentSettings.chatFontSize;
+                                                bool isSmallChatFontSize = chatFontSize == "small";
+                                                bool isStandardChatFontSize = chatFontSize == "standard";
+                                                bool isBigChatFontSize = chatFontSize == "big";
+                                                if (isSmallChatFontSize)
+                                                {
+                                                    fontSize = 12;
+                                                }
+                                                else if (isStandardChatFontSize)
+                                                {
+                                                    fontSize = 14;
+                                                }
+                                                else if (isBigChatFontSize)
+                                                {
+                                                    fontSize = 16;
+                                                }
+                                                newMsgLabel.FontSize = fontSize;
+
                                                 inputChatMsgBox.Text = "";
                                                 newMsg.Children.Add(newMsgLabel);
                                                 activeChatContent.Children.Add(newMsg);
@@ -436,7 +465,7 @@ namespace GamaManager.Dialogs
                         {
                             using (var reader = new StreamReader(webResponse.GetResponseStream()))
                             {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                js = new JavaScriptSerializer();
                                 var objText = reader.ReadToEnd();
                                 FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                                 string status = myobj.status;
@@ -586,6 +615,15 @@ namespace GamaManager.Dialogs
 
         public void GetMsgs()
         {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
@@ -595,7 +633,7 @@ namespace GamaManager.Dialogs
                 {
                     using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        js = new JavaScriptSerializer();
                         string objText = reader.ReadToEnd();
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                         string status = myobj.status;
@@ -765,6 +803,26 @@ namespace GamaManager.Dialogs
                                                             TextBlock newMsgLabel = new TextBlock();
                                                             newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
                                                             newMsgLabel.Text = newMsgContent;
+
+                                                            int fontSize = 12;
+                                                            string chatFontSize = currentSettings.chatFontSize;
+                                                            bool isSmallChatFontSize = chatFontSize == "small";
+                                                            bool isStandardChatFontSize = chatFontSize == "standard";
+                                                            bool isBigChatFontSize = chatFontSize == "big";
+                                                            if (isSmallChatFontSize)
+                                                            {
+                                                                fontSize = 12;
+                                                            }
+                                                            else if (isStandardChatFontSize)
+                                                            {
+                                                                fontSize = 14;
+                                                            }
+                                                            else if (isBigChatFontSize)
+                                                            {
+                                                                fontSize = 16;
+                                                            }
+                                                            newMsgLabel.FontSize = fontSize;
+
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
                                                             activeChatContent.Children.Add(newMsg);
@@ -920,6 +978,14 @@ namespace GamaManager.Dialogs
         async public void SendMsg(string newMsgContent)
         {
 
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+
             try
             {
                 HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
@@ -929,7 +995,7 @@ namespace GamaManager.Dialogs
                 {
                     using (StreamReader rolesReader = new StreamReader(rolesResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        js = new JavaScriptSerializer();
                         string objText = rolesReader.ReadToEnd();
                         TalkRolesResponseInfo myRolesObj = (TalkRolesResponseInfo)js.Deserialize(objText, typeof(TalkRolesResponseInfo));
                         string status = myRolesObj.status;
@@ -1048,6 +1114,27 @@ namespace GamaManager.Dialogs
                                                                 newMsgLabel.Margin = new Thickness(40, 10, 10, 10);
                                                                 newMsgLabel.Text = newMsgContent;
                                                                 inputChatMsgBox.Text = "";
+
+                                                                int fontSize = 12;
+                                                                string chatFontSize = currentSettings.chatFontSize;
+                                                                bool isSmallChatFontSize = chatFontSize == "small";
+                                                                bool isStandardChatFontSize = chatFontSize == "standard";
+                                                                bool isBigChatFontSize = chatFontSize == "big";
+                                                                if (isSmallChatFontSize)
+                                                                {
+                                                                    fontSize = 12;
+                                                                }
+                                                                else if (isStandardChatFontSize)
+                                                                {
+                                                                    fontSize = 14;
+                                                                }
+                                                                else if (isBigChatFontSize)
+                                                                {
+                                                                    fontSize = 16;
+                                                                }
+                                                                newMsgLabel.FontSize = fontSize;
+
+
                                                                 newMsg.Children.Add(newMsgLabel);
                                                                 activeChatContent.Children.Add(newMsg);
                                                             }

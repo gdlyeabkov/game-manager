@@ -473,7 +473,10 @@ namespace GamaManager.Dialogs
 
             TabItem newChat = new TabItem();
 
-            newChat.Header = this.chats[this.chats.Count - 1];
+            int countChats = this.chats.Count;
+            int lastChatIndex = countChats - 1;
+            string lastChatId = this.chats[lastChatIndex];
+            newChat.Header = lastChatId;
 
             try
             {
@@ -516,6 +519,14 @@ namespace GamaManager.Dialogs
             chatControl.SelectedIndex = activeChatIndex;
 
             GetMsgs();
+
+            ContextMenu newChatContextMenu = new ContextMenu();
+            MenuItem newChatContextMenuItem = new MenuItem();
+            newChatContextMenuItem.Header = "Закрыть вкладку";
+            newChatContextMenuItem.DataContext = lastChatId;
+            newChatContextMenuItem.Click += CloseChatHandler;
+            newChatContextMenu.Items.Add(newChatContextMenuItem);
+            newChat.ContextMenu = newChatContextMenu;
 
         }
 
@@ -1708,6 +1719,42 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
             return talk;
+        }
+
+        public void CloseChatHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            CloseChat(id);
+        }
+
+        public void CloseChat (string id)
+        {
+            ItemCollection chatControlItems = chatControl.Items;
+            int chatControlItemsCount = chatControlItems.Count;
+            bool isManyTabs = chatControlItemsCount >= 2;
+            if (isManyTabs)
+            {
+                int chatIndex = this.chats.IndexOf(id);
+                chatControl.Items.RemoveAt(chatIndex);
+                this.chats = this.chats.Where<string>((string chatId) =>
+                {
+                    bool isCurrentChat = id == chatId;
+                    bool isNotCurrentChat = !isCurrentChat;
+                    return isNotCurrentChat;
+                }).ToList<string>();
+            }
+            chatControlItemsCount = chatControlItems.Count;
+            isManyTabs = chatControlItemsCount >= 2;
+            foreach (TabItem chatControlItem in chatControlItems)
+            {
+                ContextMenu chatControlItemContextMenu = chatControlItem.ContextMenu;
+                foreach (MenuItem chatControlItemContextMenuItem in chatControlItemContextMenu.Items)
+                {
+                    chatControlItemContextMenuItem.IsEnabled = isManyTabs;
+                }
+            }
         }
 
     }

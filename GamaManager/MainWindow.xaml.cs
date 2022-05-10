@@ -5537,6 +5537,8 @@ namespace GamaManager
 
             mainControl.DataContext = currentUserId;
 
+            GetComments(cachedUserProfileId);
+
         }
 
         public void GetFriendRequests()
@@ -9753,7 +9755,8 @@ namespace GamaManager
                     var rawResult = response.GetValue<string>();
                     string[] result = rawResult.Split(new char[] { '|' });
                     string userId = result[0];
-                    string profileId = result[0];
+                    // string profileId = result[0];
+                    string profileId = result[1];
                     bool isRequestForMe = profileId == cachedUserProfileId && userId != currentUserId;
                     Debugger.Log(0, "debug", Environment.NewLine + "profileId: " + profileId + ", userId: " + userId + ", cachedUserProfileId: " + cachedUserProfileId + Environment.NewLine);
                     if (isRequestForMe)

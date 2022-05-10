@@ -263,6 +263,18 @@
                         x:Name="friends"    
                     />
                     <TextBlock
+                        x:Name="playedFriendsCountLabel"
+                        FontSize="14"
+                        Text="Играют (0)"
+                        Margin="15"
+                    />
+                    <StackPanel
+                        x:Name="playedFriends"    
+                    />
+                    <Separator
+                        
+                    />
+                    <TextBlock
                         x:Name="onlineFriendsCountLabel"
                         FontSize="14"
                         Text="Друзья в сети (0)"

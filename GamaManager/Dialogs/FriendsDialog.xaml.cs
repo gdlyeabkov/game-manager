@@ -396,6 +396,7 @@ namespace GamaManager.Dialogs
                                             string friendId = friendInfo.friend;
                                             friendsIds.Add(friendId);
                                         }
+                                        int friendsPlayCursor = 0;
                                         int friendsOnlineCursor = 0;
                                         int friendsOfflineCursor = 0;
                                         foreach (Friend friendInfo in myFriends)
@@ -476,9 +477,11 @@ namespace GamaManager.Dialogs
                                                                 }
                                                                 else if (isFriendPlayed)
                                                                 {
+                                                                    friendsPlayCursor++;
                                                                     friendLoginLabel.Foreground = playedBrush;
                                                                     friendStatusLabel.Foreground = playedBrush;
                                                                     friendStatusLabel.Text = "играет";
+                                                                    playedFriends.Children.Add(friendsItem);
                                                                 }
                                                                 else if (isFriendOffline)
                                                                 {
@@ -692,6 +695,9 @@ namespace GamaManager.Dialogs
                                         }
                                         string rawCountOfflineFriends = friendsOfflineCursor.ToString();
                                         string rawCountOnlineFriends = friendsOnlineCursor.ToString();
+                                        string rawCountPlayedFriends = friendsPlayCursor.ToString();
+                                        string playedFriendsCountLabelContent = "Играют (" + rawCountPlayedFriends + ")";
+                                        playedFriendsCountLabel.Text = playedFriendsCountLabelContent;
                                         string onlineFriendsCountLabelContent = "Друзья в сети (" + rawCountOnlineFriends + ")";
                                         onlineFriendsCountLabel.Text = onlineFriendsCountLabelContent;
                                         string offlineFriendsCountLabelContent = "Друзья не в сети (" + rawCountOfflineFriends + ")";

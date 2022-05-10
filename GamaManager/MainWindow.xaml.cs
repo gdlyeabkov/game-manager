@@ -6207,6 +6207,9 @@ namespace GamaManager
                         isNotIncludeImagesAndMediaFiles = false,
                         isShowTimeIn24 = true,
                         isDisableSpellCheck = true,
+                        isFriendListAndChatsCompactView = false,
+                        isFavoriteCompactView = false,
+                        chatFontSize = "standard",
                         isFriendOnlineNotification = false,
                         isFriendOnlineSound = false,
                         isFriendPlayedNotification = true,
@@ -6295,7 +6298,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 44;
         }
 
-        async public void RunGame(string gameName, string joinedGameName = "")
+        async public void RunGame (string gameName, string joinedGameName = "")
         {
 
             StartDetectGameHours();
@@ -6313,7 +6316,7 @@ namespace GamaManager
             // string gameName = gameNameLabel.Text;
             try
             {
-                // await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
+                await client.EmitAsync("user_is_played", currentUserId + "|" + gameName);
             }
             catch (System.Net.WebSockets.WebSocketException)
             {
@@ -9115,7 +9118,10 @@ namespace GamaManager
                                                             });
                                                             // MessageBox.Show("Пользователь " + senderName + " играет в " + gameName, "Внимание");
                                                         }
-                                                        bool isSoundEnabled = cachedFriend.isFriendPlayedSound;
+                                                        // bool isSoundEnabled = cachedFriend.isFriendPlayedSound;
+                                                        bool isLocalSoundEnabled = cachedFriend.isFriendPlayedSound;
+                                                        bool isGlobalSoundEnabled = currentSettings.isFriendPlayedSound;
+                                                        bool isSoundEnabled = isLocalSoundEnabled && isGlobalSoundEnabled;
                                                         if (isSoundEnabled)
                                                         {
                                                             Application.Current.Dispatcher.Invoke(() =>
@@ -9264,7 +9270,10 @@ namespace GamaManager
                                                                 friendNotifications.Children.Add(friendNotification);
                                                             });
                                                         }
-                                                        bool isSoundEnabled = cachedFriend.isFriendOnlineSound;
+                                                        // bool isSoundEnabled = cachedFriend.isFriendOnlineSound;
+                                                        bool isLocalSoundEnabled = cachedFriend.isFriendOnlineSound;
+                                                        bool isGlobalSoundEnabled = currentSettings.isFriendOnlineSound;
+                                                        bool isSoundEnabled = isLocalSoundEnabled && isGlobalSoundEnabled;
                                                         if (isSoundEnabled)
                                                         {
                                                             Application.Current.Dispatcher.Invoke(() =>
@@ -9296,6 +9305,8 @@ namespace GamaManager
                     string userId = result[0];
                     string msg = result[1];
                     string chatId = result[2];
+                    string msgType = result[3];
+                    string cachedId = result[4];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
@@ -9439,7 +9450,10 @@ namespace GamaManager
                                                                                 }
                                                                             });
                                                                         }
-                                                                        bool isSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                        // bool isSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                        bool isLocalSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                        bool isGlobalSoundEnabled = currentSettings.isFriendSendMsgSound;
+                                                                        bool isSoundEnabled = isLocalSoundEnabled && isGlobalSoundEnabled;
                                                                         if (isSoundEnabled)
                                                                         {
                                                                             Application.Current.Dispatcher.Invoke(() =>
@@ -15199,6 +15213,9 @@ namespace GamaManager
         public bool isNotIncludeImagesAndMediaFiles;
         public bool isShowTimeIn24;
         public bool isDisableSpellCheck;
+        public bool isFriendListAndChatsCompactView;
+        public bool isFavoriteCompactView;
+        public string chatFontSize;
         public bool isFriendOnlineNotification;
         public bool isFriendOnlineSound;
         public bool isFriendPlayedNotification;

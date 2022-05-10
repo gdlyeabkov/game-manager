@@ -627,6 +627,17 @@ namespace GamaManager.Dialogs
             rawIsChecked = disableSpellCheckBtn.IsChecked;
             isChecked = ((bool)(rawIsChecked));
             updatedSettings.isDisableSpellCheck = isChecked;
+            
+            rawIsChecked = friendListAndChatsCompactViewBtn.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFriendListAndChatsCompactView = isChecked;
+            rawIsChecked = favoriteCompactViewBtn.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isFavoriteCompactView = isChecked;
+            object chatFontSizePanelData = chatFontSizePanel.DataContext;
+            string chatFontSize = ((string)(chatFontSizePanelData));
+            updatedSettings.chatFontSize = chatFontSize;
+
             rawIsChecked = friendPlayedNotificationCheckBox.IsChecked;
             isChecked = ((bool)(rawIsChecked));
             updatedSettings.isFriendPlayedNotification = isChecked;
@@ -696,6 +707,30 @@ namespace GamaManager.Dialogs
             bool isDisableSpellCheck = currentSettings.isDisableSpellCheck;
             disableSpellCheckBtn.IsChecked = isDisableSpellCheck;
             enableSpellCheckBtn.IsChecked = !isDisableSpellCheck;
+
+            bool isFriendListAndChatsCompactView = currentSettings.isFriendListAndChatsCompactView;
+            friendListAndChatsCompactViewBtn.IsChecked = isFriendListAndChatsCompactView;
+            friendListAndChatsUnCompactViewBtn.IsChecked = !isFriendListAndChatsCompactView;
+            bool isFavoriteCompactView = currentSettings.isFavoriteCompactView;
+            favoriteCompactViewBtn.IsChecked = isFavoriteCompactView;
+            favoriteUnCompactViewBtn.IsChecked = !isFavoriteCompactView;
+            string chatFontSize = currentSettings.chatFontSize;
+            bool isSmallChatFontSize = chatFontSize == "small";
+            bool isStandardChatFontSize = chatFontSize == "standard";
+            bool isBigChatFontSize = chatFontSize == "big";
+            if (isSmallChatFontSize)
+            {
+                ToggleChatFontSize(smallChatFontSizeBtn);
+            }
+            else if (isStandardChatFontSize)
+            {
+                ToggleChatFontSize(standardChatFontSizeBtn);
+            }
+            else if (isBigChatFontSize)
+            {
+                ToggleChatFontSize(bigChatFontSizeBtn);
+            }
+
             bool isFriendPlayedNotification = currentSettings.isFriendPlayedNotification;
             friendPlayedNotificationCheckBox.IsChecked = isFriendPlayedNotification;
             bool isFriendPlayedSound = currentSettings.isFriendPlayedSound;
@@ -732,6 +767,23 @@ namespace GamaManager.Dialogs
             {
                 ToggleSendMsgBlinkWindowType(neverSendMsgBlinkWindowTypeBtn);
             }
+        }
+
+        private void ToggleChatFontSizeHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            ToggleChatFontSize(btn);
+        }
+
+        public void ToggleChatFontSize (Button btn)
+        {
+            object btnData = btn.DataContext;
+            string chatFontSize = btnData.ToString();
+            smallChatFontSizeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            standardChatFontSizeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bigChatFontSizeBtn.Background = System.Windows.Media.Brushes.LightGray;
+            btn.Background = System.Windows.Media.Brushes.SkyBlue;
+            chatFontSizePanel.DataContext = chatFontSize;
         }
 
         private void ToggleSendMsgBlinkWindowTypeHandler (object sender, RoutedEventArgs e)

@@ -373,8 +373,22 @@ namespace GamaManager.Dialogs
                                             TextBlock newMsgDateLabel = new TextBlock();
                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                             DateTime currentDate = DateTime.Now;
-                                            string rawCurrentDate = currentDate.ToLongTimeString();
-                                            newMsgDateLabel.Text = rawCurrentDate;
+
+                                            // string rawCurrentDate = currentDate.ToLongTimeString();
+                                            string rawCurrentDate = currentDate.ToLongDateString();
+                                            string rawCurrentTime = currentDate.ToLongTimeString();
+                                            bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                            bool isShowTimeIn12 = !isShowTimeIn24;
+                                            if (isShowTimeIn12)
+                                            {
+                                                string rawDate = currentDate.ToString("h:mm:ss");
+                                                DateTime dt = DateTime.Parse(rawDate);
+                                                rawCurrentTime = dt.ToLongTimeString();
+                                            }
+                                            string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                            // newMsgDateLabel.Text = rawCurrentDate;
+                                            newMsgDateLabel.Text = newMsgDateLabelContent;
+                                            
                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                             newMsg.Children.Add(newMsgHeader);
                                             if (msgType == "text")
@@ -759,7 +773,21 @@ namespace GamaManager.Dialogs
                                                                     leftSeparator.BorderThickness = new Thickness(2);
                                                                     msgsSeparator.Children.Add(leftSeparator);
                                                                     TextBlock msgsSeparatorDateLabel = new TextBlock();
-                                                                    msgsSeparatorDateLabel.Text = rawMsgDate;
+
+                                                                    string rawCurrentDate = msgDate.ToLongDateString();
+                                                                    string rawCurrentTime = msgDate.ToLongTimeString();
+                                                                    bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                                    bool isShowTimeIn12 = !isShowTimeIn24;
+                                                                    if (isShowTimeIn12)
+                                                                    {
+                                                                        string rawDate = msgDate.ToString("h:mm:ss");
+                                                                        DateTime dt = DateTime.Parse(rawDate);
+                                                                        rawCurrentTime = dt.ToLongTimeString();
+                                                                    }
+                                                                    string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime; ;
+                                                                    // msgsSeparatorDateLabel.Text = rawMsgDate;
+                                                                    msgsSeparatorDateLabel.Text = newMsgDateLabelContent;
+
                                                                     msgsSeparator.Children.Add(msgsSeparatorDateLabel);
                                                                     Separator rightSeparator = new Separator();
                                                                     rightSeparator.Width = 350;
@@ -797,7 +825,21 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgDateLabel.Text = rawMsgDate;
+
+                                                            string rawCurrentDate = msgDate.ToLongDateString();
+                                                            string rawCurrentTime = msgDate.ToLongTimeString();
+                                                            bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                            bool isShowTimeIn12 = !isShowTimeIn24;
+                                                            if (isShowTimeIn12)
+                                                            {
+                                                                string rawDate = msgDate.ToString("h:mm:ss");
+                                                                DateTime dt = DateTime.Parse(rawDate);
+                                                                rawCurrentTime = dt.ToLongTimeString();
+                                                            }
+                                                            string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime; ;
+                                                            // newMsgDateLabel.Text = rawMsgDate;
+                                                            newMsgDateLabel.Text = newMsgDateLabelContent;
+                                                            
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             TextBlock newMsgLabel = new TextBlock();
@@ -847,7 +889,21 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgDateLabel.Text = rawMsgDate;
+
+                                                            string rawCurrentDate = msgDate.ToLongDateString();
+                                                            string rawCurrentTime = msgDate.ToLongTimeString();
+                                                            bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                            bool isShowTimeIn12 = !isShowTimeIn24;
+                                                            if (isShowTimeIn12)
+                                                            {
+                                                                string rawDate = msgDate.ToString("h:mm:ss");
+                                                                DateTime dt = DateTime.Parse(rawDate);
+                                                                rawCurrentTime = dt.ToLongTimeString();
+                                                            }
+                                                            string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                                            // newMsgDateLabel.Text = rawMsgDate;
+                                                            newMsgDateLabel.Text = newMsgDateLabelContent;
+                                                            
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -882,7 +938,21 @@ namespace GamaManager.Dialogs
                                                             newMsgHeader.Children.Add(newMsgFriendNameLabel);
                                                             TextBlock newMsgDateLabel = new TextBlock();
                                                             newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                            newMsgDateLabel.Text = rawMsgDate;
+
+                                                            string rawCurrentDate = msgDate.ToLongDateString();
+                                                            string rawCurrentTime = msgDate.ToLongTimeString();
+                                                            bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                            bool isShowTimeIn12 = !isShowTimeIn24;
+                                                            if (isShowTimeIn12)
+                                                            {
+                                                                string rawDate = msgDate.ToString("h:mm:ss");
+                                                                DateTime dt = DateTime.Parse(rawDate);
+                                                                rawCurrentTime = dt.ToLongTimeString();
+                                                            }
+                                                            string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                                            // newMsgDateLabel.Text = rawMsgDate;
+                                                            newMsgDateLabel.Text = newMsgDateLabelContent;
+                                                            
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -1106,8 +1176,22 @@ namespace GamaManager.Dialogs
                                                                 TextBlock newMsgDateLabel = new TextBlock();
                                                                 newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                                                 DateTime currentDate = DateTime.Now;
-                                                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                                                newMsgDateLabel.Text = rawCurrentDate;
+                                                                
+                                                                // string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                string rawCurrentDate = currentDate.ToLongDateString();
+                                                                string rawCurrentTime = currentDate.ToLongTimeString();
+                                                                bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                                bool isShowTimeIn12 = !isShowTimeIn24;
+                                                                if (isShowTimeIn12)
+                                                                {
+                                                                    string rawDate = currentDate.ToString("h:mm:ss");
+                                                                    DateTime dt = DateTime.Parse(rawDate);
+                                                                    rawCurrentTime = dt.ToLongTimeString();
+                                                                }
+                                                                string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                                                // newMsgDateLabel.Text = rawCurrentDate;
+                                                                newMsgDateLabel.Text = newMsgDateLabelContent;
+                                                                
                                                                 newMsgHeader.Children.Add(newMsgDateLabel);
                                                                 newMsg.Children.Add(newMsgHeader);
                                                                 TextBlock newMsgLabel = new TextBlock();
@@ -1514,8 +1598,29 @@ namespace GamaManager.Dialogs
                                 TextBlock newMsgDateLabel = new TextBlock();
                                 newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                 DateTime currentDate = DateTime.Now;
-                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                newMsgDateLabel.Text = rawCurrentDate;
+
+                                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                js = new JavaScriptSerializer();
+                                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                Settings currentSettings = loadedContent.settings;
+                                // string rawCurrentDate = currentDate.ToLongTimeString();
+                                string rawCurrentDate = currentDate.ToLongDateString();
+                                string rawCurrentTime = currentDate.ToLongTimeString();
+                                bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                bool isShowTimeIn12 = !isShowTimeIn24;
+                                if (isShowTimeIn12)
+                                {
+                                    string rawDate = currentDate.ToString("h:mm:ss");
+                                    DateTime dt = DateTime.Parse(rawDate);
+                                    rawCurrentTime = dt.ToLongTimeString();
+                                }
+                                string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                // newMsgDateLabel.Text = rawCurrentDate;
+                                newMsgDateLabel.Text = newMsgDateLabelContent;
+                                
                                 newMsgHeader.Children.Add(newMsgDateLabel);
                                 newMsg.Children.Add(newMsgHeader);
                                 Image newMsgLabel = new Image();
@@ -1738,8 +1843,29 @@ namespace GamaManager.Dialogs
                                                                 TextBlock newMsgDateLabel = new TextBlock();
                                                                 newMsgDateLabel.Margin = new Thickness(5, 0, 5, 0);
                                                                 DateTime currentDate = DateTime.Now;
-                                                                string rawCurrentDate = currentDate.ToLongTimeString();
-                                                                newMsgDateLabel.Text = rawCurrentDate;
+
+                                                                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                                                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                                js = new JavaScriptSerializer();
+                                                                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                                                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                Settings currentSettings = loadedContent.settings;
+                                                                // string rawCurrentDate = currentDate.ToLongTimeString();
+                                                                string rawCurrentDate = currentDate.ToLongDateString();
+                                                                string rawCurrentTime = currentDate.ToLongTimeString();
+                                                                bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
+                                                                bool isShowTimeIn12 = !isShowTimeIn24;
+                                                                if (isShowTimeIn12)
+                                                                {
+                                                                    string rawDate = currentDate.ToString("h:mm:ss");
+                                                                    DateTime dt = DateTime.Parse(rawDate);
+                                                                    rawCurrentTime = dt.ToLongTimeString();
+                                                                }
+                                                                string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
+                                                                // newMsgDateLabel.Text = rawCurrentDate;
+                                                                newMsgDateLabel.Text = newMsgDateLabelContent;
+                                                                
                                                                 newMsgHeader.Children.Add(newMsgDateLabel);
                                                                 newMsg.Children.Add(newMsgHeader);
                                                                 Image newMsgLabel = new Image();

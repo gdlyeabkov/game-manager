@@ -713,7 +713,7 @@ namespace GamaManager.Dialogs
             rememberChatsBtn.IsChecked = isRestoreChats;
             forgetChatsBtn.IsChecked = !isRestoreChats;
 
-            bool isShowTimeIn24 = currentSettings.isDisableSpellCheck;
+            bool isShowTimeIn24 = currentSettings.isShowTimeIn24;
             showTimeIn24Btn.IsChecked = isShowTimeIn24;
             showTimeIn12Btn.IsChecked = !isShowTimeIn24;
             bool isDisableSpellCheck = currentSettings.isDisableSpellCheck;

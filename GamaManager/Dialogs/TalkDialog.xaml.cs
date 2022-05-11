@@ -656,7 +656,12 @@ namespace GamaManager.Dialogs
         public void AddChat()
         {
             TabItem newChat = new TabItem();
-            newChat.Header = talkId;
+
+            // newChat.Header = talkId;
+            TextBlock newChatHeaderLabel = new TextBlock();
+            newChatHeaderLabel.Text = talkId;
+            newChat.Header = newChatHeaderLabel;
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
@@ -675,7 +680,10 @@ namespace GamaManager.Dialogs
                         {
                             Talk talk = myobj.talk;
                             string talkTitle = talk.title;
-                            newChat.Header = talkTitle;
+
+                            // newChat.Header = talkTitle;
+                            newChatHeaderLabel.Text = talkTitle;
+
                             string userIsWritingLabelContent = talkTitle + " печатает...";
                             userIsWritingLabel.Text = userIsWritingLabelContent;
 
@@ -712,6 +720,51 @@ namespace GamaManager.Dialogs
                                         newChat.Content = newChatControlContent;
                                         activeChatIndex++;
                                         chatControl.SelectedIndex = activeChatIndex;
+
+                                        ContextMenu newChatContextMenu = new ContextMenu();
+                                        MenuItem newChatContextMenuItem = new MenuItem();
+                                        bool isFavoriteFriend = false;
+                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                        js = new JavaScriptSerializer();
+                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                        List<FriendSettings> updatedFriends = loadedContent.friends;
+                                        List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
+                                        {
+                                            return localFriend.id == talkId;
+                                        }).ToList();
+                                        int countCachedFriends = cachedFriends.Count;
+                                        bool isCachedFriendsExists = countCachedFriends >= 1;
+                                        if (isCachedFriendsExists)
+                                        {
+                                            FriendSettings cachedFriend = cachedFriends[0];
+                                            isFavoriteFriend = cachedFriend.isFavoriteFriend;
+                                        }
+                                        bool isFriendInFavorites = isFavoriteFriend;
+                                        if (isFriendInFavorites)
+                                        {
+                                            newChatContextMenuItem.Header = "Убрать из избранных";
+                                            newChatContextMenuItem.Click += RemoveTalkFromFavoriteHandler;
+                                        }
+                                        else
+                                        {
+                                            newChatContextMenuItem.Header = "Добавить в избранные";
+                                            newChatContextMenuItem.Click += AddTalkToFavoriteHandler;
+                                        }
+
+                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+                                        newChatContextMenuItem = new MenuItem();
+                                        newChatContextMenuItem.Header = "Закрыть вкладку";
+                                        newChatContextMenuItem.Click += CloseTabHandler;
+                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+                                        newChatContextMenuItem = new MenuItem();
+                                        newChatContextMenuItem.Header = "Выйти из чата";
+                                        newChatContextMenuItem.Click += LogoutHandler;
+                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+                                        newChatHeaderLabel.ContextMenu = newChatContextMenu;
+
                                     }
                                 }
                             }
@@ -2925,6 +2978,148 @@ namespace GamaManager.Dialogs
 
         }
 
+        public void LogoutHandler (object sender, RoutedEventArgs e)
+        {
+            Logout();
+        }
+
+        public void Logout ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/delete/?id=" + talkId + @"&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Close();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void CloseTabHandler (object sender, RoutedEventArgs e)
+        {
+            CloseTab();
+        }
+
+        public void CloseTab ()
+        {
+            this.Close();
+        }
+
+        public void AddTalkToFavoriteHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string talkId = ((string)(menuItemData));
+            AddTalkToFavorite(talkId);
+        }
+
+        public void AddTalkToFavorite(string talkId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            List<FriendSettings> updatedFriends = currentFriends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == talkId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = true;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends,
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+                // обновить меню
+            }
+        }
+
+        public void RemoveTalkFromFavoriteHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string talkId = ((string)(menuItemData));
+            RemoveTalkFromFavorite(talkId);
+        }
+
+        public void RemoveTalkFromFavorite (string currentTalkId)
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            List<FriendSettings> updatedFriends = currentFriends;
+            List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
+            {
+                return friend.id == currentTalkId;
+            }).ToList();
+            int countCachedFriends = cachedFriends.Count;
+            bool isCachedFriendsExists = countCachedFriends >= 1;
+            if (isCachedFriendsExists)
+            {
+                FriendSettings cachedFriend = cachedFriends[0];
+                cachedFriend.isFavoriteFriend = false;
+                string savedContent = js.Serialize(new SavedContent
+                {
+                    games = currentGames,
+                    friends = updatedFriends,
+                    settings = currentSettings,
+                    collections = currentCollections,
+                    notifications = currentNotifications,
+                    categories = currentCategories,
+                    recentChats = currentRecentChats
+                });
+                File.WriteAllText(saveDataFilePath, savedContent);
+                // обновить меню
+            }
+        }
 
     }
 }

@@ -4926,7 +4926,7 @@ namespace GamaManager
                             List<string> currentRecentChats = loadedContent.recentChats;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
-                            for (int i = 0; i < updatedFriendsCount; i++)
+                            for (int i = updatedFriendsCount - 1; i >= 0; i--)
                             {
                                 FriendSettings currentFriend = updatedFriends[i];
                                 string currentFriendId = currentFriend.id;
@@ -8873,147 +8873,188 @@ namespace GamaManager
 
         async public void SaveUserInfo ()
         {
-
-            string userNameBoxContent = userNameBox.Text;
-            int selectedCountryIndex = userCountryBox.SelectedIndex;
-            ItemCollection userCountryBoxItems = userCountryBox.Items;
-            object rawSelectedUserCountryBoxItem = userCountryBoxItems[selectedCountryIndex];
-            ComboBoxItem selectedUserCountryBoxItem = ((ComboBoxItem)(rawSelectedUserCountryBoxItem));
-            object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
-            string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
-            string userAboutBoxContent = userAboutBox.Text;
-
-            int userFriendsSettingsIndex = userFriendsSettingsSelector.SelectedIndex;
-            ItemCollection userFriendsSettingsSelectorItems = userFriendsSettingsSelector.Items;
-            object rawSelectedUserFriendsSettingsItem = userFriendsSettingsSelectorItems[userFriendsSettingsIndex];
-            ComboBoxItem selectedUserFriendsSettingsItem = ((ComboBoxItem)(rawSelectedUserFriendsSettingsItem));
-            object selectedUserFriendsSettingsItemData = selectedUserFriendsSettingsItem.DataContext;
-            string userFriendsSettings = ((string)(selectedUserFriendsSettingsItemData));
-            int userGamesSettingsIndex = userGamesSettingsSelector.SelectedIndex;
-            ItemCollection userGamesSettingsSelectorItems = userGamesSettingsSelector.Items;
-            object rawSelectedUserGamesSettingsItem = userGamesSettingsSelectorItems[userGamesSettingsIndex];
-            ComboBoxItem selectedUserGamesSettingsItem = ((ComboBoxItem)(rawSelectedUserGamesSettingsItem));
-            object selectedUserGamesSettingsItemData = selectedUserGamesSettingsItem.DataContext;
-            string userGamesSettings = ((string)(selectedUserGamesSettingsItemData));
-            int userEquipmentSettingsIndex = userEquipmentSettingsSelector.SelectedIndex;
-            ItemCollection userEquipmentSettingsSelectorItems = userEquipmentSettingsSelector.Items;
-            object rawSelectedUserEquipmentSettingsItem = userEquipmentSettingsSelectorItems[userEquipmentSettingsIndex];
-            ComboBoxItem selectedUserEquipmentSettingsItem = ((ComboBoxItem)(rawSelectedUserEquipmentSettingsItem));
-            object selectedUserEquipmentSettingsItemData = selectedUserEquipmentSettingsItem.DataContext;
-            string userEquipmentSettings = ((string)(selectedUserEquipmentSettingsItemData));
-            int userCommentsSettingsIndex = userCommentsSettingsSelector.SelectedIndex;
-            ItemCollection userCommentsSettingsSelectorItems = userCommentsSettingsSelector.Items;
-            object rawSelectedUserCommentsSettingsItem = userCommentsSettingsSelectorItems[userCommentsSettingsIndex];
-            ComboBoxItem selectedUserCommentsSettingsItem = ((ComboBoxItem)(rawSelectedUserCommentsSettingsItem));
-            object selectedUserCommentsSettingsItemData = selectedUserCommentsSettingsItem.DataContext;
-            string userCommentsSettings = ((string)(selectedUserCommentsSettingsItemData));
-
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
-            MultipartFormDataContent form = new MultipartFormDataContent();
-            ImageSource source = editProfileAvatarImg.Source;
-            BitmapImage bitmapImage = ((BitmapImage)(source));
-            byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
-            form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-
-            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
-            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
-
-            HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
-            httpClient.Dispose();
-            string sd = response.Content.ReadAsStringAsync().Result;
-            /**/
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(sd, typeof(RegisterResponseInfo));
-            string status = myobj.status;
-            bool isOkStatus = status == "OK";
-            // bool isOkStatus = true;
-            if (isOkStatus)
+            try
             {
-                /*GetUser(currentUserId);
-                GetUserInfo(currentUserId, true);
-                GetEditInfo();*/
-                MessageBox.Show("Профиль был обновлен", "Внимание");
-            }
-            else
-            {
-                MessageBox.Show("Не удается обновить профиль", "Ошибка");
-            }
-
-            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
-            webRequest.Method = "POST";
-            webRequest.ContentType = "multipart/form-data";
-            webRequest.UserAgent = ".NET Framework Test Client";
-            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                 {
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    var objText = reader.ReadToEnd();
-
-                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-
-                    string status = myobj.status;
-                    bool isOkStatus = status == "OK";
-                    if (isOkStatus)
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        MessageBox.Show("Профиль был обновлен", "Внимание");
-                        GetUser(currentUserId);
-                        GetUserInfo(currentUserId, true);
-                        GetEditInfo();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удается редактировать профиль", "Ошибка");
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string currentName = user.name;
+                            string userNameBoxContent = userNameBox.Text;
+                            bool isEditNick = currentName != userNameBoxContent;
+                            if (isEditNick)
+                            {
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/nicks/add/?id=" + currentUserId + @"&nick=" + userNameBoxContent);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                    }
+                                }
+                            }
+                            int selectedCountryIndex = userCountryBox.SelectedIndex;
+                            ItemCollection userCountryBoxItems = userCountryBox.Items;
+                            object rawSelectedUserCountryBoxItem = userCountryBoxItems[selectedCountryIndex];
+                            ComboBoxItem selectedUserCountryBoxItem = ((ComboBoxItem)(rawSelectedUserCountryBoxItem));
+                            object rawUserCountryBoxContent = selectedUserCountryBoxItem.Content;
+                            string userCountryBoxContent = ((string)(rawUserCountryBoxContent));
+                            string userAboutBoxContent = userAboutBox.Text;
+
+                            int userFriendsSettingsIndex = userFriendsSettingsSelector.SelectedIndex;
+                            ItemCollection userFriendsSettingsSelectorItems = userFriendsSettingsSelector.Items;
+                            object rawSelectedUserFriendsSettingsItem = userFriendsSettingsSelectorItems[userFriendsSettingsIndex];
+                            ComboBoxItem selectedUserFriendsSettingsItem = ((ComboBoxItem)(rawSelectedUserFriendsSettingsItem));
+                            object selectedUserFriendsSettingsItemData = selectedUserFriendsSettingsItem.DataContext;
+                            string userFriendsSettings = ((string)(selectedUserFriendsSettingsItemData));
+                            int userGamesSettingsIndex = userGamesSettingsSelector.SelectedIndex;
+                            ItemCollection userGamesSettingsSelectorItems = userGamesSettingsSelector.Items;
+                            object rawSelectedUserGamesSettingsItem = userGamesSettingsSelectorItems[userGamesSettingsIndex];
+                            ComboBoxItem selectedUserGamesSettingsItem = ((ComboBoxItem)(rawSelectedUserGamesSettingsItem));
+                            object selectedUserGamesSettingsItemData = selectedUserGamesSettingsItem.DataContext;
+                            string userGamesSettings = ((string)(selectedUserGamesSettingsItemData));
+                            int userEquipmentSettingsIndex = userEquipmentSettingsSelector.SelectedIndex;
+                            ItemCollection userEquipmentSettingsSelectorItems = userEquipmentSettingsSelector.Items;
+                            object rawSelectedUserEquipmentSettingsItem = userEquipmentSettingsSelectorItems[userEquipmentSettingsIndex];
+                            ComboBoxItem selectedUserEquipmentSettingsItem = ((ComboBoxItem)(rawSelectedUserEquipmentSettingsItem));
+                            object selectedUserEquipmentSettingsItemData = selectedUserEquipmentSettingsItem.DataContext;
+                            string userEquipmentSettings = ((string)(selectedUserEquipmentSettingsItemData));
+                            int userCommentsSettingsIndex = userCommentsSettingsSelector.SelectedIndex;
+                            ItemCollection userCommentsSettingsSelectorItems = userCommentsSettingsSelector.Items;
+                            object rawSelectedUserCommentsSettingsItem = userCommentsSettingsSelectorItems[userCommentsSettingsIndex];
+                            ComboBoxItem selectedUserCommentsSettingsItem = ((ComboBoxItem)(rawSelectedUserCommentsSettingsItem));
+                            object selectedUserCommentsSettingsItemData = selectedUserCommentsSettingsItem.DataContext;
+                            string userCommentsSettings = ((string)(selectedUserCommentsSettingsItemData));
+
+                            HttpClient httpClient = new HttpClient();
+                            httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                            MultipartFormDataContent form = new MultipartFormDataContent();
+                            ImageSource source = editProfileAvatarImg.Source;
+                            BitmapImage bitmapImage = ((BitmapImage)(source));
+                            byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
+                            form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+
+                            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+                            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+
+                            HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                            httpClient.Dispose();
+                            string sd = response.Content.ReadAsStringAsync().Result;
+                            /**/
+                            js = new JavaScriptSerializer();
+                            RegisterResponseInfo myInnerObj = (RegisterResponseInfo)js.Deserialize(sd, typeof(RegisterResponseInfo));
+                            status = myInnerObj.status;
+                            isOkStatus = status == "OK";
+                            // bool isOkStatus = true;
+                            if (isOkStatus)
+                            {
+                                /*GetUser(currentUserId);
+                                GetUserInfo(currentUserId, true);
+                                GetEditInfo();*/
+                                MessageBox.Show("Профиль был обновлен", "Внимание");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Не удается обновить профиль", "Ошибка");
+                            }
+
+                            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+                            webRequest.Method = "POST";
+                            webRequest.ContentType = "multipart/form-data";
+                            webRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                            {
+                                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                {
+                                    JavaScriptSerializer js = new JavaScriptSerializer();
+                                    var objText = reader.ReadToEnd();
+
+                                    RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+
+                                    string status = myobj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        MessageBox.Show("Профиль был обновлен", "Внимание");
+                                        GetUser(currentUserId);
+                                        GetUserInfo(currentUserId, true);
+                                        GetEditInfo();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Не удается редактировать профиль", "Ошибка");
+                                    }
+                                }
+                            }*/
+
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> currentFriends = loadedContent.friends;
+                            Settings updatedSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
+                            List<string> currentRecentChats = loadedContent.recentChats;
+                            foreach (StackPanel profileTheme in profileThemes.Children)
+                            {
+                                bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
+                                if (isSelectedTheme)
+                                {
+
+                                    /*object rawThemeName = editProfileThemeName.DataContext;
+                                    string themeName = rawThemeName.ToString();*/
+
+                                    object rawThemeName = profileTheme.DataContext;
+                                    string themeName = rawThemeName.ToString();
+
+                                    updatedSettings.profileTheme = themeName;
+                                    string savedContent = js.Serialize(new SavedContent
+                                    {
+                                        games = currentGames,
+                                        friends = currentFriends,
+                                        settings = updatedSettings,
+                                        collections = currentCollections,
+                                        notifications = currentNotifications,
+                                        categories = currentCategories,
+                                        recentChats = currentRecentChats
+                                    });
+                                    File.WriteAllText(saveDataFilePath, savedContent);
+                                    break;
+                                }
+                            }
+
+                            GetUser(currentUserId);
+                            GetUserInfo(currentUserId, true);
+                            GetEditInfo();
+
+                        }
                     }
                 }
-            }*/
-
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            js = new JavaScriptSerializer();
-            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-            List<Game> currentGames = loadedContent.games;
-            List<FriendSettings> currentFriends = loadedContent.friends;
-            Settings updatedSettings = loadedContent.settings;
-            List<string> currentCollections = loadedContent.collections;
-            Notifications currentNotifications = loadedContent.notifications;
-            List<string> currentCategories = loadedContent.categories;
-            List<string> currentRecentChats = loadedContent.recentChats;
-            foreach (StackPanel profileTheme in profileThemes.Children)
-            {
-                bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
-                if (isSelectedTheme)
-                {
-
-                    /*object rawThemeName = editProfileThemeName.DataContext;
-                    string themeName = rawThemeName.ToString();*/
-
-                    object rawThemeName = profileTheme.DataContext;
-                    string themeName = rawThemeName.ToString();
-
-                    updatedSettings.profileTheme = themeName;
-                    string savedContent = js.Serialize(new SavedContent
-                    {
-                        games = currentGames,
-                        friends = currentFriends,
-                        settings = updatedSettings,
-                        collections = currentCollections,
-                        notifications = currentNotifications,
-                        categories = currentCategories,
-                        recentChats = currentRecentChats
-                    });
-                    File.WriteAllText(saveDataFilePath, savedContent);
-                    break;
-                }
             }
-
-            GetUser(currentUserId);
-            GetUserInfo(currentUserId, true);
-            GetEditInfo();
-
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public byte[] getPngFromImageControl(BitmapImage imageC)
@@ -15884,6 +15925,19 @@ namespace GamaManager
         public string _id;
         public string msg;
         public string content;
+    }
+
+    public class UserNickNamesResponseInfo
+    {
+        public string status;
+        public List<UserNickName> nicks;
+    }
+
+    public class UserNickName
+    {
+        public string _id;
+        public string user;
+        public string nick;
     }
 
 }

@@ -315,6 +315,45 @@ namespace GamaManager.Dialogs
                             string talkId = myobj.id;
                             SendInvites(talkId);
                             Cancel();
+
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            Settings currentSettings = loadedContent.settings;
+                            List<FriendSettings> currentFriends = loadedContent.friends;
+                            List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
+                            List<string> currentRecentChats = loadedContent.recentChats;
+                            List<FriendSettings> updatedFriends = currentFriends;
+                            updatedFriends.Add(new FriendSettings()
+                            {
+                                id = talkId,
+                                isFriendOnlineNotification = true,
+                                isFriendOnlineSound = true,
+                                isFriendPlayedNotification = true,
+                                isFriendPlayedSound = true,
+                                isFriendSendMsgNotification = true,
+                                isFriendSendMsgSound = true,
+                                isFavoriteFriend = false,
+                                categories = new List<string>()
+                            });
+                            string savedContent = js.Serialize(new SavedContent
+                            {
+                                games = currentGames,
+                                friends = updatedFriends,
+                                settings = currentSettings,
+                                collections = currentCollections,
+                                notifications = currentNotifications,
+                                categories = currentCategories,
+                                recentChats = currentRecentChats
+                            });
+                            File.WriteAllText(saveDataFilePath, savedContent);
+
                         }
                     }
                 }

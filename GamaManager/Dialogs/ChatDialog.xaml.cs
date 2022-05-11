@@ -480,6 +480,23 @@ namespace GamaManager.Dialogs
                                                                             activeChatContent.Children.Add(newMsg);
                                                                         }
                                                                         activeChatScrollContent.ScrollToBottom();
+
+                                                                        ContextMenu newMsgContextMenu = new ContextMenu();
+                                                                        MenuItem newMsgContextMenuItem = new MenuItem();
+                                                                        newMsgContextMenuItem.Header = "Копировать";
+                                                                        newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                        newMsgContextMenuItem = new MenuItem();
+                                                                        newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                                        newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                        newMsgContextMenuItem = new MenuItem();
+                                                                        newMsgContextMenuItem.Header = "Отреагировать";
+                                                                        newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                        newMsg.ContextMenu = newMsgContextMenu;
+                                                                        msgPopup.PlacementTarget = newMsg;
+
                                                                     }
                                                                 }
                                                             }
@@ -680,11 +697,17 @@ namespace GamaManager.Dialogs
             int countChats = this.chats.Count;
             int lastChatIndex = countChats - 1;
             string lastChatId = this.chats[lastChatIndex];
-            newChat.Header = lastChatId;
 
+            // newChat.Header = lastChatId;
+            TextBlock newChatHeaderLabel = new TextBlock();
+            newChatHeaderLabel.Text = lastChatId;
+            newChat.Header = newChatHeaderLabel;
+            
+            HttpWebRequest webRequest = null;
+            
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + this.chats[this.chats.Count - 1]);
+                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + this.chats[this.chats.Count - 1]);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -700,7 +723,9 @@ namespace GamaManager.Dialogs
                         {
                             User friend = myobj.user;
                             string friendName = friend.name;
-                            newChat.Header = friendName;
+                            
+                            // newChat.Header = friendName;
+                            newChatHeaderLabel.Text = friendName;
 
                             /*string userIsWritingLabelContent = friendName + " печатает...";
                             userIsWritingLabel.Text = userIsWritingLabelContent;*/
@@ -785,8 +810,6 @@ namespace GamaManager.Dialogs
                 newChatInnerContextMenuItem.Click += AddFriendToFavoriteHandler;
             }
 
-
-
             newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
             newChatInnerContextMenuItem = new MenuItem();
             newChatInnerContextMenuItem.Header = "Добавить в категорию";
@@ -802,12 +825,41 @@ namespace GamaManager.Dialogs
             newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
             newChatInnerContextMenuItem = new MenuItem();
             newChatInnerContextMenuItem.Header = "Предыдущие имена";
-            for (int i = 0; i < 10;  i++)
+
+            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/nicks/all");
+            webRequest.Method = "GET";
+            webRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
             {
-                string nickName = i.ToString();
-                MenuItem newChatNestedContextMenuItem = new MenuItem();
-                newChatNestedContextMenuItem.Header = nickName;
-                newChatInnerContextMenuItem.Items.Add(newChatNestedContextMenuItem);
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    js = new JavaScriptSerializer();
+                    string objText = reader.ReadToEnd();
+                    UserNickNamesResponseInfo myObj = (UserNickNamesResponseInfo)js.Deserialize(objText, typeof(UserNickNamesResponseInfo));
+                    string status = myObj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        List<UserNickName> nicks = myObj.nicks;
+                        string currentFriendNick = newChatHeaderLabel.Text;
+                        List<UserNickName> friendNicks = nicks.Where<UserNickName>((UserNickName nickInfo) =>
+                        {
+                            string user = nickInfo.user;
+                            string nick = nickInfo.nick;
+                            bool isFriendNick = user == lastChatId;
+                            bool isNotCurrentNick = nick != currentFriendNick;
+                            bool isNickFound = isFriendNick && isNotCurrentNick;
+                            return isNickFound;
+                        }).ToList<UserNickName>();
+                        foreach (UserNickName friendNick in friendNicks)
+                        {
+                            string nickName = friendNick.nick;
+                            MenuItem newChatNestedContextMenuItem = new MenuItem();
+                            newChatNestedContextMenuItem.Header = nickName;
+                            newChatInnerContextMenuItem.Items.Add(newChatNestedContextMenuItem);
+                        }
+                    }
+                }
             }
             newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
 
@@ -860,7 +912,9 @@ namespace GamaManager.Dialogs
             }
 
             newChatContextMenu.Items.Add(newChatContextMenuItem);
-            newChat.ContextMenu = newChatContextMenu;
+
+            // newChat.ContextMenu = newChatContextMenu;
+            newChatHeaderLabel.ContextMenu = newChatContextMenu;
 
         }
 
@@ -1093,7 +1147,7 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.TextAlignment = TextAlignment.Left;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.Text = newMsgContent;
-                                                            newMsgLabel.Width = activeChatContent.Width;
+                                                            // newMsgLabel.Width = activeChatContent.Width;
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
 
@@ -1144,6 +1198,7 @@ namespace GamaManager.Dialogs
 
                                                                     }
                                                                 }
+
                                                             }
 
                                                             // newMsg.Children.Add(newMsgReactionLabel);
@@ -1157,6 +1212,22 @@ namespace GamaManager.Dialogs
 
                                                             newMsg.MouseEnter += ShowMsgPopupHandler;
                                                             newMsg.MouseLeave += HideMsgPopupHandler;
+
+                                                            ContextMenu newMsgContextMenu = new ContextMenu();
+                                                            MenuItem newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Копировать";
+                                                            newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                            newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Отреагировать";
+                                                            newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsg.ContextMenu = newMsgContextMenu;
+                                                            msgPopup.PlacementTarget = newMsg;
 
                                                         }
                                                         else if (isEmojiMsg)
@@ -1277,6 +1348,22 @@ namespace GamaManager.Dialogs
                                                             newMsg.MouseEnter += ShowMsgPopupHandler;
                                                             newMsg.MouseLeave += HideMsgPopupHandler;
 
+                                                            ContextMenu newMsgContextMenu = new ContextMenu();
+                                                            MenuItem newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Копировать";
+                                                            newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                            newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Отреагировать";
+                                                            newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsg.ContextMenu = newMsgContextMenu;
+                                                            msgPopup.PlacementTarget = newMsg;
+
                                                         }
                                                         else if (isFileMsg)
                                                         {
@@ -1396,6 +1483,22 @@ namespace GamaManager.Dialogs
 
                                                             newMsg.MouseEnter += ShowMsgPopupHandler;
                                                             newMsg.MouseLeave += HideMsgPopupHandler;
+
+                                                            ContextMenu newMsgContextMenu = new ContextMenu();
+                                                            MenuItem newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Копировать";
+                                                            newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                            newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsgContextMenuItem = new MenuItem();
+                                                            newMsgContextMenuItem.Header = "Отреагировать";
+                                                            newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                            newMsg.ContextMenu = newMsgContextMenu;
+                                                            msgPopup.PlacementTarget = newMsg;
 
                                                         }
                                                         else if (isLinkMsg)
@@ -1583,6 +1686,23 @@ namespace GamaManager.Dialogs
                                                                             {
                                                                                 newMsgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
                                                                             }
+
+                                                                            ContextMenu newMsgContextMenu = new ContextMenu();
+                                                                            MenuItem newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Копировать";
+                                                                            newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                                            newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Отреагировать";
+                                                                            newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsg.ContextMenu = newMsgContextMenu;
+                                                                            msgPopup.PlacementTarget = newMsg;
+
                                                                         }
                                                                         else
                                                                         {
@@ -1722,10 +1842,28 @@ namespace GamaManager.Dialogs
                                                                             activeChatContent.Children.Add(newMsg);
                                                                             newMsgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
                                                                             // вы уже приняли это приглашение
+
+                                                                            ContextMenu newMsgContextMenu = new ContextMenu();
+                                                                            MenuItem newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Копировать";
+                                                                            newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                                            newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsgContextMenuItem = new MenuItem();
+                                                                            newMsgContextMenuItem.Header = "Отреагировать";
+                                                                            newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                                            newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                                            newMsg.ContextMenu = newMsgContextMenu;
+                                                                            msgPopup.PlacementTarget = newMsg;
+
                                                                         }
                                                                     }
                                                                 }
                                                             }
+
                                                         }
 
                                                     }
@@ -2015,6 +2153,22 @@ namespace GamaManager.Dialogs
                                                     Dictionary<String, Object> newMsgData = new Dictionary<String, Object>();
                                                     newMsgData.Add("msg", msgId);
                                                     newMsg.DataContext = newMsgData;
+
+                                                    ContextMenu newMsgContextMenu = new ContextMenu();
+                                                    MenuItem newMsgContextMenuItem = new MenuItem();
+                                                    newMsgContextMenuItem.Header = "Копировать";
+                                                    newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                    newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                    newMsgContextMenuItem = new MenuItem();
+                                                    newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                    newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                    newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                    newMsgContextMenuItem = new MenuItem();
+                                                    newMsgContextMenuItem.Header = "Отреагировать";
+                                                    newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                    newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                    newMsg.ContextMenu = newMsgContextMenu;
+                                                    msgPopup.PlacementTarget = newMsg;
 
                                                 }
                                             }
@@ -2460,6 +2614,22 @@ namespace GamaManager.Dialogs
                                         newMsgData.Add("msg", newMsgId);
                                         newMsg.DataContext = newMsgData;
 
+                                        ContextMenu newMsgContextMenu = new ContextMenu();
+                                        MenuItem newMsgContextMenuItem = new MenuItem();
+                                        newMsgContextMenuItem.Header = "Копировать";
+                                        newMsgContextMenuItem.Click += CopyMsgHandler;
+                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                        newMsgContextMenuItem = new MenuItem();
+                                        newMsgContextMenuItem.Header = "Выделить сообщение";
+                                        newMsgContextMenuItem.Click += SelectMsgHandler;
+                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                        newMsgContextMenuItem = new MenuItem();
+                                        newMsgContextMenuItem.Header = "Отреагировать";
+                                        newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                        newMsg.ContextMenu = newMsgContextMenu;
+                                        msgPopup.PlacementTarget = newMsg;
+
                                     }
                                 }
                             }
@@ -2693,6 +2863,22 @@ namespace GamaManager.Dialogs
                                                         newMsgData.Add("msg", msgId);
                                                         newMsg.DataContext = newMsgData;
 
+                                                        ContextMenu newMsgContextMenu = new ContextMenu();
+                                                        MenuItem newMsgContextMenuItem = new MenuItem();
+                                                        newMsgContextMenuItem.Header = "Копировать";
+                                                        newMsgContextMenuItem.Click += CopyMsgHandler;
+                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                        newMsgContextMenuItem = new MenuItem();
+                                                        newMsgContextMenuItem.Header = "Выделить сообщение";
+                                                        newMsgContextMenuItem.Click += SelectMsgHandler;
+                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                        newMsgContextMenuItem = new MenuItem();
+                                                        newMsgContextMenuItem.Header = "Отреагировать";
+                                                        newMsgContextMenuItem.MouseEnter += ShowMsgReactionsPopupFromMenuHandler;
+                                                        newMsgContextMenu.Items.Add(newMsgContextMenuItem);
+                                                        newMsg.ContextMenu = newMsgContextMenu;
+                                                        msgPopup.PlacementTarget = newMsg;
+
                                                     }
                                                 }
                                             }
@@ -2806,11 +2992,13 @@ namespace GamaManager.Dialogs
             isManyTabs = chatControlItemsCount >= 2;
             foreach (TabItem chatControlItem in chatControlItems)
             {
-                ContextMenu chatControlItemContextMenu = chatControlItem.ContextMenu;
-                foreach (MenuItem chatControlItemContextMenuItem in chatControlItemContextMenu.Items)
-                {
-                    chatControlItemContextMenuItem.IsEnabled = isManyTabs;
-                }
+                object chatControlItemHeader = chatControlItem.Header;
+                TextBlock chatControlItemHeaderLabel = ((TextBlock)(chatControlItemHeader));
+                ContextMenu chatControlItemContextMenu = chatControlItemHeaderLabel.ContextMenu;
+                ItemCollection chatControlItemContextMenuItems = chatControlItemContextMenu.Items;
+                object rawCloseTabChatControlItemContextMenuItem = chatControlItemContextMenuItems[0];
+                MenuItem closeTabChatControlItemContextMenuItem = ((MenuItem)(rawCloseTabChatControlItemContextMenuItem));
+                closeTabChatControlItemContextMenuItem.IsEnabled = isManyTabs;
             }
         }
 
@@ -3193,11 +3381,15 @@ namespace GamaManager.Dialogs
         {
             UIElement element = msgPopup.PlacementTarget;
             StackPanel msg =((StackPanel)(element));
-            UIElement label = msg.Children[1];
-            TextBox msgLabel = ((TextBox)(label));
-            msgLabel.SelectAll();
-            msgLabel.Copy();
-            msgLabel.Select(0, 0);
+            UIElement msgContent = msg.Children[1];
+            bool isMsgLabel = msgContent is TextBox;
+            if (isMsgLabel)
+            {
+                TextBox msgLabel = ((TextBox)(msgContent));
+                msgLabel.SelectAll();
+                msgLabel.Copy();
+                msgLabel.Select(0, 0);
+            }
         }
 
         private void SelectMsgHandler (object sender, RoutedEventArgs e)
@@ -3210,8 +3402,12 @@ namespace GamaManager.Dialogs
             UIElement element = msgPopup.PlacementTarget;
             StackPanel msg = ((StackPanel)(element));
             UIElement label = msg.Children[1];
-            TextBox msgLabel = ((TextBox)(label));
-            msgLabel.SelectAll();
+            bool isMsgLabel = label is TextBox;
+            if (isMsgLabel)
+            {
+                TextBox msgLabel = ((TextBox)(label));
+                msgLabel.SelectAll();
+            }
         }
 
         private void ShowMsgReactionsPopupHandler (object sender, RoutedEventArgs e)

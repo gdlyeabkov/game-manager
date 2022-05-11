@@ -1,19 +1,159 @@
 ﻿<Window x:Class="GamaManager.Dialogs.ChatDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GamaManager.Dialogs"
-        mc:Ignorable="d"
-        Title="Чат"
-        Height="500"
-        Width="800"
-        Loaded="InitializeHandler"
-        GotFocus="StopBlinkWindowHandler"
-    >
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:GamaManager.Dialogs"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    Title="Чат"
+    Height="500"
+    Width="800"
+    Loaded="InitializeHandler"
+    GotFocus="StopBlinkWindowHandler"
+>
     <StackPanel
         x:Name="chatContainer"
     >
+        <Popup
+            x:Name="msgReactionsPopup"
+            Width="350"
+            Height="100"
+            Placement="Right"
+        >
+            <Popup.Child>
+                <StackPanel
+                    Background="LightGray"
+                >
+                    <TextBlock
+                        Margin="15"
+                        Text="Смайлики"    
+                    />
+                    <StackPanel
+                        Margin="15 0"
+                        Background="LightGray"
+                        Orientation="Horizontal"    
+                    >
+                        <Image
+                            Margin="15"
+                            Width="35"
+                            Height="35"
+                            DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                            MouseLeftButtonUp="AddMsgReactionHandler"
+                        >
+                            <Image.Source>
+                                <BitmapImage
+                                        UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-05-512.png"
+                                    />
+                            </Image.Source>
+                        </Image>
+                        <Image
+                            Margin="15"
+                            Width="35"
+                            Height="35"
+                            DataContext="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-21-512.png"
+                            MouseLeftButtonUp="AddMsgReactionHandler"
+                        >
+                            <Image.Source>
+                                <BitmapImage
+                                    UriSource="https://cdn4.iconfinder.com/data/icons/emojis-flat-pixel-perfect/64/emoji-21-512.png"
+                                />
+                            </Image.Source>
+                        </Image>
+                        <Image
+                            Margin="15"
+                            Width="35"
+                            Height="35"
+                            DataContext="https://cdn4.iconfinder.com/data/icons/emoji-18/61/14-512.png"
+                            MouseLeftButtonUp="AddMsgReactionHandler"
+                        >
+                            <Image.Source>
+                                <BitmapImage
+                                    UriSource="https://cdn4.iconfinder.com/data/icons/emoji-18/61/14-512.png"
+                                />
+                            </Image.Source>
+                        </Image>
+                    </StackPanel>
+                </StackPanel>
+            </Popup.Child>
+        </Popup>
+        <Popup
+            x:Name="msgPopup"
+            Width="100"
+            Height="35"
+            Placement="Custom"
+            CustomPopupPlacementCallback="MsgPopupPlacementHandler"
+        >
+            <Popup.Child>
+                <StackPanel
+                    Background="LightGray"
+                    Orientation="Horizontal"    
+                >
+                    <materialDesign:PackIcon
+                        Margin="15 10"
+                        Kind="Smiley"    
+                        MouseLeftButtonUp="ShowMsgReactionsPopupHandler"
+                    />
+                    <materialDesign:PackIcon
+                        Margin="15 10"
+                        Kind="MoreVert"    
+                    >
+                        <materialDesign:PackIcon.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem
+                                    Header="Копировать"    
+                                    Click="CopyMsgHandler"
+                                    MouseEnter="HideMsgReactionsPopupFromMenuItemHandler"
+                                />
+                                <MenuItem
+                                    Header="Выделить сообщение"
+                                    Click="SelectMsgHandler"
+                                    MouseEnter="HideMsgReactionsPopupFromMenuItemHandler"
+                                />
+                                <MenuItem
+                                    MouseEnter="ShowMsgReactionsPopupFromMenuHandler"
+                                    MouseLeave="HideMsgReactionsPopupHandler"
+                                >
+                                    <MenuItem.Header>
+                                        <StackPanel
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Text="Отреагировать"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="15 0 0 0"
+                                                Kind="ChevronRight"    
+                                            />
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                            </ContextMenu>
+                        </materialDesign:PackIcon.ContextMenu>
+                    </materialDesign:PackIcon>
+                </StackPanel>
+            </Popup.Child>
+        </Popup>
+        <!--
+        <DockPanel>
+            <TextBlock
+                DockPanel.Dock="Bottom"
+                Text="sd"    
+            />
+            <StackPanel
+                Orientation="Horizontal"    
+            >
+                <TextBlock
+                    Text="asd"    
+                />
+                <TextBlock
+                    Text="asd"    
+                />
+            </StackPanel>
+        </DockPanel>
+        -->
         <TabControl
             x:Name="chatControl"    
             Height="375"
@@ -35,17 +175,29 @@
                     TextChanged="InputToChatFieldHandler"
                 />
                 <Button
-                    Content="Отправить"
-                    Width="85"
-                    Height="25"
+                    Margin="15 0"
+                    Width="35"
+                    Height="35"
                     Click="SendMsgHandler"
-                />
+                >
+                    <Button.Content>
+                        <materialDesign:PackIcon
+                            Kind="Send"    
+                        />
+                    </Button.Content>
+                </Button>
                 <Button
-                    Content="Эмоджи"
-                    Width="85"
-                    Height="25"
+                    Margin="15 0"
+                    Width="35"
+                    Height="35"    
                     Click="OpenEmojiPopupHandler"
-                />
+                >
+                    <Button.Content>
+                        <materialDesign:PackIcon
+                            Kind="EmojiOutline"    
+                        />
+                    </Button.Content>
+                </Button>
                 <Popup
                     x:Name="emojiPopup"
                     Width="225"
@@ -102,17 +254,29 @@
                     </Popup.Child>
                 </Popup>
                 <Button
-                    Content="Прикрепить"
-                    Width="85"
-                    Height="25"
+                    Margin="15 0"
+                    Width="35"
+                    Height="35"
                     Click="AttachFileHandler"
-                />
+                >
+                    <Button.Content>
+                        <materialDesign:PackIcon
+                            Kind="AttachFile"    
+                        />
+                    </Button.Content>
+                </Button>
                 <Button
-                    Content="Голосовой чат"
-                    Width="85"
-                    Height="25"
+                    Margin="15 0"
+                    Width="35"
+                    Height="35"
                     Click="ToggleRingHandler"
-                />
+                >
+                    <Button.Content>
+                        <materialDesign:PackIcon
+                            Kind="Microphone"    
+                        />
+                    </Button.Content>
+                </Button>
             </StackPanel>
         </StackPanel>
     </StackPanel>

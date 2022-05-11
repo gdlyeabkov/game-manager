@@ -15872,4 +15872,17 @@ namespace GamaManager
         public string talk;
     }
 
+    public class MsgReactionsResponseInfo
+    {
+        public string status;
+        public List<MsgReaction> reactions;
+    }
+
+    public class MsgReaction
+    {
+        public string _id;
+        public string msg;
+        public string content;
+    }
+
 }

@@ -15299,6 +15299,7 @@ namespace GamaManager
         public int points;
         public int amount;
         public bool isEmailConfirmed;
+        public string lastGame;
     }
 
     class FriendRequestsResponseInfo

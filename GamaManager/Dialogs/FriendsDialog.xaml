@@ -262,6 +262,10 @@
                     <StackPanel
                         x:Name="friends"    
                     />
+                    <StackPanel
+                        x:Name="customPlayedCategories"    
+                    />
+                    <!--
                     <TextBlock
                         x:Name="playedFriendsCountLabel"
                         FontSize="14"
@@ -274,6 +278,7 @@
                     <Separator
                         
                     />
+                    -->
                     <TextBlock
                         x:Name="onlineFriendsCountLabel"
                         FontSize="14"

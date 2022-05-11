@@ -379,6 +379,7 @@ namespace GamaManager.Dialogs
         public string _id;
         public string user;
         public string friend;
+        public string alias;
     }
 
 }

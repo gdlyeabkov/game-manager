@@ -775,8 +775,54 @@ namespace GamaManager.Dialogs
             newChatContextMenuItem.Header = "Управление";
             newChatContextMenuItem.DataContext = lastChatId;
             newChatInnerContextMenuItem = new MenuItem();
-            newChatInnerContextMenuItem.Header = "Добавить ник";
+
+            HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+            friendRelationsWebRequest.Method = "GET";
+            friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+            using (HttpWebResponse friendRelationsWebResponse = (HttpWebResponse)friendRelationsWebRequest.GetResponse())
+            {
+                using (var friendRelationsReader = new StreamReader(friendRelationsWebResponse.GetResponseStream()))
+                {
+                    js = new JavaScriptSerializer();
+                    string objText = friendRelationsReader.ReadToEnd();
+                    FriendsResponseInfo myFriendRelationsObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                    string status = myFriendRelationsObj.status;
+                    bool isOkStatus = status == "OK";
+                    if (isOkStatus)
+                    {
+                        List<Friend> friends = myFriendRelationsObj.friends;
+                        int foundedIndex = friends.FindIndex((Friend localFriend) =>
+                        {
+                            bool isLocalMyFriend = localFriend.user == currentUserId;
+                            bool isCurrentFriend = localFriend.friend == friendId;
+                            bool isCurrentFriendRelation = isLocalMyFriend && isCurrentFriend;
+                            return isCurrentFriendRelation;
+                        });
+                        bool isFriendFound = foundedIndex >= 0;
+                        if (isFriendFound)
+                        {
+                            Friend currentFriend = friends[foundedIndex];
+                            string currentFriendRelation = currentFriend._id;
+                            string currentFriendAlias = currentFriend.alias;
+                            int currentFriendAliasLength = currentFriendAlias.Length;
+                            bool isAddNick = currentFriendAliasLength <= 0;
+                            newChatInnerContextMenuItem.DataContext = currentFriendRelation;
+                            if (isAddNick)
+                            {
+                                newChatInnerContextMenuItem.Header = "Добавить ник";
+                                newChatInnerContextMenuItem.Click += AddFriendNickHandler;
+                            }
+                            else
+                            {
+                                newChatInnerContextMenuItem.Header = "Изменить ник";
+                                newChatInnerContextMenuItem.Click += UpdateFriendNickHandler;
+                            }
+                        }
+                    }
+                }
+            }
             newChatContextMenuItem.Items.Add(newChatInnerContextMenuItem);
+
             newChatInnerContextMenuItem = new MenuItem();
 
             bool isFavoriteFriend = false;
@@ -3539,6 +3585,36 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
 
+        }
+
+        public void AddFriendNickHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            AddFriendNick(id);
+        }
+
+        public void AddFriendNick(string id)
+        {
+            Dialogs.AddNickDialog dialog = new AddNickDialog(id);
+            // надо обновить меню
+            dialog.Show();
+        }
+
+        public void UpdateFriendNickHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            UpdateFriendNick(id);
+        }
+
+        public void UpdateFriendNick(string id)
+        {
+            Dialogs.UpdateNickDialog dialog = new UpdateNickDialog(id);
+            // надо обновить меню
+            dialog.Show();
         }
 
     }

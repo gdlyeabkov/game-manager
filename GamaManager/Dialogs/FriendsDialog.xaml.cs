@@ -188,7 +188,55 @@ namespace GamaManager.Dialogs
                                             friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                             friendsItemContextMenuItem = new MenuItem();
                                             friendsItemContextMenuItem.Header = "Управление";
+                                            
                                             MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                            innerWebRequest.Method = "GET";
+                                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                            {
+                                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = innerReader.ReadToEnd();
+                                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                                    status = myInnerObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        List<Friend> friends = myInnerObj.friends;
+                                                        int foundedIndex = friends.FindIndex((Friend localFriend) =>
+                                                        {
+                                                            bool isMyFriend = localFriend.user == currentUserId;
+                                                            bool isCurrentFriend = localFriend.friend == friendId;
+                                                            bool isCurrentFriendRelation = isMyFriend && isCurrentFriend;
+                                                            return isCurrentFriendRelation;
+                                                        });
+                                                        bool isFound = foundedIndex >= 0;
+                                                        if (isFound)
+                                                        {
+                                                            Friend currentFriend = friends[foundedIndex];
+                                                            string currentFriendRelation = currentFriend._id;
+                                                            string currentFriendAlias = currentFriend.alias;
+                                                            int currentFriendAliasLength = currentFriendAlias.Length;
+                                                            bool isAddNick = currentFriendAliasLength <= 0;
+                                                            innerFriendsItemContextMenuItem.DataContext = currentFriendRelation;
+                                                            if (isAddNick)
+                                                            {
+                                                                innerFriendsItemContextMenuItem.Header = "Добавить ник";
+                                                                innerFriendsItemContextMenuItem.Click += AddFriendNickHandler;
+                                                            }
+                                                            else
+                                                            {
+                                                                innerFriendsItemContextMenuItem.Header = "Изменить ник";
+                                                                innerFriendsItemContextMenuItem.Click += UpdateFriendNickHandler;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                            innerFriendsItemContextMenuItem = new MenuItem();
                                             innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
                                             innerFriendsItemContextMenuItem.DataContext = friendId;
                                             innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
@@ -609,7 +657,56 @@ namespace GamaManager.Dialogs
                                                                                     friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                                     friendsItemContextMenuItem = new MenuItem();
                                                                                     friendsItemContextMenuItem.Header = "Управление";
+
                                                                                     MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                                    HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                                    friendRelationsWebRequest.Method = "GET";
+                                                                                    friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                    using (HttpWebResponse friendRelationsWebResponse = (HttpWebResponse)friendRelationsWebRequest.GetResponse())
+                                                                                    {
+                                                                                        using (var friendRelationsReader = new StreamReader(friendRelationsWebResponse.GetResponseStream()))
+                                                                                        {
+                                                                                            js = new JavaScriptSerializer();
+                                                                                            objText = friendRelationsReader.ReadToEnd();
+                                                                                            FriendsResponseInfo myFriendRelationsObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                                                                            status = myFriendRelationsObj.status;
+                                                                                            isOkStatus = status == "OK";
+                                                                                            if (isOkStatus)
+                                                                                            {
+                                                                                                List<Friend> friends = myFriendRelationsObj.friends;
+                                                                                                int foundedIndex = friends.FindIndex((Friend localFriend) =>
+                                                                                                {
+                                                                                                    bool isLocalMyFriend = localFriend.user == currentUserId;
+                                                                                                    bool isCurrentFriend = localFriend.friend == friendId;
+                                                                                                    bool isCurrentFriendRelation = isLocalMyFriend && isCurrentFriend;
+                                                                                                    return isCurrentFriendRelation;
+                                                                                                });
+                                                                                                bool isFriendFound = foundedIndex >= 0;
+                                                                                                if (isFriendFound)
+                                                                                                {
+                                                                                                    Friend currentFriend = friends[foundedIndex];
+                                                                                                    string currentFriendRelation = currentFriend._id;
+                                                                                                    string currentFriendAlias = currentFriend.alias;
+                                                                                                    int currentFriendAliasLength = currentFriendAlias.Length;
+                                                                                                    bool isAddNick = currentFriendAliasLength <= 0;
+                                                                                                    innerFriendsItemContextMenuItem.DataContext = currentFriendRelation;
+                                                                                                    if (isAddNick)
+                                                                                                    {
+                                                                                                        innerFriendsItemContextMenuItem.Header = "Добавить ник";
+                                                                                                        innerFriendsItemContextMenuItem.Click += AddFriendNickHandler;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        innerFriendsItemContextMenuItem.Header = "Изменить ник";
+                                                                                                        innerFriendsItemContextMenuItem.Click += UpdateFriendNickHandler;
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                                    innerFriendsItemContextMenuItem = new MenuItem();
+
                                                                                     innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
                                                                                     innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                                     innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
@@ -854,7 +951,56 @@ namespace GamaManager.Dialogs
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
                                                                 friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Управление";
+
                                                                 MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                friendRelationsWebRequest.Method = "GET";
+                                                                friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                using (HttpWebResponse friendRelationsWebResponse = (HttpWebResponse)friendRelationsWebRequest.GetResponse())
+                                                                {
+                                                                    using (var friendRelationsReader = new StreamReader(friendRelationsWebResponse.GetResponseStream()))
+                                                                    {
+                                                                        js = new JavaScriptSerializer();
+                                                                        objText = friendRelationsReader.ReadToEnd();
+                                                                        FriendsResponseInfo myFriendRelationsObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                                                        status = myFriendRelationsObj.status;
+                                                                        isOkStatus = status == "OK";
+                                                                        if (isOkStatus)
+                                                                        {
+                                                                            List<Friend> friends = myFriendRelationsObj.friends;
+                                                                            int foundedIndex = friends.FindIndex((Friend localFriend) =>
+                                                                            {
+                                                                                bool isLocalMyFriend = localFriend.user == currentUserId;
+                                                                                bool isCurrentFriend = localFriend.friend == friendId;
+                                                                                bool isCurrentFriendRelation = isLocalMyFriend && isCurrentFriend;
+                                                                                return isCurrentFriendRelation;
+                                                                            });
+                                                                            bool isFriendFound = foundedIndex >= 0;
+                                                                            if (isFriendFound)
+                                                                            {
+                                                                                Friend currentFriend = friends[foundedIndex];
+                                                                                string currentFriendRelation = currentFriend._id;
+                                                                                string currentFriendAlias = currentFriend.alias;
+                                                                                int currentFriendAliasLength = currentFriendAlias.Length;
+                                                                                bool isAddNick = currentFriendAliasLength <= 0;
+                                                                                innerFriendsItemContextMenuItem.DataContext = currentFriendRelation;
+                                                                                if (isAddNick)
+                                                                                {
+                                                                                    innerFriendsItemContextMenuItem.Header = "Добавить ник";
+                                                                                    innerFriendsItemContextMenuItem.Click += AddFriendNickHandler;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    innerFriendsItemContextMenuItem.Header = "Изменить ник";
+                                                                                    innerFriendsItemContextMenuItem.Click += UpdateFriendNickHandler;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+
                                                                 innerFriendsItemContextMenuItem.Header = "Удалить из друзей";
                                                                 innerFriendsItemContextMenuItem.DataContext = friendId;
                                                                 innerFriendsItemContextMenuItem.Click += RemoveFriendHandler;
@@ -2298,6 +2444,42 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
             return talk;
+        }
+
+        public void AddFriendNickHandler (object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData)); 
+            AddFriendNick(id);
+        }
+
+        public void AddFriendNick (string id)
+        {
+            Dialogs.AddNickDialog dialog = new AddNickDialog(id);
+            dialog.Closed += RefreshFriendsHandler;
+            dialog.Show();
+        }
+
+        public void UpdateFriendNickHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            UpdateFriendNick(id);
+        }
+
+        public void UpdateFriendNick (string id)
+        {
+            Dialogs.UpdateNickDialog dialog = new UpdateNickDialog(id);
+            dialog.Closed += RefreshFriendsHandler;
+            dialog.Show();
+        }
+
+        public void RefreshFriendsHandler (object sender, EventArgs e)
+        {
+            GetFriends(currentUserId, "");
+            GetTalks();
         }
 
     }

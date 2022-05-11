@@ -294,6 +294,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddNickDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\CategoryManagementDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -386,6 +390,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\UpdateNickDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -425,6 +433,9 @@
     </Compile>
     <Compile Include="Dialogs\AddGroupRequestDialog.xaml.cs">
       <DependentUpon>AddGroupRequestDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddNickDialog.xaml.cs">
+      <DependentUpon>AddNickDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CategoryManagementDialog.xaml.cs">
       <DependentUpon>CategoryManagementDialog.xaml</DependentUpon>
@@ -494,6 +505,9 @@
     </Compile>
     <Compile Include="Dialogs\TalkSettingsDialog.xaml.cs">
       <DependentUpon>TalkSettingsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\UpdateNickDialog.xaml.cs">
+      <DependentUpon>UpdateNickDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameIntegrationManager.cs" />
     <Compile Include="GamePage.xaml.cs">

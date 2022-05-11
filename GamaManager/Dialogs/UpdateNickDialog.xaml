@@ -1,0 +1,78 @@
+﻿<Window x:Class="GamaManager.Dialogs.UpdateNickDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:GamaManager.Dialogs"
+    mc:Ignorable="d"
+    Title="Изменить ник"
+    Height="450"
+    Width="800"
+>
+    <StackPanel>
+        <TextBlock
+            Margin="15"
+            FontSize="36"
+            Text="Изменить ник"
+        />
+        <TextBlock
+            Margin="15"
+            Text="Изменить ник, который вы присвоили этому другу."
+        />
+        <StackPanel
+            Orientation="Horizontal"    
+        >
+            <Image
+                x:Name="friendAvatar"
+                Margin="15"
+                Width="100"    
+                Height="100"    
+                ImageFailed="SetDefaultAvatarHandler"
+            >
+                <Image.Source>
+                    <BitmapImage
+                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                    />
+                </Image.Source>
+            </Image>
+            <StackPanel>
+                <TextBlock
+                    x:Name="friendNameLabel"
+                    FontSize="24"
+                    Margin="0 10"
+                    Text="asd"
+                />
+                <TextBlock
+                    FontSize="16"
+                    Margin="0 10"
+                    Text="Текущий ник"
+                />
+                <TextBox
+                    x:Name="friendAliasBox"
+                    Width="600"
+                    FontSize="24"
+                    Margin="0 10"
+                    Text="asd"
+                />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel
+            Orientation="Horizontal"    
+        >
+            <Button
+                Margin="15 0"
+                Width="275"
+                Height="30"
+                Content="Подтвердить"    
+                Click="AcceptHandler"
+            />
+            <Button
+                Margin="15 0"
+                Width="275"
+                Height="30"
+                Content="Отмена"    
+                Click="CancelHandler"
+            />
+        </StackPanel>
+    </StackPanel>
+</Window>

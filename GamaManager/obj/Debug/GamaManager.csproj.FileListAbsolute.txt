@@ -866,3 +866,7 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateCategoryDial
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategoryManagementDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CategorySettingsDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\CreateCategoryDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddNickDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\UpdateNickDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddNickDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\UpdateNickDialog.baml

@@ -2201,9 +2201,166 @@ namespace GamaManager.Dialogs
 
         public void OpenTalk (string talkId)
         {
-            Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> updatedRecentChats = loadedContent.recentChats;
+            bool isOpenNewChatInNewWindow = currentSettings.isOpenNewChatInNewWindow;
+
+
+            Application app = Application.Current;
+            WindowCollection windows = app.Windows;
+            IEnumerable<Window> myWindows = windows.OfType<Window>();
+            List<Window> talkWindows = myWindows.Where<Window>(window =>
+            {
+                string windowTitle = window.Title;
+                bool isTalkWindow = windowTitle == "Беседа";
+                object windowData = window.DataContext;
+                bool isWindowDataExists = windowData != null;
+                bool isTalkExists = true;
+                if (isWindowDataExists && isTalkWindow)
+                {
+                    string localFriend = ((string)(windowData));
+                    isTalkExists = chats.Contains(talkId);
+                }
+                return isWindowDataExists && isTalkWindow && isTalkExists;
+            }).ToList<Window>();
+
+            int countTalkWindows = talkWindows.Count;
+            bool isNotOpenedTalkWindows = countTalkWindows <= 0;
+
+            chats.Add(talkId);
+
+            /*if (isNotOpenedTalkWindows)
+            {
+                talkWindows = myWindows.Where<Window>(window =>
+                {
+                    string windowTitle = window.Title;
+                    bool isTalkWindow = windowTitle == "Беседа";
+                    return isTalkWindow;
+                }).ToList<Window>();
+                countTalkWindows = talkWindows.Count;
+                isNotOpenedTalkWindows = countTalkWindows <= 0;
+                if (isNotOpenedTalkWindows)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+                    dialog.DataContext = talkId;
+                    dialog.Show();
+
+                    // восстанавливаем окна чата из кеша
+
+                }
+            }
+            else
+            {
+                if (isOpenNewChatInNewWindow)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+                    dialog.DataContext = talkId;
+                    dialog.Show();
+                }
+                else
+                {
+                    Dialogs.TalkDialog talkWindow = ((TalkDialog)(talkWindows[0]));
+                    talkWindow.Focus();
+                    talkWindow.AddChat(talkId);
+                }
+            }*/
+
+            if (isNotOpenedTalkWindows)
+            {
+                talkWindows = myWindows.Where<Window>(window =>
+                {
+                    string windowTitle = window.Title;
+                    bool isTalkWindow = windowTitle == "Беседа";
+                    return isTalkWindow;
+                }).ToList<Window>();
+                countTalkWindows = talkWindows.Count;
+                isNotOpenedTalkWindows = countTalkWindows <= 0;
+                if (isNotOpenedTalkWindows)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+                    dialog.DataContext = talkId;
+                    dialog.Show();
+
+                    // восстанавливаем окна чата из кеша
+                    bool isResoreChats = currentSettings.isRestoreChats;
+                    if (isResoreChats)
+                    {
+                        /*foreach (string updatedRecentChat in updatedRecentChats)
+                        {
+                            bool isChatExists = chats.Contains(updatedRecentChat);
+                            bool isChatNotExists = !isChatExists;
+                            if (isChatNotExists)
+                            {
+                                chats.Add(updatedRecentChat);
+                                dialog.Focus();
+                                // dialog.AddChat();
+                                dialog.AddChat(friend);
+                            }
+                        }
+                        updatedRecentChats.Clear();
+                        string savedContent = js.Serialize(new SavedContent
+                        {
+                            games = currentGames,
+                            friends = currentFriends,
+                            settings = currentSettings,
+                            collections = currentCollections,
+                            notifications = currentNotifications,
+                            categories = currentCategories,
+                            recentChats = updatedRecentChats
+                        });
+                        File.WriteAllText(saveDataFilePath, savedContent);*/
+                        dialog.SelectChat(talkId);
+                    }
+
+                }
+                else
+                {
+                    if (isOpenNewChatInNewWindow)
+                    {
+                        Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+                        dialog.DataContext = talkId;
+                        dialog.Show();
+                    }
+                    else
+                    {
+                        Dialogs.TalkDialog talkWindow = ((TalkDialog)(talkWindows[0]));
+                        talkWindow.Focus();
+                        talkWindow.AddChat(talkId);
+                    }
+                }
+            }
+            else
+            {
+                if (isOpenNewChatInNewWindow)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
+                    dialog.DataContext = talkId;
+                    dialog.Show();
+                }
+                else
+                {
+                    Dialogs.TalkDialog talkWindow = ((TalkDialog)(talkWindows[0]));
+                    talkWindow.Focus();
+                    talkWindow.SelectChat(talkId);
+                }
+            }
+
+
+            /*Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
             dialog.Closed += GetTalksHandler;
-            dialog.Show();
+            dialog.Show();*/
         }
 
         public void GetTalksHandler (object sender, EventArgs e)

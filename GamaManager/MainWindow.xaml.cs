@@ -10376,8 +10376,8 @@ namespace GamaManager
                     {
                         Dialogs.ChatDialog dialog = ((Dialogs.ChatDialog)(chatWindows[0]));
                         dialog.Focus();
-                        // dialog.AddChat();
                         dialog.AddChat(id);
+                        dialog.SelectChat(id);
                     }
                 }
             }

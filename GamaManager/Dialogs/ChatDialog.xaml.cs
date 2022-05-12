@@ -42,7 +42,6 @@ namespace GamaManager.Dialogs
         public WaveIn waveSource;
         public WaveFileWriter waveFile;
         public Brush msgsSeparatorBrush = null;
-        // public List<string> chats;
         public List<string> chats = new List<string>();
         public MainWindow mainWindow;
         public bool isAppInit = false;
@@ -274,10 +273,7 @@ namespace GamaManager.Dialogs
                                                                                 inputChatMsgBox.Text = "";
                                                                                 newMsg.Children.Add(newMsgLabel);
 
-                                                                                /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                                                newMsgReactionLabel.Text = "0";
-                                                                                newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                                                                
                                                                                 StackPanel newMsgReactions = new StackPanel();
                                                                                 newMsgReactions.Orientation = Orientation.Horizontal;
                                                                                 newMsgReactions.Margin = new Thickness(15);
@@ -298,16 +294,6 @@ namespace GamaManager.Dialogs
                                                                                         if (isOkStatus)
                                                                                         {
                                                                                             List<MsgReaction> reactions = myInnerNestedObj.reactions;
-
-                                                                                            /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                                            {
-                                                                                                string msgReactionId = reaction.msg;
-                                                                                                bool isCurrentMsg = msgReactionId == cachedId;
-                                                                                                // return isCurrentMsg || true;
-                                                                                                return isCurrentMsg;
-                                                                                            });
-                                                                                            string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                                            newMsgReactionLabel.Text = rawCountMsgReactions;*/
 
                                                                                             List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                                             {
@@ -350,10 +336,7 @@ namespace GamaManager.Dialogs
                                                                                 inputChatMsgBox.Text = "";
                                                                                 newMsg.Children.Add(newMsgLabel);
 
-                                                                                /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                                                newMsgReactionLabel.Text = "0";
-                                                                                newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                                                                
                                                                                 StackPanel newMsgReactions = new StackPanel();
                                                                                 newMsgReactions.Orientation = Orientation.Horizontal;
                                                                                 newMsgReactions.Margin = new Thickness(15);
@@ -375,16 +358,7 @@ namespace GamaManager.Dialogs
                                                                                         {
                                                                                             List<MsgReaction> reactions = myInnerNestedObj.reactions;
 
-                                                                                            /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                                            {
-                                                                                                string msgReactionId = reaction.msg;
-                                                                                                bool isCurrentMsg = msgReactionId == cachedId;
-                                                                                                // return isCurrentMsg || true;
-                                                                                                return isCurrentMsg;
-                                                                                            });
-                                                                                            string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                                            newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                                                            
                                                                                             List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                                             {
                                                                                                 string msgReactionId = reaction.msg;
@@ -426,10 +400,7 @@ namespace GamaManager.Dialogs
                                                                                 inputChatMsgBox.Text = "";
                                                                                 newMsg.Children.Add(newMsgLabel);
 
-                                                                                /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                                                newMsgReactionLabel.Text = "0";
-                                                                                newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                                                                
                                                                                 StackPanel newMsgReactions = new StackPanel();
                                                                                 newMsgReactions.Orientation = Orientation.Horizontal;
                                                                                 newMsgReactions.Margin = new Thickness(15);
@@ -450,16 +421,7 @@ namespace GamaManager.Dialogs
                                                                                         {
                                                                                             List<MsgReaction> reactions = myInnerNestedObj.reactions;
 
-                                                                                            /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                                            {
-                                                                                                string msgReactionId = reaction.msg;
-                                                                                                bool isCurrentMsg = msgReactionId == cachedId;
-                                                                                                // return isCurrentMsg || true;
-                                                                                                return isCurrentMsg;
-                                                                                            });
-                                                                                            string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                                            newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                                                            
                                                                                             List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                                             {
                                                                                                 string msgReactionId = reaction.msg;
@@ -740,13 +702,7 @@ namespace GamaManager.Dialogs
                         {
                             User friend = myobj.user;
                             string friendName = friend.name;
-
-                            // newChat.Header = friendName;
                             newChatHeaderLabel.Text = friendName;
-
-                            /*string userIsWritingLabelContent = friendName + " печатает...";
-                            userIsWritingLabel.Text = userIsWritingLabelContent;*/
-
                         }
                     }
                 }
@@ -1037,11 +993,17 @@ namespace GamaManager.Dialogs
                                                 {
                                                     string newMsgUserId = msg.user;
                                                     string newMsgFriendId = msg.friend;
-                                                    // bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == friendId) || (newMsgUserId == friendId && newMsgFriendId == currentUserId);
-                                                    bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == this.chats[chatControl.SelectedIndex]) || (newMsgUserId == this.chats[chatControl.SelectedIndex] && newMsgFriendId == currentUserId);
+                                                    bool isMsgFromMe = newMsgUserId == currentUserId;
+                                                    int selectedChatIndex = chatControl.SelectedIndex;
+                                                    string selectedChatId = this.chats[selectedChatIndex];
+                                                    bool isMsgToFriend = newMsgFriendId == selectedChatId;
+                                                    bool isMsgFromMeToFriend = isMsgFromMe && isMsgToFriend;
+                                                    bool isMsgFromFriend = newMsgFriendId == currentUserId;
+                                                    bool isMsgToMe = newMsgUserId == selectedChatId;
+                                                    bool isMsgFromFriendToMe= isMsgToMe && isMsgFromFriend;
+                                                    bool isCurrentChatMsg = isMsgFromMeToFriend || isMsgFromFriendToMe;
                                                     if (isCurrentChatMsg)
                                                     {
-
                                                         DateTime msgDate = msg.date;
                                                         string rawMsgDate = msgDate.ToLongDateString();
                                                         string senderName = "";
@@ -1210,13 +1172,9 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.TextAlignment = TextAlignment.Left;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.Text = newMsgContent;
-                                                            // newMsgLabel.Width = activeChatContent.Width;
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
 
-                                                            /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                            newMsgReactionLabel.Text = "0";
-                                                            newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
@@ -1348,9 +1306,6 @@ namespace GamaManager.Dialogs
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
 
-                                                            /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                            newMsgReactionLabel.Text = "0";
-                                                            newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
@@ -1370,16 +1325,6 @@ namespace GamaManager.Dialogs
                                                                     if (isOkStatus)
                                                                     {
                                                                         List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                                        /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                        {
-                                                                            string msgReactionId = reaction.msg;
-                                                                            bool isCurrentMsg = msgReactionId == newMsgId;
-                                                                            // return isCurrentMsg || true;
-                                                                            return isCurrentMsg;
-                                                                        });*/
-                                                                        // string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                        // newMsgReactionLabel.Text = rawCountMsgReactions;
-
                                                                         List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                         {
                                                                             string msgReactionId = reaction.msg;
@@ -1484,9 +1429,6 @@ namespace GamaManager.Dialogs
                                                             inputChatMsgBox.Text = "";
                                                             newMsg.Children.Add(newMsgLabel);
 
-                                                            /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                            newMsgReactionLabel.Text = "0";
-                                                            newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
@@ -1506,17 +1448,7 @@ namespace GamaManager.Dialogs
                                                                     if (isOkStatus)
                                                                     {
                                                                         List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                                        /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                        {
-                                                                            string msgReactionId = reaction.msg;
-                                                                            bool isCurrentMsg = msgReactionId == newMsgId;
-                                                                            // return isCurrentMsg || true;
-                                                                            return isCurrentMsg;
-                                                                        });
-                                                                        string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                        newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
-                                                                        List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
+                                                                                                                                                List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                         {
                                                                             string msgReactionId = reaction.msg;
                                                                             bool isCurrentMsg = msgReactionId == newMsgId;
@@ -1673,9 +1605,6 @@ namespace GamaManager.Dialogs
 
                                                                             newMsg.Children.Add(newMsgLabel);
 
-                                                                            /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                                            newMsgReactionLabel.Text = "0";
-                                                                            newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
                                                                             StackPanel newMsgReactions = new StackPanel();
                                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                                             newMsgReactions.Margin = new Thickness(15);
@@ -1695,17 +1624,7 @@ namespace GamaManager.Dialogs
                                                                                     if (isOkStatus)
                                                                                     {
                                                                                         List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                                                        /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                                        {
-                                                                                            string msgReactionId = reaction.msg;
-                                                                                            bool isCurrentMsg = msgReactionId == newMsgId;
-                                                                                            // return isCurrentMsg || true;
-                                                                                            return isCurrentMsg;
-                                                                                        });
-                                                                                        string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                                        newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
-
+                                                                                        
                                                                                         List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                                         {
                                                                                             string msgReactionId = reaction.msg;
@@ -1844,9 +1763,6 @@ namespace GamaManager.Dialogs
 
                                                                             newMsg.Children.Add(newMsgLabel);
 
-                                                                            /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                                            newMsgReactionLabel.Text = "0";
-                                                                            newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
                                                                             StackPanel newMsgReactions = new StackPanel();
                                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                                             newMsgReactions.Margin = new Thickness(15);
@@ -1866,16 +1782,7 @@ namespace GamaManager.Dialogs
                                                                                     if (isOkStatus)
                                                                                     {
                                                                                         List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                                                        /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                                        {
-                                                                                            string msgReactionId = reaction.msg;
-                                                                                            bool isCurrentMsg = msgReactionId == newMsgId;
-                                                                                            // return isCurrentMsg || true;
-                                                                                            return isCurrentMsg;
-                                                                                        });
-                                                                                        string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                                        newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                                                        
                                                                                         List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                                         {
                                                                                             string msgReactionId = reaction.msg;
@@ -2147,10 +2054,7 @@ namespace GamaManager.Dialogs
                                                     inputChatMsgBox.Text = "";
                                                     newMsg.Children.Add(newMsgLabel);
 
-                                                    /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                    newMsgReactionLabel.Text = "0";
-                                                    newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                                    
                                                     StackPanel newMsgReactions = new StackPanel();
                                                     newMsgReactions.Orientation = Orientation.Horizontal;
                                                     newMsgReactions.Margin = new Thickness(15);
@@ -2170,16 +2074,7 @@ namespace GamaManager.Dialogs
                                                             if (isOkStatus)
                                                             {
                                                                 List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                                /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                {
-                                                                    string msgReactionId = reaction.msg;
-                                                                    bool isCurrentMsg = msgReactionId == msgId;
-                                                                    // return isCurrentMsg || true;
-                                                                    return isCurrentMsg;
-                                                                });
-                                                                string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                                
                                                                 List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                 {
                                                                     string msgReactionId = reaction.msg;
@@ -2312,17 +2207,6 @@ namespace GamaManager.Dialogs
         public void StopBlinkWindow()
         {
             StopFlashingWindow(this);
-            /*int chatIndex = chatControl.SelectedIndex;
-            chatIndex = chats.FindIndex((string chatId) =>
-            {
-                bool isChatForUser = friendId == chatId;
-                return isChatForUser;
-            });
-            bool isChatFound = chatIndex >= 0;
-            if (isChatFound)
-            {
-                chatControl.SelectedIndex = chatIndex;
-            }*/
         }
 
         public void SelectChat(string localFriendId)
@@ -2606,10 +2490,7 @@ namespace GamaManager.Dialogs
                                         newMsgLabel.EndInit();
                                         newMsg.Children.Add(newMsgLabel);
 
-                                        /*TextBlock newMsgReactionLabel = new TextBlock();
-                                        newMsgReactionLabel.Text = "0";
-                                        newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                        
                                         StackPanel newMsgReactions = new StackPanel();
                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                         newMsgReactions.Margin = new Thickness(15);
@@ -2629,16 +2510,7 @@ namespace GamaManager.Dialogs
                                                 if (isOkStatus)
                                                 {
                                                     List<MsgReaction> reactions = myInnerNestedObj.reactions;
-                                                    /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                    {
-                                                        string msgReactionId = reaction.msg;
-                                                        bool isCurrentMsg = msgReactionId == newMsgId;
-                                                        // return isCurrentMsg || true;
-                                                        return isCurrentMsg;
-                                                    });
-                                                    string rawCountMsgReactions = countMsgReactions.ToString();
-                                                    newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                    
                                                     List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                     {
                                                         string msgReactionId = reaction.msg;
@@ -2855,10 +2727,7 @@ namespace GamaManager.Dialogs
                                                         inputChatMsgBox.Text = "";
                                                         newMsg.Children.Add(newMsgLabel);
 
-                                                        /*TextBlock newMsgReactionLabel = new TextBlock();
-                                                        newMsgReactionLabel.Text = "0";
-                                                        newMsgReactionLabel.Margin = new Thickness(40, 10, 10, 10);*/
-
+                                                        
                                                         StackPanel newMsgReactions = new StackPanel();
                                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                                         newMsgReactions.Margin = new Thickness(15);
@@ -2879,16 +2748,7 @@ namespace GamaManager.Dialogs
                                                                 {
                                                                     List<MsgReaction> reactions = myInnerNestedObj.reactions;
 
-                                                                    /*int countMsgReactions = reactions.Count<MsgReaction>((MsgReaction reaction) =>
-                                                                    {
-                                                                        string msgReactionId = reaction.msg;
-                                                                        bool isCurrentMsg = msgReactionId == msgId;
-                                                                        // return isCurrentMsg || true;
-                                                                        return isCurrentMsg;
-                                                                    });
-                                                                    string rawCountMsgReactions = countMsgReactions.ToString();
-                                                                    newMsgReactionLabel.Text = rawCountMsgReactions;*/
-
+                                                                    
                                                                     List<MsgReaction> msgReactions = reactions.Where<MsgReaction>((MsgReaction reaction) =>
                                                                     {
                                                                         string msgReactionId = reaction.msg;
@@ -3044,12 +2904,6 @@ namespace GamaManager.Dialogs
             {
                 int chatIndex = this.chats.IndexOf(id);
                 chatControl.Items.RemoveAt(chatIndex);
-                /*this.chats = this.chats.Where<string>((string chatId) =>
-                {
-                    bool isCurrentChat = id == chatId;
-                    bool isNotCurrentChat = !isCurrentChat;
-                    return isNotCurrentChat;
-                }).ToList<string>();*/
                 this.chats.RemoveAt(chatIndex);
             }
             chatControlItemsCount = chatControlItems.Count;
@@ -3508,8 +3362,6 @@ namespace GamaManager.Dialogs
 
         private void HideMsgReactionsPopupFromContextMenuHandler(object sender, MouseEventArgs e)
         {
-            /*ContextMenu contextMenu = ((ContextMenu)(sender));
-            HideMsgReactionsPopup(contextMenu);*/
             HideMsgReactionsPopupFromContextMenu();
         }
 
@@ -3579,13 +3431,6 @@ namespace GamaManager.Dialogs
                             msgPopup.IsOpen = false;
                             msgReactionsPopup.IsOpen = false;
                             UIElementCollection msgItems = msg.Children;
-                            /*UIElement label = msgItems[2];
-                            TextBlock msgReactionLabel = ((TextBlock)(label));
-                            string msgReactionLabelContent = msgReactionLabel.Text;
-                            int count = Int32.Parse(msgReactionLabelContent);
-                            int updatedCount = count + 1;
-                            string rawUpdatedCount = updatedCount.ToString();
-                            msgReactionLabel.Text = rawUpdatedCount;*/
                             UIElement footer = msgItems[2];
                             StackPanel msgReactios = ((StackPanel)(footer));
                             Image msgReaction = new Image();

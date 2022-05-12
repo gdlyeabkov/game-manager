@@ -926,7 +926,12 @@ namespace GamaManager.Dialogs
                                                                                 {
                                                                                     Friend currentFriendRelation = friendRelations[foundIndex];
                                                                                     string friendAlias = currentFriendRelation.alias;
-                                                                                    friendLoginLabel.Text += @" (" + friendAlias + ")";
+                                                                                    int friendAliasLength = friendAlias.Length;
+                                                                                    bool isAliasExists = friendAliasLength >= 1;
+                                                                                    if (isAliasExists)
+                                                                                    {
+                                                                                        friendLoginLabel.Text += @" (" + friendAlias + ")";
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }

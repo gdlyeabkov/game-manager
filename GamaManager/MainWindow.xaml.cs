@@ -9394,7 +9394,7 @@ namespace GamaManager
                     }
                     // здесь GetFriends();
                 });
-                client.On("friend_send_msg", async response =>
+                client.On("friend_send_msg_notification", async response =>
                 {
                     var rawResult = response.GetValue<string>();
                     string[] result = rawResult.Split(new char[] { '|' });
@@ -10198,6 +10198,9 @@ namespace GamaManager
 
         public void OpenChatFromPopup(string id, Popup popup)
         {
+            
+            chats.Add(id);
+            
             Application app = Application.Current;
             WindowCollection windows = app.Windows;
             IEnumerable<Window> myWindows = windows.OfType<Window>();
@@ -10220,9 +10223,15 @@ namespace GamaManager
             if (isNotOpenedChatWindows)
             {
                 Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                dialog.Closed += DebugHandler;
                 dialog.Show();
                 popup.IsOpen = false;
             }
+        }
+
+        public void DebugHandler(object sender, EventArgs e)
+        {
+            Debugger.Log(0, "debug", Environment.NewLine + "chats: " + this.chats.Count.ToString() + Environment.NewLine);
         }
 
         private void ToggleFullScreenModeHandler(object sender, MouseButtonEventArgs e)

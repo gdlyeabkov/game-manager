@@ -11,6 +11,7 @@
     Width="800"
     Loaded="InitializeHandler"
     GotFocus="StopBlinkWindowHandler"
+    Closed="ResetChatsHandler"
 >
     <StackPanel
         x:Name="chatContainer"

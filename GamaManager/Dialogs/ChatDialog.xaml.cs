@@ -71,6 +71,7 @@ namespace GamaManager.Dialogs
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
+            this.client = client;
             this.friendId = friendId;
             this.isStartBlink = isStartBlink;
             this.chats = chats;
@@ -89,8 +90,8 @@ namespace GamaManager.Dialogs
             try
             {
                 // client = new SocketIO("http://localhost:4000/");
-                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
-                await client.ConnectAsync();
+                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
+                // await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
                 {
                     var rawResult = response.GetValue<string>();
@@ -1021,7 +1022,7 @@ namespace GamaManager.Dialogs
                                                     string newMsgUserId = msg.user;
                                                     string newMsgFriendId = msg.friend;
                                                     // bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == friendId) || (newMsgUserId == friendId && newMsgFriendId == currentUserId);
-                                                    bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == this.chats[chatControl.SelectedIndex]) || (newMsgUserId == this.chats[chatControl.SelectedIndex] && newMsgFriendId == this.chats[chatControl.SelectedIndex]);
+                                                    bool isCurrentChatMsg = (newMsgUserId == currentUserId && newMsgFriendId == this.chats[chatControl.SelectedIndex]) || (newMsgUserId == this.chats[chatControl.SelectedIndex] && newMsgFriendId == currentUserId);
                                                     if (isCurrentChatMsg)
                                                     {
 
@@ -3615,6 +3616,16 @@ namespace GamaManager.Dialogs
             Dialogs.UpdateNickDialog dialog = new UpdateNickDialog(id);
             // надо обновить меню
             dialog.Show();
+        }
+
+        private void ResetChatsHandler (object sender, EventArgs e)
+        {
+            ResetChats();
+        }
+
+        public void ResetChats ()
+        {
+            this.chats.Clear();
         }
 
     }

@@ -98,6 +98,7 @@
                                     Margin="15 0"    
                                 >
                                     <TextBlock
+                                        x:Name="addNickAfterFriendNameLabel"
                                         FontSize="14"
                                         Margin="15 5"
                                         Text="Пример друга"    

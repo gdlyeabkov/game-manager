@@ -4786,6 +4786,222 @@
                                             Visibility="Collapsed"    
                                         >
                                             <StackPanel>
+                                                <DockPanel
+                                                    Background="DarkCyan"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="20"
+                                                        Text="Добавить друга"
+                                                        Margin="15"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    Background="Gray"
+                                                    Margin="0 10"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        Text="Код для друга"
+                                                        Margin="15 5"
+                                                    />
+                                                    <DockPanel
+                                                        Margin="0 5"    
+                                                    >
+                                                        <TextBox
+                                                            x:Name="myFriendCodeBox"
+                                                            VerticalContentAlignment="Center"
+                                                            Height="30"
+                                                            Margin="15 0"
+                                                            HorizontalAlignment="Left"
+                                                            BorderThickness="0"
+                                                            IsReadOnly="True"
+                                                            Text="Мой код друга"
+                                                            Width="275"
+                                                        />
+                                                        <Button
+                                                            Height="30"
+                                                            Width="125"
+                                                            Content="Копировать"
+                                                            Click="CopyMyFriendCodeHandler"
+                                                        />
+                                                    </DockPanel>
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        HorizontalAlignment="Left"
+                                                        Text="Введите код друга, чтобы отправить приглашение."    
+                                                    />
+                                                    <TextBox
+                                                        x:Name="friendCodeBox"
+                                                        VerticalContentAlignment="Center"
+                                                        Margin="15"
+                                                        HorizontalAlignment="Left"
+                                                        Width="275"
+                                                        Height="30"
+                                                        TextChanged="FindUserByFriendCodeHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="30"
+                                                                            Width="275"
+                                                                            Text="Введите код друга"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <StackPanel
+                                                        x:Name="foundedFriendByFriendCode"
+                                                        Orientation="Horizontal"
+                                                        Visibility="Collapsed"
+                                                    >
+                                                        <Image
+                                                            x:Name="foundedFriendByFriendCodeAvatar"
+                                                            Margin="15"
+                                                            Width="75"    
+                                                            Height="75"    
+                                                            ImageFailed="SetDefautAvatarHandler"
+                                                        >
+                                                            <Image.Source>
+                                                                <BitmapImage
+                                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                                />
+                                                            </Image.Source>
+                                                        </Image>
+                                                        <StackPanel
+                                                            Margin="15 0"        
+                                                        >
+                                                            <TextBlock
+                                                                x:Name="foundedFriendByFriendCodeNameLabel"
+                                                                Text="Имя пользователя"
+                                                                Margin="0 5"
+                                                                FontSize="16"
+                                                            />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        FontSize="20"
+                                                        Text="Или отправьте быстрое приглашение"    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        FontSize="14"
+                                                        Text="Создайте ссылку и отправьте её кому угодно, чтобы она моментально соединила вас с&#10;принявшим приглашение пользователем. Будьте осторожны, если публикуете ссылку в&#10;общедоступном месте."    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        FontSize="14"
+                                                        Text="ВНИМАНИЕ: ссылка действует 30 дней, но использовать её можно лишь один раз."
+                                                    />
+
+                                                    <DockPanel
+                                                        Margin="0 5"    
+                                                    >
+                                                        <TextBox
+                                                            x:Name="addFriendRequestLinkBox"
+                                                            VerticalContentAlignment="Center"
+                                                            Height="30"
+                                                            Margin="15 0"
+                                                            HorizontalAlignment="Left"
+                                                            BorderThickness="0"
+                                                            IsReadOnly="True"
+                                                            Text="Ссылка на добавление в друзья"
+                                                            Width="275"
+                                                        />
+                                                        <Button
+                                                            Height="30"
+                                                            Width="125"
+                                                            Content="Копировать"
+                                                            Click="CopyMyFriendLinkHandler"
+                                                        />
+                                                    </DockPanel>
+
+                                                    <Button
+                                                        HorizontalAlignment="Left"
+                                                        Margin="15 5"
+                                                        Width="175"
+                                                        Height="30"
+                                                        Content="Создать новую ссылку"    
+                                                    />
+                                                    <TextBlock
+                                                        FontSize="18"
+                                                        Text="Или попробуйте найти своего друга"
+                                                        Margin="15 5"
+                                                    />
+                                                    <TextBox
+                                                        VerticalContentAlignment="Center"
+                                                        Margin="15"
+                                                        HorizontalAlignment="Left"
+                                                        Width="275"
+                                                        Height="30"
+                                                        KeyUp="DetectFriendSearchHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="30"
+                                                                            Width="275"
+                                                                            Text="Введите имя профиля своего друга"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </StackPanel>
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -11966,6 +12182,54 @@ E. Что произойдет, если положение Пункта 11 бу
                                     />
                                 </StackPanel>
                             </StackPanel>                            
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <TextBlock
+                                Text="Назад"    
+                                TextAlignment="Left"
+                                Margin="35 15"
+                                FontSize="14"
+                                MouseLeftButtonUp="CancelFriendSearchHandler"
+                            />
+                            <TextBlock
+                                Text="Найти друзей"    
+                                TextAlignment="Center"
+                                Margin="0 15"
+                                FontSize="20"
+                            />
+                            <TextBlock
+                                Text="Поиск по имени пользователя"    
+                                TextAlignment="Center"
+                                Margin="0 15"
+                                FontSize="14"
+                            />
+                            <TextBox
+                                x:Name="searchedFriendsBox"
+                                Margin="35 15"
+                                Height="25"
+                                TextChanged="GetSearchedFriendsHandler"
+                            />
+                            <TextBlock
+                                Text="Не можете найти пользователя? Воспользуйтесь быстрым приглашением"    
+                                TextAlignment="Center"
+                                Margin="0 15"
+                                FontSize="14"
+                            />
+                            <StackPanel
+                                Margin="75 15"
+                                x:Name="searchedFriends"    
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

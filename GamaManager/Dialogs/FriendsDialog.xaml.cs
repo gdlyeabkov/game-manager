@@ -894,6 +894,45 @@ namespace GamaManager.Dialogs
                                                                 friendLoginLabel.Margin = new Thickness(10, 5, 10, 5);
                                                                 friendLoginLabel.Text = friendLogin;
                                                                 friendsItem.Children.Add(friendLoginLabel);
+
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                innerNestedWebRequest.Method = "GET";
+                                                                innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                {
+                                                                    using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                    {
+                                                                        js = new JavaScriptSerializer();
+                                                                        objText = innerNestedReader.ReadToEnd();
+                                                                        FriendsResponseInfo myInnerNestedObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                                                        status = myInnerNestedObj.status;
+                                                                        isOkStatus = status == "OK";
+                                                                        if (isOkStatus)
+                                                                        {
+                                                                            List<Friend> friendRelations = myInnerNestedObj.friends;
+                                                                            bool isAddNickAfterFriendNames = currentSettings.isAddNickAfterFriendNames;
+                                                                            if (isAddNickAfterFriendNames)
+                                                                            {
+                                                                                int foundIndex = friendRelations.FindIndex((Friend localFriend) =>
+                                                                                {
+                                                                                    string localUserRelationId = localFriend.user;
+                                                                                    string localFriendRelationId = localFriend.friend;
+                                                                                    bool isCurrentUser = currentUserId == localUserRelationId;
+                                                                                    bool isCurrentFriend = friendId == localFriendRelationId;
+                                                                                    return isCurrentUser && isCurrentFriend;
+                                                                                });
+                                                                                bool isFound = foundIndex >= 0;
+                                                                                if (isFound)
+                                                                                {
+                                                                                    Friend currentFriendRelation = friendRelations[foundIndex];
+                                                                                    string friendAlias = currentFriendRelation.alias;
+                                                                                    friendLoginLabel.Text += @" (" + friendAlias + ")";
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+
                                                                 TextBlock friendStatusLabel = new TextBlock();
                                                                 friendStatusLabel.Height = 25;
                                                                 friendStatusLabel.VerticalAlignment = VerticalAlignment.Center;
@@ -949,10 +988,23 @@ namespace GamaManager.Dialogs
                                                                 friendsItemContextMenuItem.DataContext = friendId;
                                                                 friendsItemContextMenuItem.Click += OpenFriendProfileHandler;
                                                                 friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+
+                                                                friendsItemContextMenuItem = new MenuItem();
+                                                                friendsItemContextMenuItem.Header = "Обмен";
+                                                                friendsItemContextMenuItem.DataContext = friendId;
+                                                                friendsItemContextMenuItem.Click += OpenUserProfileHandler;
+                                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Открыть инвентарь";
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem.Header = "Отправить предложение обмена";
+                                                                friendsItemContextMenuItem.Items.Add(innerFriendsItemContextMenuItem);
+                                                                friendsItemContextMenu.Items.Add(friendsItemContextMenuItem);
+
                                                                 friendsItemContextMenuItem = new MenuItem();
                                                                 friendsItemContextMenuItem.Header = "Управление";
 
-                                                                MenuItem innerFriendsItemContextMenuItem = new MenuItem();
+                                                                innerFriendsItemContextMenuItem = new MenuItem();
                                                                 HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                                                                 friendRelationsWebRequest.Method = "GET";
                                                                 friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
@@ -1050,7 +1102,7 @@ namespace GamaManager.Dialogs
                                                                 innerFriendsItemContextMenuItem = new MenuItem();
                                                                 try
                                                                 {
-                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/all");
+                                                                    innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/blacklist/relations/all");
                                                                     innerNestedWebRequest.Method = "GET";
                                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                     using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -2171,6 +2223,7 @@ namespace GamaManager.Dialogs
         public void OpenFriendSettings ()
         {
             Dialogs.FriendsSettingsDialog dialog = new Dialogs.FriendsSettingsDialog(currentUserId);
+            dialog.Closed += RefreshFriendsHandler;
             dialog.Show();
         }
 
@@ -2480,6 +2533,20 @@ namespace GamaManager.Dialogs
         {
             GetFriends(currentUserId, "");
             GetTalks();
+        }
+
+        public void OpenUserProfileHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = ((MenuItem)(sender));
+            object menuItemData = menuItem.DataContext;
+            string id = ((string)(menuItemData));
+            OpenUserProfile(id);
+        }
+
+        public void OpenUserProfile(string id)
+        {
+            mainWindow.mainControl.DataContext = id;
+            mainWindow.ReturnToProfile();
         }
 
     }

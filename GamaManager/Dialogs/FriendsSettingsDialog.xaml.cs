@@ -441,10 +441,12 @@ namespace GamaManager.Dialogs
                 if (isEnabledBtn)
                 {
                     notAddNickAfterFriendNameBtn.IsChecked = toggledValue;
+                    addNickAfterFriendNameLabel.Text = "Пример друга (Ник)";
                 }
                 else
                 {
                     addNickAfterFriendNameBtn.IsChecked = toggledValue;
+                    addNickAfterFriendNameLabel.Text = "Ник";
                 }
             }
         }
@@ -613,8 +615,11 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
-            object rawIsChecked = hideOfflineFriendsFromCategoriesBtn.IsChecked;
+            object rawIsChecked = addNickAfterFriendNameBtn.IsChecked;
             bool isChecked = ((bool)(rawIsChecked));
+            updatedSettings.isAddNickAfterFriendNames = isChecked;
+            rawIsChecked = hideOfflineFriendsFromCategoriesBtn.IsChecked;
+            isChecked = ((bool)(rawIsChecked));
             updatedSettings.isHideOfflineFriendsFromCategories = isChecked;
             rawIsChecked = openNewChatInNewWindowBtn.IsChecked;
             isChecked = ((bool)(rawIsChecked));
@@ -699,6 +704,17 @@ namespace GamaManager.Dialogs
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             Settings currentSettings = loadedContent.settings;
+            bool isAddNickAfterFriendNames = currentSettings.isAddNickAfterFriendNames;
+            addNickAfterFriendNameBtn.IsChecked = isAddNickAfterFriendNames;
+            notAddNickAfterFriendNameBtn.IsChecked = !isAddNickAfterFriendNames;
+            if (isAddNickAfterFriendNames)
+            {
+                addNickAfterFriendNameLabel.Text = "Пример друга (Ник)";
+            }
+            else
+            {
+                addNickAfterFriendNameLabel.Text = "Ник";
+            }
             bool isHideOfflineFriendsFromCategories = currentSettings.isHideOfflineFriendsFromCategories;
             hideOfflineFriendsFromCategoriesBtn.IsChecked = isHideOfflineFriendsFromCategories;
             showOfflineFriendsFromCategoriesBtn.IsChecked = !isHideOfflineFriendsFromCategories;

@@ -1428,7 +1428,8 @@ namespace GamaManager.Dialogs
                 isNotOpenedChatWindows = countChatWindows <= 0;
                 if (isNotOpenedChatWindows)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                    // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, mainWindow);
                     dialog.DataContext = friend;
                     dialog.Show();
 
@@ -1444,7 +1445,8 @@ namespace GamaManager.Dialogs
                             {
                                 chats.Add(updatedRecentChat);
                                 dialog.Focus();
-                                dialog.AddChat();
+                                // dialog.AddChat();
+                                dialog.AddChat(friend);
                             }
                         }
                         updatedRecentChats.Clear();
@@ -1467,7 +1469,8 @@ namespace GamaManager.Dialogs
                 {
                     if (isOpenNewChatInNewWindow)
                     {
-                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                        // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, mainWindow);
                         dialog.DataContext = friend;
                         dialog.Show();
                     }
@@ -1475,7 +1478,8 @@ namespace GamaManager.Dialogs
                     {
                         Dialogs.ChatDialog chatWindow = ((ChatDialog)(chatWindows[0]));
                         chatWindow.Focus();
-                        chatWindow.AddChat();
+                        // chatWindow.AddChat();
+                        chatWindow.AddChat(friend);
                     }
                 }
             }
@@ -1483,7 +1487,8 @@ namespace GamaManager.Dialogs
             {
                 if (isOpenNewChatInNewWindow)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                    // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, chats, mainWindow);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, friend, false, mainWindow);
                     dialog.DataContext = friend;
                     dialog.Show();
                 }

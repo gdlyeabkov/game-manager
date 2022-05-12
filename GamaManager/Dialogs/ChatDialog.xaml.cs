@@ -42,8 +42,10 @@ namespace GamaManager.Dialogs
         public WaveIn waveSource;
         public WaveFileWriter waveFile;
         public Brush msgsSeparatorBrush = null;
-        public List<string> chats;
+        // public List<string> chats;
+        public List<string> chats = new List<string>();
         public MainWindow mainWindow;
+        public bool isAppInit = false;
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -67,14 +69,15 @@ namespace GamaManager.Dialogs
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 
-        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats, MainWindow mainWindow)
+        // public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, List<string> chats, MainWindow mainWindow)
+        public ChatDialog(string currentUserId, SocketIO client, string friendId, bool isStartBlink, MainWindow mainWindow)
         {
             InitializeComponent();
             this.currentUserId = currentUserId;
             this.client = client;
             this.friendId = friendId;
             this.isStartBlink = isStartBlink;
-            this.chats = chats;
+            // this.chats = chats;
             this.mainWindow = mainWindow;
         }
 
@@ -656,6 +659,8 @@ namespace GamaManager.Dialogs
             /*int waveindevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("WaveIn", 0);
             int waveoutdevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("Waveout", 0);*/
 
+            isAppInit = true;
+
         }
 
         public void InitConstants()
@@ -667,7 +672,8 @@ namespace GamaManager.Dialogs
         public void Initialize()
         {
             InitConstants();
-            AddChat();
+            // AddChat();
+            AddChat(friendId);
             ReceiveMessages();
             InitFlash();
             GetChatSettings();
@@ -696,8 +702,10 @@ namespace GamaManager.Dialogs
         }
 
         // public void AddChat()
-        public void AddChat()
+        public void AddChat(string localFriendId)
         {
+
+            chats.Add(localFriendId);
 
             JavaScriptSerializer js = null;
 
@@ -3036,12 +3044,13 @@ namespace GamaManager.Dialogs
             {
                 int chatIndex = this.chats.IndexOf(id);
                 chatControl.Items.RemoveAt(chatIndex);
-                this.chats = this.chats.Where<string>((string chatId) =>
+                /*this.chats = this.chats.Where<string>((string chatId) =>
                 {
                     bool isCurrentChat = id == chatId;
                     bool isNotCurrentChat = !isCurrentChat;
                     return isNotCurrentChat;
-                }).ToList<string>();
+                }).ToList<string>();*/
+                this.chats.RemoveAt(chatIndex);
             }
             chatControlItemsCount = chatControlItems.Count;
             isManyTabs = chatControlItemsCount >= 2;
@@ -3634,6 +3643,51 @@ namespace GamaManager.Dialogs
         public void ResetChats()
         {
             this.chats.Clear();
+        }
+
+        private void DetectChatToggleHandler(object sender, SelectionChangedEventArgs e)
+        {
+            DetectChatToggle();
+        }
+
+        public void DetectChatToggle()
+        {
+            if (isAppInit)
+            {
+                int selectedChatIndex = chatControl.SelectedIndex;
+                ItemCollection chatControlItems = chatControl.Items;
+                foreach (TabItem chatControlItem in chatControlItems)
+                {
+                    int chatIndex = chatControlItems.IndexOf(chatControlItem);
+                    bool isNotSelectedChat = chatIndex != selectedChatIndex;
+                    if (isNotSelectedChat)
+                    {
+                        object rawChatControlItemHeader = chatControlItem.Header;
+                        TextBlock chatControlItemHeader = ((TextBlock)(rawChatControlItemHeader));
+                        ContextMenu chatControlItemContextMenu = chatControlItemHeader.ContextMenu;
+                        if (chatControlItemContextMenu != null)
+                        {
+                            ItemCollection chatControlItemContextMenuItems = chatControlItemContextMenu.Items;
+                            object rawCloseTabMenuItem = chatControlItemContextMenuItems[0];
+                            MenuItem closeTabMenuItem = ((MenuItem)(rawCloseTabMenuItem));
+                            closeTabMenuItem.IsEnabled = false;
+                        }
+                    }
+                    else
+                    {
+                        object rawChatControlItemHeader = chatControlItem.Header;
+                        TextBlock chatControlItemHeader = ((TextBlock)(rawChatControlItemHeader));
+                        ContextMenu chatControlItemContextMenu = chatControlItemHeader.ContextMenu;
+                        if (chatControlItemContextMenu != null)
+                        {
+                            ItemCollection chatControlItemContextMenuItems = chatControlItemContextMenu.Items;
+                            object rawCloseTabMenuItem = chatControlItemContextMenuItems[0];
+                            MenuItem closeTabMenuItem = ((MenuItem)(rawCloseTabMenuItem));
+                            closeTabMenuItem.IsEnabled = true;
+                        }
+                    }
+                }
+            }
         }
 
     }

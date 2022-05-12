@@ -300,7 +300,8 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                 dialog.Show();
             }
         }
@@ -9468,12 +9469,19 @@ namespace GamaManager
                                                                 Application app = Application.Current;
                                                                 WindowCollection windows = app.Windows;
                                                                 IEnumerable<Window> myWindows = windows.OfType<Window>();
-                                                                int countChatWindows = myWindows.Count(window =>
+                                                                /*int countChatWindows = myWindows.Count(window =>
                                                                 {
                                                                     string windowTitle = window.Title;
                                                                     bool isChatWindow = windowTitle == "Чат";
                                                                     return isChatWindow;
-                                                                });
+                                                                });*/
+                                                                List<Window> chatWindows = myWindows.Where<Window>(window =>
+                                                                {
+                                                                    string windowTitle = window.Title;
+                                                                    bool isChatWindow = windowTitle == "Чат";
+                                                                    return isChatWindow;
+                                                                }).ToList<Window>();
+                                                                int countChatWindows = chatWindows.Count;
                                                                 bool isNotOpenedChatWindows = countChatWindows <= 0;
                                                                 if (isNotOpenedChatWindows && currentUserId != userId)
                                                                 {
@@ -9560,92 +9568,104 @@ namespace GamaManager
                                                                         }
                                                                     }
                                                                 }
-                                                                else if (!chats.Contains(userId) && currentUserId != userId)
+                                                                else
                                                                 {
+                                                                    bool isChatNotOpened = chatWindows.All<Window>((Window window) =>
+                                                                    {
+                                                                        ChatDialog dialog = window as ChatDialog;
+                                                                        List<string> localChats = dialog.chats;
+                                                                        bool isChatFound = localChats.Contains(userId);
+                                                                        bool isChatNotFound = !isChatFound;
+                                                                        return isChatNotFound;
+                                                                    });
+                                                                    if (isChatNotOpened && currentUserId != userId)
+                                                                    {
 
-                                                                    Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-                                                                    string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-                                                                    string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-                                                                    js = new JavaScriptSerializer();
-                                                                    string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-                                                                    SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-                                                                    List<Game> currentGames = loadedContent.games;
-                                                                    List<FriendSettings> updatedFriends = loadedContent.friends;
-                                                                    Settings currentSettings = loadedContent.settings;
-                                                                    List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
-                                                                    {
-                                                                        return localFriend.id == userId;
-                                                                    }).ToList();
-                                                                    int countCachedFriends = cachedFriends.Count;
-                                                                    bool isCachedFriendsExists = countCachedFriends >= 1;
-                                                                    if (isCachedFriendsExists)
-                                                                    {
-                                                                        FriendSettings cachedFriend = cachedFriends[0];
-                                                                        bool isLocalNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
-                                                                        bool isGlobalNotificationEnabled = currentSettings.isFriendSendMsgNotification;
-                                                                        bool isNotificationEnabled = isLocalNotificationEnabled && isGlobalNotificationEnabled;
-                                                                        if (isNotificationEnabled)
+                                                                        Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                                                        string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                                                        string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                                                        js = new JavaScriptSerializer();
+                                                                        string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                                                        SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                                                        List<Game> currentGames = loadedContent.games;
+                                                                        List<FriendSettings> updatedFriends = loadedContent.friends;
+                                                                        Settings currentSettings = loadedContent.settings;
+                                                                        List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings localFriend) =>
                                                                         {
-                                                                            Application.Current.Dispatcher.Invoke(async () =>
+                                                                            return localFriend.id == userId;
+                                                                        }).ToList();
+                                                                        int countCachedFriends = cachedFriends.Count;
+                                                                        bool isCachedFriendsExists = countCachedFriends >= 1;
+                                                                        if (isCachedFriendsExists)
+                                                                        {
+                                                                            FriendSettings cachedFriend = cachedFriends[0];
+                                                                            bool isLocalNotificationEnabled = cachedFriend.isFriendSendMsgNotification;
+                                                                            bool isGlobalNotificationEnabled = currentSettings.isFriendSendMsgNotification;
+                                                                            bool isNotificationEnabled = isLocalNotificationEnabled && isGlobalNotificationEnabled;
+                                                                            if (isNotificationEnabled)
                                                                             {
-                                                                                if (chatId == currentUserId && friendsIds.Contains(userId))
+                                                                                Application.Current.Dispatcher.Invoke(async () =>
                                                                                 {
-                                                                                    Popup friendNotification = new Popup();
-                                                                                    friendNotification.DataContext = friend._id;
-                                                                                    friendNotification.MouseLeftButtonUp += OpenChatFromPopupHandler;
-                                                                                    friendNotification.Placement = PlacementMode.Custom;
-                                                                                    friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
-                                                                                    friendNotification.PlacementTarget = this;
-                                                                                    friendNotification.Width = 225;
-                                                                                    friendNotification.Height = 275;
-                                                                                    StackPanel friendNotificationBody = new StackPanel();
-                                                                                    friendNotificationBody.Background = friendRequestBackground;
-                                                                                    Image friendNotificationBodySenderAvatar = new Image();
-                                                                                    friendNotificationBodySenderAvatar.Width = 100;
-                                                                                    friendNotificationBodySenderAvatar.Height = 100;
-                                                                                    friendNotificationBodySenderAvatar.BeginInit();
-                                                                                    Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                                                                    BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
-                                                                                    friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
-                                                                                    friendNotificationBodySenderAvatar.EndInit();
-                                                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
-                                                                                    TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
-                                                                                    friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
-                                                                                    friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
-                                                                                    friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
-                                                                                    friendNotification.Child = friendNotificationBody;
-                                                                                    friendRequests.Children.Add(friendNotification);
-                                                                                    friendNotification.IsOpen = true;
-                                                                                    friendNotification.StaysOpen = false;
-                                                                                    friendNotification.PopupAnimation = PopupAnimation.Fade;
-                                                                                    friendNotification.AllowsTransparency = true;
-                                                                                    DispatcherTimer timer = new DispatcherTimer();
-                                                                                    timer.Interval = TimeSpan.FromSeconds(3);
-                                                                                    timer.Tick += delegate
+                                                                                    if (chatId == currentUserId && friendsIds.Contains(userId))
                                                                                     {
-                                                                                        friendNotification.IsOpen = false;
-                                                                                        timer.Stop();
-                                                                                    };
-                                                                                    timer.Start();
-                                                                                    friendNotifications.Children.Add(friendNotification);
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                        // bool isSoundEnabled = cachedFriend.isFriendSendMsgSound;
-                                                                        bool isLocalSoundEnabled = cachedFriend.isFriendSendMsgSound;
-                                                                        bool isGlobalSoundEnabled = currentSettings.isFriendSendMsgSound;
-                                                                        bool isSoundEnabled = isLocalSoundEnabled && isGlobalSoundEnabled;
-                                                                        if (isSoundEnabled)
-                                                                        {
-                                                                            Application.Current.Dispatcher.Invoke(() =>
+                                                                                        Popup friendNotification = new Popup();
+                                                                                        friendNotification.DataContext = friend._id;
+                                                                                        friendNotification.MouseLeftButtonUp += OpenChatFromPopupHandler;
+                                                                                        friendNotification.Placement = PlacementMode.Custom;
+                                                                                        friendNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
+                                                                                        friendNotification.PlacementTarget = this;
+                                                                                        friendNotification.Width = 225;
+                                                                                        friendNotification.Height = 275;
+                                                                                        StackPanel friendNotificationBody = new StackPanel();
+                                                                                        friendNotificationBody.Background = friendRequestBackground;
+                                                                                        Image friendNotificationBodySenderAvatar = new Image();
+                                                                                        friendNotificationBodySenderAvatar.Width = 100;
+                                                                                        friendNotificationBodySenderAvatar.Height = 100;
+                                                                                        friendNotificationBodySenderAvatar.BeginInit();
+                                                                                        Uri friendNotificationBodySenderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
+                                                                                        BitmapImage friendNotificationBodySenderAvatarImg = new BitmapImage(friendNotificationBodySenderAvatarUri);
+                                                                                        friendNotificationBodySenderAvatar.Source = friendNotificationBodySenderAvatarImg;
+                                                                                        friendNotificationBodySenderAvatar.EndInit();
+                                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderAvatar);
+                                                                                        TextBlock friendNotificationBodySenderLoginLabel = new TextBlock();
+                                                                                        friendNotificationBodySenderLoginLabel.Margin = new Thickness(10);
+                                                                                        friendNotificationBodySenderLoginLabel.Text = "Пользователь " + Environment.NewLine + senderName + Environment.NewLine + " оставил вам сообщение";
+                                                                                        friendNotificationBody.Children.Add(friendNotificationBodySenderLoginLabel);
+                                                                                        friendNotification.Child = friendNotificationBody;
+                                                                                        friendRequests.Children.Add(friendNotification);
+                                                                                        friendNotification.IsOpen = true;
+                                                                                        friendNotification.StaysOpen = false;
+                                                                                        friendNotification.PopupAnimation = PopupAnimation.Fade;
+                                                                                        friendNotification.AllowsTransparency = true;
+                                                                                        DispatcherTimer timer = new DispatcherTimer();
+                                                                                        timer.Interval = TimeSpan.FromSeconds(3);
+                                                                                        timer.Tick += delegate
+                                                                                        {
+                                                                                            friendNotification.IsOpen = false;
+                                                                                            timer.Stop();
+                                                                                        };
+                                                                                        timer.Start();
+                                                                                        friendNotifications.Children.Add(friendNotification);
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                            // bool isSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                            bool isLocalSoundEnabled = cachedFriend.isFriendSendMsgSound;
+                                                                            bool isGlobalSoundEnabled = currentSettings.isFriendSendMsgSound;
+                                                                            bool isSoundEnabled = isLocalSoundEnabled && isGlobalSoundEnabled;
+                                                                            if (isSoundEnabled)
                                                                             {
-                                                                                mainAudio.LoadedBehavior = MediaState.Play;
-                                                                                mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
-                                                                            });
+                                                                                Application.Current.Dispatcher.Invoke(() =>
+                                                                                {
+                                                                                    mainAudio.LoadedBehavior = MediaState.Play;
+                                                                                    mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
+                                                                                });
+                                                                            }
                                                                         }
-                                                                    }
 
+                                                                    }
                                                                 }
+
                                                             }
                                                         }
                                                     }
@@ -10268,7 +10288,8 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                 dialog.Show();
                 popup.IsOpen = false;
             }
@@ -10310,7 +10331,9 @@ namespace GamaManager
                 {
                     string localFriend = ((string)(windowData));
                     // isChatExists = id == localFriend;
-                    isChatExists = chats.Contains(id);
+                    // isChatExists = chats.Contains(id);
+                    ChatDialog chatDialog = window as ChatDialog;
+                    isChatExists = chatDialog.chats.Contains(id);
                 }
                 return isWindowDataExists && isChatWindow && isChatExists;
             }).ToList<Window>();
@@ -10331,7 +10354,8 @@ namespace GamaManager
                 isNotOpenedChatWindows = countChatWindows <= 0;
                 if (isNotOpenedChatWindows)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                    // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                     dialog.DataContext = id;
                     dialog.Closed += DebugHandler;
                     dialog.Show();
@@ -10341,7 +10365,8 @@ namespace GamaManager
                 {
                     if (isOpenNewChatInNewWindow)
                     {
-                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                        // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                         dialog.DataContext = id;
                         dialog.Closed += DebugHandler;
                         dialog.Show();
@@ -10351,7 +10376,8 @@ namespace GamaManager
                     {
                         Dialogs.ChatDialog dialog = ((Dialogs.ChatDialog)(chatWindows[0]));
                         dialog.Focus();
-                        dialog.AddChat();
+                        // dialog.AddChat();
+                        dialog.AddChat(id);
                     }
                 }
             }
@@ -10359,7 +10385,8 @@ namespace GamaManager
             {
                 if (isOpenNewChatInNewWindow)
                 {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                    // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                     dialog.DataContext = id;
                     dialog.Show();
                 }

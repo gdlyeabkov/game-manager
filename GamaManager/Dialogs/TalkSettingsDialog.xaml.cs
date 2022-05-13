@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,20 +28,22 @@ namespace GamaManager.Dialogs
 
         public string currentUserId = "";
         public string talkId = "";
+        public SocketIO client = null;
         public string attachmentExt = "png";
 
-        public TalkSettingsDialog(string currentUserId, string talkId)
+        public TalkSettingsDialog(string currentUserId, string talkId, SocketIO client)
         {
             InitializeComponent();
 
-            Initialize(currentUserId, talkId);
+            Initialize(currentUserId, talkId, client);
             
         }
 
-        public void Initialize (string currentUserId, string talkId)
+        public void Initialize (string currentUserId, string talkId, SocketIO client)
         {
             this.currentUserId = currentUserId;
             this.talkId = talkId;
+            this.client = client;
             SetTalkTitleLabel();
             SetTalkTitleSlogan();
             SetTalkAvatar();
@@ -582,7 +585,8 @@ namespace GamaManager.Dialogs
                                         bool isCanCreateChannels = (isHaveRoles || isOwner) && isNotBlocked;
                                         if (isCanCreateChannels)
                                         {
-                                            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+                                            // Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+                                            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId, currentUserId, client);
                                             dialog.Closed += GetChannelsHandler;
                                             dialog.Show();
                                         }

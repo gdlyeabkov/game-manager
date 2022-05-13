@@ -616,12 +616,13 @@ namespace GamaManager.Dialogs
 
         public void InitializeHandler(object sender, RoutedEventArgs e)
         {
+
+            isAppInit = true;
+
             Initialize();
 
             /*int waveindevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("WaveIn", 0);
             int waveoutdevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("Waveout", 0);*/
-
-            isAppInit = true;
 
         }
 
@@ -2147,7 +2148,7 @@ namespace GamaManager.Dialogs
                                     // string newMsgType = "text";
                                     string newMsgId = "mock";
                                     // await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
-                                    await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId);
+                                    await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|mockChannelId|friend");
                                 }
                                 catch (System.Net.WebSockets.WebSocketException)
                                 {
@@ -2398,7 +2399,7 @@ namespace GamaManager.Dialogs
                     string ext = myobj.content;
                     Debugger.Log(0, "debug", Environment.NewLine + "id: " + newMsgId + ", ext: " + ext + ", sd: " + sd + Environment.NewLine);
                     // await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
-                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId);
+                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|mockChannelId|friend");
 
                     byte[] rawImage = ImageFileToByteArray(filePath);
                     string newMsgContent = "";
@@ -2821,7 +2822,7 @@ namespace GamaManager.Dialogs
                                         // string newMsgType = "emoji";
                                         string newMsgId = "mock";
                                         // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.friendId + "|" + newMsgType + "|" + newMsgId);
-                                        await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId);
+                                        await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|mockChannelId|friend");
                                     }
                                     catch (System.Net.WebSockets.WebSocketException)
                                     {

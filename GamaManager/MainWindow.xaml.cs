@@ -9404,6 +9404,8 @@ namespace GamaManager
                     string chatId = result[2];
                     string msgType = result[3];
                     string cachedId = result[4];
+                    string channelId = result[5];
+                    string method = result[6];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
@@ -9438,7 +9440,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "myFriends: " + myFriends.Count.ToString());
                                     Debugger.Log(0, "debug", "friendsIds: " + String.Join("|", friendsIds));
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
-                                    if (isMyFriendOnline)
+                                    if (isMyFriendOnline && method == "friend")
                                     {
                                         string currentFriendId = userId;
                                         bool isCurrentChat = currentFriendId == userId;
@@ -9679,6 +9681,7 @@ namespace GamaManager
                                         }
                                     }
 
+                                    if (method == "talk")
                                     {
                                         HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
                                         innerWebRequest.Method = "GET";
@@ -10317,6 +10320,9 @@ namespace GamaManager
                     Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
                     dialog.DataContext = id;
                     dialog.Closed += DebugHandler;
+                    
+                    // dialog.Loaded += ActivateTextChannelHandler;
+                    
                     dialog.Show();
                     popup.IsOpen = false;
                 }
@@ -10379,6 +10385,27 @@ namespace GamaManager
                 Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                 dialog.Show();
                 popup.IsOpen = false;
+            }*/
+        }
+
+        public void ActivateTextChannelHandler (object sender, RoutedEventArgs e)
+        {
+            /*Dialogs.TalkDialog dialog = ((TalkDialog)(sender));
+            object talkData = dialog.DataContext;
+            string talkId = ((string)(talkData));
+            UIElement rawTextChannels = dialog.textChannels;
+            StackPanel textChannels = ((StackPanel)(rawTextChannels));
+            foreach (StackPanel textChannel in textChannels.Children)
+            {
+                object textChannelData = textChannel.DataContext;
+                string textChannelId = ((string)(textChannelData));
+                receivedChannelId это id текстового каннала который пришел с сокета
+                bool isFound = textChannelId == receivedChannelId;
+                if (isFound)
+                {
+                    dialog.SelectTextChannel(0);
+                    break;
+                }
             }*/
         }
 

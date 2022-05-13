@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,18 +26,22 @@ namespace GamaManager.Dialogs
     {
 
         public string talkId = "";
+        public string currentUserId = "";
+        public SocketIO client = null;
 
-        public CreateTextChannelDialog(string talkId)
+        public CreateTextChannelDialog(string talkId, string currentUserId, SocketIO client)
         {
             InitializeComponent();
 
-            Initialize(talkId);
+            Initialize(talkId, currentUserId, client);
 
         }
 
-        public void Initialize (string talkId)
+        public void Initialize (string talkId, string currentUserId, SocketIO client)
         {
             this.talkId = talkId;
+            this.currentUserId = currentUserId;
+            this.client = client;
         }
 
 
@@ -44,7 +50,7 @@ namespace GamaManager.Dialogs
             Accept();
         }
 
-        public void Accept ()
+        async public void Accept ()
         {
             string channelNameBoxContent = channelNameBox.Text;
             try
@@ -63,6 +69,14 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            try
+                            {
+                                await client.EmitAsync("user_update_talk", currentUserId + "|" + this.talkId);
+                            }
+                            catch (System.Net.WebSockets.WebSocketException)
+                            {
+                                Debugger.Log(0, "debug", "Ошибка сокетов");
+                            }
                             Cancel();
                         }
                     }

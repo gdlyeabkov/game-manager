@@ -301,7 +301,9 @@ namespace GamaManager.Dialogs
                         // string currentFriendId = this.talkId;
                         string currentFriendId = this.chats[chatControl.SelectedIndex];
                     
-                        bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
+                        // bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
+                        bool isCurrentChat = this.chats.Contains(cachedFriendId) && userId != currentUserId;
+
                         Debugger.Log(0, "debug", Environment.NewLine + "isCurrentChat: " + isCurrentChat.ToString() + Environment.NewLine);
                         if (isCurrentChat)
                         {
@@ -656,17 +658,25 @@ namespace GamaManager.Dialogs
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        string currentFriendId = this.talkId;
-                                        bool isCurrentChat = currentFriendId == userId;
-                                        if (isCurrentChat)
+                                        
+                                        this.Dispatcher.Invoke(async () =>
                                         {
-                                            this.Dispatcher.Invoke(async () =>
+
+                                            // string currentFriendId = this.talkId;
+                                            string currentFriendId = this.chats[chatControl.SelectedIndex];
+                                            bool isCurrentChat = currentFriendId == userId;
+                                            if (isCurrentChat)
                                             {
-                                                userIsWritingLabel.Visibility = Visibility.Visible;
-                                                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(true);
-                                                userIsWritingLabel.Visibility = Visibility.Hidden;
-                                            });
-                                        }
+                                                this.Dispatcher.Invoke(async () =>
+                                                {
+                                                    userIsWritingLabel.Visibility = Visibility.Visible;
+                                                    await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(true);
+                                                    userIsWritingLabel.Visibility = Visibility.Hidden;
+                                                });
+                                            }
+                                        
+                                        });
+
                                     }
                                 }
                             }
@@ -676,6 +686,22 @@ namespace GamaManager.Dialogs
                     {
                         MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                         this.Close();
+                    }
+                });
+                client.On("friend_update_talk", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string localTalkId = result[1];
+                    Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " update talk: " + localTalkId + Environment.NewLine);
+                    bool isNotMe = userId != currentUserId;
+                    bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
+                    bool isUpdate = isCurrentTalk && isNotMe;
+                    if (isUpdate)
+                    {
+                        GetTextChannels();
+                        GetBlockedInfo();
                     }
                 });
             }
@@ -823,6 +849,9 @@ namespace GamaManager.Dialogs
 
         public void Initialize()
         {
+
+            isAppInit = true;
+
             InitConstants(currentUserId, talkId, client);
             // AddChat();
             AddChat(talkId);
@@ -831,9 +860,6 @@ namespace GamaManager.Dialogs
             InitFlash();
             GetBlockedInfo();
             this.DataContext = talkId;
-
-            isAppInit = true;
-
         }
 
         public void InitConstants(string currentUserId, string talkId, SocketIO client)
@@ -1694,7 +1720,7 @@ namespace GamaManager.Dialogs
                                                                 string newMsgChannel = channelId;
 
                                                                 // await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
-                                                                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
+                                                                await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel + "|talk");
                                                                 
                                                             }
                                                             catch (System.Net.WebSockets.WebSocketException)
@@ -1984,7 +2010,7 @@ namespace GamaManager.Dialogs
                     string newMsgChannel = channelId;
 
                     // await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
-                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
+                    await client.EmitAsync("user_send_msg", currentUserId + "|" + ext + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel + "|talk");
 
                     byte[] rawImage = ImageFileToByteArray(filePath);
                     string newMsgContent = "";
@@ -2427,7 +2453,7 @@ namespace GamaManager.Dialogs
                                                                     string newMsgChannel = channelId;
 
                                                                     // await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
-                                                                    await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
+                                                                    await client.EmitAsync("user_send_msg", currentUserId + "|" + emojiData + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel + "|talk");
 
                                                                 }
                                                                 catch (System.Net.WebSockets.WebSocketException)
@@ -2550,7 +2576,7 @@ namespace GamaManager.Dialogs
         private void OpenTalkSettings()
         {
             // Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog(currentUserId, talkId);
-            Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog(currentUserId, chats[chatControl.SelectedIndex]);
+            Dialogs.TalkSettingsDialog dialog = new Dialogs.TalkSettingsDialog(currentUserId, chats[chatControl.SelectedIndex], client);
             dialog.Closed += GetTextChannelsHandler;
             dialog.Show();
         }
@@ -2683,20 +2709,37 @@ namespace GamaManager.Dialogs
 
         public void CreateTextChannel()
         {
-            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+            // Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(talkId);
+            Dialogs.CreateTextChannelDialog dialog = new Dialogs.CreateTextChannelDialog(chats[chatControl.SelectedIndex], currentUserId, client);
             dialog.Closed += GetTextChannelsHandler;
             dialog.Show();
         }
 
-        public void GetTextChannelsHandler (object sender, EventArgs e)
+        async public void GetTextChannelsHandler (object sender, EventArgs e)
         {
             GetTextChannels();
+            try
+            {    
+                await client.EmitAsync("user_update_talk", currentUserId + "|" + this.chats[chatControl.SelectedIndex]);
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+            }
         }
 
-        public void RefreshDataHandler(object sender, EventArgs e)
+        async public void RefreshDataHandler(object sender, EventArgs e)
         {
             GetTextChannels();
             GetBlockedInfo();
+            try
+            {
+                await client.EmitAsync("user_update_talk", currentUserId + "|" + this.chats[chatControl.SelectedIndex]);
+            }
+            catch (System.Net.WebSockets.WebSocketException)
+            {
+                Debugger.Log(0, "debug", "Ошибка сокетов");
+            }
         }
 
         public void GetTextChannels()

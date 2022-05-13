@@ -357,6 +357,7 @@
                 <TabControl
                     x:Name="chatControl"    
                     Height="375"
+                    SelectionChanged="DetectChatToggleHandler"
                 />
             </StackPanel>
         </DockPanel>

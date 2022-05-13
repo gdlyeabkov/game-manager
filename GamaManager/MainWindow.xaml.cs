@@ -10267,7 +10267,95 @@ namespace GamaManager
 
         public void OpenTalkFromPopup (string id, Popup popup)
         {
+
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            bool isOpenNewChatInNewWindow = currentSettings.isOpenNewChatInNewWindow;
+
             Application app = Application.Current;
+            WindowCollection windows = app.Windows;
+            IEnumerable<Window> myWindows = windows.OfType<Window>();
+            List<Window> talkWindows = myWindows.Where<Window>(window =>
+            {
+                string windowTitle = window.Title;
+                bool isTalkWindow = windowTitle == "Беседа";
+                object windowData = window.DataContext;
+                bool isWindowDataExists = windowData != null;
+                bool isTalkExists = true;
+                if (isWindowDataExists && isTalkWindow)
+                {
+                    string localFriend = ((string)(windowData));
+                    TalkDialog talkDialog = window as TalkDialog;
+                    isTalkExists = talkDialog.chats.Contains(id);
+                }
+                return isWindowDataExists && isTalkWindow && isTalkExists;
+            }).ToList<Window>();
+            int countTalkWindows = talkWindows.Count;
+            bool isNotOpenedTalkWindows = countTalkWindows <= 0;
+
+            chats.Add(id);
+
+            if (isNotOpenedTalkWindows)
+            {
+                talkWindows = myWindows.Where<Window>(window =>
+                {
+                    string windowTitle = window.Title;
+                    bool isTalkWindow = windowTitle == "Беседа";
+                    return isTalkWindow;
+                }).ToList<Window>();
+                countTalkWindows = talkWindows.Count;
+                isNotOpenedTalkWindows = countTalkWindows <= 0;
+                if (isNotOpenedTalkWindows)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
+                    dialog.DataContext = id;
+                    dialog.Closed += DebugHandler;
+                    dialog.Show();
+                    popup.IsOpen = false;
+                }
+                else
+                {
+                    if (isOpenNewChatInNewWindow)
+                    {
+                        Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
+                        dialog.DataContext = id;
+                        dialog.Closed += DebugHandler;
+                        dialog.Show();
+                        popup.IsOpen = false;
+                    }
+                    else
+                    {
+                        Dialogs.TalkDialog dialog = ((Dialogs.TalkDialog)(talkWindows[0]));
+                        dialog.Focus();
+                        dialog.AddChat(id);
+                        dialog.SelectChat(id);
+                    }
+                }
+            }
+            else
+            {
+                if (isOpenNewChatInNewWindow)
+                {
+                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
+                    dialog.DataContext = id;
+                    dialog.Show();
+                }
+                else
+                {
+                    Dialogs.TalkDialog talkWindow = ((TalkDialog)(talkWindows[0]));
+                    talkWindow.Focus();
+                    talkWindow.SelectChat(id);
+                }
+            }
+
+            /*Application app = Application.Current;
             WindowCollection windows = app.Windows;
             IEnumerable<Window> myWindows = windows.OfType<Window>();
             List<Window> chatWindows = myWindows.Where<Window>(window =>
@@ -10288,11 +10376,10 @@ namespace GamaManager
             bool isNotOpenedChatWindows = countChatWindows <= 0;
             if (isNotOpenedChatWindows)
             {
-                // Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
                 Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, this);
                 dialog.Show();
                 popup.IsOpen = false;
-            }
+            }*/
         }
 
         public void OpenChatFromPopupHandler (object sender, RoutedEventArgs e)
@@ -10397,23 +10484,6 @@ namespace GamaManager
                     chatWindow.SelectChat(id);
                 }
             }
-            /*else if (!chats.Contains(id))
-            {
-                
-                if (isOpenNewChatInNewWindow)
-                {
-                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, chats, this);
-                    dialog.Closed += DebugHandler;
-                    dialog.Show();
-                    popup.IsOpen = false;
-                }
-                else
-                {
-                    Dialogs.ChatDialog dialog = ((Dialogs.ChatDialog)(chatWindows[0]));
-                    dialog.Focus();
-                    dialog.AddChat();
-                }
-            }*/
         }
 
         public void DebugHandler(object sender, EventArgs e)

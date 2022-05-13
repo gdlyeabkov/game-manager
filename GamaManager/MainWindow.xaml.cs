@@ -9803,7 +9803,11 @@ namespace GamaManager
                                                                                                         Talk talk = myInnserNestedObj.talk;
                                                                                                         string talkTitle = talk.title;
                                                                                                         Popup talkNotification = new Popup();
-                                                                                                        talkNotification.DataContext = chatId;
+                                                                                                        // talkNotification.DataContext = chatId;
+                                                                                                        Dictionary<String, Object>  talkNotificationData = new Dictionary<String, Object>();
+                                                                                                        talkNotificationData.Add("talk", chatId);
+                                                                                                        talkNotificationData.Add("channel", channelId);
+                                                                                                        talkNotification.DataContext = talkNotificationData;
                                                                                                         talkNotification.MouseLeftButtonUp += OpenTalkFromPopupHandler;
                                                                                                         talkNotification.Placement = PlacementMode.Custom;
                                                                                                         talkNotification.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(FriendRequestPlacementHandler);
@@ -10264,11 +10268,14 @@ namespace GamaManager
         {
             Popup popup = ((Popup)(sender));
             object popupData = popup.DataContext;
-            string talkId = ((string)(popupData));
-            OpenTalkFromPopup(talkId, popup);
+            // string talkId = ((string)(popupData));
+            Dictionary<String, Object> talkData = ((Dictionary<String, Object>)(popupData));
+            string talkId = ((string)(talkData["talk"]));
+            string channelId = ((string)(talkData["channel"]));
+            OpenTalkFromPopup(talkId, popup, channelId);
         }
 
-        public void OpenTalkFromPopup (string id, Popup popup)
+        public void OpenTalkFromPopup (string id, Popup popup, string channel)
         {
 
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -10294,7 +10301,7 @@ namespace GamaManager
                 bool isTalkExists = true;
                 if (isWindowDataExists && isTalkWindow)
                 {
-                    string localFriend = ((string)(windowData));
+                    // string localFriend = ((string)(windowData));
                     TalkDialog talkDialog = window as TalkDialog;
                     isTalkExists = talkDialog.chats.Contains(id);
                 }
@@ -10318,10 +10325,14 @@ namespace GamaManager
                 if (isNotOpenedTalkWindows)
                 {
                     Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                    dialog.DataContext = id;
+                    // dialog.DataContext = id;
+                    Dictionary<String, Object>  dialogData = new Dictionary<String, Object>();
+                    dialogData.Add("talk", id);
+                    dialogData.Add("channel", channel);
+                    dialog.DataContext = dialogData;
                     dialog.Closed += DebugHandler;
                     
-                    // dialog.Loaded += ActivateTextChannelHandler;
+                    dialog.Loaded += ActivateTextChannelHandler;
                     
                     dialog.Show();
                     popup.IsOpen = false;
@@ -10331,7 +10342,11 @@ namespace GamaManager
                     if (isOpenNewChatInNewWindow)
                     {
                         Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                        dialog.DataContext = id;
+                        // dialog.DataContext = id;
+                        Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                        dialogData.Add("talk", id);
+                        dialogData.Add("channel", channel);
+                        dialog.DataContext = dialogData;
                         dialog.Closed += DebugHandler;
                         dialog.Show();
                         popup.IsOpen = false;
@@ -10350,7 +10365,11 @@ namespace GamaManager
                 if (isOpenNewChatInNewWindow)
                 {
                     Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                    dialog.DataContext = id;
+                    // dialog.DataContext = id;
+                    Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                    dialogData.Add("talk", id);
+                    dialogData.Add("channel", channel);
+                    dialog.DataContext = dialogData;
                     dialog.Show();
                 }
                 else
@@ -10390,23 +10409,71 @@ namespace GamaManager
 
         public void ActivateTextChannelHandler (object sender, RoutedEventArgs e)
         {
-            /*Dialogs.TalkDialog dialog = ((TalkDialog)(sender));
-            object talkData = dialog.DataContext;
-            string talkId = ((string)(talkData));
-            UIElement rawTextChannels = dialog.textChannels;
+            Dialogs.TalkDialog dialog = ((TalkDialog)(sender));
+            object rawTalkData = dialog.DataContext;
+            // string talkId = ((string)(talkData));
+            Dictionary<String, Object> talkData = ((Dictionary<String, Object>)(rawTalkData));
+            string talkId = ((string)(talkData["talk"]));
+            string receivedChannelId = ((string)(talkData["channel"]));
+            /*UIElement rawTextChannels = dialog.textChannels;
             StackPanel textChannels = ((StackPanel)(rawTextChannels));
             foreach (StackPanel textChannel in textChannels.Children)
             {
                 object textChannelData = textChannel.DataContext;
                 string textChannelId = ((string)(textChannelData));
-                receivedChannelId это id текстового каннала который пришел с сокета
+                // receivedChannelId это id текстового каннала который пришел с сокета
                 bool isFound = textChannelId == receivedChannelId;
                 if (isFound)
                 {
-                    dialog.SelectTextChannel(0);
+                    int index = textChannels.Children.IndexOf(textChannel);
+                    dialog.SelectTextChannel(index);
                     break;
                 }
             }*/
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        TalkChannelsResponseInfo myobj = (TalkChannelsResponseInfo)js.Deserialize(objText, typeof(TalkChannelsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkChannel> totalChannels = myobj.channels;
+                            int channelIndex = -1;
+                            foreach (TalkChannel channel in totalChannels)
+                            {
+                                string channelTalkId = channel.talk;
+                                string channelId = channel._id;
+                                string channelTitle = channel.title;
+                                bool isCurrentTalkChannel = channelTalkId == talkId;
+                                if (isCurrentTalkChannel)
+                                {
+                                    channelIndex++;
+                                    bool isChannelFound = channelId == receivedChannelId;
+                                    if (isChannelFound)
+                                    {
+                                        dialog.SelectTextChannel(channelIndex);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void OpenChatFromPopupHandler (object sender, RoutedEventArgs e)

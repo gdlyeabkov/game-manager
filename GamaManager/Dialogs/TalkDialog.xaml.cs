@@ -70,7 +70,7 @@ namespace GamaManager.Dialogs
             this.talkId = talkId;
             this.client = client;
             this.isStartBlink = isStartBlink;
-            
+
             /*SetTalkNameLabel();
             ToggleOwnerMenu();
             SetUsersCountLabel();
@@ -101,10 +101,10 @@ namespace GamaManager.Dialogs
                             List<TalkRelation> currentTalkUsers = relations.Where<TalkRelation>((TalkRelation relation) =>
                             {
                                 string localTalkId = relation.talk;
-                                
+
                                 // bool isCurrentTalk = talkId == localTalkId;
                                 bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
-                                
+
                                 return isCurrentTalk;
                             }).ToList<TalkRelation>();
                             int usersCount = currentTalkUsers.Count;
@@ -198,7 +198,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public bool GetBlockedInfo ()
+        public bool GetBlockedInfo()
         {
             bool isRelationBlocked = false;
             try
@@ -300,7 +300,7 @@ namespace GamaManager.Dialogs
 
                         // string currentFriendId = this.talkId;
                         string currentFriendId = this.chats[chatControl.SelectedIndex];
-                    
+
                         // bool isCurrentChat = currentFriendId == cachedFriendId && userId != currentUserId;
                         bool isCurrentChat = this.chats.Contains(cachedFriendId) && userId != currentUserId;
 
@@ -328,7 +328,7 @@ namespace GamaManager.Dialogs
                                                 User friend = myInnerObj.user;
                                                 string friendName = friend.name;
                                                 ItemCollection chatControlItems = chatControl.Items;
-                                                
+
                                                 // object rawActiveChat = chatControlItems[activeChatIndex];
                                                 // object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
                                                 int chatIndex = chatControl.SelectedIndex;
@@ -345,7 +345,7 @@ namespace GamaManager.Dialogs
 
                                                     TabItem activeChat = ((TabItem)(rawActiveChat));
 
-                                            
+
                                                     object rawActiveChatControlContent = activeChat.Content;
                                                     TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
                                                     ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
@@ -405,7 +405,7 @@ namespace GamaManager.Dialogs
                                                     string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
                                                     // newMsgDateLabel.Text = rawCurrentDate;
                                                     newMsgDateLabel.Text = newMsgDateLabelContent;
-                                            
+
                                                     newMsgHeader.Children.Add(newMsgDateLabel);
                                                     newMsg.Children.Add(newMsgHeader);
                                                     if (msgType == "text")
@@ -484,7 +484,7 @@ namespace GamaManager.Dialogs
                                                         }
 
                                                         activeChatContent.Children.Add(newMsg);
-                                                
+
                                                     }
                                                     else if (msgType == "emoji")
                                                     {
@@ -658,7 +658,7 @@ namespace GamaManager.Dialogs
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        
+
                                         this.Dispatcher.Invoke(async () =>
                                         {
 
@@ -674,7 +674,7 @@ namespace GamaManager.Dialogs
                                                     userIsWritingLabel.Visibility = Visibility.Hidden;
                                                 });
                                             }
-                                        
+
                                         });
 
                                     }
@@ -695,14 +695,73 @@ namespace GamaManager.Dialogs
                     string userId = result[0];
                     string localTalkId = result[1];
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " update talk: " + localTalkId + Environment.NewLine);
-                    bool isNotMe = userId != currentUserId;
-                    bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
-                    bool isUpdate = isCurrentTalk && isNotMe;
-                    if (isUpdate)
+                    this.Dispatcher.Invoke(async () =>
                     {
-                        GetTextChannels();
-                        GetBlockedInfo();
-                    }
+                        bool isNotMe = userId != currentUserId;
+                        bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
+                        bool isUpdate = isCurrentTalk && isNotMe;
+                        if (isUpdate)
+                        {
+                            GetTextChannels();
+                            GetBlockedInfo();
+                        }
+                    });
+                });
+                client.On("friend_add_reaction", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string localTalkId = result[1];
+                    string localChannelId = result[2];
+                    string localMsgId = result[3];
+                    string content = result[4];
+                    Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " update talk: " + localTalkId + Environment.NewLine);
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        ItemCollection chatControlItems = chatControl.Items;
+                        object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+                        TabItem activeChat = ((TabItem)(rawActiveChat));
+                        object rawActiveChatControlContent = activeChat.Content;
+                        TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                        ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                        object rawActiveChannel = activeChatControlContentItems[activeChatControlContent.SelectedIndex];
+                        TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                        object activeChannelData = activeChannel.DataContext;
+                        string activeChannelId = ((string)(activeChannelData));
+                        bool isNotMe = userId != currentUserId;
+                        bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
+                        bool isCurrentChannel = activeChannelId == localChannelId;
+                        bool isUpdate = isCurrentTalk && isNotMe && isCurrentChannel;
+                        Debugger.Log(0, "debuger", Environment.NewLine + "isCurrentChannel: " + isCurrentChannel.ToString() + Environment.NewLine);
+                        if (isUpdate)
+                        {
+                            object rawActiveChannelScrollContent = activeChannel.Content;
+                            ScrollViewer activeChannelScrollContent = ((ScrollViewer)(rawActiveChannelScrollContent));
+                            object rawActiveChatContent = activeChannelScrollContent.Content;
+                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                            foreach (StackPanel activeChatContentItem in activeChatContent.Children)
+                            {
+                                object rawMsgId = activeChatContentItem.DataContext;
+                                string msgId = ((string)(rawMsgId));
+                                bool isMsgFound = msgId == localMsgId;
+                                if (isMsgFound)
+                                {
+                                    UIElementCollection activeChatContentItemChildren = activeChatContentItem.Children;
+                                    UIElement footer = activeChatContentItemChildren[2];
+                                    StackPanel reactions = ((StackPanel)(footer));
+                                    Image newMsgReaction = new Image();
+                                    newMsgReaction.Width = 15;
+                                    newMsgReaction.Height = 15;
+                                    newMsgReaction.BeginInit();
+                                    newMsgReaction.Source = new BitmapImage(new Uri(content));
+                                    newMsgReaction.EndInit();
+                                    reactions.Children.Add(newMsgReaction);
+                                }
+                            }
+                        }
+                    });
                 });
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -770,14 +829,17 @@ namespace GamaManager.Dialogs
                                         foreach (TalkChannel channel in channels)
                                         {
                                             string channelId = channel._id;
-                                            TabItem newChatControlContentItem = new TabItem();
-                                            newChatControlContentItem.Visibility = Visibility.Collapsed;
-                                            ScrollViewer newChatScrollContent = new ScrollViewer();
-                                            StackPanel newChatContent = new StackPanel();
-                                            newChatScrollContent.Content = newChatContent;
-                                            newChatControlContentItem.Content = newChatScrollContent;
-                                            newChatControlContent.Items.Add(newChatControlContentItem);
-                                            newChatControlContentItem.DataContext = channelId;
+                                            if (channel.talk == lastChatId)
+                                            {
+                                                TabItem newChatControlContentItem = new TabItem();
+                                                newChatControlContentItem.Visibility = Visibility.Collapsed;
+                                                ScrollViewer newChatScrollContent = new ScrollViewer();
+                                                StackPanel newChatContent = new StackPanel();
+                                                newChatScrollContent.Content = newChatContent;
+                                                newChatControlContentItem.Content = newChatScrollContent;
+                                                newChatControlContent.Items.Add(newChatControlContentItem);
+                                                newChatControlContentItem.DataContext = channelId;
+                                            }
                                         }
                                         newChatControlContent.SelectedIndex = 0;
                                         newChat.Content = newChatControlContent;
@@ -859,7 +921,10 @@ namespace GamaManager.Dialogs
             // GetMsgs();
             InitFlash();
             GetBlockedInfo();
-            this.DataContext = talkId;
+            // this.DataContext = talkId;
+            Dictionary<String, Object> talkData = ((Dictionary<String, Object>)(this.DataContext));
+            talkData["talk"] = talkId;
+            this.DataContext = talkData;
         }
 
         public void InitConstants(string currentUserId, string talkId, SocketIO client)
@@ -916,7 +981,7 @@ namespace GamaManager.Dialogs
                                                 int msgsCursor = -1;
                                                 foreach (Msg msg in msgs)
                                                 {
-                                                    
+
                                                     string msgId = msg._id;
 
                                                     string newMsgUserId = msg.user;
@@ -1086,7 +1151,7 @@ namespace GamaManager.Dialogs
                                                             string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime; ;
                                                             // newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgDateLabel.Text = newMsgDateLabelContent;
-                                                            
+
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
 
@@ -1172,7 +1237,7 @@ namespace GamaManager.Dialogs
                                                         else if (isEmojiMsg)
                                                         {
                                                             StackPanel newMsg = new StackPanel();
-                                                            
+
                                                             newMsg.Background = System.Windows.Media.Brushes.Transparent;
 
                                                             StackPanel newMsgHeader = new StackPanel();
@@ -1206,7 +1271,7 @@ namespace GamaManager.Dialogs
                                                             string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
                                                             // newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgDateLabel.Text = newMsgDateLabelContent;
-                                                            
+
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -1271,7 +1336,7 @@ namespace GamaManager.Dialogs
                                                         else if (isFileMsg)
                                                         {
                                                             StackPanel newMsg = new StackPanel();
-                                                            
+
                                                             newMsg.Background = System.Windows.Media.Brushes.Transparent;
 
                                                             StackPanel newMsgHeader = new StackPanel();
@@ -1305,7 +1370,7 @@ namespace GamaManager.Dialogs
                                                             string newMsgDateLabelContent = rawCurrentDate + " " + rawCurrentTime;
                                                             // newMsgDateLabel.Text = rawMsgDate;
                                                             newMsgDateLabel.Text = newMsgDateLabelContent;
-                                                            
+
                                                             newMsgHeader.Children.Add(newMsgDateLabel);
                                                             newMsg.Children.Add(newMsgHeader);
                                                             Image newMsgLabel = new Image();
@@ -1445,7 +1510,7 @@ namespace GamaManager.Dialogs
             FlashWindowEx(ref info);
         }
 
-        async public void SendMsg (string newMsgContent)
+        async public void SendMsg(string newMsgContent)
         {
 
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -1576,7 +1641,7 @@ namespace GamaManager.Dialogs
                                                                             {
                                                                                 User friend = myInnerObj.user;
                                                                                 string friendName = friend.name;
-                                                                                
+
                                                                                 object rawActiveChatScrollContent = activeChannel.Content;
                                                                                 ScrollViewer activeChatScrollContent = ((ScrollViewer)(rawActiveChatScrollContent));
                                                                                 object rawActiveChatContent = activeChatScrollContent.Content;
@@ -1721,7 +1786,7 @@ namespace GamaManager.Dialogs
 
                                                                 // await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.talkId + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel);
                                                                 await client.EmitAsync("user_send_msg", currentUserId + "|" + newMsgContent + "|" + this.chats[chatControl.SelectedIndex] + "|" + newMsgType + "|" + newMsgId + "|" + newMsgChannel + "|talk");
-                                                                
+
                                                             }
                                                             catch (System.Net.WebSockets.WebSocketException)
                                                             {
@@ -1971,7 +2036,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        async public void SendFileMsg (string filePath)
+        async public void SendFileMsg(string filePath)
         {
             try
             {
@@ -2042,7 +2107,7 @@ namespace GamaManager.Dialogs
                                         StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
 
                                         StackPanel newMsg = new StackPanel();
-                                        
+
                                         newMsg.Background = System.Windows.Media.Brushes.Transparent;
 
                                         StackPanel newMsgHeader = new StackPanel();
@@ -2192,15 +2257,15 @@ namespace GamaManager.Dialogs
             emojiPopup.IsOpen = true;
         }
 
-        private void AddEmojiMsgHandler (object sender, MouseButtonEventArgs e)
+        private void AddEmojiMsgHandler(object sender, MouseButtonEventArgs e)
         {
             Image emoji = ((Image)(sender));
             object rawEmojiData = emoji.DataContext;
             string emojiData = rawEmojiData.ToString();
-            AddEmojiMsg (emojiData);
+            AddEmojiMsg(emojiData);
         }
 
-        async public void AddEmojiMsg (string emojiData)
+        async public void AddEmojiMsg(string emojiData)
         {
             try
             {
@@ -2523,7 +2588,7 @@ namespace GamaManager.Dialogs
 
                 // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + chats[chatControl.SelectedIndex]);
-                
+
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2626,10 +2691,10 @@ namespace GamaManager.Dialogs
                             List<TalkRelation> currentTalkUsers = relations.Where<TalkRelation>((TalkRelation relation) =>
                             {
                                 string localTalkId = relation.talk;
-                                
+
                                 // bool isCurrentTalk = talkId == localTalkId;
                                 bool isCurrentTalk = chats[chatControl.SelectedIndex] == localTalkId;
-                                
+
                                 return isCurrentTalk;
                             }).ToList<TalkRelation>();
                             foreach (TalkRelation currentTalkUser in currentTalkUsers)
@@ -2715,11 +2780,16 @@ namespace GamaManager.Dialogs
             dialog.Show();
         }
 
-        async public void GetTextChannelsHandler (object sender, EventArgs e)
+        public void GetTextChannelsHandler(object sender, EventArgs e)
         {
             GetTextChannels();
+            RefreshUsersData();
+        }
+
+        async public void RefreshUsersData()
+        {
             try
-            {    
+            {
                 await client.EmitAsync("user_update_talk", currentUserId + "|" + this.chats[chatControl.SelectedIndex]);
             }
             catch (System.Net.WebSockets.WebSocketException)
@@ -2732,14 +2802,7 @@ namespace GamaManager.Dialogs
         {
             GetTextChannels();
             GetBlockedInfo();
-            try
-            {
-                await client.EmitAsync("user_update_talk", currentUserId + "|" + this.chats[chatControl.SelectedIndex]);
-            }
-            catch (System.Net.WebSockets.WebSocketException)
-            {
-                Debugger.Log(0, "debug", "Ошибка сокетов");
-            }
+            RefreshUsersData();
         }
 
         public void GetTextChannels()
@@ -2768,10 +2831,10 @@ namespace GamaManager.Dialogs
                                 string channelTalkId = channel.talk;
                                 string channelId = channel._id;
                                 string channelTitle = channel.title;
-                                
+
                                 // bool isCurrentTalkChannel = channelTalkId == talkId;
                                 bool isCurrentTalkChannel = channelTalkId == chats[chatControl.SelectedIndex];
-                                
+
                                 if (isCurrentTalkChannel)
                                 {
                                     channelIndex++;
@@ -2789,7 +2852,13 @@ namespace GamaManager.Dialogs
                                     channelsItemTitleLabel.Text = channelTitle;
                                     channelsItem.Children.Add(channelsItemTitleLabel);
                                     textChannels.Children.Add(channelsItem);
-                                    channelsItem.DataContext = channelIndex;
+
+                                    // channelsItem.DataContext = channelIndex;
+                                    Dictionary<String, Object> channelData = new Dictionary<String, Object>();
+                                    channelData.Add("id", channelId);
+                                    channelData.Add("index", channelIndex);
+                                    channelsItem.DataContext = channelData;
+
                                     channelsItem.MouseLeftButtonUp += SelectTextChannelHandler;
                                 }
                             }
@@ -2804,15 +2873,17 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void SelectTextChannelHandler (object sender, RoutedEventArgs e)
+        public void SelectTextChannelHandler(object sender, RoutedEventArgs e)
         {
             StackPanel channel = ((StackPanel)(sender));
             object channelData = channel.DataContext;
-            int channelIndex = ((int)(channelData));
+            // int channelIndex = ((int)(channelData));
+            Dictionary<String, Object> parsedChannelData = ((Dictionary<String, Object>)(channelData));
+            int channelIndex = ((int)(parsedChannelData["index"]));
             SelectTextChannel(channelIndex);
         }
 
-        public void SelectTextChannel (int channelIndex)
+        public void SelectTextChannel(int channelIndex)
         {
             ItemCollection chatControlItems = chatControl.Items;
             // object rawActiveChat = chatControlItems[activeChatIndex];
@@ -2823,11 +2894,12 @@ namespace GamaManager.Dialogs
             activeChatControlContent.SelectedIndex = channelIndex;
         }
 
-        public void ToggleAsideHandler (object sender, RoutedEventArgs e) {
+        public void ToggleAsideHandler(object sender, RoutedEventArgs e)
+        {
             ToogleAside();
         }
 
-        public void ToogleAside ()
+        public void ToogleAside()
         {
             Visibility visible = Visibility.Visible;
             Visibility invisible = Visibility.Collapsed;
@@ -2952,7 +3024,7 @@ namespace GamaManager.Dialogs
             HideMsgReactionsPopupFromContextMenu();
         }
 
-        public void HideMsgReactionsPopupFromContextMenu ()
+        public void HideMsgReactionsPopupFromContextMenu()
         {
             msgReactionsPopup.IsOpen = false;
         }
@@ -2980,12 +3052,12 @@ namespace GamaManager.Dialogs
             msgReactionsPopup.IsOpen = false;
         }
 
-        public void RemoveMsgHandler (object sender, RoutedEventArgs e)
+        public void RemoveMsgHandler(object sender, RoutedEventArgs e)
         {
             RemoveMsg();
         }
 
-        public void RemoveMsg ()
+        public void RemoveMsg()
         {
             UIElement element = msgPopup.PlacementTarget;
             StackPanel msg = ((StackPanel)(element));
@@ -3037,7 +3109,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void AddMsgReactionHandler (object sender, RoutedEventArgs e)
+        public void AddMsgReactionHandler(object sender, RoutedEventArgs e)
         {
             Image reaction = ((Image)(sender));
             object rawContent = reaction.DataContext;
@@ -3045,7 +3117,7 @@ namespace GamaManager.Dialogs
             AddMsgReaction(content);
         }
 
-        public void AddMsgReaction (string content)
+        async public void AddMsgReaction(string content)
         {
             UIElement element = msgPopup.PlacementTarget;
             StackPanel msg = ((StackPanel)(element));
@@ -3078,6 +3150,27 @@ namespace GamaManager.Dialogs
                             msgReaction.Width = 15;
                             msgReaction.Source = new BitmapImage(new Uri(content));
                             msgReactios.Children.Add(msgReaction);
+
+                            try
+                            {
+                                ItemCollection chatControlItems = chatControl.Items;
+                                object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+                                TabItem activeChat = ((TabItem)(rawActiveChat));
+                                object rawActiveChatControlContent = activeChat.Content;
+                                TabControl activeChatControlContent = ((TabControl)(rawActiveChatControlContent));
+                                int activeChatControlContentSelectedIndex = activeChatControlContent.SelectedIndex;
+                                ItemCollection activeChatControlContentItems = activeChatControlContent.Items;
+                                object rawActiveChannel = activeChatControlContentItems[activeChatControlContentSelectedIndex];
+                                TabItem activeChannel = ((TabItem)(rawActiveChannel));
+                                object activeChannelData = activeChannel.DataContext;
+                                string activeChannelId = ((string)(activeChannelData));
+                                await client.EmitAsync("user_add_reaction", currentUserId + "|" + this.chats[chatControl.SelectedIndex] + "|" + activeChannelId + "|" + msgId + "|" + content);
+                            }
+                            catch (System.Net.WebSockets.WebSocketException)
+                            {
+                                Debugger.Log(0, "debug", "Ошибка сокетов");
+                            }
+
                         }
                     }
                 }
@@ -3090,12 +3183,12 @@ namespace GamaManager.Dialogs
 
         }
 
-        public void LogoutHandler (object sender, RoutedEventArgs e)
+        public void LogoutHandler(object sender, RoutedEventArgs e)
         {
             Logout();
         }
 
-        public void Logout ()
+        public void Logout()
         {
             try
             {
@@ -3125,7 +3218,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void CloseTabHandler (object sender, RoutedEventArgs e)
+        public void CloseTabHandler(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -3133,7 +3226,7 @@ namespace GamaManager.Dialogs
             CloseTab(id);
         }
 
-        public void CloseTab (string id)
+        public void CloseTab(string id)
         {
             ItemCollection chatControlItems = chatControl.Items;
             int chatControlItemsCount = chatControlItems.Count;
@@ -3216,7 +3309,7 @@ namespace GamaManager.Dialogs
             RemoveTalkFromFavorite(talkId);
         }
 
-        public void RemoveTalkFromFavorite (string currentTalkId)
+        public void RemoveTalkFromFavorite(string currentTalkId)
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -3320,6 +3413,31 @@ namespace GamaManager.Dialogs
                 SetUsersCountLabel();
                 GetUsers();
                 GetTextChannels();
+                /*object rawData = this.DataContext;
+                Dictionary<String, Object> data = ((Dictionary<String, Object>)(rawData));
+                object rawChannelId = data["channel"];
+                string channelId = ((string)(rawChannelId));
+                Debugger.Log(0, "debug", Environment.NewLine + "channelId: " + channelId + Environment.NewLine);
+                if (channelId != "mockChannelId")
+                {
+                    foreach (StackPanel textChannel in textChannels.Children)
+                    {
+                        object textChannelData = textChannel.DataContext;
+                        Dictionary<String, Object> parsedChannelData = ((Dictionary<String, Object>)(textChannelData));
+                        string localTextChannelId = ((string)(parsedChannelData["id"]));
+                        int localTextChannelIndex = ((int)(parsedChannelData["index"]));
+                        Debugger.Log(0, "debug", Environment.NewLine + "localTextChannelId: " + localTextChannelId + "localTextChannelIndex: " + localTextChannelIndex + Environment.NewLine);
+                        bool isFound = localTextChannelId == channelId;
+                        if (isFound)
+                        {
+                            int index = textChannels.Children.IndexOf(textChannel);
+                            // SelectTextChannel(localTextChannelIndex);
+                            SelectTextChannel(index);
+                            break;
+                        }
+                    }
+                }*/
+                //SelectTextChannel(5);
 
             }
         }

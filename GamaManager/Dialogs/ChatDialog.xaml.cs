@@ -606,6 +606,58 @@ namespace GamaManager.Dialogs
                         this.Close();
                     }
                 });
+                client.On("friend_add_reaction", async response =>
+                {
+                    var rawResult = response.GetValue<string>();
+                    string[] result = rawResult.Split(new char[] { '|' });
+                    string userId = result[0];
+                    string localChatId = result[1];
+                    string localChannelId = result[2];
+                    string localMsgId = result[3];
+                    string content = result[4];
+                    Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " update chat: " + localChatId + Environment.NewLine);
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        ItemCollection chatControlItems = chatControl.Items;
+                        object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+                        TabItem activeChat = ((TabItem)(rawActiveChat));
+                        bool isNotMe = userId != currentUserId;
+                        // bool isCurrentChat = chats[chatControl.SelectedIndex] == userId && currentUserId == localChatId;
+                        bool isCurrentChat = chats[chatControl.SelectedIndex] == userId || currentUserId == localChatId;
+                        bool isUpdate = isCurrentChat && isNotMe;
+                        if (isUpdate)
+                        {
+                            object rawActiveChannelScrollContent = activeChat.Content;
+                            ScrollViewer activeChannelScrollContent = ((ScrollViewer)(rawActiveChannelScrollContent));
+                            object rawActiveChatContent = activeChannelScrollContent.Content;
+                            StackPanel activeChatContent = ((StackPanel)(rawActiveChatContent));
+
+                            foreach (StackPanel activeChatContentItem in activeChatContent.Children)
+                            {
+                                /*object rawMsgId = activeChatContentItem.DataContext;
+                                string msgId = ((string)(rawMsgId));*/
+                                object rawMsgData = activeChatContentItem.DataContext;
+                                Dictionary<String, Object> msgData = ((Dictionary<String, Object>)(rawMsgData));
+                                object rawMsgId = msgData["msg"];
+                                string msgId = ((string)(rawMsgId));
+                                bool isMsgFound = msgId == localMsgId;
+                                if (isMsgFound)
+                                {
+                                    UIElementCollection activeChatContentItemChildren = activeChatContentItem.Children;
+                                    UIElement footer = activeChatContentItemChildren[2];
+                                    StackPanel reactions = ((StackPanel)(footer));
+                                    Image newMsgReaction = new Image();
+                                    newMsgReaction.Width = 15;
+                                    newMsgReaction.Height = 15;
+                                    newMsgReaction.BeginInit();
+                                    newMsgReaction.Source = new BitmapImage(new Uri(content));
+                                    newMsgReaction.EndInit();
+                                    reactions.Children.Add(newMsgReaction);
+                                }
+                            }
+                        }
+                    });
+                });
             }
             catch (System.Net.WebSockets.WebSocketException)
             {
@@ -3402,7 +3454,7 @@ namespace GamaManager.Dialogs
             AddMsgReaction(content);
         }
 
-        public void AddMsgReaction(string content)
+        async public void AddMsgReaction(string content)
         {
             UIElement element = msgPopup.PlacementTarget;
             StackPanel msg = ((StackPanel)(element));
@@ -3439,6 +3491,14 @@ namespace GamaManager.Dialogs
                             msgReaction.Width = 15;
                             msgReaction.Source = new BitmapImage(new Uri(content));
                             msgReactios.Children.Add(msgReaction);
+                            try
+                            {
+                                await client.EmitAsync("user_add_reaction", currentUserId + "|" + this.chats[chatControl.SelectedIndex] + "|" + "mockChannelId" + "|" + msgId + "|" + content);
+                            }
+                            catch (System.Net.WebSockets.WebSocketException)
+                            {
+                                Debugger.Log(0, "debug", "Ошибка сокетов");
+                            }
                         }
                     }
                 }

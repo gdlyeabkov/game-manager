@@ -1910,13 +1910,25 @@ namespace GamaManager.Dialogs
                                                     totalTalksItemLabel.Margin = new Thickness(15, 0, 15, 0);
                                                     totalTalksItemLabel.Text = talkTitle;
                                                     totalTalksItem.Children.Add(totalTalksItemLabel);
+                                                    
                                                     totalTalksItem.DataContext = talkId;
+                                                    /*Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                                                    dialogData.Add("talk", talkId);
+                                                    dialogData.Add("channel", "mockChannelId");
+                                                    totalTalksItem.DataContext = dialogData;*/
+                                                    
                                                     totalTalksItem.MouseLeftButtonUp += OpenTalkHandler;
                                                     talks.Children.Add(totalTalksItem);
                                                     ContextMenu totalTalksItemContextMenu = new ContextMenu();
                                                     MenuItem totalTalksItemContextMenuItem = new MenuItem();
                                                     totalTalksItemContextMenuItem.Header = "Открыть окно чата";
+
                                                     totalTalksItemContextMenuItem.DataContext = talkId;
+                                                    /*Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                                                    dialogData.Add("talk", talkId);
+                                                    dialogData.Add("channel", "mockChannelId");
+                                                    totalTalksItem.DataContext = dialogData;*/
+
                                                     totalTalksItemContextMenuItem.Click += OpenTalkFromMenuHandler;
                                                     totalTalksItemContextMenu.Items.Add(totalTalksItemContextMenuItem);
                                                     totalTalksItemContextMenuItem = new MenuItem();
@@ -2290,7 +2302,13 @@ namespace GamaManager.Dialogs
                 if (isNotOpenedTalkWindows)
                 {
                     Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
-                    dialog.DataContext = talkId;
+
+                    // dialog.DataContext = talkId;
+                    Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                    dialogData.Add("talk", talkId);
+                    dialogData.Add("channel", "mockChannelId");
+                    dialog.DataContext = dialogData;
+
                     dialog.Show();
 
                     // восстанавливаем окна чата из кеша
@@ -2330,7 +2348,13 @@ namespace GamaManager.Dialogs
                     if (isOpenNewChatInNewWindow)
                     {
                         Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
-                        dialog.DataContext = talkId;
+
+                        // dialog.DataContext = talkId;
+                        Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                        dialogData.Add("talk", talkId);
+                        dialogData.Add("channel", "mockChannelId");
+                        dialog.DataContext = dialogData;
+
                         dialog.Show();
                     }
                     else
@@ -2346,7 +2370,13 @@ namespace GamaManager.Dialogs
                 if (isOpenNewChatInNewWindow)
                 {
                     Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, talkId, client, false);
-                    dialog.DataContext = talkId;
+
+                    // dialog.DataContext = talkId;
+                    Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
+                    dialogData.Add("talk", talkId);
+                    dialogData.Add("channel", "mockChannelId");
+                    dialog.DataContext = dialogData;
+
                     dialog.Show();
                 }
                 else

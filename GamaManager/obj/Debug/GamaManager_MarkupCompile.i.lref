@@ -1,6 +1,9 @@
 ﻿
 
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddNickDialog.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\UpdateNickDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ChatDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\FriendsDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\FriendsSettingsDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\GameSettingsDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\TalkDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
 

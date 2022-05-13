@@ -1363,8 +1363,8 @@ namespace GamaManager.Dialogs
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client, mainControl);
-            dialog.Show();
+            this.mainControl.SelectedIndex = 16;
+            mainWindow.friendsSettingsControl.SelectedIndex = 1;
         }
 
         public void OpenChatHandler(object sender, RoutedEventArgs e)

@@ -5512,7 +5512,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -5540,7 +5542,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6235,7 +6239,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6360,7 +6366,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6695,7 +6703,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6749,7 +6759,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6905,7 +6917,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -6959,7 +6973,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -7002,7 +7018,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -7090,7 +7108,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -7200,7 +7220,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -8264,6 +8286,78 @@
                                             Text="Лаборатории"    
                                         />
                                     </StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Margin="15 0"
+                                        VerticalAlignment="Center"    
+                                        MouseLeftButtonUp="OpenLabsHandler"
+                                    >
+                                        <TextBox
+                                            Width="250"
+                                            Height="25"
+                                            TextChanged="SearchGameHandler"
+                                        >
+                                            <TextBox.Resources>
+                                                <VisualBrush
+                                                    x:Key="hinttext"
+                                                    AlignmentX="Left"
+                                                    Stretch="None"
+                                                    TileMode="None"
+                                                >
+                                                    <VisualBrush.Visual>
+                                                        <DockPanel>
+                                                            <TextBlock
+                                                                Height="25"
+                                                                Width="250"
+                                                                Text="Поиск"
+                                                                Foreground="#959595"
+                                                                Background="White"
+                                                            />
+                                                        </DockPanel>
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </TextBox.Resources>
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="FontSize" Value="12" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <Button
+                                            Width="25"
+                                            Height="25"
+                                        >
+                                            <Button.Content>
+                                                <materialDesign:PackIcon
+                                                    Kind="Search"    
+                                                />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                    <Popup
+                                        x:Name="searchGameBoxPopup"
+                                        StaysOpen="False" 
+                                        Width="350"
+                                        Height="200"
+                                    >
+                                        <Popup.Child>
+                                            <StackPanel
+                                                x:Name="searchGameBoxPopupBody"
+                                                Background="LightGray"
+                                            />
+                                        </Popup.Child>
+                                    </Popup>
                                 </StackPanel>
                                 <TextBlock
                                     FontSize="24"
@@ -8316,7 +8410,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -8385,7 +8481,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <StackPanel>
                     <DocumentViewer
                         x:Name="activeExperiment"
@@ -8393,7 +8491,9 @@
                     />
                 </StackPanel>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -8407,7 +8507,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -8437,7 +8539,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -8750,7 +8854,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -9974,7 +10080,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10062,7 +10170,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10150,7 +10260,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10263,7 +10375,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10276,11 +10390,11 @@
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="18"
-                                        Margin="0 10"
+                                        Margin="25 10"
                                         Text="Торговая площадка"    
                                     />
                                     <TextBlock
-                                        Margin="0 10"
+                                        Margin="25 10"
                                         Text="Продавайте предметы участникам сообщества или приобретайте их, используя средства из кошелька Steam."    
                                     />
                                 </StackPanel>
@@ -10315,7 +10429,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10338,7 +10454,9 @@
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10559,7 +10677,9 @@ CCPA предоставляет жителям Калифорнии опреде
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -10632,7 +10752,9 @@ CCPA предоставляет жителям Калифорнии опреде
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -11010,7 +11132,9 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -11784,7 +11908,9 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -11908,7 +12034,9 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -12075,7 +12203,9 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    
@@ -12186,7 +12316,9 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
                 <ScrollViewer>
                     <DockPanel
                         Background="Green"    

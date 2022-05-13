@@ -7425,8 +7425,8 @@ namespace GamaManager
 
         public void OpenAddFriendDialog()
         {
-            Dialogs.AddFriendDialog dialog = new Dialogs.AddFriendDialog(currentUserId, client, mainControl);
-            dialog.Show();
+            mainControl.SelectedIndex = 16;
+            friendsSettingsControl.SelectedIndex = 1;
         }
 
         private void OpenFriendsDialogHandler(object sender, RoutedEventArgs e)
@@ -16023,6 +16023,87 @@ namespace GamaManager
             addFriendRequestLinkBox.Select(0, 0);
         }
 
+        private void SearchGameHandler (object sender, TextChangedEventArgs e)
+        {
+            TextBox box = ((TextBox)(sender));
+            string boxContent = box.Text;
+            SearchGame(boxContent);
+        }
+
+        private void SearchGame (string boxContent)
+        {
+            searchGameBoxPopupBody.Children.Clear();
+            string keywords = boxContent.ToLower();
+            int keywordsLength = keywords.Length;
+            bool isFilterEnabled = keywordsLength >= 1;
+            if (isFilterEnabled)
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> totalGames = myobj.games;
+                                foreach (GameResponseInfo someGame in totalGames)
+                                {
+                                    string someGameName = someGame.name;
+                                    bool isGameFound = someGameName.Contains(keywords);
+                                    if (isGameFound)
+                                    {
+                                        int someGamePrice = someGame.price;
+                                        StackPanel searchedGame = new StackPanel();
+                                        searchedGame.Orientation = Orientation.Horizontal;
+                                        Image searchedGameThumbnail = new Image();
+                                        searchedGameThumbnail.Width = 75;
+                                        searchedGameThumbnail.Height = 75;
+                                        searchedGameThumbnail.BeginInit();
+                                        searchedGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + someGameName));
+                                        searchedGameThumbnail.EndInit();
+                                        searchedGame.Children.Add(searchedGameThumbnail);
+                                        StackPanel searchedGameAside = new StackPanel();
+                                        searchedGameAside.Margin = new Thickness(15);
+                                        TextBlock someGameNameLabel = new TextBlock();
+                                        someGameNameLabel.Text = someGameName;
+                                        searchedGameAside.Children.Add(someGameNameLabel);
+                                        TextBlock someGamePriceLabel = new TextBlock();
+                                        string rawSomeGamePrice = someGamePrice.ToString();
+                                        string measure = "Р";
+                                        string someGamePriceLabelContent = rawSomeGamePrice + " " + measure;
+                                        bool isFreeGame = someGamePrice <= 0;
+                                        if (isFreeGame)
+                                        {
+                                            someGamePriceLabelContent = "Бесплатная";
+                                        }
+                                        someGamePriceLabel.Text = someGameName;
+                                        searchedGameAside.Children.Add(someGamePriceLabel);
+                                        searchedGame.Children.Add(searchedGameAside);
+                                        searchGameBoxPopupBody.Children.Add(searchedGame);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            searchGameBoxPopup.IsOpen = isFilterEnabled;
+        }
+        
     }
 
     class SavedContent

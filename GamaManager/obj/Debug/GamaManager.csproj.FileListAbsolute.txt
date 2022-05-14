@@ -870,3 +870,7 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddNickDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\UpdateNickDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddNickDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\UpdateNickDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\SetWishListDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\SetWishListDialog.baml
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\HeaderControl.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\HeaderControl.baml

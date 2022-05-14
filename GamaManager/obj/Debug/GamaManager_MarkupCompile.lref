@@ -36,4 +36,6 @@ FC:\wpf_projects\LastGameManager\GamaManager\GameWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddNickDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\UpdateNickDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\SetWishListDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\HeaderControl.xaml;;
 

@@ -374,6 +374,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\SetWishListDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\SystemInfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -399,6 +403,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -494,6 +502,9 @@
     <Compile Include="Dialogs\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SetWishListDialog.xaml.cs">
+      <DependentUpon>SetWishListDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SystemInfoDialog.xaml.cs">
       <DependentUpon>SystemInfoDialog.xaml</DependentUpon>
     </Compile>
@@ -515,6 +526,9 @@
     </Compile>
     <Compile Include="GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HeaderControl.xaml.cs">
+      <DependentUpon>HeaderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FrameRate.cs" />
     <Compile Include="Helpers\FrameRateCalculator.cs" />

@@ -94,6 +94,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> updatedCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             updatedCategories.Add(categoryNameBoxContent);
 
             foreach (Border request in requests.Children)
@@ -143,7 +144,8 @@ namespace GamaManager.Dialogs
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = updatedCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
 

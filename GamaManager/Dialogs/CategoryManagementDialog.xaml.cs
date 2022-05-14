@@ -194,6 +194,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             foreach (CheckBox checkBox in categories.Children)
             {
                 object rawCurrentCategory = checkBox.DataContext;
@@ -231,7 +232,8 @@ namespace GamaManager.Dialogs
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -262,6 +264,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> updatedCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.categories;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             int countCategories = updatedCategories.Count;
             int countFriends = updatedFriends.Count;
             for (int i = 0; i < countCategories;  i++)
@@ -300,7 +303,8 @@ namespace GamaManager.Dialogs
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = updatedCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
         }

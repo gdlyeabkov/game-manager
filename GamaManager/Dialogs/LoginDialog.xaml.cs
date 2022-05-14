@@ -89,60 +89,81 @@ namespace GamaManager.Dialogs
             string registerLoginFieldContent = registerLoginField.Text;
             string registerPasswordFieldContent = registerPasswordField.Password;
             string registerConfirmPasswordFieldContent = registerConfirmPasswordField.Password;
-            try
+            int registerLoginFieldContentLength = registerLoginFieldContent.Length;
+            bool isLoginSet = registerLoginFieldContentLength >= 1;
+            int registerPasswordFieldContentLength = registerPasswordFieldContent.Length;
+            bool isPasswordSet = registerPasswordFieldContentLength >= 8;
+            bool isDataSet = isLoginSet && isPasswordSet;
+            if (isDataSet)
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                try
                 {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/create/?login=" + registerLoginFieldContent + "&password=" + registerPasswordFieldContent + "&confirmPassword=" + registerConfirmPasswordFieldContent + @"&role=" + "gamer");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
                         {
-                            string id = myobj.id;
-                            try
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
                             {
-                                MailMessage message = new MailMessage();
-                                SmtpClient smtp = new SmtpClient();
-                                message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
-                                message.To.Add(new System.Net.Mail.MailAddress(registerLoginFieldContent));
-                                string subjectBoxContent = @"Подтверждение аккаунта Office ware game manager";
-                                message.Subject = subjectBoxContent;
-                                message.IsBodyHtml = true; //to make message body as html  
-                                string messageBodyBoxContent = "<h3>Здравствуйте, " + registerLoginFieldContent + "!</h3><p>Подтвердите E-mail вашего аккаунта Office ware game manager</p><a href=\"http://localhost:4000/api/users/email/confirm/?id=" + id + "\">Подтвердить</a>";
-                                message.Body = messageBodyBoxContent;
-                                smtp.Port = 587;
-                                smtp.Host = "smtp.gmail.com"; //for gmail host  
-                                smtp.EnableSsl = true;
-                                smtp.UseDefaultCredentials = false;
-                                smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
-                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                                smtp.Send(message);
+                                string id = myobj.id;
+                                try
+                                {
+                                    MailMessage message = new MailMessage();
+                                    SmtpClient smtp = new SmtpClient();
+                                    message.From = new System.Net.Mail.MailAddress("glebdyakov2000@gmail.com");
+                                    message.To.Add(new System.Net.Mail.MailAddress(registerLoginFieldContent));
+                                    string subjectBoxContent = @"Подтверждение аккаунта Office ware game manager";
+                                    message.Subject = subjectBoxContent;
+                                    message.IsBodyHtml = true; //to make message body as html  
+                                    string messageBodyBoxContent = "<h3>Здравствуйте, " + registerLoginFieldContent + "!</h3><p>Подтвердите E-mail вашего аккаунта Office ware game manager</p><a href=\"http://localhost:4000/api/users/email/confirm/?id=" + id + "\">Подтвердить</a>";
+                                    message.Body = messageBodyBoxContent;
+                                    smtp.Port = 587;
+                                    smtp.Host = "smtp.gmail.com"; //for gmail host  
+                                    smtp.EnableSsl = true;
+                                    smtp.UseDefaultCredentials = false;
+                                    smtp.Credentials = new NetworkCredential("glebdyakov2000@gmail.com", "ttolpqpdzbigrkhz");
+                                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                    smtp.Send(message);
+                                }
+                                catch (Exception)
+                                {
+                                    MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                                }
+                                OpenManager(id);
                             }
-                            catch (Exception)
+                            else
                             {
-                                MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
+                                MessageBox.Show("Не удалось создать аккаунт", "Ошибка");
                             }
-                            OpenManager(id);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Не удалось создать аккаунт", "Ошибка");
-                        }
 
+                        }
                     }
                 }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
-            catch (System.Net.WebException)
+            else
             {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
+                bool isLoginNotSet = !isLoginSet;
+                bool isPasswordNotSet = !isPasswordSet;
+                if (isLoginNotSet)
+                {
+                    MessageBox.Show("Вы не указали логин.", "Внимание");
+                }
+                else if (isPasswordNotSet)
+                {
+                    MessageBox.Show("Пароль должен содержать минимум 8 символов.", "Внимание");
+                }
             }
         }
 

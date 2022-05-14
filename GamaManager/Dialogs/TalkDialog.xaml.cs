@@ -704,6 +704,7 @@ namespace GamaManager.Dialogs
                         {
                             GetTextChannels();
                             GetBlockedInfo();
+                            SetTalkNameLabel();
                         }
                     });
                 });
@@ -2784,6 +2785,7 @@ namespace GamaManager.Dialogs
         {
             GetTextChannels();
             RefreshUsersData();
+            SetTalkNameLabel();
         }
 
         async public void RefreshUsersData()
@@ -3276,6 +3278,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == talkId;
@@ -3294,7 +3297,8 @@ namespace GamaManager.Dialogs
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 // обновить меню
@@ -3324,6 +3328,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -3343,7 +3348,8 @@ namespace GamaManager.Dialogs
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 // обновить меню

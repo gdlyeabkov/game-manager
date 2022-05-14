@@ -3074,6 +3074,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -3092,7 +3093,8 @@ namespace GamaManager.Dialogs
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -3121,6 +3123,7 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -3140,7 +3143,8 @@ namespace GamaManager.Dialogs
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -3262,6 +3266,7 @@ namespace GamaManager.Dialogs
                             Notifications currentNotifications = loadedContent.notifications;
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
+                            Recommendations currentRecommendations = loadedContent.recommendations;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -3280,7 +3285,8 @@ namespace GamaManager.Dialogs
                                     collections = currentCollections,
                                     notifications = currentNotifications,
                                     categories = currentCategories,
-                                    recentChats = currentRecentChats
+                                    recentChats = currentRecentChats,
+                                    recommendations = currentRecommendations
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }

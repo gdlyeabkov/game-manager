@@ -72,6 +72,7 @@ namespace GamaManager
         public ImapClient mailClient = null;
         public bool isFamilyViewMode = false;
         public List<string> chats = new List<string>();
+        public DispatcherTimer carouselTimer;
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -1570,7 +1571,177 @@ namespace GamaManager
                 GetAccountSettings();
                 InitMail();
                 GetFamilyView();
-                GetIcons();/**/
+                GetIcons();
+                SetCarouselItems();/**/
+            }
+        }
+
+        public void SetCarouselItems ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            totalGames.Reverse();
+                            bool isGamesExists = totalGames.Count >= 1;
+                            if (isGamesExists)
+                            {
+                                carouselTimer = new DispatcherTimer();
+                                carouselTimer.Interval = TimeSpan.FromSeconds(4);
+                                carouselTimer.Tick += delegate
+                                {
+                                    MoveCarouselToRight();
+                                };
+                                carouselTimer.Start();
+                                int gamesCursor = -1;
+                                foreach (GameResponseInfo totalGamesItem in totalGames)
+                                {
+                                    bool isAddGame = gamesCursor <= 5;
+                                    if (isAddGame)
+                                    {
+                                        gamesCursor++;
+                                        string totalGamesItemName = totalGamesItem.name;
+                                        int totalGamesItemPrice = totalGamesItem.price;
+                                        string totalGamesItemPlatform = totalGamesItem.platform;
+                                        ItemCollection carouselControlItems = carouselControl.Items;
+                                        TabItem carouselControlItem = new TabItem();
+                                        carouselControlItem.Visibility = invisible;
+                                        DockPanel carouselControlItemBody = new DockPanel();
+                                        carouselControlItemBody.Background = System.Windows.Media.Brushes.LightGray;
+                                        Image carouselControlItemBodyThumbnail = new Image();
+                                        carouselControlItemBodyThumbnail.Width = 500;
+                                        carouselControlItemBodyThumbnail.Height = 500;
+                                        carouselControlItemBodyThumbnail.Margin = new Thickness(15, 0, 15, 0);
+                                        carouselControlItemBodyThumbnail.ImageFailed += SetDefaultThumbnailHandler;
+                                        carouselControlItemBodyThumbnail.BeginInit();
+                                        carouselControlItemBodyThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                        carouselControlItemBodyThumbnail.EndInit();
+                                        carouselControlItemBody.Children.Add(carouselControlItemBodyThumbnail);
+                                        StackPanel carouselControlItemBodyAside = new StackPanel();
+                                        TextBlock carouselControlItemBodyNameLabel = new TextBlock();
+                                        carouselControlItemBodyNameLabel.FontSize = 18;
+                                        carouselControlItemBodyNameLabel.Margin = new Thickness(15);
+                                        carouselControlItemBodyNameLabel.Text = totalGamesItemName;
+                                        carouselControlItemBodyAside.Children.Add(carouselControlItemBodyNameLabel);
+                                        DockPanel carouselControlItemBodyFooter = new DockPanel();
+                                        TextBlock carouselControlItemBodyPriceLabel = new TextBlock();
+                                        string rawTotalGamesItemPrice = totalGamesItemPrice.ToString();
+                                        string carouselControlItemBodyPriceLabelContent = rawTotalGamesItemPrice + " Р";
+                                        bool isFreeGame = totalGamesItemPrice <= 0;
+                                        if (isFreeGame)
+                                        {
+                                            carouselControlItemBodyPriceLabelContent = "Бесплатно";
+                                        }
+                                        carouselControlItemBodyPriceLabel.Text = carouselControlItemBodyPriceLabelContent;
+                                        carouselControlItemBodyPriceLabel.VerticalAlignment = VerticalAlignment.Center;
+                                        carouselControlItemBodyFooter.Children.Add(carouselControlItemBodyPriceLabel);
+                                        StackPanel carouselControlItemBodyPlatforms = new StackPanel();
+                                        carouselControlItemBodyPlatforms.HorizontalAlignment = HorizontalAlignment.Right;
+                                        carouselControlItemBodyPlatforms.Orientation = Orientation.Horizontal;
+                                        bool isWindowsPlatform = totalGamesItemPlatform == "Windows";
+                                        bool isMacOSPlatform = totalGamesItemPlatform == "macOS";
+                                        bool isLinuxPlatform = totalGamesItemPlatform == "Linux";
+                                        if (isWindowsPlatform)
+                                        {
+                                            Image carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-social-windows-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                        }
+                                        else if (isMacOSPlatform)
+                                        {
+                                            Image carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn3.iconfinder.com/data/icons/picons-social/57/16-apple-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                        }
+                                        else if (isLinuxPlatform)
+                                        {
+                                            Image carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn4.iconfinder.com/data/icons/proglyphs-free/512/Linux_-_Tux-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                        }
+                                        else
+                                        {
+                                            Image carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-social-windows-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                            carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn3.iconfinder.com/data/icons/picons-social/57/16-apple-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                            carouselControlItemBodyPlatform = new Image();
+                                            carouselControlItemBodyPlatform.Width = 25;
+                                            carouselControlItemBodyPlatform.Height = 25;
+                                            carouselControlItemBodyPlatform.Margin = new Thickness(15, 0, 15, 0);
+                                            carouselControlItemBodyPlatform.BeginInit();
+                                            carouselControlItemBodyPlatform.Source = new BitmapImage(new Uri(@"https://cdn4.iconfinder.com/data/icons/proglyphs-free/512/Linux_-_Tux-128.png"));
+                                            carouselControlItemBodyPlatform.EndInit();
+                                            carouselControlItemBodyPlatforms.Children.Add(carouselControlItemBodyPlatform);
+                                        }
+                                        carouselControlItemBodyFooter.Children.Add(carouselControlItemBodyPlatforms);
+                                        carouselControlItemBodyAside.Children.Add(carouselControlItemBodyFooter);
+                                        carouselControlItemBody.Children.Add(carouselControlItemBodyAside);
+                                        carouselControlItem.Content = carouselControlItemBody;
+                                        carouselControl.Items.Add(carouselControlItem);
+                                        Button carouselShortcut = new Button();
+                                        carouselShortcut.Width = 25;
+                                        carouselShortcut.Height = 10;
+                                        carouselShortcut.Margin = new Thickness(15);
+                                        bool isFirstShortcut = gamesCursor == 0;
+                                        if (isFirstShortcut)
+                                        {
+                                            carouselShortcut.Background = System.Windows.Media.Brushes.SkyBlue;
+                                        }
+                                        carouselShortcut.Click += SelectCarouselShortcutHandler;
+                                        carouselShortcuts.Children.Add(carouselShortcut);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -3030,6 +3201,7 @@ namespace GamaManager
                             Notifications currentNotifications = loadedContent.notifications;
                             List<string> currentCategories = loadedContent.categories; 
                             List<string> currentRecentChats = loadedContent.recentChats;
+                            Recommendations currentRecommendations = loadedContent.recommendations;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -3048,7 +3220,8 @@ namespace GamaManager
                                     collections = currentCollections,
                                     notifications = currentNotifications,
                                     categories = currentCategories,
-                                    recentChats = currentRecentChats
+                                    recentChats = currentRecentChats,
+                                    recommendations = currentRecommendations
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                                 mainControl.DataContext = currentUserId;
@@ -3245,6 +3418,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -3281,7 +3455,8 @@ namespace GamaManager
                 collections = updatedCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -3578,6 +3753,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -3613,7 +3789,8 @@ namespace GamaManager
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetGameCollections();
@@ -3668,6 +3845,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             foreach (Game updatedGame in updatedGames)
             {
                 string updatedGameName = updatedGame.name;
@@ -3696,7 +3874,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -4752,8 +4931,6 @@ namespace GamaManager
                                 if (isResultsFound)
                                 {
                                     GameResponseInfo foundedGame = gameResults[0];
-                                    string currentGameImg = foundedGame.image;
-                                    // string gameName = foundedGame.name;
                                     dowloadsCursor++;
                                     try
                                     {
@@ -4769,7 +4946,6 @@ namespace GamaManager
                                         int lastRowIndex = rowsCount - 1;
                                         Image downloadImg = new Image();
                                         downloadImg.BeginInit();
-                                        // downloadImg.Source = new BitmapImage(new Uri(currentGameImg));
                                         Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
                                         downloadImg.Source = new BitmapImage();
                                         downloadImg.EndInit();
@@ -4933,6 +5109,7 @@ namespace GamaManager
                             Notifications currentNotifications = loadedContent.notifications;
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
+                            Recommendations currentRecommendations = loadedContent.recommendations;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = updatedFriendsCount - 1; i >= 0; i--)
@@ -4954,7 +5131,8 @@ namespace GamaManager
                                 collections = currentCollections,
                                 notifications = currentNotifications,
                                 categories = currentCategories,
-                                recentChats = currentRecentChats
+                                recentChats = currentRecentChats,
+                                recommendations = currentRecommendations
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -6142,7 +6320,8 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
-            List<Game> results = updatedGames.Where<Game>((Game game) =>
+            Recommendations currentRecommendations = loadedContent.recommendations;
+            List <Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
             }).ToList<Game>();
@@ -6160,7 +6339,8 @@ namespace GamaManager
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
@@ -6259,7 +6439,15 @@ namespace GamaManager
                         notificationsUpdateGames = true
                     },
                     categories = new List<string>() { },
-                    recentChats = new List<string>() { }
+                    recentChats = new List<string>() { },
+                    recommendations = new Recommendations() {
+                        isEarlyAccess = true,
+                        isSoftWare = true,
+                        isVideo = true,
+                        isSoundTracks = true,
+                        isNotReleases = true,
+                        exceptTags = new List<string>() { }
+                    }
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6482,6 +6670,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -6527,7 +6716,8 @@ namespace GamaManager
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -6632,6 +6822,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -6658,7 +6849,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
@@ -7140,6 +7332,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<Game> results = updatedGames.Where((Game someGame) =>
             {
 
@@ -7246,7 +7439,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;
@@ -7806,6 +8000,7 @@ namespace GamaManager
                                         Notifications currentNotifications = loadedContent.notifications;
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
+                                        Recommendations currentRecommendations = loadedContent.recommendations;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -7827,7 +8022,8 @@ namespace GamaManager
                                             collections = currentCollections,
                                             notifications = currentNotifications,
                                             categories = currentCategories,
-                                            recentChats = currentRecentChats
+                                            recentChats = currentRecentChats,
+                                            recommendations = currentRecommendations
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         GetFriendsSettings();
@@ -8147,6 +8343,7 @@ namespace GamaManager
                                         Notifications currentNotifications = loadedContent.notifications;
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
+                                        Recommendations currentRecommendations = loadedContent.recommendations;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -8168,7 +8365,8 @@ namespace GamaManager
                                             collections = currentCollections,
                                             notifications = currentNotifications,
                                             categories = currentCategories,
-                                            recentChats = currentRecentChats
+                                            recentChats = currentRecentChats,
+                                            recommendations = currentRecommendations
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -8804,8 +9002,17 @@ namespace GamaManager
             GetWantGames();
         }
 
+        public void GetWantGamesFromBtnHandler (object sender, RoutedEventArgs e)
+        {
+            GetWantGames();
+        }
+
         public void GetWantGames ()
         {
+            string wishGamesBoxContent = wishGamesBox.Text;
+            string insensitiveCaseWishGamesBoxContent = wishGamesBoxContent.ToLower();
+            int insensitiveCaseWishGamesBoxContentLength = insensitiveCaseWishGamesBoxContent.Length;
+            bool isFilterDisabled = insensitiveCaseWishGamesBoxContentLength <= 0;
             mainControl.SelectedIndex = 33;
             wantGamesList.Children.Clear();
             try
@@ -8825,15 +9032,164 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<GameResponseInfo> totalGames = myobj.games;
+
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            Recommendations currentRecommendations = loadedContent.recommendations;
+                            List<string> exceptTags = currentRecommendations.exceptTags;
+
                             totalGames = totalGames.Where((GameResponseInfo game) =>
                             {
-                                return false;
+                                string gameId = game._id;
+                                string gameName = game.name;
+                                string gamePlatform = game.platform;
+                                int gamePrice = game.price;
+                                string insensitiveCaseGameName = gameName.ToLower();
+                                bool isKeywordsMatches = insensitiveCaseGameName.Contains(insensitiveCaseWishGamesBoxContent);
+                                bool isPlatformMatch = true;
+                                bool isPriceMatch = true;
+                                object rawIsPlatformChecked = macOSPlatformRadioBtn.IsChecked;
+                                bool isPlatformChecked = ((bool)(rawIsPlatformChecked));
+                                if (isPlatformChecked)
+                                {
+                                    isPlatformMatch = gamePlatform == "macOS";
+                                }
+                                rawIsPlatformChecked = linuxPlatformRadioBtn.IsChecked;
+                                isPlatformChecked = ((bool)(rawIsPlatformChecked));
+                                if (isPlatformChecked)
+                                {
+                                    isPlatformMatch = gamePlatform == "Linux";
+                                }
+                                object rawIsPriceChecked = cheaperThan150RubRadioBtn.IsChecked;
+                                bool isPriceChecked = ((bool)(rawIsPriceChecked));
+                                if (isPriceChecked)
+                                {
+                                    isPriceMatch = gamePrice < 150;
+                                }
+                                rawIsPriceChecked = cheaperThan300RubRadioBtn.IsChecked;
+                                isPriceChecked = ((bool)(rawIsPriceChecked));
+                                if (isPriceChecked)
+                                {
+                                    isPriceMatch = gamePrice < 300;
+                                }
+                                bool isGameInWishList = false;
+
+                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/tags/relations/all");
+                                nestedWebRequest.Method = "GET";
+                                nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                {
+                                    using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = nestedReader.ReadToEnd();
+                                        GameTagRelationsResponseInfo myNestedObj = (GameTagRelationsResponseInfo)js.Deserialize(objText, typeof(GameTagRelationsResponseInfo));
+                                        status = myNestedObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameTagRelation> relations = myNestedObj.relations;
+                                            List<GameTagRelation> currentGameRelations = relations.Where<GameTagRelation>((GameTagRelation relation) =>
+                                            {
+                                                string relationGameId = relation.game;
+                                                bool isRelationForCurrentGame = relationGameId == gameId;
+                                                return isRelationForCurrentGame;
+                                            }).ToList<GameTagRelation>();
+                                            List<string> currentGameRelationTags = new List<string>();
+                                            foreach (GameTagRelation currentGameRelation in currentGameRelations)
+                                            {
+                                                string currentGameRelationTagId = currentGameRelation.tag;
+                                                currentGameRelationTags.Add(currentGameRelationTagId);
+                                            }
+
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/tags/all");
+                                            innerNestedWebRequest.Method = "GET";
+                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                            {
+                                                using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = innerNestedReader.ReadToEnd();
+                                                    GameTagsResponseInfo myInnerNestedObj = (GameTagsResponseInfo)js.Deserialize(objText, typeof(GameTagsResponseInfo));
+                                                    status = myInnerNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        List<GameTag> totalTags = myInnerNestedObj.tags;
+                                                        List<GameTag> currentGameTags = totalTags.Where((GameTag tag) =>
+                                                        {
+                                                            string tagId = tag._id;
+                                                            bool isTagFound = currentGameRelationTags.Contains(tagId);
+                                                            return isTagFound;
+                                                        }).ToList<GameTag>();
+                                                        List<string> currentGameTagNames = new List<string>();
+                                                        foreach (GameTag currentGameTag in currentGameTags)
+                                                        {
+                                                            string currentGameTagTitle = currentGameTag.title;
+                                                            currentGameTagNames.Add(currentGameTagTitle);
+                                                        }
+                                                        isGameInWishList = exceptTags.All((string exceptTag) =>
+                                                        {
+                                                            bool isExceptTag = currentGameTagNames.Contains(exceptTag);
+                                                            bool isNotExceptTag = !isExceptTag;
+                                                            return isNotExceptTag;
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                bool isAddGame = isGameInWishList && (isKeywordsMatches || isFilterDisabled) && isPlatformMatch && isPriceMatch;
+                                return isAddGame;
                             }).ToList<GameResponseInfo>();
                             int totalGamesCount = totalGames.Count;
                             bool isGamesExists = totalGamesCount >= 1;
                             if (isGamesExists)
                             {
                                 wantGamesList.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (GameResponseInfo someGame in totalGames)
+                                {
+                                    string someGameName = someGame.name;
+                                    int someGamePrice = someGame.price;
+                                    StackPanel gameElement = new StackPanel();
+                                    gameElement.Orientation = Orientation.Horizontal;
+                                    Image someGameThumbnail = new Image();
+                                    someGameThumbnail.Width = 75;
+                                    someGameThumbnail.Height = 75;
+                                    someGameThumbnail.Margin = new Thickness(15);
+                                    someGameThumbnail.BeginInit();
+                                    someGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + someGameName));
+                                    someGameThumbnail.EndInit();
+                                    someGameThumbnail.ImageFailed += SetDefaultThumbnailHandler;
+                                    gameElement.Children.Add(someGameThumbnail);
+                                    StackPanel someGameAside = new StackPanel();
+                                    someGameAside.Margin = new Thickness(15);
+                                    TextBlock someGameNameLabel = new TextBlock();
+                                    someGameNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                    someGameNameLabel.Text = someGameName;
+                                    someGameNameLabel.FontSize = 14;
+                                    someGameAside.Children.Add(someGameNameLabel);
+                                    string someGamePriceLabelContent = someGamePrice + " Р";
+                                    bool isFreeGame = someGamePrice <= 0;
+                                    if (isFreeGame)
+                                    {
+                                        someGamePriceLabelContent = "Бесплатная";
+                                    }
+                                    TextBlock someGamePriceLabel = new TextBlock();
+                                    someGamePriceLabel.Text = someGameName;
+                                    someGamePriceLabel.Text = someGamePriceLabelContent;
+                                    someGameAside.Children.Add(someGamePriceLabel);
+                                    gameElement.Children.Add(someGameAside);
+                                    gameElement.Margin = new Thickness(15);
+                                    wantGamesList.Children.Add(gameElement);
+                                }
                             }
                             else
                             {
@@ -9024,6 +9380,7 @@ namespace GamaManager
                             Notifications currentNotifications = loadedContent.notifications;
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
+                            Recommendations currentRecommendations = loadedContent.recommendations;
                             foreach (StackPanel profileTheme in profileThemes.Children)
                             {
                                 bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
@@ -9045,7 +9402,8 @@ namespace GamaManager
                                         collections = currentCollections,
                                         notifications = currentNotifications,
                                         categories = currentCategories,
-                                        recentChats = currentRecentChats
+                                        recentChats = currentRecentChats,
+                                        recommendations = currentRecommendations
                                     });
                                     File.WriteAllText(saveDataFilePath, savedContent);
                                     break;
@@ -11374,6 +11732,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -11411,7 +11770,8 @@ namespace GamaManager
                 collections = updatedCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -11707,6 +12067,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string gameName = game.name;
@@ -11729,7 +12090,8 @@ namespace GamaManager
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -12157,6 +12519,7 @@ namespace GamaManager
                                             Notifications currentNotifications = loadedContent.notifications;
                                             List<string> currentCategories = loadedContent.categories;
                                             List<string> currentRecentChats = loadedContent.recentChats;
+                                            Recommendations currentRecommendations = loadedContent.recommendations;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -12175,7 +12538,8 @@ namespace GamaManager
                                                     collections = currentCollections,
                                                     notifications = currentNotifications,
                                                     categories = currentCategories,
-                                                    recentChats = currentRecentChats
+                                                    recentChats = currentRecentChats,
+                                                    recommendations = currentRecommendations
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                                 GetOnlineFriends();
@@ -12240,6 +12604,7 @@ namespace GamaManager
                                             Notifications currentNotifications = loadedContent.notifications;
                                             List<string> currentCategories = loadedContent.categories; 
                                             List<string> currentRecentChats = loadedContent.recentChats;
+                                            Recommendations currentRecommendations = loadedContent.recommendations;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -12258,7 +12623,8 @@ namespace GamaManager
                                                     collections = currentCollections,
                                                     notifications = currentNotifications,
                                                     categories = currentCategories,
-                                                    recentChats = currentRecentChats
+                                                    recentChats = currentRecentChats,
+                                                    recommendations = currentRecommendations
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                             }
@@ -14439,6 +14805,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -14454,7 +14821,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();
@@ -15060,6 +15428,7 @@ namespace GamaManager
                 Notifications currentNotifications = loadedContent.notifications;
                 List<string> currentCategories = loadedContent.categories; 
                 List<string> currentRecentChats = loadedContent.recentChats;
+                Recommendations currentRecommendations = loadedContent.recommendations;
                 updatedSettings.familyView = true;
                 string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
                 updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -15093,7 +15462,8 @@ namespace GamaManager
                     collections = currentCollections,
                     notifications = currentNotifications,
                     categories = currentCategories,
-                    recentChats = currentRecentChats
+                    recentChats = currentRecentChats,
+                    recommendations = currentRecommendations
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFamilyView();
@@ -15201,6 +15571,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories; 
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             updatedSettings.familyView = false;
             string familyViewPinCodeBoxContent = "";
             updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -15212,7 +15583,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = currentNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetFamilyView();
@@ -15543,6 +15915,7 @@ namespace GamaManager
             Notifications updatedNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
             updatedNotifications.isNotificationsEnabled = ((bool)(notificationsEnabledCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListWithDiscount = ((bool)(notificationsProductFromWantListWithDiscountCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListUpdateAcccess = ((bool)(notificationsProductFromWantListUpdateAcccessCheckBox.IsChecked));
@@ -15560,7 +15933,8 @@ namespace GamaManager
                 collections = currentCollections,
                 notifications = updatedNotifications,
                 categories = currentCategories,
-                recentChats = currentRecentChats
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations
             });
             File.WriteAllText(saveDataFilePath, savedContent);
         }
@@ -15781,7 +16155,7 @@ namespace GamaManager
                                                         usersItemAddFriendBtn.DataContext = userId;
                                                         usersItemAddFriendBtn.Click += AddFriendHandler;
                                                         usersItem.Children.Add(usersItemAddFriendBtn);
-                                                        usersItem.MouseLeftButtonUp += ShowFriendCodeHandler;
+                                                        // usersItem.MouseLeftButtonUp += ShowFriendCodeHandler;
                                                     }
                                                     usersIds.Add(userId);
                                                 }
@@ -15908,6 +16282,7 @@ namespace GamaManager
                                                         Notifications currentNotifications = loadedContent.notifications;
                                                         List<string> currentCategories = loadedContent.categories;
                                                         List<string> currentRecentChats = loadedContent.recentChats;
+                                                        Recommendations currentRecommendations = loadedContent.recommendations;
                                                         updatedFriends.Add(new FriendSettings()
                                                         {
                                                             id = friendId,
@@ -15928,7 +16303,8 @@ namespace GamaManager
                                                             collections = currentCollections,
                                                             notifications = currentNotifications,
                                                             categories = currentCategories,
-                                                            recentChats = currentRecentChats
+                                                            recentChats = currentRecentChats,
+                                                            recommendations = currentRecommendations
                                                         });
                                                         File.WriteAllText(saveDataFilePath, savedContent);
                                                         string eventData = currentUserId + "|" + friendId;
@@ -16032,6 +16408,7 @@ namespace GamaManager
 
         private void SearchGame (string boxContent)
         {
+            int gameCursor = -1;
             searchGameBoxPopupBody.Children.Clear();
             string keywords = boxContent.ToLower();
             int keywordsLength = keywords.Length;
@@ -16061,8 +16438,19 @@ namespace GamaManager
                                     bool isGameFound = someGameName.Contains(keywords);
                                     if (isGameFound)
                                     {
+                                        gameCursor++;
                                         int someGamePrice = someGame.price;
+                                        bool isNotFirstGame = gameCursor >= 1;
+                                        if (isNotFirstGame)
+                                        {
+                                            Separator separator = new Separator();
+                                            separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                            separator.BorderThickness = new Thickness(1);
+                                            separator.Margin = new Thickness(25, 5, 25, 5);
+                                            searchGameBoxPopupBody.Children.Add(separator);
+                                        }
                                         StackPanel searchedGame = new StackPanel();
+                                        searchedGame.Margin = new Thickness(15);
                                         searchedGame.Orientation = Orientation.Horizontal;
                                         Image searchedGameThumbnail = new Image();
                                         searchedGameThumbnail.Width = 75;
@@ -16074,6 +16462,7 @@ namespace GamaManager
                                         StackPanel searchedGameAside = new StackPanel();
                                         searchedGameAside.Margin = new Thickness(15);
                                         TextBlock someGameNameLabel = new TextBlock();
+                                        someGameNameLabel.FontSize = 14;
                                         someGameNameLabel.Text = someGameName;
                                         searchedGameAside.Children.Add(someGameNameLabel);
                                         TextBlock someGamePriceLabel = new TextBlock();
@@ -16085,7 +16474,7 @@ namespace GamaManager
                                         {
                                             someGamePriceLabelContent = "Бесплатная";
                                         }
-                                        someGamePriceLabel.Text = someGameName;
+                                        someGamePriceLabel.Text = someGamePriceLabelContent;
                                         searchedGameAside.Children.Add(someGamePriceLabel);
                                         searchedGame.Children.Add(searchedGameAside);
                                         searchGameBoxPopupBody.Children.Add(searchedGame);
@@ -16103,7 +16492,167 @@ namespace GamaManager
             }
             searchGameBoxPopup.IsOpen = isFilterEnabled;
         }
-        
+
+        private void SetWishListHandler (object sender, RoutedEventArgs e)
+        {
+            SetWishList();
+        }
+
+        public void SetWishList ()
+        {
+            SetWishListDialog dialog = new SetWishListDialog(currentUserId);
+            dialog.Show();
+        }
+
+        private void anyPlatformRadioBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MoveCarouselToLeftHandler (object sender, MouseButtonEventArgs e)
+        {
+            MoveCarouselToLeft();
+        }
+
+        public void ClearCarouselShortcuts ()
+        {
+            foreach (Button carouselShortcut in carouselShortcuts.Children)
+            {
+                carouselShortcut.Background = System.Windows.Media.Brushes.LightGray;
+            }
+        }
+
+        public void MoveCarouselToLeft ()
+        {
+            ClearCarouselShortcuts();
+            int selectedIndex = carouselControl.SelectedIndex;
+            // int countPopularGames = 5;
+            int countPopularGames = carouselControl.Items.Count;
+            bool isFirstGame = selectedIndex == 0;
+            if (isFirstGame)
+            {
+                carouselControl.SelectedIndex = countPopularGames - 1;
+            }
+            else
+            {
+                carouselControl.SelectedIndex = selectedIndex - 1;
+            }
+            selectedIndex = carouselControl.SelectedIndex;
+            UIElement rawCurrentCarouselShortcut = carouselShortcuts.Children[selectedIndex];
+            Button currentCarouselShortcut = ((Button)(rawCurrentCarouselShortcut));
+            currentCarouselShortcut.Background = System.Windows.Media.Brushes.SkyBlue;
+            carouselTimer.Stop();
+        }
+
+        private void MoveCarouselToRightHandler (object sender, MouseButtonEventArgs e)
+        {
+            MoveCarouselToRight();
+        }
+
+        public void MoveCarouselToRight ()
+        {
+            ClearCarouselShortcuts();
+            int selectedIndex = carouselControl.SelectedIndex;
+            // int countPopularGames = 5;
+            int countPopularGames = carouselControl.Items.Count;
+            bool isLastGame = selectedIndex == countPopularGames - 1;
+            if (isLastGame)
+            {
+                carouselControl.SelectedIndex = 0;
+            }
+            else
+            {
+                carouselControl.SelectedIndex = selectedIndex + 1;
+            }
+            selectedIndex = carouselControl.SelectedIndex;
+            UIElement rawCurrentCarouselShortcut = carouselShortcuts.Children[selectedIndex];
+            Button currentCarouselShortcut = ((Button)(rawCurrentCarouselShortcut));
+            currentCarouselShortcut.Background = System.Windows.Media.Brushes.SkyBlue;
+            // carouselTimer.Stop();
+        }
+
+        private void SelectCarouselShortcutHandler (object sender, RoutedEventArgs e)
+        {
+            Button shortcut = ((Button)(sender));
+            SelectCarouselShortcut(shortcut);
+        }
+
+        public void SelectCarouselShortcut (Button shortcut)
+        {
+            int index = carouselShortcuts.Children.IndexOf(shortcut);
+            carouselControl.SelectedIndex = index;
+            ClearCarouselShortcuts();
+            shortcut.Background = System.Windows.Media.Brushes.SkyBlue;
+        }
+
+        private void OpenPresentCardsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenPresentCards();
+        }
+
+        public void OpenPresentCards ()
+        {
+            mainControl.SelectedIndex = 51;
+        }
+
+        private void OpenFriendRecommendationsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenFriendRecommendations();
+        }
+
+        public void OpenFriendRecommendations ()
+        {
+            mainControl.SelectedIndex = 53;
+        }
+
+        private void OpenCuratorsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenCurators();
+        }
+
+        public void OpenCurators ()
+        {
+            mainControl.SelectedIndex = 54;
+        }
+
+        private void OpenTagsHandler(object sender, MouseButtonEventArgs e)
+        {
+            OpenTags();
+        }
+
+        public void OpenTags()
+        {
+            mainControl.SelectedIndex = 52;
+        }
+
+        private void SelectGlobalsTagHandler(object sender, MouseButtonEventArgs e)
+        {
+            StackPanel controlItem = ((StackPanel)(sender));
+            object controlItemData = controlItem.DataContext;
+            string rawControlItemIndex = controlItemData.ToString();
+            int index = Int32.Parse(rawControlItemIndex);
+            SelectGlobalsTag(index);
+        }
+
+        public void SelectGlobalsTag(int index)
+        {
+            globalTagsControl.SelectedIndex = index;
+        }
+
+        private void SelectRecommendationsTagHandler (object sender, MouseButtonEventArgs e)
+        {
+            StackPanel controlItem = ((StackPanel)(sender));
+            object controlItemData = controlItem.DataContext;
+            string rawControlItemIndex = controlItemData.ToString();
+            int index = Int32.Parse(rawControlItemIndex);
+            SelectRecommendationsTag(index);
+        }
+
+        public void SelectRecommendationsTag (int index)
+        {
+            recommendationTagsControl.SelectedIndex = index;
+        }
+
     }
 
     class SavedContent
@@ -16115,6 +16664,16 @@ namespace GamaManager
         public Notifications notifications;
         public List<String> categories;
         public List<String> recentChats;
+        public Recommendations recommendations;
+    }
+
+    class Recommendations {
+        public bool isEarlyAccess;
+        public bool isSoftWare;
+        public bool isVideo;
+        public bool isSoundTracks;
+        public bool isNotReleases;
+        public List<string> exceptTags;
     }
 
     class Notifications
@@ -16167,12 +16726,11 @@ namespace GamaManager
     {
         public string _id;
         public string name;
-        public string url;
-        public string image;
         public int users;
         public int maxUsers;
         public int likes;
         public int price;
+        public string platform;
     }
 
     class UserResponseInfo
@@ -16796,6 +17354,30 @@ namespace GamaManager
         public string _id;
         public string user;
         public string nick;
+    }
+
+    public class GameTagsResponseInfo
+    {
+        public string status;
+        public List<GameTag> tags;
+    }
+
+    public class GameTag
+    {
+        public string _id;
+        public string title;
+    }
+
+    public class GameTagRelationsResponseInfo {
+        public string status;
+        public List<GameTagRelation> relations;
+    }
+
+    public class GameTagRelation
+    {
+        public string _id;
+        public string game;
+        public string tag;
     }
 
 }

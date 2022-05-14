@@ -265,6 +265,7 @@ namespace GamaManager.Dialogs
                                         Notifications currentNotifications = loadedContent.notifications;
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
+                                        Recommendations currentRecommendations = loadedContent.recommendations;
                                         updatedFriends.Add(new FriendSettings()
                                         {
                                             id = friendId,
@@ -285,7 +286,8 @@ namespace GamaManager.Dialogs
                                             collections = currentCollections,
                                             notifications = currentNotifications,
                                             categories = currentCategories,
-                                            recentChats = currentRecentChats
+                                            recentChats = currentRecentChats,
+                                            recommendations = currentRecommendations
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         string eventData = currentUserId + "|" + friendId;

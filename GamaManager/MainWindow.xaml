@@ -7063,6 +7063,7 @@
                                     Text="Видимость"    
                                 />
                                 <ComboBox
+                                    x:Name="reviewVisibiltySelector"
                                     SelectedIndex="0"
                                     Width="125"
                                     Height="25"
@@ -7078,11 +7079,11 @@
                                     Margin="150 0"
                                 >
                                     <CheckBox
-                                        x:Name="reviewCommentsPermissionCheckBOx"
+                                        x:Name="reviewCommentsPermissionCheckBox"
                                         Content="Разрешить комментарии"    
                                     />
                                     <CheckBox
-                                        x:Name="reviewGameFreeCheckBOx"
+                                        x:Name="reviewGameFreeCheckBox"
                                         Content="Поставьте галочку, если вы получили этот продукт&#10;бесплатно"    
                                     />
                                 </StackPanel>
@@ -7125,6 +7126,7 @@
                                 HorizontalAlignment="Center"
                             >
                                 <StackPanel
+                                    x:Name="mainReview"
                                     Margin="15"
                                     Background="LightGray" 
                                     Width="1000"
@@ -7172,6 +7174,18 @@
                                             FontSize="14"
                                         />
                                     </StackPanel>
+                                    <TextBlock
+                                        x:Name="mainReviewAdvicesLabel"
+                                        Text="Пользователей, посчитавших обзор полезным: 0"
+                                        Margin="15 5"
+                                        FontSize="14"
+                                    />
+                                    <TextBlock
+                                        x:Name="mainReviewFunsLabel"
+                                        Text="Пользователей, посчитавших обзор забавным: 0"
+                                        Margin="15 5"
+                                        FontSize="14"
+                                    />
                                     <StackPanel
                                         Margin="0 15"
                                         Orientation="Horizontal"    
@@ -7205,8 +7219,14 @@
                                         >
                                             <TextBlock
                                                 x:Name="mainReviewDateLabel"
-                                                Margin="15"
+                                                Margin="15 5"
                                                 Text="Дата публикации обзора"    
+                                            />
+                                            <TextBlock
+                                                x:Name="mainReviewFreeProductLabel"
+                                                Margin="15 5"
+                                                Text="Товар получен бесплатно"
+                                                Foreground="Orange"
                                             />
                                             <TextBlock
                                                 x:Name="mainReviewDescLabel"
@@ -7227,6 +7247,7 @@
                                                     <Button
                                                         Width="65"
                                                         Height="20"
+                                                        Click="IncreaseReviewAdvicesHandler"
                                                     >
                                                         <Button.Content>
                                                             <StackPanel
@@ -7267,6 +7288,7 @@
                                                         Width="100"
                                                         Height="20"
                                                         Margin="5 0"
+                                                        Click="IncreaseReviewFunsHandler"
                                                     >
                                                         <Button.Content>
                                                             <StackPanel
@@ -7319,6 +7341,7 @@
                                                 </Button>
                                             </DockPanel>
                                             <StackPanel
+                                                x:Name="mainReviewEnabledCommentsPanel"
                                                 Background="LightSlateGray"
                                                 Margin="15"
                                                 Orientation="Horizontal"    
@@ -7328,6 +7351,7 @@
                                                     Kind="Chat"    
                                                 />
                                                 <TextBlock
+                                                    x:Name="mainReviewEnabledCommentsPanelCountLabel"
                                                     Margin="5"
                                                     Text="Комментариев: 0"    
                                                 />
@@ -7337,6 +7361,21 @@
                                                 />
                                             </StackPanel>
                                             <StackPanel
+                                                x:Name="mainReviewDisabledCommentsPanel"
+                                                Background="LightSlateGray"
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Комментарии к этому обзору отключены"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                x:Name="mainReviewComments"    
+                                            />
+                                            <StackPanel
+                                                x:Name="mainReviewSendCommentPanel"
                                                 Margin="15"
                                                 Orientation="Horizontal"    
                                             >
@@ -7352,47 +7391,58 @@
                                                         />
                                                     </Image.Source>
                                                 </Image>
-                                                <TextBox
-                                                    Width="500"
-                                                    Height="50"
-                                                >
-                                                    <TextBox.Resources>
-                                                        <VisualBrush
-                                                            x:Key="hinttext"
-                                                            AlignmentX="Left"
-                                                            Stretch="None"
-                                                            TileMode="None"
-                                                        >
-                                                            <VisualBrush.Visual>
-                                                                <DockPanel>
-                                                                    <TextBlock
-                                                                        Height="50"
-                                                                        Width="500"
-                                                                        Text="Оставить комментарий"
-                                                                        Foreground="#959595"
-                                                                        Background="White"
-                                                                    />  
-                                                                </DockPanel>
-                                                            </VisualBrush.Visual>
-                                                        </VisualBrush>
-                                                    </TextBox.Resources>
-                                                    <TextBox.Style>
-                                                        <Style TargetType="TextBox">
-                                                            <Setter Property="VerticalAlignment" Value="Center" />
-                                                            <Setter Property="FontSize" Value="12" />
-                                                            <Setter Property="Width" Value="Auto" />
-                                                            <Setter Property="Width" Value="Auto" />
-                                                            <Style.Triggers>
-                                                                <Trigger Property="Text" Value="">
-                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                                </Trigger>
-                                                                <Trigger Property="Text" Value="{x:Null}">
-                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBox.Style>
-                                                </TextBox>
+                                                <StackPanel>
+                                                    <TextBox
+                                                        x:Name="mainReviewCommentsBox"
+                                                        Width="500"
+                                                        Height="50"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="50"
+                                                                            Width="500"
+                                                                            Text="Оставить комментарий"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />  
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button 
+                                                        HorizontalAlignment="Right"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Margin="0 5"
+                                                        Content="Отправить"
+                                                        Click="SendReviewCommentHandler"
+                                                    />
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                         <StackPanel
@@ -8787,7 +8837,7 @@
                                     FontSize="14"
                                 />
                                 <StackPanel
-                                    Margin="5 0"
+                                    Margin="5"
                                     Orientation="Horizontal"    
                                     MouseLeftButtonUp="OpenFriendRecommendationsHandler"
                                 >
@@ -8801,7 +8851,7 @@
                                     />
                                 </StackPanel>
                                 <StackPanel
-                                    Margin="5 0"
+                                    Margin="5"
                                     Orientation="Horizontal"    
                                     MouseLeftButtonUp="OpenCuratorsHandler"
                                 >
@@ -8815,7 +8865,7 @@
                                     />
                                 </StackPanel>
                                 <StackPanel
-                                    Margin="5 0"
+                                    Margin="5"
                                     Orientation="Horizontal"    
                                     MouseLeftButtonUp="OpenTagsHandler"
                                 >
@@ -13149,7 +13199,10 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             FontSize="16"
                                                             Margin="15 5"
                                                             Text="Инди"    
-                                                        />    
+                                                        />
+                                                        <WrapPanel
+                                                            x:Name="indiGames"    
+                                                        />
                                                     </StackPanel>
                                                 </TabItem>
                                                 <TabItem
@@ -13160,6 +13213,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             FontSize="16"
                                                             Margin="15 5"
                                                             Text="Экшен"    
+                                                        />
+                                                        <WrapPanel
+                                                            x:Name="actionGames"    
                                                         />
                                                     </StackPanel>
                                                 </TabItem>
@@ -13172,6 +13228,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             Margin="15 5"
                                                             Text="Приключение"    
                                                         />
+                                                        <WrapPanel
+                                                            x:Name="travelGames"    
+                                                        />
                                                     </StackPanel>
                                                 </TabItem>
                                                 <TabItem
@@ -13183,6 +13242,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             Margin="15 5"
                                                             Text="Казуальная игра"    
                                                         />
+                                                        <WrapPanel
+                                                            x:Name="casualGames"    
+                                                        />
                                                     </StackPanel>
                                                 </TabItem>
                                                 <TabItem
@@ -13193,6 +13255,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             FontSize="16"
                                                             Margin="15 5"
                                                             Text="Симулятор"    
+                                                        />
+                                                        <WrapPanel
+                                                            x:Name="simulatorGames"    
                                                         />
                                                     </StackPanel>
                                                 </TabItem>
@@ -13419,6 +13484,7 @@ E. Что произойдет, если положение Пункта 11 бу
                                             x:Name="popularGamesForFriends"    
                                         />
                                         <TextBlock
+                                            x:Name="popularGamesForFriendsResultsLabel"
                                             Text="Результаты 0-0 из 0"    
                                         />
                                         <DockPanel>

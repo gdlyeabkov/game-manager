@@ -1577,7 +1577,336 @@ namespace GamaManager
                 GetAllFriendRecommendations();
                 GetLastFriendRecommendations();
                 GetPopularGamesForFriends();
-                /**/
+                GetGamesByTags();/**/
+            }
+        }
+
+        public void GetGamesByTags()
+        {
+            GetIndiGames();
+            GetActionGames();
+            GetTravelGames();
+            GetCasualGames();
+            GetSimulatorGames();
+        }
+
+        public void GetIndiGames ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> genreGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameGenre = someGame.genre;
+                                bool isGenreMatch = someGameGenre == "Инди";
+                                return isGenreMatch;
+                            }).ToList<GameResponseInfo>();
+                            foreach (GameResponseInfo genreGame in genreGames)
+                            {
+                                string genreGameName = genreGame.name;
+                                int genreGamePrice = genreGame.price;
+                                StackPanel genreGamesItem = new StackPanel();
+                                genreGamesItem.Margin = new Thickness(5, 15, 5, 15);
+                                Image genreGamesItemThumbnail = new Image();
+                                genreGamesItemThumbnail.Width = 250;
+                                genreGamesItemThumbnail.Height = 100;
+                                genreGamesItemThumbnail.BeginInit();
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.EndInit();
+                                genreGamesItem.Children.Add(genreGamesItemThumbnail);
+                                TextBlock genreGamesItemNameLabel = new TextBlock();
+                                genreGamesItemNameLabel.Text = genreGameName;
+                                genreGamesItem.Children.Add(genreGamesItemNameLabel);
+                                TextBlock genreGamesItemPriceLabel = new TextBlock();
+                                string rawGenreGamePrice = genreGamePrice.ToString();
+                                string genreGamesItemPriceLabelContent = rawGenreGamePrice + " руб.";
+                                bool isFreeGame = genreGamePrice <= 0;
+                                if (isFreeGame)
+                                {
+                                    genreGamesItemPriceLabelContent = "Бесплатная";
+                                }
+                                genreGamesItemPriceLabel.Text = genreGamesItemPriceLabelContent;
+                                genreGamesItem.Children.Add(genreGamesItemPriceLabel);
+                                indiGames.Children.Add(genreGamesItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetActionGames()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> genreGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameGenre = someGame.genre;
+                                bool isGenreMatch = someGameGenre == "Экшен";
+                                return isGenreMatch;
+                            }).ToList<GameResponseInfo>();
+                            foreach (GameResponseInfo genreGame in genreGames)
+                            {
+                                string genreGameName = genreGame.name;
+                                int genreGamePrice = genreGame.price;
+                                StackPanel genreGamesItem = new StackPanel();
+                                genreGamesItem.Margin = new Thickness(5, 15, 5, 15);
+                                Image genreGamesItemThumbnail = new Image();
+                                genreGamesItemThumbnail.Width = 250;
+                                genreGamesItemThumbnail.Height = 100;
+                                genreGamesItemThumbnail.BeginInit();
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.EndInit();
+                                genreGamesItem.Children.Add(genreGamesItemThumbnail);
+                                TextBlock genreGamesItemNameLabel = new TextBlock();
+                                genreGamesItemNameLabel.Text = genreGameName;
+                                genreGamesItem.Children.Add(genreGamesItemNameLabel);
+                                TextBlock genreGamesItemPriceLabel = new TextBlock();
+                                string rawGenreGamePrice = genreGamePrice.ToString();
+                                string genreGamesItemPriceLabelContent = rawGenreGamePrice + " руб.";
+                                bool isFreeGame = genreGamePrice <= 0;
+                                if (isFreeGame)
+                                {
+                                    genreGamesItemPriceLabelContent = "Бесплатная";
+                                }
+                                genreGamesItemPriceLabel.Text = genreGamesItemPriceLabelContent;
+                                genreGamesItem.Children.Add(genreGamesItemPriceLabel);
+                                actionGames.Children.Add(genreGamesItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetTravelGames()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> genreGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameGenre = someGame.genre;
+                                bool isGenreMatch = someGameGenre == "Приключение";
+                                return isGenreMatch;
+                            }).ToList<GameResponseInfo>();
+                            foreach (GameResponseInfo genreGame in genreGames)
+                            {
+                                string genreGameName = genreGame.name;
+                                int genreGamePrice = genreGame.price;
+                                StackPanel genreGamesItem = new StackPanel();
+                                genreGamesItem.Margin = new Thickness(5, 15, 5, 15);
+                                Image genreGamesItemThumbnail = new Image();
+                                genreGamesItemThumbnail.Width = 250;
+                                genreGamesItemThumbnail.Height = 100;
+                                genreGamesItemThumbnail.BeginInit();
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.EndInit();
+                                genreGamesItem.Children.Add(genreGamesItemThumbnail);
+                                TextBlock genreGamesItemNameLabel = new TextBlock();
+                                genreGamesItemNameLabel.Text = genreGameName;
+                                genreGamesItem.Children.Add(genreGamesItemNameLabel);
+                                TextBlock genreGamesItemPriceLabel = new TextBlock();
+                                string rawGenreGamePrice = genreGamePrice.ToString();
+                                string genreGamesItemPriceLabelContent = rawGenreGamePrice + " руб.";
+                                bool isFreeGame = genreGamePrice <= 0;
+                                if (isFreeGame)
+                                {
+                                    genreGamesItemPriceLabelContent = "Бесплатная";
+                                }
+                                genreGamesItemPriceLabel.Text = genreGamesItemPriceLabelContent;
+                                genreGamesItem.Children.Add(genreGamesItemPriceLabel);
+                                travelGames.Children.Add(genreGamesItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetCasualGames()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> genreGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameGenre = someGame.genre;
+                                bool isGenreMatch = someGameGenre == "Казуальная игра";
+                                return isGenreMatch;
+                            }).ToList<GameResponseInfo>();
+                            foreach (GameResponseInfo genreGame in genreGames)
+                            {
+                                string genreGameName = genreGame.name;
+                                int genreGamePrice = genreGame.price;
+                                StackPanel genreGamesItem = new StackPanel();
+                                genreGamesItem.Margin = new Thickness(5, 15, 5, 15);
+                                Image genreGamesItemThumbnail = new Image();
+                                genreGamesItemThumbnail.Width = 250;
+                                genreGamesItemThumbnail.Height = 100;
+                                genreGamesItemThumbnail.BeginInit();
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.EndInit();
+                                genreGamesItem.Children.Add(genreGamesItemThumbnail);
+                                TextBlock genreGamesItemNameLabel = new TextBlock();
+                                genreGamesItemNameLabel.Text = genreGameName;
+                                genreGamesItem.Children.Add(genreGamesItemNameLabel);
+                                TextBlock genreGamesItemPriceLabel = new TextBlock();
+                                string rawGenreGamePrice = genreGamePrice.ToString();
+                                string genreGamesItemPriceLabelContent = rawGenreGamePrice + " руб.";
+                                bool isFreeGame = genreGamePrice <= 0;
+                                if (isFreeGame)
+                                {
+                                    genreGamesItemPriceLabelContent = "Бесплатная";
+                                }
+                                genreGamesItemPriceLabel.Text = genreGamesItemPriceLabelContent;
+                                genreGamesItem.Children.Add(genreGamesItemPriceLabel);
+                                casualGames.Children.Add(genreGamesItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetSimulatorGames()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> genreGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameGenre = someGame.genre;
+                                bool isGenreMatch = someGameGenre == "Симулятор";
+                                return isGenreMatch;
+                            }).ToList<GameResponseInfo>();
+                            foreach (GameResponseInfo genreGame in genreGames)
+                            {
+                                string genreGameName = genreGame.name;
+                                int genreGamePrice = genreGame.price;
+                                StackPanel genreGamesItem = new StackPanel();
+                                genreGamesItem.Margin = new Thickness(5, 15, 5, 15);
+                                Image genreGamesItemThumbnail = new Image();
+                                genreGamesItemThumbnail.Width = 250;
+                                genreGamesItemThumbnail.Height = 100;
+                                genreGamesItemThumbnail.BeginInit();
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.EndInit();
+                                genreGamesItem.Children.Add(genreGamesItemThumbnail);
+                                TextBlock genreGamesItemNameLabel = new TextBlock();
+                                genreGamesItemNameLabel.Text = genreGameName;
+                                genreGamesItem.Children.Add(genreGamesItemNameLabel);
+                                TextBlock genreGamesItemPriceLabel = new TextBlock();
+                                string rawGenreGamePrice = genreGamePrice.ToString();
+                                string genreGamesItemPriceLabelContent = rawGenreGamePrice + " руб.";
+                                bool isFreeGame = genreGamePrice <= 0;
+                                if (isFreeGame)
+                                {
+                                    genreGamesItemPriceLabelContent = "Бесплатная";
+                                }
+                                genreGamesItemPriceLabel.Text = genreGamesItemPriceLabelContent;
+                                genreGamesItem.Children.Add(genreGamesItemPriceLabel);
+                                simulatorGames.Children.Add(genreGamesItem);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -1646,6 +1975,15 @@ namespace GamaManager
                                             bool isAddSession = isMyFriendRecommendation && isFilterMatch;
                                             return isAddSession;
                                         }).Distinct().ToList<GameSession>();
+                                        int friendRecommendationsCount = friendRecommendations.Count;
+                                        string firstResultNumber = "0";
+                                        bool isHaveResults = friendRecommendationsCount >= 1;
+                                        if (isHaveResults)
+                                        {
+                                            firstResultNumber = "1";
+                                        }
+                                        string popularGamesForFriendsResultsLabelContent = "Результаты " + firstResultNumber + "-" + friendRecommendationsCount + " из " + friendRecommendationsCount;
+                                        popularGamesForFriendsResultsLabel.Text = popularGamesForFriendsResultsLabelContent;
                                         foreach (GameSession recommendation in friendRecommendations)
                                         {
                                             string recommendationId = recommendation._id;
@@ -3221,24 +3559,195 @@ namespace GamaManager
                                 {
                                     string id = totalReviewsItem._id;
                                     string desc = totalReviewsItem.desc;
-                                    StackPanel review = new StackPanel();
-                                    review.Width = 500;
-                                    review.Margin = new Thickness(15);
-                                    review.Background = System.Windows.Media.Brushes.LightGray;
-                                    PackIcon reviewIcon = new PackIcon();
-                                    reviewIcon.Margin = new Thickness(15);
-                                    reviewIcon.HorizontalAlignment = HorizontalAlignment.Left;
-                                    reviewIcon.Width = 50;
-                                    reviewIcon.Height = 50;
-                                    reviewIcon.Kind = PackIconKind.ThumbsUp;
-                                    review.Children.Add(reviewIcon);
-                                    TextBlock reviewDescLabel = new TextBlock();
-                                    reviewDescLabel.Margin = new Thickness(15);
-                                    reviewDescLabel.Text = desc;
-                                    review.Children.Add(reviewDescLabel);
-                                    reviews.Children.Add(review);
-                                    review.DataContext = id;
-                                    review.MouseLeftButtonUp += SelectReviewHandler;
+                                    string gameId = totalReviewsItem.game;
+                                    DateTime date = totalReviewsItem.date;
+                                    string hours = totalReviewsItem.hours;
+                                    string author = totalReviewsItem.user;
+                                    string visibility = totalReviewsItem.visibility;
+                                    bool isForAll = visibility == "Для всех";
+                                    bool isOnlyFriends = visibility == "Только для друзей";
+
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+                                            FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                List<Friend> friendRecords = myInnerObj.friends.Where<Friend>((Friend joint) =>
+                                                {
+                                                    string userId = joint.user;
+                                                    bool isMyFriend = userId == currentUserId;
+                                                    return isMyFriend;
+                                                }).ToList<Friend>();
+                                                List<string> friendsIds = new List<string>();
+                                                foreach (Friend friendRecord in friendRecords)
+                                                {
+                                                    string localFriendId = friendRecord.friend;
+                                                    friendsIds.Add(localFriendId);
+                                                }
+                                                bool isAuthorFriend = friendsIds.Contains(author);
+                                                bool isHaveAccess = isOnlyFriends && isAuthorFriend;
+                                                bool isAuthor = currentUserId == author;
+                                                bool isAddReview = isForAll || isHaveAccess || isAuthor;
+                                                if (isAddReview)
+                                                {
+
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                    nestedWebRequest.Method = "GET";
+                                                    nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                                    {
+                                                        using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = nestedReader.ReadToEnd();
+                                                            GamesListResponseInfo myNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                                            string responseStatus = myNestedObj.status;
+                                                            bool isOKStatus = responseStatus == "OK";
+                                                            if (isOKStatus)
+                                                            {
+                                                                List<GameResponseInfo> totalGames = myNestedObj.games;
+                                                                List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                                                {
+                                                                    string someGameId = someGame._id;
+                                                                    bool isIdMatches = someGameId == gameId;
+                                                                    return isIdMatches;
+                                                                }).ToList<GameResponseInfo>();
+                                                                int countResults = results.Count;
+                                                                bool isHaveResults = countResults >= 1;
+                                                                if (isHaveResults)
+                                                                {
+
+                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                                    innerNestedWebRequest.Method = "GET";
+                                                                    innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                    using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                                    {
+                                                                        using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                        {
+                                                                            js = new JavaScriptSerializer();
+                                                                            objText = innerNestedReader.ReadToEnd();
+                                                                            ReviewCommentsResponseInfo myInnerNestedObj = (ReviewCommentsResponseInfo)js.Deserialize(objText, typeof(ReviewCommentsResponseInfo));
+                                                                            status = myInnerNestedObj.status;
+                                                                            isOkStatus = status == "OK";
+                                                                            if (isOkStatus)
+                                                                            {
+                                                                                List<ReviewComment> reviewComments = myInnerNestedObj.comments;
+                                                                                List<ReviewComment> currentReviewComments = reviewComments.Where<ReviewComment>((ReviewComment comment) =>
+                                                                                {
+                                                                                    string commentReviewId = comment.review;
+                                                                                    bool isCurrentReview = commentReviewId == id;
+                                                                                    return isCurrentReview;
+                                                                                }).ToList<ReviewComment>();
+                                                                                int countComments = currentReviewComments.Count;
+                                                                                string rawCountComments = countComments.ToString();
+
+                                                                                GameResponseInfo reviewGame = results[0];
+                                                                                string reviewGameName = reviewGame.name;
+                                                                                string rawDate = date.ToLongDateString();
+                                                                                StackPanel review = new StackPanel();
+                                                                                review.Width = 500;
+                                                                                review.Margin = new Thickness(15);
+                                                                                review.Background = System.Windows.Media.Brushes.LightGray;
+                                                                                TextBlock reviewAdvicesLabel = new TextBlock();
+                                                                                reviewAdvicesLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                                                int countAdvices = 0;
+                                                                                string rawCountAdvices = countAdvices.ToString();
+                                                                                string reviewAdvicesLabelContent = "Пользователей, посчитавших обзор полезным: " + rawCountAdvices;
+                                                                                reviewAdvicesLabel.Text = reviewAdvicesLabelContent;
+                                                                                review.Children.Add(reviewAdvicesLabel);
+                                                                                TextBlock reviewFunsLabel = new TextBlock();
+                                                                                reviewFunsLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                                                int countFuns = 0;
+                                                                                string rawCountFuns = countFuns.ToString();
+                                                                                string reviewFunsLabelContent = "Пользователей, посчитавших обзор забавным: " + rawCountFuns;
+                                                                                reviewFunsLabel.Text = reviewFunsLabelContent;
+                                                                                review.Children.Add(reviewFunsLabel);
+                                                                                StackPanel reviewHeader = new StackPanel();
+                                                                                reviewHeader.Orientation = Orientation.Horizontal;
+                                                                                PackIcon reviewIcon = new PackIcon();
+                                                                                reviewIcon.Margin = new Thickness(15);
+                                                                                reviewIcon.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                                reviewIcon.Width = 50;
+                                                                                reviewIcon.Height = 50;
+                                                                                reviewIcon.Kind = PackIconKind.ThumbsUp;
+                                                                                reviewHeader.Children.Add(reviewIcon);
+                                                                                StackPanel reviewHeaderAside = new StackPanel();
+                                                                                reviewHeaderAside.Margin = new Thickness(15);
+
+                                                                                TextBlock reviewHeaderAsideRecommendationLabel = new TextBlock();
+                                                                                reviewHeaderAsideRecommendationLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                                reviewHeaderAsideRecommendationLabel.FontSize = 16;
+                                                                                reviewHeaderAsideRecommendationLabel.Text = "Рекомендую";
+                                                                                reviewHeaderAside.Children.Add(reviewHeaderAsideRecommendationLabel);
+                                                                                TextBlock reviewHeaderAsideHoursLabel = new TextBlock();
+                                                                                string rawHours = hours.ToString();
+                                                                                string reviewHeaderAsideHoursLabelContent = rawHours + " ч. всего";
+                                                                                reviewHeaderAsideHoursLabel.Text = reviewHeaderAsideHoursLabelContent;
+                                                                                reviewHeaderAside.Children.Add(reviewHeaderAsideHoursLabel);
+
+                                                                                reviewHeader.Children.Add(reviewHeaderAside);
+                                                                                review.Children.Add(reviewHeader);
+                                                                                TextBlock reviewDateLabel = new TextBlock();
+                                                                                reviewDateLabel.Margin = new Thickness(15);
+                                                                                string reviewDateLabelContent = "Опубликовано: " + rawDate;
+                                                                                reviewDateLabel.Foreground = System.Windows.Media.Brushes.Orange;
+                                                                                reviewDateLabel.Text = reviewDateLabelContent;
+                                                                                review.Children.Add(reviewDateLabel);
+                                                                                TextBlock reviewDescLabel = new TextBlock();
+                                                                                reviewDescLabel.Margin = new Thickness(15);
+                                                                                reviewDescLabel.Text = desc;
+                                                                                reviewDescLabel.FontSize = 14;
+                                                                                review.Children.Add(reviewDescLabel);
+                                                                                Separator reviewSeparator = new Separator();
+                                                                                review.Children.Add(reviewSeparator);
+                                                                                DockPanel reviewFooter = new DockPanel();
+                                                                                reviewFooter.Margin = new Thickness(15);
+                                                                                TextBlock reviewFooterGameNameLabel = new TextBlock();
+                                                                                reviewFooterGameNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                                                                reviewFooterGameNameLabel.Text = reviewGameName;
+                                                                                reviewFooter.Children.Add(reviewFooterGameNameLabel);
+                                                                                StackPanel reviewFooterComments = new StackPanel();
+                                                                                reviewFooterComments.Margin = new Thickness(15, 0, 15, 0);
+                                                                                reviewFooterComments.Orientation = Orientation.Horizontal;
+                                                                                reviewFooterComments.HorizontalAlignment = HorizontalAlignment.Right;
+                                                                                PackIcon reviewFooterCommentsIcon = new PackIcon();
+                                                                                reviewFooterCommentsIcon.Kind = PackIconKind.Chat;
+                                                                                reviewFooterCommentsIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                                                reviewFooterComments.Children.Add(reviewFooterCommentsIcon);
+                                                                                TextBlock reviewFooterCountCommentsLabel = new TextBlock();
+                                                                                reviewFooterCountCommentsLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                                reviewFooterCountCommentsLabel.Text = rawCountComments;
+                                                                                reviewFooterComments.Children.Add(reviewFooterCountCommentsLabel);
+                                                                                reviewFooter.Children.Add(reviewFooterComments);
+                                                                                review.Children.Add(reviewFooter);
+                                                                                reviews.Children.Add(review);
+                                                                                review.DataContext = id;
+                                                                                review.MouseLeftButtonUp += SelectReviewHandler;
+
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                                
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else
@@ -3272,6 +3781,7 @@ namespace GamaManager
 
         public void SelectReview (string id)
         {
+            mainReviewComments.Children.Clear();
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + id);
@@ -3294,6 +3804,11 @@ namespace GamaManager
                             string desc = review.desc;
                             DateTime date = review.date;
                             string hours = review.hours;
+                            int advices = review.advices;
+                            int funs = review.funs;
+                            bool isCommentsEnabled = review.isCommentsEnabled;
+                            string visibility = review.visibility;
+                            bool isFreeProduct = review.isFreeProduct;
                             string rawDate = date.ToLongDateString();
                             HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
                             innerWebRequest.Method = "GET";
@@ -3354,6 +3869,121 @@ namespace GamaManager
                                                         mainReviewDescLabel.Text = desc;
                                                         string mainReviewDateLabelContent = "Опубликовано: " + rawDate;
                                                         mainReviewDateLabel.Text = mainReviewDateLabelContent;
+                                                        mainReviewDateLabel.Text = mainReviewDateLabelContent;
+                                                        string rawAdvices = advices.ToString();
+                                                        string mainReviewAdvicesLabelContent = "Пользователей, посчитавших обзор полезным: " + rawAdvices;
+                                                        mainReviewAdvicesLabel.Text = mainReviewAdvicesLabelContent;
+                                                        string rawFuns = funs.ToString();
+                                                        string mainReviewFunsLabelContent = "Пользователей, посчитавших обзор забавным: " + rawFuns;
+                                                        mainReviewFunsLabel.Text = mainReviewFunsLabelContent;
+                                                        if (isCommentsEnabled)
+                                                        {
+                                                            mainReviewDisabledCommentsPanel.Visibility = invisible;
+                                                            mainReviewEnabledCommentsPanel.Visibility = visible;
+                                                            mainReviewSendCommentPanel.Visibility = visible;
+
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                            innerNestedWebRequest.Method = "GET";
+                                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                            {
+                                                                using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                {
+                                                                    js = new JavaScriptSerializer();
+                                                                    objText = innerNestedReader.ReadToEnd();
+                                                                    ReviewCommentsResponseInfo myInnerNestedObj = (ReviewCommentsResponseInfo)js.Deserialize(objText, typeof(ReviewCommentsResponseInfo));
+                                                                    status = myInnerNestedObj.status;
+                                                                    isOkStatus = status == "OK";
+                                                                    if (isOkStatus)
+                                                                    {
+                                                                        List<ReviewComment> reviewComments = myInnerNestedObj.comments;
+                                                                        List<ReviewComment> currentReviewComments = reviewComments.Where<ReviewComment>((ReviewComment comment) =>
+                                                                        {
+                                                                            string commentReviewId = comment.review;
+                                                                            bool isCurrentReview = commentReviewId == id;
+                                                                            return isCurrentReview;
+                                                                        }).ToList<ReviewComment>();
+                                                                        int countComments = currentReviewComments.Count;
+                                                                        string rawCountComments = countComments.ToString();
+                                                                        string mainReviewEnabledCommentsPanelCountLabelContent = "Комментариев: " + rawCountComments;
+                                                                        mainReviewEnabledCommentsPanelCountLabel.Text = mainReviewEnabledCommentsPanelCountLabelContent;
+
+                                                                        foreach (ReviewComment comment in currentReviewComments)
+                                                                        {
+                                                                            string commentUserId = comment.user;
+                                                                            HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                            userWebRequest.Method = "GET";
+                                                                            userWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                            using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
+                                                                            {
+                                                                                using (StreamReader userReader = new StreamReader(userWebResponse.GetResponseStream()))
+                                                                                {
+                                                                                    js = new JavaScriptSerializer();
+                                                                                    objText = userReader.ReadToEnd();
+                                                                                    UserResponseInfo myUserObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                    status = myUserObj.status;
+                                                                                    isOkStatus = status == "OK";
+                                                                                    if (isOkStatus)
+                                                                                    {
+                                                                                        User commentUser = myUserObj.user;
+                                                                                        string commentUserName = commentUser.name;
+                                                                                        DateTime commentDate = comment.date;
+                                                                                        string commentContent = comment.content;
+                                                                                        string rawCommentDate = commentDate.ToLongDateString();
+                                                                                        StackPanel mainReviewComment = new StackPanel();
+                                                                                        mainReviewComment.Orientation = Orientation.Horizontal;
+                                                                                        mainReviewComment.Margin = new Thickness(15);
+                                                                                        Image mainReviewCommentUserAvatar = new Image();
+                                                                                        mainReviewCommentUserAvatar.Margin = new Thickness(15, 0, 15, 0);
+                                                                                        mainReviewCommentUserAvatar.Width = 40;
+                                                                                        mainReviewCommentUserAvatar.Height = 40;
+                                                                                        mainReviewCommentUserAvatar.BeginInit();
+                                                                                        mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                        mainReviewCommentUserAvatar.EndInit();
+                                                                                        mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
+                                                                                        StackPanel mainReviewCommentAside = new StackPanel();
+                                                                                        mainReviewCommentAside.Margin = new Thickness(15, 0, 15, 0);
+                                                                                        StackPanel mainReviewCommentAsideHeader = new StackPanel();
+                                                                                        mainReviewCommentAsideHeader.Orientation = Orientation.Horizontal;
+                                                                                        TextBlock mainReviewCommentAsideHeaderUserNameLabel = new TextBlock();
+                                                                                        mainReviewCommentAsideHeaderUserNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                                        mainReviewCommentAsideHeaderUserNameLabel.Text = commentUserName;
+                                                                                        mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderUserNameLabel);
+                                                                                        TextBlock mainReviewCommentAsideHeaderDateLabel = new TextBlock();
+                                                                                        mainReviewCommentAsideHeaderDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                                        mainReviewCommentAsideHeaderDateLabel.Text = rawCommentDate;
+                                                                                        mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderDateLabel);
+                                                                                        mainReviewCommentAside.Children.Add(mainReviewCommentAsideHeader);
+                                                                                        TextBlock mainReviewCommentContentLabel = new TextBlock();
+                                                                                        mainReviewCommentContentLabel.Margin = new Thickness(5, 10, 5, 0);
+                                                                                        mainReviewCommentContentLabel.Text = commentContent;
+                                                                                        mainReviewCommentAside.Children.Add(mainReviewCommentContentLabel);
+                                                                                        mainReviewComment.Children.Add(mainReviewCommentAside);
+                                                                                        mainReviewComments.Children.Add(mainReviewComment);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                        else
+                                                        {
+                                                            mainReviewDisabledCommentsPanel.Visibility = visible;
+                                                            mainReviewEnabledCommentsPanel.Visibility = invisible;
+                                                            mainReviewSendCommentPanel.Visibility = invisible;
+                                                        }
+                                                        if (isFreeProduct)
+                                                        {
+                                                            mainReviewFreeProductLabel.Visibility = visible;
+                                                        }
+                                                        else
+                                                        {
+                                                            mainReviewFreeProductLabel.Visibility = invisible;
+                                                        }
+                                                        mainReview.DataContext = id;
                                                         mainControl.SelectedIndex = 27;
                                                     }
                                                 }
@@ -3408,12 +4038,73 @@ namespace GamaManager
                                     Image communityScreenShotPhoto = new Image();
                                     communityScreenShotPhoto.Margin = new Thickness(15);
                                     communityScreenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                    communityScreenShotPhoto.Width = 50;
-                                    communityScreenShotPhoto.Height = 50;
+                                    communityScreenShotPhoto.Width = 500;
+                                    communityScreenShotPhoto.Height = 425;
                                     communityScreenShotPhoto.BeginInit();
                                     communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
                                     communityScreenShotPhoto.EndInit();
                                     communityScreenShot.Children.Add(communityScreenShotPhoto);
+                                    DockPanel communityScreenShotFooter = new DockPanel();
+                                    // communityScreenShotFooter.Orientation = Orientation.Horizontal;
+                                    PackIcon communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.ThumbUp;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooter.Children.Add(communityScreenShotFooterItemIcon);
+                                    communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.ThumbDown;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooter.Children.Add(communityScreenShotFooterItemIcon);
+                                    StackPanel communityScreenShotFooterItem = new StackPanel();
+                                    communityScreenShotFooterItem.Orientation = Orientation.Horizontal;
+                                    communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.Medal;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemIcon);
+                                    TextBlock communityScreenShotFooterItemLabel = new TextBlock();
+                                    communityScreenShotFooterItemLabel.Text = "Наградить";
+                                    communityScreenShotFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemLabel);
+                                    communityScreenShotFooter.Children.Add(communityScreenShotFooterItem);
+                                    StackPanel communityScreenShotFooterAside = new StackPanel();
+                                    communityScreenShotFooterAside.Orientation = Orientation.Horizontal;
+                                    communityScreenShotFooterAside.HorizontalAlignment = HorizontalAlignment.Right;
+
+                                    communityScreenShotFooterItem = new StackPanel();
+                                    communityScreenShotFooterItem.Orientation = Orientation.Horizontal;
+                                    communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.ThumbUp;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemIcon);
+                                    communityScreenShotFooterItemLabel = new TextBlock();
+                                    communityScreenShotFooterItemLabel.Text = "0";
+                                    communityScreenShotFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemLabel);
+                                    communityScreenShotFooterAside.Children.Add(communityScreenShotFooterItem);
+                                    communityScreenShotFooterItem = new StackPanel();
+                                    communityScreenShotFooterItem.Orientation = Orientation.Horizontal;
+                                    communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.Medal;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemIcon);
+                                    communityScreenShotFooterItemLabel = new TextBlock();
+                                    communityScreenShotFooterItemLabel.Text = "0";
+                                    communityScreenShotFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemLabel);
+                                    communityScreenShotFooterAside.Children.Add(communityScreenShotFooterItem);
+                                    communityScreenShotFooterItem = new StackPanel();
+                                    communityScreenShotFooterItem.Orientation = Orientation.Horizontal;
+                                    communityScreenShotFooterItemIcon = new PackIcon();
+                                    communityScreenShotFooterItemIcon.Kind = PackIconKind.Chat;
+                                    communityScreenShotFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemIcon);
+                                    communityScreenShotFooterItemLabel = new TextBlock();
+                                    communityScreenShotFooterItemLabel.Text = "0";
+                                    communityScreenShotFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                    communityScreenShotFooterItem.Children.Add(communityScreenShotFooterItemLabel);
+                                    communityScreenShotFooterAside.Children.Add(communityScreenShotFooterItem);
+
+                                    communityScreenShotFooter.Children.Add(communityScreenShotFooterAside);
+                                    communityScreenShot.Children.Add(communityScreenShotFooter);
                                     communityScreenShots.Children.Add(communityScreenShot);
                                     communityScreenShot.DataContext = id;
                                     communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
@@ -3781,34 +4472,128 @@ namespace GamaManager
                                 foreach (Illustration totalIllustrationsItem in totalIllustrations)
                                 {
                                     string id = totalIllustrationsItem._id;
-                                    string title = totalIllustrationsItem.title;
-                                    string desc = totalIllustrationsItem.desc;
-                                    StackPanel illustration = new StackPanel();
-                                    illustration.Width = 500;
-                                    illustration.Margin = new Thickness(15);
-                                    illustration.Background = System.Windows.Media.Brushes.LightGray;
-                                    TextBlock illustrationTitleLabel = new TextBlock();
-                                    illustrationTitleLabel.FontSize = 16;
-                                    illustrationTitleLabel.Margin = new Thickness(15);
-                                    illustrationTitleLabel.Text = title;
-                                    illustration.Children.Add(illustrationTitleLabel);
-                                    Image illustrationPhoto = new Image();
-                                    illustrationPhoto.Margin = new Thickness(15);
-                                    illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                    illustrationPhoto.Width = 50;
-                                    illustrationPhoto.Height = 50;
-                                    illustrationPhoto.BeginInit();
-                                    illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
-                                    illustrationPhoto.EndInit();
-                                    illustration.Children.Add(illustrationPhoto);
-                                    TextBlock illustrationDescLabel = new TextBlock();
-                                    illustrationDescLabel.Margin = new Thickness(15);
-                                    illustrationDescLabel.Text = desc;
-                                    illustration.Children.Add(illustrationDescLabel);
-                                    illustrations.Children.Add(illustration);
-                                    illustration.DataContext = id;
-                                    illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+                                    string userId = totalIllustrationsItem.user;
+
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                User author = myInnerObj.user;
+                                                string authorName = author.name;
+                                                string title = totalIllustrationsItem.title;
+                                                string desc = totalIllustrationsItem.desc;
+                                                StackPanel illustration = new StackPanel();
+                                                illustration.Width = 500;
+                                                illustration.Margin = new Thickness(15);
+                                                illustration.Background = System.Windows.Media.Brushes.LightGray;
+                                                TextBlock illustrationTitleLabel = new TextBlock();
+                                                illustrationTitleLabel.FontSize = 16;
+                                                illustrationTitleLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationTitleLabel.Text = title;
+                                                illustration.Children.Add(illustrationTitleLabel);
+                                                Image illustrationPhoto = new Image();
+                                                illustrationPhoto.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                illustrationPhoto.Width = 500;
+                                                illustrationPhoto.Height = 425;
+                                                illustrationPhoto.BeginInit();
+                                                illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                illustrationPhoto.EndInit();
+                                                illustration.Children.Add(illustrationPhoto);
+                                                TextBlock illustrationDescLabel = new TextBlock();
+                                                illustrationDescLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationDescLabel.Text = desc;
+                                                illustration.Children.Add(illustrationDescLabel);
+
+                                                DockPanel illustrationFooter = new DockPanel();
+                                                PackIcon illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.ThumbUp;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooter.Children.Add(illustrationFooterItemIcon);
+                                                illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.ThumbDown;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooter.Children.Add(illustrationFooterItemIcon);
+                                                StackPanel illustrationFooterItem = new StackPanel();
+                                                illustrationFooterItem.Orientation = Orientation.Horizontal;
+                                                illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.Medal;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemIcon);
+                                                TextBlock illustrationFooterItemLabel = new TextBlock();
+                                                illustrationFooterItemLabel.Text = "Наградить";
+                                                illustrationFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemLabel);
+                                                illustrationFooter.Children.Add(illustrationFooterItem);
+                                                StackPanel illustrationFooterAside = new StackPanel();
+                                                illustrationFooterAside.Orientation = Orientation.Horizontal;
+                                                illustrationFooterAside.HorizontalAlignment = HorizontalAlignment.Right;
+
+                                                illustrationFooterItem = new StackPanel();
+                                                illustrationFooterItem.Orientation = Orientation.Horizontal;
+                                                illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.ThumbUp;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemIcon);
+                                                illustrationFooterItemLabel = new TextBlock();
+                                                illustrationFooterItemLabel.Text = "0";
+                                                illustrationFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemLabel);
+                                                illustrationFooterAside.Children.Add(illustrationFooterItem);
+                                                illustrationFooterItem = new StackPanel();
+                                                illustrationFooterItem.Orientation = Orientation.Horizontal;
+                                                illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.Medal;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemIcon);
+                                                illustrationFooterItemLabel = new TextBlock();
+                                                illustrationFooterItemLabel.Text = "0";
+                                                illustrationFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemLabel);
+                                                illustrationFooterAside.Children.Add(illustrationFooterItem);
+                                                illustrationFooterItem = new StackPanel();
+                                                illustrationFooterItem.Orientation = Orientation.Horizontal;
+                                                illustrationFooterItemIcon = new PackIcon();
+                                                illustrationFooterItemIcon.Kind = PackIconKind.Chat;
+                                                illustrationFooterItemIcon.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemIcon);
+                                                illustrationFooterItemLabel = new TextBlock();
+                                                illustrationFooterItemLabel.Text = "0";
+                                                illustrationFooterItemLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustrationFooterItem.Children.Add(illustrationFooterItemLabel);
+                                                illustrationFooterAside.Children.Add(illustrationFooterItem);
+                                                illustrationFooter.Children.Add(illustrationFooterAside);
+                                                illustration.Children.Add(illustrationFooter);
+                                                TextBlock illustrationAuthorLabel = new TextBlock();
+                                                illustrationAuthorLabel.Text = authorName;
+                                                illustrationAuthorLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustration.Children.Add(illustrationAuthorLabel);
+                                                Separator illustrationSeparator = new Separator();
+                                                illustration.Children.Add(illustrationSeparator);
+                                                TextBlock illustrationGameNameLabel = new TextBlock();
+                                                illustrationGameNameLabel.Text = "Иллюстрация по игре";
+                                                illustrationGameNameLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                illustration.Children.Add(illustrationGameNameLabel);
+
+                                                illustrations.Children.Add(illustration);
+                                                illustration.DataContext = id;
+                                                illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+
+                                            }
+                                        }
+                                    }
                                 }
+
                             }
                             else
                             {
@@ -3884,6 +4669,8 @@ namespace GamaManager
                                     manualDescLabel.Margin = new Thickness(15);
                                     manualDescLabel.Text = desc;
                                     manual.Children.Add(manualDescLabel);
+                                    Separator manualSeparator = new Separator();
+                                    manual.Children.Add(manualSeparator);
                                     manuals.Children.Add(manual);
                                     manual.DataContext = id;
                                     manual.MouseLeftButtonUp += SelectManualHandler;
@@ -14210,7 +14997,27 @@ namespace GamaManager
                 string hours = game.hours;
                 string gameId = game.id;
                 string reviewDescBoxContent = reviewDescBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/add/?id=" + currentUserId + @"&game=" + gameId + @"&hours=" + hours + @"&desc=" + reviewDescBoxContent);
+                string rawIsCommentsEnabled = "false";
+                object rawReviewCommentsPermissionCheckBoxIsChecked = reviewCommentsPermissionCheckBox.IsChecked;
+                bool reviewCommentsPermissionCheckBoxIsChecked = ((bool)(rawReviewCommentsPermissionCheckBoxIsChecked));
+                if (reviewCommentsPermissionCheckBoxIsChecked)
+                {
+                    rawIsCommentsEnabled = "true";
+                }
+                int reviewVisibiltySelectorSelectedIndex = reviewVisibiltySelector.SelectedIndex;
+                ItemCollection reviewVisibiltySelectorItems = reviewVisibiltySelector.Items;
+                object rawReviewVisibiltySelectedSelectorItem = reviewVisibiltySelectorItems[reviewVisibiltySelectorSelectedIndex];
+                ComboBoxItem reviewVisibiltySelectedSelectorItem = ((ComboBoxItem)(rawReviewVisibiltySelectedSelectorItem));
+                object rawReviewVisibiltySelectedSelectorItemContent = reviewVisibiltySelectedSelectorItem.Content;
+                string reviewVisibiltySelectedSelectorItemContent = rawReviewVisibiltySelectedSelectorItemContent.ToString();
+                string rawIsFreeProduct = "false";
+                object rawReviewGameFreeCheckBoxIsChecked = reviewGameFreeCheckBox.IsChecked;
+                bool reviewGameFreeCheckBoxIsChecked = ((bool)(rawReviewGameFreeCheckBoxIsChecked));
+                if (reviewGameFreeCheckBoxIsChecked)
+                {
+                    rawIsFreeProduct = "true";
+                }
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/add/?id=" + currentUserId + @"&game=" + gameId + @"&hours=" + hours + @"&desc=" + reviewDescBoxContent + @"&comments=" + rawIsCommentsEnabled + @"&visibility=" + reviewVisibiltySelectedSelectorItemContent + @"&free=" + rawIsFreeProduct);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14239,6 +15046,10 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
+                                        reviewDescBox.Text = "";
+                                        reviewVisibiltySelector.SelectedIndex = 0;
+                                        reviewCommentsPermissionCheckBox.IsChecked = false;
+                                        reviewGameFreeCheckBox.IsChecked = false;
                                         mainControl.SelectedIndex = 20;
                                         GetCommunityInfo();
                                     }
@@ -17770,6 +18581,123 @@ namespace GamaManager
             GetAllRecommendationGames();
         }
 
+        private void IncreaseReviewAdvicesHandler (object sender, RoutedEventArgs e)
+        {
+            IncreaseReviewAdvices();
+        }
+
+        public void IncreaseReviewAdvices ()
+        {
+            try
+            {
+                object mainReviewData = mainReview.DataContext;
+                string reviewId = ((string)(mainReviewData));
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/increase/?id=" + reviewId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            SelectReview(reviewId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void IncreaseReviewFunsHandler(object sender, RoutedEventArgs e)
+        {
+            IncreaseReviewFuns();
+        }
+
+        public void IncreaseReviewFuns()
+        {
+            try
+            {
+                object mainReviewData = mainReview.DataContext;
+                string reviewId = ((string)(mainReviewData));
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/funs/increase/?id=" + reviewId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            SelectReview(reviewId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SendReviewCommentHandler (object sender, RoutedEventArgs e)
+        {
+            SendReviewComment();
+        }
+
+        public void SendReviewComment ()
+        {
+            object mainReviewData = mainReview.DataContext;
+            string reviewId = ((string)(mainReviewData));
+            string mainReviewCommentsBoxContent = mainReviewCommentsBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/add/?id=" + reviewId + @"&content=" + mainReviewCommentsBoxContent + @"&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainReviewCommentsBox.Text = "";
+                            SelectReview(reviewId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
     }
 
     class SavedContent
@@ -17848,6 +18776,7 @@ namespace GamaManager
         public int likes;
         public int price;
         public string platform;
+        public string genre;
     }
 
     class UserResponseInfo
@@ -18233,6 +19162,11 @@ namespace GamaManager
         public string desc;
         public string hours;
         public DateTime date;
+        public int advices;
+        public int funs;
+        public bool isCommentsEnabled;
+        public string visibility;
+        public bool isFreeProduct;
     }
 
     class ExperimentsResponseInfo
@@ -18508,6 +19442,21 @@ namespace GamaManager
         public string _id;
         public string game;
         public string user;
+        public DateTime date;
+    }
+
+    public class ReviewCommentsResponseInfo
+    {
+        public string status;
+        public List<ReviewComment> comments;
+    }
+
+    public class ReviewComment
+    {
+        public string _id;
+        public string review;
+        public string user;
+        public string content;
         public DateTime date;
     }
 

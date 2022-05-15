@@ -779,6 +779,29 @@ namespace GamaManager
 
         public void OpenAddManualPage ()
         {
+            manualGameSelector.Items.Clear();
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            int currentGamesCount = currentGames.Count;
+            bool isHaveGames = currentGamesCount >= 1;
+            foreach (Game currentGame in currentGames)
+            {
+                string currentGameId = currentGame.id;
+                string currentGameName = currentGame.name;
+                ComboBoxItem manualGameSelectorItem = new ComboBoxItem();
+                manualGameSelectorItem.Content = currentGameName;
+                manualGameSelectorItem.DataContext = currentGameId;
+                manualGameSelector.Items.Add(manualGameSelectorItem);
+            }
+            if (isHaveGames)
+            {
+                manualGameSelector.SelectedIndex = 0;
+            }
             mainControl.SelectedIndex = 21;
         }
 
@@ -1032,27 +1055,15 @@ namespace GamaManager
                     isDrm = true;
                     rawIsDrm = "true";
                 }
-                /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            mainControl.SelectedIndex = 20;
-                            GetCommunityInfo();
-                        }
-                    }
-                }*/
 
-                string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt;
+                int manualGameSelectorSelectedIndex = manualGameSelector.SelectedIndex;
+                ItemCollection manualGameSelectorItems = manualGameSelector.Items;
+                object rawManualGameSelectorSelectedItem = manualGameSelectorItems[manualGameSelectorSelectedIndex];
+                ComboBoxItem manualGameSelectorSelectedItem = ((ComboBoxItem)(rawManualGameSelectorSelectedItem));
+                object manualGameSelectorSelectedItemData = manualGameSelectorSelectedItem.DataContext;
+                string gameId = ((string)(manualGameSelectorSelectedItemData));
+
+                string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId;
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -4643,37 +4654,125 @@ namespace GamaManager
                                 manuals.HorizontalAlignment = HorizontalAlignment.Left;
                                 foreach (Manual totalManualsItem in totalManuals)
                                 {
-                                    string id = totalManualsItem._id;
-                                    string title = totalManualsItem.title;
-                                    string desc = totalManualsItem.desc;
-                                    StackPanel manual = new StackPanel();
-                                    manual.Width = 500;
-                                    manual.Margin = new Thickness(15);
-                                    manual.Background = System.Windows.Media.Brushes.LightGray;
-                                    TextBlock manualTitleLabel = new TextBlock();
-                                    manualTitleLabel.FontSize = 16;
-                                    manualTitleLabel.Margin = new Thickness(15);
-                                    manualTitleLabel.Text = title;
-                                    manual.Children.Add(manualTitleLabel);
-                                    Image manualPhoto = new Image();
-                                    manualPhoto.Margin = new Thickness(15);
-                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                    manualPhoto.Width = 50;
-                                    manualPhoto.Height = 50;
-                                    manualPhoto.BeginInit();
-                                    // manualPhoto.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
-                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
-                                    manualPhoto.EndInit();
-                                    manual.Children.Add(manualPhoto);
-                                    TextBlock manualDescLabel = new TextBlock();
-                                    manualDescLabel.Margin = new Thickness(15);
-                                    manualDescLabel.Text = desc;
-                                    manual.Children.Add(manualDescLabel);
-                                    Separator manualSeparator = new Separator();
-                                    manual.Children.Add(manualSeparator);
-                                    manuals.Children.Add(manual);
-                                    manual.DataContext = id;
-                                    manual.MouseLeftButtonUp += SelectManualHandler;
+                                    string gameId = totalManualsItem.game;
+
+                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                    nestedWebRequest.Method = "GET";
+                                    nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                    {
+                                        using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = nestedReader.ReadToEnd();
+                                            GamesListResponseInfo myNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                            string responseStatus = myNestedObj.status;
+                                            bool isOKStatus = responseStatus == "OK";
+                                            if (isOKStatus)
+                                            {
+                                                List<GameResponseInfo> totalGames = myNestedObj.games;
+                                                List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                                {
+                                                    string someGameId = someGame._id;
+                                                    bool isIdMatches = someGameId == gameId;
+                                                    return isIdMatches;
+                                                }).ToList<GameResponseInfo>();
+                                                int countResults = results.Count;
+                                                bool isHaveResults = countResults >= 1;
+                                                if (isHaveResults)
+                                                {
+                                                    GameResponseInfo manualGame = results[0];
+                                                    string manualGameName = manualGame.name;
+                                                    string id = totalManualsItem._id;
+                                                    string title = totalManualsItem.title;
+                                                    string desc = totalManualsItem.desc;
+                                                    StackPanel manual = new StackPanel();
+                                                    manual.Width = 500;
+                                                    manual.Margin = new Thickness(15);
+                                                    manual.Background = System.Windows.Media.Brushes.LightGray;
+                                                    TextBlock manualTitleLabel = new TextBlock();
+                                                    manualTitleLabel.FontSize = 16;
+                                                    manualTitleLabel.Margin = new Thickness(15);
+                                                    manualTitleLabel.Text = title;
+                                                    manual.Children.Add(manualTitleLabel);
+                                                    StackPanel manualPhotoWrap = new StackPanel();
+                                                    manualPhotoWrap.Orientation = Orientation.Horizontal;
+                                                    manualPhotoWrap.Background = System.Windows.Media.Brushes.LightSlateGray;
+                                                    manualPhotoWrap.Margin = new Thickness(15);
+                                                    Image manualPhoto = new Image();
+                                                    manualPhoto.Margin = new Thickness(15);
+                                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                    manualPhoto.Width = 50;
+                                                    manualPhoto.Height = 50;
+                                                    manualPhoto.BeginInit();
+                                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                    manualPhoto.EndInit();
+                                                    manualPhotoWrap.Children.Add(manualPhoto);
+                                                    manual.Children.Add(manualPhotoWrap);
+                                                    TextBlock manualDescLabel = new TextBlock();
+                                                    manualDescLabel.Margin = new Thickness(15);
+                                                    manualDescLabel.Text = desc;
+                                                    manual.Children.Add(manualDescLabel);
+                                                    Separator manualSeparator = new Separator();
+                                                    manual.Children.Add(manualSeparator);
+                                                    DockPanel manualFooter = new DockPanel();
+                                                    PackIcon manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Star;
+                                                    manualFooter.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Star;
+                                                    manualFooter.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Star;
+                                                    manualFooter.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Star;
+                                                    manualFooter.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Star;
+                                                    manualFooter.Children.Add(manualFooterItemIcon);
+                                                    TextBlock manualFooterItemLabel = new TextBlock();
+                                                    manualFooterItemLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemLabel.Text = "Оценок: 0";
+                                                    manualFooter.Children.Add(manualFooterItemLabel);
+                                                    StackPanel manualFooterItem = new StackPanel();
+                                                    manualFooterItem.Orientation = Orientation.Horizontal;
+                                                    manualFooterItem.HorizontalAlignment = HorizontalAlignment.Right;
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Medal;
+                                                    manualFooterItem.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemLabel = new TextBlock();
+                                                    manualFooterItemLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemLabel.Text = "0";
+                                                    manualFooterItem.Children.Add(manualFooterItemLabel);
+                                                    manualFooterItemIcon = new PackIcon();
+                                                    manualFooterItemIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemIcon.Kind = PackIconKind.Chat;
+                                                    manualFooterItem.Children.Add(manualFooterItemIcon);
+                                                    manualFooterItemLabel = new TextBlock();
+                                                    manualFooterItemLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                    manualFooterItemLabel.Text = "0";
+                                                    manualFooterItem.Children.Add(manualFooterItemLabel);
+                                                    manualFooter.Children.Add(manualFooterItem);
+
+                                                    manual.Children.Add(manualFooter);
+                                                    TextBlock manualGameNameLabel = new TextBlock();
+                                                    manualGameNameLabel.Margin = new Thickness(15);
+                                                    manualGameNameLabel.Text = manualGameName;
+                                                    manual.Children.Add(manualGameNameLabel);
+                                                    manuals.Children.Add(manual);
+                                                    manual.DataContext = id;
+                                                    manual.MouseLeftButtonUp += SelectManualHandler;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else
@@ -18659,6 +18758,45 @@ namespace GamaManager
             }
         }
 
+        public void SendManualCommentHandler (object sender, RoutedEventArgs e)
+        {
+            SendManualComment();
+        }
+
+        public void SendManualComment()
+        {
+            object mainManualData = mainManual.DataContext;
+            string manualId = ((string)(mainManualData));
+            string mainManualCommentsBoxContent = mainManualCommentsBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/add/?id=" + manualId + @"&content=" + mainManualCommentsBoxContent + @"&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            mainManualCommentsBox.Text = "";
+                            SelectManual(manualId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void SendReviewCommentHandler (object sender, RoutedEventArgs e)
         {
             SendReviewComment();
@@ -19088,6 +19226,7 @@ namespace GamaManager
         public string lang;
         public bool isDrm;
         public DateTime date;
+        public string game;
     }
 
     class IllustrationsResponseInfo

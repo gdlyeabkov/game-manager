@@ -1572,8 +1572,1048 @@ namespace GamaManager
                 InitMail();
                 GetFamilyView();
                 GetIcons();
-                SetCarouselItems();/**/
+                SetCarouselItems();
+                GetGameRecommendationsInfo();
+                GetAllFriendRecommendations();
+                GetLastFriendRecommendations();
+                GetPopularGamesForFriends();
+                /**/
             }
+        }
+
+        public void GetPopularGamesForFriends ()
+        {
+            popularGamesForFriends.Children.Clear();
+            DateTime currentDate = DateTime.Now;
+            object rawSortType = popularGamesForFriendsPanel.DataContext;
+            string sortType = rawSortType.ToString();
+            bool isLastSessions = sortType == "last";
+            bool isNotLastSessions = !isLastSessions;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
+                            }
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GameSessionsResponseInfo myInnerObj = (GameSessionsResponseInfo)js.Deserialize(objText, typeof(GameSessionsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GameSession> sessions = myInnerObj.sessions;
+                                        List<GameSession> friendRecommendations = sessions.Where<GameSession>((GameSession session) =>
+                                        {
+                                            DateTime sessionDate = session.date;
+                                            string reviewUserId = session.user;
+                                            bool isMyFriendRecommendation = friendsIds.Contains(reviewUserId);
+                                            TimeSpan interval = currentDate.Subtract(sessionDate);
+                                            double intervalDays = interval.TotalDays;
+                                            bool isLastSession = intervalDays <= 14;
+                                            bool isFilterMatch = (isNotLastSessions || isLastSessions && isLastSession);
+                                            bool isAddSession = isMyFriendRecommendation && isFilterMatch;
+                                            return isAddSession;
+                                        }).Distinct().ToList<GameSession>();
+                                        foreach (GameSession recommendation in friendRecommendations)
+                                        {
+                                            string recommendationId = recommendation._id;
+                                            string recommendationUserId = recommendation.user;
+                                            DateTime recommendationDate = recommendation.date;
+                                            string recommendationGameId = recommendation.game;
+
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User user = myNestedObj.user;
+                                                        string userName = user.name;
+
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        innerNestedWebRequest.Method = "GET";
+                                                        innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                        using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                        {
+                                                            using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                            {
+                                                                js = new JavaScriptSerializer();
+                                                                objText = innerNestedReader.ReadToEnd();
+                                                                GamesListResponseInfo myInnerNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                                                status = myobj.status;
+                                                                isOkStatus = status == "OK";
+                                                                if (isOkStatus)
+                                                                {
+                                                                    List<GameResponseInfo> games = myInnerNestedObj.games;
+                                                                    List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                                    {
+                                                                        string gameId = game._id;
+                                                                        bool isIdMatches = gameId == recommendationGameId;
+                                                                        return isIdMatches;
+                                                                    }).ToList<GameResponseInfo>();
+                                                                    int countResults = gameResults.Count;
+                                                                    bool isResultsFound = countResults >= 1;
+                                                                    if (isResultsFound)
+                                                                    {
+                                                                        GameResponseInfo recommendationGame = gameResults[0];
+                                                                        string recommendationGameName = recommendationGame.name;
+                                                                        StackPanel friendRecommendation = new StackPanel();
+                                                                        friendRecommendation.Background = System.Windows.Media.Brushes.LightGray;
+                                                                        friendRecommendation.Margin = new Thickness(15);
+                                                                        friendRecommendation.Orientation = Orientation.Horizontal;
+                                                                        Image friendRecommendationThumbnail = new Image();
+                                                                        friendRecommendationThumbnail.Width = 100;
+                                                                        friendRecommendationThumbnail.Height = 100;
+                                                                        friendRecommendationThumbnail.Margin = new Thickness(15);
+                                                                        friendRecommendationThumbnail.BeginInit();
+                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                        friendRecommendationThumbnail.EndInit();
+                                                                        friendRecommendation.Children.Add(friendRecommendationThumbnail);
+                                                                        Image friendRecommendationAvatar = new Image();
+                                                                        friendRecommendationAvatar.Width = 40;
+                                                                        friendRecommendationAvatar.Height = 40;
+                                                                        friendRecommendationAvatar.Margin = new Thickness(15, 0, 15, 0);
+                                                                        friendRecommendationAvatar.BeginInit();
+                                                                        friendRecommendationAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                        friendRecommendationAvatar.EndInit();
+                                                                        friendRecommendation.Children.Add(friendRecommendationAvatar);
+                                                                        ProgressBar friendRecommendationHoursBar = new ProgressBar();
+                                                                        friendRecommendationHoursBar.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationHoursBar.Width = 150;
+                                                                        friendRecommendationHoursBar.Height = 25;
+                                                                        friendRecommendation.Children.Add(friendRecommendationHoursBar);
+                                                                        popularGamesForFriends.Children.Add(friendRecommendation);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SortPopularGamesForFriendsHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel sortTypePanel = ((StackPanel)(sender));
+            object rawSortType = sortTypePanel.DataContext;
+            string sortType = rawSortType.ToString();
+            SortPopularGamesForFriends(sortType);
+        }
+
+        public void SortPopularGamesForFriends (string sortType)
+        {
+            popularGamesForFriendsPanel.DataContext = sortType;
+            GetPopularGamesForFriends();
+        }
+
+        public void GetLastFriendRecommendations ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
+                            }
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<Review> recommendations = myInnerObj.reviews;
+                                        DateTime currentDate = DateTime.Now;
+                                        List<Review> friendRecommendations = recommendations.Where<Review>((Review review) =>
+                                        {
+                                            string reviewUserId = review.user;
+                                            DateTime reviewDate = review.date;
+                                            bool isMyFriendRecommendation = friendsIds.Contains(reviewUserId);
+                                            TimeSpan interval = currentDate.Subtract(reviewDate);
+                                            double intervalDays = interval.TotalDays;
+                                            bool isLastRecommendation = intervalDays <= 14;
+                                            bool isLastFriendRecommendation = isMyFriendRecommendation && isLastRecommendation;
+                                            return isLastFriendRecommendation;
+                                        }).ToList<Review>();
+                                        foreach (Review recommendation in friendRecommendations)
+                                        {
+                                            string recommendationId = recommendation._id;
+                                            string recommendationUserId = recommendation.user;
+                                            DateTime recommendationDate = recommendation.date;
+                                            string recommendationDesc = recommendation.desc;
+                                            string recommendationGameId = recommendation.game;
+
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User user = myNestedObj.user;
+                                                        string userName = user.name;
+
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        innerNestedWebRequest.Method = "GET";
+                                                        innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                        using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                        {
+                                                            using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                            {
+                                                                js = new JavaScriptSerializer();
+                                                                objText = innerNestedReader.ReadToEnd();
+                                                                GamesListResponseInfo myInnerNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                                                status = myobj.status;
+                                                                isOkStatus = status == "OK";
+                                                                if (isOkStatus)
+                                                                {
+                                                                    List<GameResponseInfo> games = myInnerNestedObj.games;
+                                                                    List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                                    {
+                                                                        string gameId = game._id;
+                                                                        bool isIdMatches = gameId == recommendationGameId;
+                                                                        return isIdMatches;
+                                                                    }).ToList<GameResponseInfo>();
+                                                                    int countResults = gameResults.Count;
+                                                                    bool isResultsFound = countResults >= 1;
+                                                                    if (isResultsFound)
+                                                                    {
+                                                                        GameResponseInfo recommendationGame = gameResults[0];
+                                                                        string recommendationGameName = recommendationGame.name;
+                                                                        StackPanel friendRecommendation = new StackPanel();
+                                                                        friendRecommendation.Background = System.Windows.Media.Brushes.LightGray;
+                                                                        friendRecommendation.Margin = new Thickness(15);
+                                                                        friendRecommendation.Orientation = Orientation.Horizontal;
+                                                                        Image friendRecommendationThumbnail = new Image();
+                                                                        friendRecommendationThumbnail.Width = 100;
+                                                                        friendRecommendationThumbnail.Height = 100;
+                                                                        friendRecommendationThumbnail.Margin = new Thickness(15);
+                                                                        friendRecommendationThumbnail.BeginInit();
+                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                        friendRecommendationThumbnail.EndInit();
+                                                                        friendRecommendation.Children.Add(friendRecommendationThumbnail);
+                                                                        StackPanel friendRecommendationAside = new StackPanel();
+                                                                        friendRecommendationAside.Margin = new Thickness(15, 0, 15, 0);
+                                                                        StackPanel friendRecommendationAsideHeader = new StackPanel();
+                                                                        friendRecommendationAsideHeader.Orientation = Orientation.Horizontal;
+                                                                        Image friendRecommendationAsideHeaderAvatar = new Image();
+                                                                        friendRecommendationAsideHeaderAvatar.Width = 40;
+                                                                        friendRecommendationAsideHeaderAvatar.Height = 40;
+                                                                        friendRecommendationAsideHeaderAvatar.Margin = new Thickness(15, 0, 15, 0);
+                                                                        friendRecommendationAsideHeaderAvatar.BeginInit();
+                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                        friendRecommendationAsideHeaderAvatar.EndInit();
+                                                                        friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAvatar);
+                                                                        StackPanel friendRecommendationAsideHeaderAside = new StackPanel();
+                                                                        TextBlock friendRecommendationAsideHeaderAsideNameLabel = new TextBlock();
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.FontSize = 14;
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.Text = recommendationGameName;
+                                                                        friendRecommendationAsideHeaderAside.Children.Add(friendRecommendationAsideHeaderAsideNameLabel);
+
+                                                                        TextBlock friendRecommendationAsideHeaderAsideDateLabel = new TextBlock();
+                                                                        friendRecommendationAsideHeaderAsideDateLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideHeaderAsideDateLabel.Text = recommendationDate.ToLongDateString();
+                                                                        friendRecommendationAsideHeaderAside.Children.Add(friendRecommendationAsideHeaderAsideDateLabel);
+
+                                                                        friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAside);
+                                                                        friendRecommendationAside.Children.Add(friendRecommendationAsideHeader);
+                                                                        TextBlock friendRecommendationAsideDescLabel = new TextBlock();
+                                                                        friendRecommendationAsideDescLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideDescLabel.Text = recommendationDesc;
+                                                                        friendRecommendationAsideDescLabel.FontSize = 16;
+                                                                        friendRecommendationAside.Children.Add(friendRecommendationAsideDescLabel);
+                                                                        TextBlock recentRunGameAsideDetailLabel = new TextBlock();
+                                                                        recentRunGameAsideDetailLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        recentRunGameAsideDetailLabel.Text = "Просмотреть полную информацию";
+                                                                        recentRunGameAsideDetailLabel.DataContext = recommendationId;
+                                                                        recentRunGameAsideDetailLabel.MouseLeftButtonUp += SelectReviewFromRecommendationsHandler;
+                                                                        friendRecommendationAside.Children.Add(recentRunGameAsideDetailLabel);
+                                                                        friendRecommendation.Children.Add(friendRecommendationAside);
+                                                                        lastFriendRecommendations.Children.Add(friendRecommendation);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetAllFriendRecommendations ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
+                            }
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<Review> recommendations = myInnerObj.reviews;
+                                        List<Review> friendRecommendations = recommendations.Where<Review>((Review review) =>
+                                        {
+                                            string reviewUserId = review.user;
+                                            bool isMyFriendRecommendation = friendsIds.Contains(reviewUserId);
+                                            return isMyFriendRecommendation;
+                                        }).ToList<Review>();
+                                        foreach (Review recommendation in friendRecommendations)
+                                        {
+                                            string recommendationId = recommendation._id;
+                                            string recommendationUserId = recommendation.user;
+                                            DateTime recommendationDate = recommendation.date;
+                                            string recommendationDesc = recommendation.desc;
+                                            string recommendationGameId = recommendation.game;
+
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User user = myNestedObj.user;
+                                                        string userName = user.name;
+
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        innerNestedWebRequest.Method = "GET";
+                                                        innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                        using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                        {
+                                                            using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                            {
+                                                                js = new JavaScriptSerializer();
+                                                                objText = innerNestedReader.ReadToEnd();
+                                                                GamesListResponseInfo myInnerNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                                                status = myobj.status;
+                                                                isOkStatus = status == "OK";
+                                                                if (isOkStatus)
+                                                                {
+                                                                    List<GameResponseInfo> games = myInnerNestedObj.games;
+                                                                    List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                                    {
+                                                                        string gameId = game._id;
+                                                                        bool isIdMatches = gameId == recommendationGameId;
+                                                                        return isIdMatches;
+                                                                    }).ToList<GameResponseInfo>();
+                                                                    int countResults = gameResults.Count;
+                                                                    bool isResultsFound = countResults >= 1;
+                                                                    if (isResultsFound)
+                                                                    {
+                                                                        GameResponseInfo recommendationGame = gameResults[0];
+                                                                        string recommendationGameName = recommendationGame.name;
+                                                                        StackPanel friendRecommendation = new StackPanel();
+                                                                        friendRecommendation.Background = System.Windows.Media.Brushes.LightGray;
+                                                                        friendRecommendation.Margin = new Thickness(15);
+                                                                        friendRecommendation.Orientation = Orientation.Horizontal;
+                                                                        Image friendRecommendationThumbnail = new Image();
+                                                                        friendRecommendationThumbnail.Width = 100;
+                                                                        friendRecommendationThumbnail.Height = 100;
+                                                                        friendRecommendationThumbnail.Margin = new Thickness(15);
+                                                                        friendRecommendationThumbnail.BeginInit();
+                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                        friendRecommendationThumbnail.EndInit();
+                                                                        friendRecommendation.Children.Add(friendRecommendationThumbnail);
+                                                                        StackPanel friendRecommendationAside = new StackPanel();
+                                                                        friendRecommendationAside.Margin = new Thickness(15, 0, 15, 0);
+                                                                        StackPanel friendRecommendationAsideHeader = new StackPanel();
+                                                                        friendRecommendationAsideHeader.Orientation = Orientation.Horizontal;
+                                                                        Image friendRecommendationAsideHeaderAvatar = new Image();
+                                                                        friendRecommendationAsideHeaderAvatar.Width = 40;
+                                                                        friendRecommendationAsideHeaderAvatar.Height = 40;
+                                                                        friendRecommendationAsideHeaderAvatar.Margin = new Thickness(15, 0, 15, 0);
+                                                                        friendRecommendationAsideHeaderAvatar.BeginInit();
+                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                        friendRecommendationAsideHeaderAvatar.EndInit();
+                                                                        friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAvatar);
+                                                                        StackPanel friendRecommendationAsideHeaderAside = new StackPanel();
+                                                                        TextBlock friendRecommendationAsideHeaderAsideNameLabel = new TextBlock();
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.FontSize = 14;
+                                                                        friendRecommendationAsideHeaderAsideNameLabel.Text = recommendationGameName;
+                                                                        friendRecommendationAsideHeaderAside.Children.Add(friendRecommendationAsideHeaderAsideNameLabel);
+
+                                                                        TextBlock friendRecommendationAsideHeaderAsideDateLabel = new TextBlock();
+                                                                        friendRecommendationAsideHeaderAsideDateLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideHeaderAsideDateLabel.Text = recommendationDate.ToLongDateString();
+                                                                        friendRecommendationAsideHeaderAside.Children.Add(friendRecommendationAsideHeaderAsideDateLabel);
+
+                                                                        friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAside);
+                                                                        friendRecommendationAside.Children.Add(friendRecommendationAsideHeader);
+                                                                        TextBlock friendRecommendationAsideDescLabel = new TextBlock();
+                                                                        friendRecommendationAsideDescLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        friendRecommendationAsideDescLabel.Text = recommendationDesc;
+                                                                        friendRecommendationAsideDescLabel.FontSize = 16;
+                                                                        friendRecommendationAside.Children.Add(friendRecommendationAsideDescLabel);
+                                                                        TextBlock recentRunGameAsideDetailLabel = new TextBlock();
+                                                                        recentRunGameAsideDetailLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                        recentRunGameAsideDetailLabel.Text = "Просмотреть полную информацию";
+                                                                        recentRunGameAsideDetailLabel.DataContext = recommendationId;
+                                                                        recentRunGameAsideDetailLabel.MouseLeftButtonUp += SelectReviewFromRecommendationsHandler;
+                                                                        friendRecommendationAside.Children.Add(recentRunGameAsideDetailLabel);
+                                                                        friendRecommendation.Children.Add(friendRecommendationAside);
+                                                                        allFriendRecommendations.Children.Add(friendRecommendation);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectReviewFromRecommendationsHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock descLabel = ((TextBlock)(sender));
+            object descLabelData = descLabel.DataContext;
+            string id = ((string)(descLabelData));
+            SelectReview(id);
+        }
+
+        public void GetGameRecommendationsInfo()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            gameRecommendationsAvatar.BeginInit();
+                            gameRecommendationsAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            gameRecommendationsAvatar.EndInit();
+                            gameRecommendationsUserNameLabel.Text = userName;
+                            GetRecentRunRecommendationGames();
+                            GetAllRecommendationGames();
+                            GetRecommendationReviewsInfo();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetRecommendationReviewsInfo ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            int productsCount = currentGames.Count;
+            string rawProductsCount = productsCount.ToString();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ReviewsResponseInfo myobj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Review> totalReviews = myobj.reviews;
+                            List<Review> myReviews = totalReviews.Where<Review>((Review review) =>
+                            {
+                                string reviewUserId = review.user;
+                                bool isMyReview = reviewUserId == currentUserId;
+                                return isMyReview;
+                            }).ToList<Review>();
+                            int myReviewsCount = myReviews.Count;
+                            string rawMyReviewsCount = myReviewsCount.ToString();
+                            gameRecommendationsCountReviewsLabel.Text = rawMyReviewsCount;
+                            gameRecommendationsCountProductsLabel.Text = rawProductsCount;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetRecentRunRecommendationGames ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            DateTime currentDate = DateTime.Now;
+            List<Game> recentGames = currentGames.Where<Game>((Game someGame) =>
+            {
+                string rawSomeGameDate = someGame.date;
+                DateTime someGameDate = DateTime.Parse(rawSomeGameDate);
+                TimeSpan interval = currentDate.Subtract(someGameDate);
+                double intervalDays = interval.TotalDays;
+                bool isRecent = intervalDays <= 14;
+                return isRecent;
+            }).ToList<Game>();
+            foreach (Game recentGame in recentGames)
+            {
+                string recentRunGameName = recentGame.name;
+                string recentRunGameHours = recentGame.hours;
+                StackPanel recentRunGame = new StackPanel();
+                recentRunGame.Background = System.Windows.Media.Brushes.LightGray;
+                recentRunGame.Margin = new Thickness(15);
+                recentRunGame.Orientation = Orientation.Horizontal;
+                Image recentRunGameThumbnail = new Image();
+                recentRunGameThumbnail.Width = 100;
+                recentRunGameThumbnail.Height = 100;
+                recentRunGameThumbnail.Margin = new Thickness(15);
+                recentRunGameThumbnail.BeginInit();
+                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                recentRunGameThumbnail.EndInit();
+                recentRunGame.Children.Add(recentRunGameThumbnail);
+                StackPanel recentRunGameAside = new StackPanel();
+                recentRunGameAside.Margin = new Thickness(15, 0, 15, 0);
+                TextBlock recentRunGameAsideNameLabel = new TextBlock();
+                recentRunGameAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                recentRunGameAsideNameLabel.FontSize = 16;
+                recentRunGameAsideNameLabel.Text = recentRunGameName;
+                recentRunGameAside.Children.Add(recentRunGameAsideNameLabel);
+                TextBlock recentRunGameAsideHoursLabel = new TextBlock();
+                recentRunGameAsideHoursLabel.Margin = new Thickness(0, 5, 0, 5);
+                string recentRunGameAsideHoursLabelContent = recentRunGameHours + " ч.";
+                recentRunGameAsideHoursLabel.Text = recentRunGameAsideHoursLabelContent;
+                recentRunGameAside.Children.Add(recentRunGameAsideHoursLabel);
+                StackPanel recentRunGameAsideFooter = new StackPanel();
+                recentRunGameAsideFooter.Margin = new Thickness(0, 5, 0, 5);
+                recentRunGameAsideFooter.Orientation = Orientation.Horizontal;
+                ComboBox recentRunGameAsideFooterLinks = new ComboBox();
+                recentRunGameAsideFooterLinks.Margin = new Thickness(0, 0, 15, 0);
+                recentRunGameAsideFooterLinks.Width = 125;
+                recentRunGameAsideFooterLinks.Height = 25;
+
+                ComboBoxItem recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Visibility = invisible;
+                StackPanel recentRunGameAsideFooterLinksItemContent = new StackPanel();
+                recentRunGameAsideFooterLinksItemContent.Orientation = Orientation.Horizontal;
+                PackIcon recentRunGameAsideFooterLinksItemContentIcon = new PackIcon();
+                recentRunGameAsideFooterLinksItemContentIcon.Kind = PackIconKind.Stairs;
+                recentRunGameAsideFooterLinksItemContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterLinksItemContent.Children.Add(recentRunGameAsideFooterLinksItemContentIcon);
+                TextBlock recentRunGameAsideFooterLinksItemContentLabel = new TextBlock();
+                recentRunGameAsideFooterLinksItemContentLabel.Text = "Ссылки";
+                recentRunGameAsideFooterLinksItemContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterLinksItemContent.Children.Add(recentRunGameAsideFooterLinksItemContentLabel);
+                recentRunGameAsideFooterLinksItem.Content = recentRunGameAsideFooterLinksItemContent;
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Content = "Перейти на страницу сообщества";
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Content = "Посетить форумы";
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Content = "Найти группы сообщества";
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Content = "Посетить официальный сайт";
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                recentRunGameAsideFooterLinksItem.Content = "Прочитать последние новости";
+                recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                recentRunGameAsideFooterLinks.SelectedIndex = 0;
+                recentRunGameAsideFooterLinks.SelectionChanged += GameRecommendationsFooterLinksItemSelectedHandler;
+
+                recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterLinks);
+                ComboBox recentRunGameAsideFooterStats = new ComboBox();
+                recentRunGameAsideFooterStats.Margin = new Thickness(15, 0, 15, 0);
+                recentRunGameAsideFooterStats.Width = 125;
+                recentRunGameAsideFooterStats.Height = 25;
+
+                ComboBoxItem recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                recentRunGameAsideFooterStatsItem.Visibility = invisible;
+                StackPanel recentRunGameAsideFooterStatsItemContent = new StackPanel();
+                recentRunGameAsideFooterStatsItemContent.Orientation = Orientation.Horizontal;
+                PackIcon recentRunGameAsideFooterStatsItemContentIcon = new PackIcon();
+                recentRunGameAsideFooterStatsItemContentIcon.Kind = PackIconKind.ChartBar;
+                recentRunGameAsideFooterStatsItemContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterStatsItemContent.Children.Add(recentRunGameAsideFooterStatsItemContentIcon);
+                TextBlock recentRunGameAsideFooterStatsItemContentLabel = new TextBlock();
+                recentRunGameAsideFooterStatsItemContentLabel.Text = "Статистика";
+                recentRunGameAsideFooterStatsItemContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterStatsItemContent.Children.Add(recentRunGameAsideFooterStatsItemContentLabel);
+                recentRunGameAsideFooterStatsItem.Content = recentRunGameAsideFooterStatsItemContent;
+                recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                recentRunGameAsideFooterStatsItem.Content = "Достижения";
+                recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                recentRunGameAsideFooterStatsItem.Content = "Глобальные достижения";
+                recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                recentRunGameAsideFooterStats.SelectedIndex = 0;
+                recentRunGameAsideFooterStats.SelectionChanged += GameRecommendationsFooterStatsItemSelectedHandler;
+
+                recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterStats);
+                Button recentRunGameAsideFooterReview = new Button();
+                recentRunGameAsideFooterReview.Margin = new Thickness(15, 0, 15, 0);
+                recentRunGameAsideFooterReview.Width = 125;
+                recentRunGameAsideFooterReview.Height = 25;
+                StackPanel recentRunGameAsideFooterReviewContent = new StackPanel();
+                recentRunGameAsideFooterReviewContent.Orientation = Orientation.Horizontal;
+                PackIcon recentRunGameAsideFooterReviewContentIcon = new PackIcon();
+                recentRunGameAsideFooterReviewContentIcon.Kind = PackIconKind.ThumbsUp;
+                recentRunGameAsideFooterReviewContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterReviewContent.Children.Add(recentRunGameAsideFooterReviewContentIcon);
+                TextBlock recentRunGameAsideFooterReviewContentLabel = new TextBlock();
+                recentRunGameAsideFooterReviewContentLabel.Text = "Написать обзор";
+                recentRunGameAsideFooterReviewContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                recentRunGameAsideFooterReviewContent.Children.Add(recentRunGameAsideFooterReviewContentLabel);
+                recentRunGameAsideFooterReview.Content = recentRunGameAsideFooterReviewContent;
+                recentRunGameAsideFooterReview.DataContext = recentRunGameName;
+                recentRunGameAsideFooterReview.Click += OpenAddReviewFromRecommendationsHandler;
+                recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterReview);
+                recentRunGameAside.Children.Add(recentRunGameAsideFooter);
+                recentRunGame.Children.Add(recentRunGameAside);
+                recentRunGames.Children.Add(recentRunGame);
+
+            }
+        }
+
+        public void OpenAddReviewFromRecommendationsHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string name = ((string)(btnData));
+            OpenAddReview(name);
+        }
+
+        public void GetAllRecommendationGames ()
+        {
+            object rawSortData = sortAllGameRecommendationsPanel.DataContext;
+            string sortData = rawSortData.ToString();
+            bool isSortByHours = sortData == "hours";
+            bool isSortByName = sortData == "name";
+            bool isSortByAchievements = sortData == "achievements";
+            allRecommendationGames.Children.Clear();
+            string allRecommendationGamesBoxContent = allRecommendationGamesBox.Text;
+            int allRecommendationGamesBoxContentLength = allRecommendationGamesBoxContent.Length;
+            bool isFilterDisabled = allRecommendationGamesBoxContentLength <= 0;
+            string insensitiveCaseAllRecommendationGamesBoxContent = allRecommendationGamesBoxContent.ToLower();
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            if (isSortByHours)
+            {
+                currentGames = currentGames.OrderBy((Game someGame) =>
+                {
+                    return someGame.hours;
+                }).ToList<Game>();
+            }
+            else if (isSortByName)
+            {
+                currentGames = currentGames.OrderBy((Game someGame) =>
+                {
+                    return someGame.name;
+                }).ToList<Game>();
+            }
+            else if (isSortByAchievements)
+            {
+                currentGames = currentGames.OrderBy((Game someGame) =>
+                {
+                    return someGame.installDate;
+                }).ToList<Game>();
+            }
+            foreach (Game recentGame in currentGames)
+            {
+                string recentRunGameName = recentGame.name;
+                string insensitiveCaseRecentRunGameName = recentRunGameName;
+                bool isKeywordsMatch = insensitiveCaseRecentRunGameName.Contains(insensitiveCaseAllRecommendationGamesBoxContent);
+                bool isAddGame = isKeywordsMatch  || isFilterDisabled;
+                if (isAddGame)
+                {
+                    string recentRunGameHours = recentGame.hours;
+                    StackPanel recentRunGame = new StackPanel();
+                    recentRunGame.Background = System.Windows.Media.Brushes.LightGray;
+                    recentRunGame.Margin = new Thickness(15);
+                    recentRunGame.Orientation = Orientation.Horizontal;
+                    Image recentRunGameThumbnail = new Image();
+                    recentRunGameThumbnail.Width = 100;
+                    recentRunGameThumbnail.Height = 100;
+                    recentRunGameThumbnail.Margin = new Thickness(15);
+                    recentRunGameThumbnail.BeginInit();
+                    recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                    recentRunGameThumbnail.EndInit();
+                    recentRunGame.Children.Add(recentRunGameThumbnail);
+                    StackPanel recentRunGameAside = new StackPanel();
+                    recentRunGameAside.Margin = new Thickness(15, 0, 15, 0);
+                    TextBlock recentRunGameAsideNameLabel = new TextBlock();
+                    recentRunGameAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                    recentRunGameAsideNameLabel.FontSize = 16;
+                    recentRunGameAsideNameLabel.Text = recentRunGameName;
+                    recentRunGameAside.Children.Add(recentRunGameAsideNameLabel);
+                    TextBlock recentRunGameAsideHoursLabel = new TextBlock();
+                    recentRunGameAsideHoursLabel.Margin = new Thickness(0, 5, 0, 5);
+                    string recentRunGameAsideHoursLabelContent = recentRunGameHours + " ч.";
+                    recentRunGameAsideHoursLabel.Text = recentRunGameAsideHoursLabelContent;
+                    recentRunGameAside.Children.Add(recentRunGameAsideHoursLabel);
+                    StackPanel recentRunGameAsideFooter = new StackPanel();
+                    recentRunGameAsideFooter.Margin = new Thickness(0, 5, 0, 5);
+                    recentRunGameAsideFooter.Orientation = Orientation.Horizontal;
+                    ComboBox recentRunGameAsideFooterLinks = new ComboBox();
+                    recentRunGameAsideFooterLinks.Margin = new Thickness(0, 0, 15, 0);
+                    recentRunGameAsideFooterLinks.Width = 125;
+                    recentRunGameAsideFooterLinks.Height = 25;
+
+                    ComboBoxItem recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Visibility = invisible;
+                    StackPanel recentRunGameAsideFooterLinksItemContent = new StackPanel();
+                    recentRunGameAsideFooterLinksItemContent.Orientation = Orientation.Horizontal;
+                    PackIcon recentRunGameAsideFooterLinksItemContentIcon = new PackIcon();
+                    recentRunGameAsideFooterLinksItemContentIcon.Kind = PackIconKind.Stairs;
+                    recentRunGameAsideFooterLinksItemContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterLinksItemContent.Children.Add(recentRunGameAsideFooterLinksItemContentIcon);
+                    TextBlock recentRunGameAsideFooterLinksItemContentLabel = new TextBlock();
+                    recentRunGameAsideFooterLinksItemContentLabel.Text = "Ссылки";
+                    recentRunGameAsideFooterLinksItemContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterLinksItemContent.Children.Add(recentRunGameAsideFooterLinksItemContentLabel);
+                    recentRunGameAsideFooterLinksItem.Content = recentRunGameAsideFooterLinksItemContent;
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Content = "Перейти на страницу сообщества";
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Content = "Посетить форумы";
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Content = "Найти группы сообщества";
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Content = "Посетить официальный сайт";
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinksItem = new ComboBoxItem();
+                    recentRunGameAsideFooterLinksItem.Content = "Прочитать последние новости";
+                    recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
+                    recentRunGameAsideFooterLinks.SelectedIndex = 0;
+                    recentRunGameAsideFooterLinks.SelectionChanged += GameRecommendationsFooterLinksItemSelectedHandler;
+
+                    recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterLinks);
+                    ComboBox recentRunGameAsideFooterStats = new ComboBox();
+                    recentRunGameAsideFooterStats.Margin = new Thickness(15, 0, 15, 0);
+                    recentRunGameAsideFooterStats.Width = 125;
+                    recentRunGameAsideFooterStats.Height = 25;
+
+                    ComboBoxItem recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                    recentRunGameAsideFooterStatsItem.Visibility = invisible;
+                    StackPanel recentRunGameAsideFooterStatsItemContent = new StackPanel();
+                    recentRunGameAsideFooterStatsItemContent.Orientation = Orientation.Horizontal;
+                    PackIcon recentRunGameAsideFooterStatsItemContentIcon = new PackIcon();
+                    recentRunGameAsideFooterStatsItemContentIcon.Kind = PackIconKind.ChartBar;
+                    recentRunGameAsideFooterStatsItemContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterStatsItemContent.Children.Add(recentRunGameAsideFooterStatsItemContentIcon);
+                    TextBlock recentRunGameAsideFooterStatsItemContentLabel = new TextBlock();
+                    recentRunGameAsideFooterStatsItemContentLabel.Text = "Статистика";
+                    recentRunGameAsideFooterStatsItemContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterStatsItemContent.Children.Add(recentRunGameAsideFooterStatsItemContentLabel);
+                    recentRunGameAsideFooterStatsItem.Content = recentRunGameAsideFooterStatsItemContent;
+                    recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                    recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                    recentRunGameAsideFooterStatsItem.Content = "Достижения";
+                    recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                    recentRunGameAsideFooterStatsItem = new ComboBoxItem();
+                    recentRunGameAsideFooterStatsItem.Content = "Глобальные достижения";
+                    recentRunGameAsideFooterStats.Items.Add(recentRunGameAsideFooterStatsItem);
+                    recentRunGameAsideFooterStats.SelectedIndex = 0;
+                    recentRunGameAsideFooterStats.SelectionChanged += GameRecommendationsFooterStatsItemSelectedHandler;
+
+                    recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterStats);
+                    Button recentRunGameAsideFooterReview = new Button();
+                    recentRunGameAsideFooterReview.Margin = new Thickness(15, 0, 15, 0);
+                    recentRunGameAsideFooterReview.Width = 125;
+                    recentRunGameAsideFooterReview.Height = 25;
+                    StackPanel recentRunGameAsideFooterReviewContent = new StackPanel();
+                    recentRunGameAsideFooterReviewContent.Orientation = Orientation.Horizontal;
+                    PackIcon recentRunGameAsideFooterReviewContentIcon = new PackIcon();
+                    recentRunGameAsideFooterReviewContentIcon.Kind = PackIconKind.ThumbsUp;
+                    recentRunGameAsideFooterReviewContentIcon.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterReviewContent.Children.Add(recentRunGameAsideFooterReviewContentIcon);
+                    TextBlock recentRunGameAsideFooterReviewContentLabel = new TextBlock();
+                    recentRunGameAsideFooterReviewContentLabel.Text = "Написать обзор";
+                    recentRunGameAsideFooterReviewContentLabel.Margin = new Thickness(5, 0, 5, 0);
+                    recentRunGameAsideFooterReviewContent.Children.Add(recentRunGameAsideFooterReviewContentLabel);
+                    recentRunGameAsideFooterReview.Content = recentRunGameAsideFooterReviewContent;
+                    recentRunGameAsideFooterReview.DataContext = recentRunGameName;
+                    recentRunGameAsideFooterReview.Click += OpenAddReviewFromRecommendationsHandler;
+                    recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterReview);
+                    recentRunGameAside.Children.Add(recentRunGameAsideFooter);
+                    recentRunGame.Children.Add(recentRunGameAside);
+                    allRecommendationGames.Children.Add(recentRunGame);
+                }
+            }
+        }
+
+
+        public void SelectGameRecommendationsItemHandler (object sender, SelectionChangedEventArgs e)
+        {
+            SelectGameRecommendationsItem();
+        }
+
+        public void SelectGameRecommendationsItem ()
+        {
+            int selectedIndex = gameRecommendationsControl.SelectedIndex;
+            bool isWishList = selectedIndex == 4;
+            if (isWishList)
+            {
+                mainControl.SelectedIndex = 0;
+                gameRecommendationsControl.SelectedIndex = 0;
+            }
+        }
+
+        private void GameRecommendationsFooterStatsItemSelectedHandler (object sender, SelectionChangedEventArgs e)
+        {
+            if (isAppInit)
+            {
+                ComboBox selector = ((ComboBox)(sender));
+                GameRecommendationsFooterStatsItemSelected(selector);
+            }
+        }
+
+        public void GameRecommendationsFooterStatsItemSelected (ComboBox selector)
+        {
+            int selectedIndex = selector.SelectedIndex;
+            bool isAchievements = selectedIndex == 1;
+            bool isGlobalAchievements = selectedIndex == 2;
+            if (isAchievements)
+            {
+
+            }
+            else if (isGlobalAchievements)
+            {
+
+            }
+            selector.SelectedIndex = 0;
+        }
+
+        private void GameRecommendationsFooterLinksItemSelectedHandler(object sender, SelectionChangedEventArgs e)
+        {
+            if (isAppInit)
+            {
+                ComboBox selector = ((ComboBox)(sender));
+                GameRecommendationsFooterLinksItemSelected(selector);
+            }
+        }
+
+        public void GameRecommendationsFooterLinksItemSelected(ComboBox selector)
+        {
+            int selectedIndex = selector.SelectedIndex;
+            bool isVisitStorePage = selectedIndex == 1;
+            bool isVisitForums = selectedIndex == 2;
+            bool isFindCommunityGroups = selectedIndex == 3;
+            bool isVisitOfficialSite = selectedIndex == 4;
+            bool isReadLastNews = selectedIndex == 5;
+            if (isVisitStorePage)
+            {
+
+            }
+            else if (isVisitForums)
+            {
+
+            }
+            else if (isFindCommunityGroups)
+            {
+
+            }
+            else if (isVisitOfficialSite)
+            {
+
+            }
+            else if (isReadLastNews)
+            {
+
+            }
+            selector.SelectedIndex = 0;
         }
 
         public void SetCarouselItems ()
@@ -2312,7 +3352,8 @@ namespace GamaManager
                                                         mainReviewGameThumbnail.EndInit();
                                                         mainReviewGameLabel.Text = foundedGameName;
                                                         mainReviewDescLabel.Text = desc;
-                                                        mainReviewDateLabel.Text = rawDate;
+                                                        string mainReviewDateLabelContent = "Опубликовано: " + rawDate;
+                                                        mainReviewDateLabel.Text = mainReviewDateLabelContent;
                                                         mainControl.SelectedIndex = 27;
                                                     }
                                                 }
@@ -6609,6 +7650,25 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
+                                        
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/add/?id=" + gameId + @"&user=" + currentUserId);
+                                        nestedWebRequest.Method = "GET";
+                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                        {
+                                            using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = nestedReader.ReadToEnd();
+                                                UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                status = myNestedObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+
+                                                }
+                                            }
+                                        }
 
                                     }
                                 }
@@ -13132,7 +14192,8 @@ namespace GamaManager
 
         private void OpenAddReviewHandler (object sender, RoutedEventArgs e)
         {
-            OpenAddReview();
+            string name = gameNameLabel.Text;
+            OpenAddReview(name);
         }
 
         public void AddReviewHandler (object sender, RoutedEventArgs e)
@@ -13196,10 +14257,9 @@ namespace GamaManager
             }
         }
 
-        public void OpenAddReview ()
+        public void OpenAddReview (string name)
         {
             mainControl.SelectedIndex = 26;
-            string name = gameNameLabel.Text;
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
@@ -16653,6 +17713,63 @@ namespace GamaManager
             recommendationTagsControl.SelectedIndex = index;
         }
 
+        private void OpenAllFriendRecommendationsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAllFriendRecommendations();
+        }
+
+        public void OpenAllFriendRecommendations ()
+        {
+            mainControl.SelectedIndex = 55;
+        }
+
+        private void OpenGameRecommendationsHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenGameRecommendations();
+        }
+
+        public void OpenGameRecommendations ()
+        {
+            mainControl.SelectedIndex = 56;
+        }
+
+        private void GetAllRecommendationGamesHandler(object sender, TextChangedEventArgs e)
+        {
+            GetAllRecommendationGames();
+        }
+
+        private void SortAllGameRecommendationsHandler (object sender, MouseButtonEventArgs e)
+        {
+            TextBlock label = ((TextBlock)(sender));
+            object labelData = label.DataContext;
+            string sortData = labelData.ToString();
+            SortAllGameRecommendations(sortData);
+        }
+
+        public void SortAllGameRecommendations (string sortData)
+        {
+            sortAllGameRecommendationsByHoursLabel.TextDecorations = TextDecorations.Underline;
+            sortAllGameRecommendationsByNameLabel.TextDecorations = TextDecorations.Underline;
+            sortAllGameRecommendationsByAchievementsLabel.TextDecorations = TextDecorations.Underline;
+            bool isHours = sortData == "hours";
+            bool isName = sortData == "name";
+            bool isAchievements = sortData == "achievements";
+            if (isHours)
+            {
+                sortAllGameRecommendationsByHoursLabel.TextDecorations = null;
+            }
+            else if (isName)
+            {
+                sortAllGameRecommendationsByNameLabel.TextDecorations = null;
+            }
+            else if (isAchievements)
+            {
+                sortAllGameRecommendationsByAchievementsLabel.TextDecorations = null;
+            }
+            sortAllGameRecommendationsPanel.DataContext = sortData;
+            GetAllRecommendationGames();
+        }
+
     }
 
     class SavedContent
@@ -17378,6 +18495,20 @@ namespace GamaManager
         public string _id;
         public string game;
         public string tag;
+    }
+
+    public class GameSessionsResponseInfo
+    {
+        public string status;
+        public List<GameSession> sessions;
+    }
+
+    public class GameSession
+    {
+        public string _id;
+        public string game;
+        public string user;
+        public DateTime date;
     }
 
 }

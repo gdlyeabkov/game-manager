@@ -110,7 +110,7 @@ namespace GamaManager
             this.Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded (object sender, RoutedEventArgs e)
         {
             debugger = new SpeechSynthesizer();
             visible = Visibility.Visible;

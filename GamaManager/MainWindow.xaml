@@ -7149,12 +7149,27 @@
                                         <TextBlock
                                             x:Name="mainReviewUserNameLabel"
                                             Margin="15"
+                                            FontSize="20"
                                             Text="Имя пользователя"
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Kind="ChevronDoubleRight"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Обзоры"
+                                            FontSize="14"
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Kind="ChevronDoubleRight"    
                                         />
                                         <TextBlock
                                             x:Name="mainReviewGameLabel"
                                             Margin="15"
                                             Text="Обзор на игру"
+                                            FontSize="14"
                                         />
                                     </StackPanel>
                                     <StackPanel
@@ -7198,20 +7213,245 @@
                                                 Margin="15"
                                                 Text="Описание обзора"    
                                             />
-                                        </StackPanel>
-                                        <Image
-                                            x:Name="mainReviewGameThumbnail"
-                                            Margin="15 0"
-                                            Width="150"    
-                                            Height="150"    
-                                            ImageFailed="SetDefautAvatarHandler"
-                                        >
-                                            <Image.Source>
-                                                <BitmapImage
-                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            <Separator
+                                                Margin="15 5"    
+                                            />
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        Text="Был ли этот обзор полезен?"    
+                                                    />
+                                                    <Button
+                                                        Width="65"
+                                                        Height="20"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbUp"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Да"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="65"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbDown"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Нет"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="100"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Smiley"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Забавный"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="100"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Medal"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Наградить"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
+                                                <Button
+                                                    HorizontalAlignment="Right"
+                                                    Width="50"
+                                                    Height="20"
+                                                    Margin="5 0"
+                                                >
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Margin="5 0"
+                                                            Kind="Flag"    
+                                                        />
+                                                    </Button.Content>
+                                                </Button>
+                                            </DockPanel>
+                                            <StackPanel
+                                                Background="LightSlateGray"
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Margin="5"
+                                                    Kind="Chat"    
                                                 />
-                                            </Image.Source>
-                                        </Image>
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Комментариев: 0"    
+                                                />
+                                                <CheckBox
+                                                    Margin="5"
+                                                    Content="Подписаться (?)"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <Image
+                                                    Margin="15 0"
+                                                    Width="50"    
+                                                    Height="50"    
+                                                    ImageFailed="SetDefautAvatarHandler"
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                                <TextBox
+                                                    Width="500"
+                                                    Height="50"
+                                                >
+                                                    <TextBox.Resources>
+                                                        <VisualBrush
+                                                            x:Key="hinttext"
+                                                            AlignmentX="Left"
+                                                            Stretch="None"
+                                                            TileMode="None"
+                                                        >
+                                                            <VisualBrush.Visual>
+                                                                <DockPanel>
+                                                                    <TextBlock
+                                                                        Height="50"
+                                                                        Width="500"
+                                                                        Text="Оставить комментарий"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                    />  
+                                                                </DockPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </TextBox.Resources>
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="FontSize" Value="12" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="15 0"    
+                                        >
+                                            <Image
+                                                x:Name="mainReviewGameThumbnail"
+                                                Margin="0 15"
+                                                Width="150"    
+                                                Height="150"    
+                                                ImageFailed="SetDefautAvatarHandler"
+                                            >
+                                                <Image.Source>
+                                                    <BitmapImage
+                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                    />
+                                                </Image.Source>
+                                            </Image>
+                                            <StackPanel
+                                                Orientation="Horizontal"    
+                                                Margin="0 5"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Kind="Cart"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Открыть страницу в магазине"
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="0 5"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Kind="Web"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Открыть центр сообщества"
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal"    
+                                                Margin="0 5"
+                                            >
+                                                <materialDesign:PackIcon
+                                                    Kind="Search"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 0"
+                                                    Text="Найти похожее"
+                                                />
+                                            </StackPanel>
+                                            <TextBlock
+                                                Margin="0 15"
+                                                Text="ДРУЗЕЙ С ЭТОЙ ИГРОЙ: 0"    
+                                            />
+                                        </StackPanel>
                                     </StackPanel>
                                     <Separator
                                         Margin="15 5"    
@@ -13115,14 +13355,14 @@ E. Что произойдет, если положение Пункта 11 бу
                                 DataContext="{ Binding ElementName=mainWindow}"    
                             />
                             <TextBlock
-                                Margin="15"
-                                FontSize="24"
-                                Text="ПОПУЛЯРНЫЕ МЕТКИ"    
+                                Margin="15 5"
+                                FontSize="14"
+                                Text="Рекоммендация > АКТИВНОСТЬ ДРУЗЕЙ"    
                             />
                             <TextBlock
                                 Margin="15"
-                                FontSize="16"
-                                Text="Просмотр по самым популярным меткам для продуктов с сортировкой по частоте употребления меток.&#10;Нажмите здесь, чтобы узнать о пометке продуктов в Steam."    
+                                FontSize="24"
+                                Text="АКТИВНОСТЬ ДРУЗЕЙ"    
                             />
                             <TabControl
                                 Margin="15"    
@@ -13135,71 +13375,69 @@ E. Что произойдет, если положение Пункта 11 бу
                                     <StackPanel
                                         Margin="0 15"    
                                     >
-                                        <TextBlock
-                                            Margin="0 15"
-                                            Text="Самые популярные игры у друзей"    
-                                        />
                                         <DockPanel>
+                                            <TextBlock
+                                                Margin="0 15"
+                                                Text="Самые популярные игры у друзей"    
+                                            />
                                             <StackPanel
+                                                x:Name="popularGamesForFriendsPanel"
+                                                Orientation="Horizontal"
                                                 Width="250"
+                                                DataContext="last"
                                             >
                                                 <StackPanel
+                                                    Width="165"
+                                                    Height="25"
                                                     Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="0"
-                                                    MouseLeftButtonUp="SelectGlobalsTagHandler"
+                                                    Margin="2 0"
+                                                    DataContext="last"
+                                                    MouseLeftButtonUp="SortPopularGamesForFriendsHandler"
                                                 >
                                                     <TextBlock
                                                         Margin="15 5"
-                                                        Text="Инди"    
+                                                        Text="За последние 2 недели"    
                                                     />
                                                 </StackPanel>
                                                 <StackPanel
+                                                    MinWidth="165"
+                                                    Height="25"
                                                     Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="1"
-                                                    MouseLeftButtonUp="SelectGlobalsTagHandler"
+                                                    Margin="2 0"
+                                                    DataContext="all"
+                                                    MouseLeftButtonUp="SortPopularGamesForFriendsHandler"
                                                 >
                                                     <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Экшен"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="2"
-                                                    MouseLeftButtonUp="SelectGlobalsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Приключение"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="3"
-                                                    MouseLeftButtonUp="SelectGlobalsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Казуальная игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="4"
-                                                    MouseLeftButtonUp="SelectGlobalsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Симулятор"    
+                                                        Padding="2 0"
+                                                        Margin="0 5"
+                                                        Text="За всё время"    
                                                     />
                                                 </StackPanel>
                                             </StackPanel>
                                         </DockPanel>
+                                        <StackPanel
+                                            x:Name="popularGamesForFriends"    
+                                        />
+                                        <TextBlock
+                                            Text="Результаты 0-0 из 0"    
+                                        />
+                                        <DockPanel>
+                                            <TextBlock
+                                                FontSize="18"
+                                                Text="Последние рекомендации ваших друзей"    
+                                            />
+                                            <Button
+                                                HorizontalAlignment="Right"
+                                                Width="125"
+                                                Height="25"
+                                                Content="Полный список"
+                                                Click="OpenAllFriendRecommendationsHandler"
+                                            />
+                                        </DockPanel>
+                                        <Separator />
+                                        <StackPanel
+                                            x:Name="lastFriendRecommendations"    
+                                        />
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem
@@ -13212,67 +13450,12 @@ E. Что произойдет, если положение Пункта 11 бу
                                             Margin="0 15"
                                             Text="Самые частые игры в списках желаемого друзей"    
                                         />
-                                        <DockPanel>
-                                            <StackPanel
-                                                Width="250"
-                                            >
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="0"
-                                                    MouseLeftButtonUp="SelectRecommendationsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Геройский шутер"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="1"
-                                                    MouseLeftButtonUp="SelectRecommendationsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Баскетбол"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="2"
-                                                    MouseLeftButtonUp="SelectRecommendationsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Гонки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="3"
-                                                    MouseLeftButtonUp="SelectRecommendationsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Зомби"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Background="LightGray"    
-                                                    Margin="0 2"
-                                                    DataContext="4"
-                                                    MouseLeftButtonUp="SelectRecommendationsTagHandler"
-                                                >
-                                                    <TextBlock
-                                                        Margin="15 5"
-                                                        Text="Спортивная игра"    
-                                                    />
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DockPanel>
+                                        <StackPanel
+                                            x:Name="wantGamesForFriends"    
+                                        />
+                                        <TextBlock
+                                            Text="Результаты 0-0 из 0"    
+                                        />
                                     </StackPanel>
                                 </TabItem>
                             </TabControl>
@@ -13325,6 +13508,318 @@ E. Что произойдет, если положение Пункта 11 бу
                                     Height="85"
                                 />
                             </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <!--
+                            РЕКОМЕНДАЦИИ ВАШИХ ДРУЗЕЙ
+                            -->
+                            <local:HeaderControl
+                                DataContext="{ Binding ElementName=mainWindow }"    
+                            />
+                            <TextBlock
+                                Text="Рекомендация > Другом"
+                                Margin="15 5"
+                            />
+                            <TextBlock
+                                Text="РЕКОМЕНДАЦИИ ВАШИХ ДРУЗЕЙ"
+                                FontSize="24"
+                                Margin="15"
+                            />
+                            <Separator
+                                Margin="25"    
+                            />
+                            <StackPanel
+                                x:Name="allFriendRecommendations"    
+                            />
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="14"
+                                    Text="ПОРЕКОМЕНДУЙТЕ ЧТО-НИБУДЬ САМИ"    
+                                    Margin="15"
+                                />
+                                <Separator />
+                                <DockPanel>
+                                    <Image
+                                        Margin="15"
+                                        Width="65"    
+                                        Height="65"    
+                                        ImageFailed="SetDefautAvatarHandler"
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <TextBlock
+                                        FontSize="14"
+                                        Text="Хотите порекомендовать понравившуюся игру всем своим друзьям?&#10;Выберите ее из списка игр."    
+                                        Margin="15"
+                                    />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="14"
+                                        Text="Порекомендовать игру"
+                                        Margin="15"
+                                        MouseLeftButtonUp="OpenGameRecommendationsHandler"
+                                    />
+                                </DockPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <!--
+                            Ваши игры
+                            -->
+                            <StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <Image
+                                        x:Name="gameRecommendationsAvatar"
+                                        Margin="15"
+                                        Width="100"    
+                                        Height="100"    
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <TextBlock
+                                        x:Name="gameRecommendationsUserNameLabel"
+                                        VerticalAlignment="Center"
+                                        Margin="5 0"
+                                        FontSize="24"
+                                        Text="Пользователь"    
+                                    />
+                                    <materialDesign:PackIcon
+                                        VerticalAlignment="Center"
+                                        Kind="ChevronDoubleRight" 
+                                        Width="15"
+                                        Height="15"
+                                        Margin="5 0"
+                                    />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Margin="5 0"
+                                        Text="Игры"    
+                                    />
+                                </StackPanel>
+                                <TabControl
+                                    x:Name="gameRecommendationsControl"
+                                    SelectionChanged="SelectGameRecommendationsItemHandler"
+                                >
+                                    <TabItem
+                                        Header="Недавно запущенные"    
+                                    >
+                                        <StackPanel
+                                            x:Name="recentRunGames"    
+                                        />
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Все"
+                                    >
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="5 0"
+                                                        Text="Поиск"
+                                                    />
+                                                    <TextBox
+                                                        x:Name="allRecommendationGamesBox"
+                                                        Margin="5 0"
+                                                        Width="250"
+                                                        Height="25"
+                                                        TextChanged="GetAllRecommendationGamesHandler"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Width="250"
+                                                                            Height="25"
+                                                                            Text="Фильтр"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    x:Name="sortAllGameRecommendationsPanel"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal"    
+                                                    DataContext="hours"
+                                                >
+                                                    <TextBlock
+                                                        Margin="5 0"
+                                                        Text="Сортировать по"    
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="sortAllGameRecommendationsByHoursLabel"
+                                                        Margin="5 0"
+                                                        Text="времени в игре"
+                                                        Foreground="SkyBlue"
+                                                        DataContext="hours"
+                                                        MouseLeftButtonUp="SortAllGameRecommendationsHandler"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="sortAllGameRecommendationsByNameLabel"
+                                                        Margin="5 0"
+                                                        Text="названию"    
+                                                        TextDecorations="Underline"
+                                                        Foreground="SkyBlue"
+                                                        DataContext="name"
+                                                        MouseLeftButtonUp="SortAllGameRecommendationsHandler"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="sortAllGameRecommendationsByAchievementsLabel"
+                                                        Margin="5 0"
+                                                        Text="проценту достижений"    
+                                                        TextDecorations="Underline"
+                                                        Foreground="SkyBlue"
+                                                        DataContext="achievements"
+                                                        MouseLeftButtonUp="SortAllGameRecommendationsHandler"
+                                                    />
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <StackPanel
+                                                x:Name="allRecommendationGames"    
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Идеальные"    
+                                    >
+                                        <StackPanel
+                                            x:Name="idealGames"    
+                                        />
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Подписки"    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Список желаемого"    
+                                    >
+                                        <StackPanel>
+
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Обзоры"    
+                                    >
+                                        <DockPanel>
+                                            <StackPanel
+                                                Margin="15"    
+                                            >
+                                                <TextBlock
+                                                    Text="Последние обзоры"    
+                                                    FontSize="18"
+                                                />
+                                                <Separator />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Background="LightGray"
+                                                Width="350"
+                                                Margin="0 15"
+                                                HorizontalAlignment="Right"    
+                                            >
+                                                <DockPanel
+                                                    VerticalAlignment="Center"
+                                                >
+                                                    <TextBlock
+                                                        x:Name="gameRecommendationsCountReviewsLabel"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="30"
+                                                        Text="0"    
+                                                        Margin="15"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="0 0 0 15"
+                                                        VerticalAlignment="Center"
+                                                        Text="ЧИСЛО&#10;ОБЗОРОВ"
+                                                    />
+                                                </DockPanel>
+                                                <DockPanel
+                                                    VerticalAlignment="Center"
+                                                >
+                                                    <TextBlock
+                                                        x:Name="gameRecommendationsCountProductsLabel"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="30"
+                                                        Text="0"    
+                                                        Margin="15"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="0 0 0 15"
+                                                        VerticalAlignment="Center"
+                                                        Text="КОЛИЧЕСТВО&#10;ПРОДУКТОВ"
+                                                    />
+                                                </DockPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </TabItem>
+                                </TabControl>
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

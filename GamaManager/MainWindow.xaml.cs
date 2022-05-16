@@ -3303,15 +3303,16 @@ namespace GamaManager
             }
         }
 
-    public void GetContent ()
-    {
-        GetScreenShots("", true);
-        GetIllustrationsContent();
-        GetVideoContent();
-        GetStoreContent();
-        GetCollectionsContent();
-        GetManualsContent();
-    }
+        public void GetContent ()
+        {
+            GetScreenShots("", true);
+            GetIllustrationsContent();
+            GetVideoContent();
+            GetStoreContent();
+            GetCollectionsContent();
+            GetManualsContent();
+            GetFavoriteManualsContent();
+        }
 
         public void GetIllustrationsContent ()
         {
@@ -3439,6 +3440,143 @@ namespace GamaManager
         public void GetCollectionsContent()
         {
 
+        }
+
+        public void GetFavoriteManualsContent ()
+        {
+            int selectedIndex = screenShotsFilter.SelectedIndex;
+            object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
+            ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
+            object rawFilter = selectedItem.DataContext;
+            string filter = rawFilter.ToString();
+            bool isFilterDisabled = filter == @"all games";
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ManualsResponseInfo myobj = (ManualsResponseInfo)js.Deserialize(objText, typeof(ManualsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+
+                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                            manualFavoriteRelationsWebRequest.Method = "GET";
+                            manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var manualFavoriteRelationsReader = new StreamReader(manualFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = manualFavoriteRelationsReader.ReadToEnd();
+                                    ManualFavoriteRelationsResponseInfo myManualFavoriteRelationsObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
+                                    status = myManualFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+
+                                        List<ManualFavoriteRelation> favoriteRelations = myManualFavoriteRelationsObj.relations;
+                                        List<ManualFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
+                                        {
+                                            string relationManualId = relation.manual;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<ManualFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (ManualFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationManualId = myFavoriteRelation.manual;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationManualId);
+                                        }
+
+                                        List<Manual> totalManuals = myobj.manuals;
+                                        totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            string userId = content.user;
+                                            bool isMyContent = userId == currentUserId;
+                                            bool isFilterMatch = filter == contentGameId;
+                                            bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
+                                            return isAddManual;
+                                        }).ToList<Manual>();
+                                        contentManuals.Children.Clear();
+                                        int totalManualsCount = totalManuals.Count;
+                                        bool isHaveManuals = totalManualsCount >= 1;
+                                        if (isHaveManuals)
+                                        {
+                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                            foreach (Manual totalManualsItem in totalManuals)
+                                            {
+                                                string id = totalManualsItem._id;
+                                                string userId = totalManualsItem.user;
+                                                bool isMyContent = userId == currentUserId;
+                                                bool isFavoriteManual = myFavoriteRelationIds.Contains(id);
+                                                if ((isMyContent || true) && isFavoriteManual)
+                                                {
+                                                    string title = totalManualsItem.title;
+                                                    string desc = totalManualsItem.desc;
+                                                    StackPanel manual = new StackPanel();
+                                                    manual.Width = 500;
+                                                    manual.Margin = new Thickness(15);
+                                                    manual.Background = System.Windows.Media.Brushes.LightGray;
+                                                    TextBlock manualTitleLabel = new TextBlock();
+                                                    manualTitleLabel.FontSize = 16;
+                                                    manualTitleLabel.Margin = new Thickness(15);
+                                                    manualTitleLabel.Text = title;
+                                                    manual.Children.Add(manualTitleLabel);
+                                                    Image manualPhoto = new Image();
+                                                    manualPhoto.Margin = new Thickness(15);
+                                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                    manualPhoto.Width = 50;
+                                                    manualPhoto.Height = 50;
+                                                    manualPhoto.BeginInit();
+                                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                    manualPhoto.EndInit();
+                                                    manual.Children.Add(manualPhoto);
+                                                    TextBlock manualDescLabel = new TextBlock();
+                                                    manualDescLabel.Margin = new Thickness(15);
+                                                    manualDescLabel.Text = desc;
+                                                    manual.Children.Add(manualDescLabel);
+                                                    contentFavoriteManuals.Children.Add(manual);
+                                                    manual.DataContext = id;
+                                                    manual.MouseLeftButtonUp += SelectManualHandler;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            TextBlock notFoundLabel = new TextBlock();
+                                            notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                            notFoundLabel.TextAlignment = TextAlignment.Center;
+                                            notFoundLabel.FontSize = 18;
+                                            notFoundLabel.Margin = new Thickness(15);
+                                            notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
+                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                            contentFavoriteManuals.Children.Add(notFoundLabel);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetManualsContent()
@@ -6184,116 +6322,162 @@ namespace GamaManager
                                                             isOkStatus = status == "OK";
                                                             if (isOkStatus)
                                                             {
-                                                                List<ManualVisit> visits = myGetVisitsObj.visits;
-                                                                List<ManualVisit> currentManualVisits = visits.Where<ManualVisit>((ManualVisit visit) =>
+
+                                                                HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                                                                manualFavoriteRelationsWebRequest.Method = "GET";
+                                                                manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
                                                                 {
-                                                                    string visitManualId = visit.manual;
-                                                                    bool isCurrentManual = visitManualId == manualId;
-                                                                    return isCurrentManual;
-                                                                }).ToList<ManualVisit>();
-                                                                int countCurrentManualVisits = currentManualVisits.Count;
-                                                                List<string> currentManualVisitUsers = new List<string>();
-                                                                foreach (ManualVisit currentManualVisit in currentManualVisits)
-                                                                {
-                                                                    string currentManualVisitUserId = currentManualVisit.user;
-                                                                    currentManualVisitUsers.Add(currentManualVisitUserId);
-                                                                }
-                                                                bool isNotAddVisit = currentManualVisitUsers.Contains(currentUserId);
-                                                                bool isNotAuthor = currentUserId != userId;
-                                                                bool isAddVisit = !isNotAddVisit && isNotAuthor;
-                                                                if (isAddVisit)
-                                                                {
-                                                                    countCurrentManualVisits++;
-                                                                    HttpWebRequest addVisitWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/visits/add/?user=" + currentUserId + @"&id=" + manualId);
-                                                                    addVisitWebRequest.Method = "GET";
-                                                                    addVisitWebRequest.UserAgent = ".NET Framework Test Client";
-                                                                    using (HttpWebResponse addVisitWebResponse = (HttpWebResponse)addVisitWebRequest.GetResponse())
+                                                                    using (var manualFavoriteRelationsReader = new StreamReader(manualFavoriteRelationsWebResponse.GetResponseStream()))
                                                                     {
-                                                                        using (var addVisitReader = new StreamReader(addVisitWebResponse.GetResponseStream()))
+                                                                        js = new JavaScriptSerializer();
+                                                                        objText = manualFavoriteRelationsReader.ReadToEnd();
+                                                                        ManualFavoriteRelationsResponseInfo myManualFavoriteRelationsObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
+                                                                        status = myManualFavoriteRelationsObj.status;
+                                                                        isOkStatus = status == "OK";
+                                                                        if (isOkStatus)
                                                                         {
-                                                                            js = new JavaScriptSerializer();
-                                                                            objText = addVisitReader.ReadToEnd();
-                                                                            UserResponseInfo myAddVisitObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                                                            status = myAddVisitObj.status;
-                                                                            isOkStatus = status == "OK";
-                                                                        }
-                                                                    }
-                                                                }
 
-                                                                string rawManualVisitsCount = countCurrentManualVisits.ToString();
-                                                                string mainManualVisitsLabelContent = rawManualVisitsCount + " уникальных посетителей";
-                                                                mainManualVisitsLabel.Text = mainManualVisitsLabelContent;
-
-                                                                List<ManualComment> reviewComments = myInnerNestedObj.comments;
-                                                                List<ManualComment> currentManualComments = reviewComments.Where<ManualComment>((ManualComment comment) =>
-                                                                {
-                                                                    string commentManualId = comment.manual;
-                                                                    bool isCurrentManual = commentManualId == manualId;
-                                                                    return isCurrentManual;
-                                                                }).ToList<ManualComment>();
-                                                                int countComments = currentManualComments.Count;
-                                                                string rawCountComments = countComments.ToString();
-                                                                string mainManualCountCommentsLabelContent = "Комментариев: " + rawCountComments;
-                                                                mainManualCountCommentsLabel.Text = mainManualCountCommentsLabelContent;
-
-                                                                foreach (ManualComment comment in currentManualComments)
-                                                                {
-                                                                    string commentUserId = comment.user;
-                                                                    HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
-                                                                    userWebRequest.Method = "GET";
-                                                                    userWebRequest.UserAgent = ".NET Framework Test Client";
-                                                                    using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
-                                                                    {
-                                                                        using (StreamReader userReader = new StreamReader(userWebResponse.GetResponseStream()))
-                                                                        {
-                                                                            js = new JavaScriptSerializer();
-                                                                            objText = userReader.ReadToEnd();
-                                                                            UserResponseInfo myUserObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                                                            status = myUserObj.status;
-                                                                            isOkStatus = status == "OK";
-                                                                            if (isOkStatus)
+                                                                            List<ManualVisit> visits = myGetVisitsObj.visits;
+                                                                            List<ManualVisit> currentManualVisits = visits.Where<ManualVisit>((ManualVisit visit) =>
                                                                             {
-                                                                                User commentUser = myUserObj.user;
-                                                                                string commentUserName = commentUser.name;
-                                                                                DateTime commentDate = comment.date;
-                                                                                string commentContent = comment.content;
-                                                                                string rawCommentDate = commentDate.ToLongDateString();
-                                                                                StackPanel mainReviewComment = new StackPanel();
-                                                                                mainReviewComment.Orientation = Orientation.Horizontal;
-                                                                                mainReviewComment.Margin = new Thickness(15);
-                                                                                Image mainReviewCommentUserAvatar = new Image();
-                                                                                mainReviewCommentUserAvatar.Margin = new Thickness(15, 0, 15, 0);
-                                                                                mainReviewCommentUserAvatar.Width = 40;
-                                                                                mainReviewCommentUserAvatar.Height = 40;
-                                                                                mainReviewCommentUserAvatar.BeginInit();
-                                                                                mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
-                                                                                mainReviewCommentUserAvatar.EndInit();
-                                                                                mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
-                                                                                StackPanel mainReviewCommentAside = new StackPanel();
-                                                                                mainReviewCommentAside.Margin = new Thickness(15, 0, 15, 0);
-                                                                                StackPanel mainReviewCommentAsideHeader = new StackPanel();
-                                                                                mainReviewCommentAsideHeader.Orientation = Orientation.Horizontal;
-                                                                                TextBlock mainReviewCommentAsideHeaderUserNameLabel = new TextBlock();
-                                                                                mainReviewCommentAsideHeaderUserNameLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                                mainReviewCommentAsideHeaderUserNameLabel.Text = commentUserName;
-                                                                                mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderUserNameLabel);
-                                                                                TextBlock mainReviewCommentAsideHeaderDateLabel = new TextBlock();
-                                                                                mainReviewCommentAsideHeaderDateLabel.Margin = new Thickness(5, 0, 5, 0);
-                                                                                mainReviewCommentAsideHeaderDateLabel.Text = rawCommentDate;
-                                                                                mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderDateLabel);
-                                                                                mainReviewCommentAside.Children.Add(mainReviewCommentAsideHeader);
-                                                                                TextBlock mainReviewCommentContentLabel = new TextBlock();
-                                                                                mainReviewCommentContentLabel.Margin = new Thickness(5, 10, 5, 0);
-                                                                                mainReviewCommentContentLabel.Text = commentContent;
-                                                                                mainReviewCommentAside.Children.Add(mainReviewCommentContentLabel);
-                                                                                mainReviewComment.Children.Add(mainReviewCommentAside);
-                                                                                mainManualComments.Children.Add(mainReviewComment);
-
+                                                                                string visitManualId = visit.manual;
+                                                                                bool isCurrentManual = visitManualId == manualId;
+                                                                                return isCurrentManual;
+                                                                            }).ToList<ManualVisit>();
+                                                                            int countCurrentManualVisits = currentManualVisits.Count;
+                                                                            List<string> currentManualVisitUsers = new List<string>();
+                                                                            foreach (ManualVisit currentManualVisit in currentManualVisits)
+                                                                            {
+                                                                                string currentManualVisitUserId = currentManualVisit.user;
+                                                                                currentManualVisitUsers.Add(currentManualVisitUserId);
                                                                             }
+                                                                            bool isNotAddVisit = currentManualVisitUsers.Contains(currentUserId);
+                                                                            bool isNotAuthor = currentUserId != userId;
+                                                                            bool isAddVisit = !isNotAddVisit && isNotAuthor;
+                                                                            if (isAddVisit)
+                                                                            {
+                                                                                countCurrentManualVisits++;
+                                                                                HttpWebRequest addVisitWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/visits/add/?user=" + currentUserId + @"&id=" + manualId);
+                                                                                addVisitWebRequest.Method = "GET";
+                                                                                addVisitWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                using (HttpWebResponse addVisitWebResponse = (HttpWebResponse)addVisitWebRequest.GetResponse())
+                                                                                {
+                                                                                    using (var addVisitReader = new StreamReader(addVisitWebResponse.GetResponseStream()))
+                                                                                    {
+                                                                                        js = new JavaScriptSerializer();
+                                                                                        objText = addVisitReader.ReadToEnd();
+                                                                                        UserResponseInfo myAddVisitObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                        status = myAddVisitObj.status;
+                                                                                        isOkStatus = status == "OK";
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            string rawManualVisitsCount = countCurrentManualVisits.ToString();
+                                                                            string mainManualVisitsLabelContent = rawManualVisitsCount + " уникальных посетителей";
+                                                                            mainManualVisitsLabel.Text = mainManualVisitsLabelContent;
+
+                                                                            List<ManualComment> reviewComments = myInnerNestedObj.comments;
+                                                                            List<ManualComment> currentManualComments = reviewComments.Where<ManualComment>((ManualComment comment) =>
+                                                                            {
+                                                                                string commentManualId = comment.manual;
+                                                                                bool isCurrentManual = commentManualId == manualId;
+                                                                                return isCurrentManual;
+                                                                            }).ToList<ManualComment>();
+                                                                            int countComments = currentManualComments.Count;
+                                                                            string rawCountComments = countComments.ToString();
+                                                                            string mainManualCountCommentsLabelContent = "Комментариев: " + rawCountComments;
+                                                                            mainManualCountCommentsLabel.Text = mainManualCountCommentsLabelContent;
+
+                                                                            foreach (ManualComment comment in currentManualComments)
+                                                                            {
+                                                                                string commentUserId = comment.user;
+                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                                userWebRequest.Method = "GET";
+                                                                                userWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
+                                                                                {
+                                                                                    using (StreamReader userReader = new StreamReader(userWebResponse.GetResponseStream()))
+                                                                                    {
+                                                                                        js = new JavaScriptSerializer();
+                                                                                        objText = userReader.ReadToEnd();
+                                                                                        UserResponseInfo myUserObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                        status = myUserObj.status;
+                                                                                        isOkStatus = status == "OK";
+                                                                                        if (isOkStatus)
+                                                                                        {
+                                                                                            User commentUser = myUserObj.user;
+                                                                                            string commentUserName = commentUser.name;
+                                                                                            DateTime commentDate = comment.date;
+                                                                                            string commentContent = comment.content;
+                                                                                            string rawCommentDate = commentDate.ToLongDateString();
+                                                                                            StackPanel mainReviewComment = new StackPanel();
+                                                                                            mainReviewComment.Orientation = Orientation.Horizontal;
+                                                                                            mainReviewComment.Margin = new Thickness(15);
+                                                                                            Image mainReviewCommentUserAvatar = new Image();
+                                                                                            mainReviewCommentUserAvatar.Margin = new Thickness(15, 0, 15, 0);
+                                                                                            mainReviewCommentUserAvatar.Width = 40;
+                                                                                            mainReviewCommentUserAvatar.Height = 40;
+                                                                                            mainReviewCommentUserAvatar.BeginInit();
+                                                                                            mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                            mainReviewCommentUserAvatar.EndInit();
+                                                                                            mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
+                                                                                            StackPanel mainReviewCommentAside = new StackPanel();
+                                                                                            mainReviewCommentAside.Margin = new Thickness(15, 0, 15, 0);
+                                                                                            StackPanel mainReviewCommentAsideHeader = new StackPanel();
+                                                                                            mainReviewCommentAsideHeader.Orientation = Orientation.Horizontal;
+                                                                                            TextBlock mainReviewCommentAsideHeaderUserNameLabel = new TextBlock();
+                                                                                            mainReviewCommentAsideHeaderUserNameLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                                            mainReviewCommentAsideHeaderUserNameLabel.Text = commentUserName;
+                                                                                            mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderUserNameLabel);
+                                                                                            TextBlock mainReviewCommentAsideHeaderDateLabel = new TextBlock();
+                                                                                            mainReviewCommentAsideHeaderDateLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                                            mainReviewCommentAsideHeaderDateLabel.Text = rawCommentDate;
+                                                                                            mainReviewCommentAsideHeader.Children.Add(mainReviewCommentAsideHeaderDateLabel);
+                                                                                            mainReviewCommentAside.Children.Add(mainReviewCommentAsideHeader);
+                                                                                            TextBlock mainReviewCommentContentLabel = new TextBlock();
+                                                                                            mainReviewCommentContentLabel.Margin = new Thickness(5, 10, 5, 0);
+                                                                                            mainReviewCommentContentLabel.Text = commentContent;
+                                                                                            mainReviewCommentAside.Children.Add(mainReviewCommentContentLabel);
+                                                                                            mainReviewComment.Children.Add(mainReviewCommentAside);
+                                                                                            mainManualComments.Children.Add(mainReviewComment);
+
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            List<ManualFavoriteRelation> favoriteRelations = myManualFavoriteRelationsObj.relations;
+                                                                            List<ManualFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
+                                                                            {
+                                                                                string relationManualId = relation.manual;
+                                                                                string relationUserId = relation.user;
+                                                                                bool isCurrentManual = relationManualId == manualId;
+                                                                                bool isCurrentUser = relationUserId == currentUserId;
+                                                                                bool isMyFavoriteRelation = isCurrentManual && isCurrentUser;
+                                                                                return isMyFavoriteRelation;
+                                                                            }).ToList<ManualFavoriteRelation>();
+                                                                            int countMyFavoriteRelations = myFavoriteRelations.Count;
+                                                                            bool isFavorite = countMyFavoriteRelations >= 1;
+                                                                            if (isFavorite)
+                                                                            {
+                                                                                mainManualFavoriteBtnContentLabel.Text = "Удалить из избранного";
+                                                                                mainManualFavoriteBtn.Click -= IncreaseManualFavoritesHandler;
+                                                                                mainManualFavoriteBtn.Click += RemoveManualFavoritesHandler;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mainManualFavoriteBtnContentLabel.Text = "В избранное";
+                                                                                mainManualFavoriteBtn.Click -= RemoveManualFavoritesHandler;
+                                                                                mainManualFavoriteBtn.Click += IncreaseManualFavoritesHandler;
+                                                                            }
+
+                                                                            mainManual.DataContext = manualId;
+
                                                                         }
                                                                     }
                                                                 }
-                                                                mainManual.DataContext = manualId;
 
                                                             }
                                                         }
@@ -20842,6 +21026,44 @@ namespace GamaManager
             }
         }
 
+
+        public void RemoveManualFavoritesHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveManualFavorites();
+        }
+
+        public void RemoveManualFavorites ()
+        {
+            try
+            {
+                object mainManualData = mainManual.DataContext;
+                string manualId = ((string)(mainManualData));
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/remove/?manual=" + manualId + @"&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            SelectManual(manualId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void IncreaseManualFavoritesHandler (object sender, RoutedEventArgs e)
         {
             IncreaseManualFavorites();
@@ -20853,7 +21075,7 @@ namespace GamaManager
             {
                 object mainManualData = mainManual.DataContext;
                 string manualId = ((string)(mainManualData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/increase/?id=" + manualId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/increase/?id=" + manualId + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -20934,6 +21156,32 @@ namespace GamaManager
         public void ScrollToManualComments ()
         {
             mainManualScroll.ScrollToBottom();
+        }
+
+        private void SelectManualsContentItemHandler (object sender, MouseButtonEventArgs e)
+        {
+            StackPanel manualsContentItem = ((StackPanel)(sender));
+            object manualsContentItemData = manualsContentItem.DataContext;
+            string rawManualsContentItemData = manualsContentItemData.ToString();
+            int index = Int32.Parse(rawManualsContentItemData);
+            SelectManualsContentItem(index);
+        }
+
+
+        public void SelectManualsContentItem (int index)
+        {
+            manualsListContentItem.Background = System.Windows.Media.Brushes.Transparent;
+            favoriteManualsListContentItem.Background = System.Windows.Media.Brushes.Transparent;
+            bool isFavorite = index == 1;
+            if (isFavorite)
+            {
+                favoriteManualsListContentItem.Background = System.Windows.Media.Brushes.LightSlateGray;
+            }
+            else
+            {
+                manualsListContentItem.Background = System.Windows.Media.Brushes.LightSlateGray;
+            }
+            contentManualsControl.SelectedIndex = index;
         }
 
     }
@@ -21780,6 +22028,18 @@ namespace GamaManager
         {
             return 0;
         }
+    }
+
+    public class ManualFavoriteRelationsResponseInfo
+    {
+        public List<ManualFavoriteRelation> relations;
+        public string status;
+    }
+
+    public class ManualFavoriteRelation
+    {
+        public string user;
+        public string manual;
     }
 
 }

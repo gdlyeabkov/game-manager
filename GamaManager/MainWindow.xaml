@@ -2477,27 +2477,60 @@
                                     Header="Руководства"    
                                 >
                                     <DockPanel>
-                                        <StackPanel
-                                            x:Name="contentManuals"
-                                            Margin="25"
-                                            Background="Gray"
-                                            Orientation="Vertical"
-                                        />
+                                        <TabControl
+                                            x:Name="contentManualsControl"
+                                            SelectedIndex="0"
+                                            MinWidth="650"
+                                        >
+                                            <TabItem
+                                                Visibility="Collapsed"    
+                                            >
+                                                <StackPanel
+                                                    x:Name="contentManuals"
+                                                    Margin="25"
+                                                    Background="Gray"
+                                                    Orientation="Vertical"
+                                                />
+                                            </TabItem>
+                                            <TabItem    
+                                                Visibility="Collapsed"    
+                                            >
+                                                <StackPanel
+                                                    x:Name="contentFavoriteManuals"
+                                                    Margin="25"
+                                                    Background="Gray"
+                                                    Orientation="Vertical"
+                                                />
+                                            </TabItem>
+                                        </TabControl>
                                         <StackPanel>
                                             <StackPanel
                                                 Background="Gray"
                                                 Margin="25"    
                                             >
-                                                <TextBlock
-                                                    FontSize="18"
-                                                    Margin="15"
-                                                    Text="Перечень"    
-                                                />
-                                                <TextBlock
-                                                    FontSize="18"
-                                                    Margin="15"
-                                                    Text="Избранное"
-                                                />
+                                                <StackPanel
+                                                    x:Name="manualsListContentItem"
+                                                    Background="LightSlateGray"    
+                                                    DataContext="0"
+                                                    MouseLeftButtonUp="SelectManualsContentItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="18"
+                                                        Margin="15"
+                                                        Text="Перечень"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    x:Name="favoriteManualsListContentItem"
+                                                    DataContext="1"
+                                                    MouseLeftButtonUp="SelectManualsContentItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        FontSize="18"
+                                                        Margin="15"
+                                                        Text="Избранное"
+                                                    />
+                                                </StackPanel>
                                             </StackPanel>
                                             <StackPanel
                                                 Background="Gray"
@@ -7123,10 +7156,10 @@
                                             </Button.Content>
                                         </Button>
                                         <Button
+                                            x:Name="mainManualFavoriteBtn"
                                             Margin="10"
-                                            Width="125"
+                                            Width="175"
                                             Height="20"
-                                            Click="IncreaseManualFavoritesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -7137,6 +7170,7 @@
                                                         Kind="Star"    
                                                     />
                                                     <TextBlock
+                                                        x:Name="mainManualFavoriteBtnContentLabel"
                                                         Margin="5 0"
                                                         Text="В избранное"    
                                                     />

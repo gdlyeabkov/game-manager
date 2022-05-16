@@ -70,18 +70,47 @@ namespace GamaManager.Dialogs
                         bool isFilterMatches = isWordsMatches || isNotFilter;
                         if (isFilterMatches)
                         {
-                            FileInfo info = new FileInfo(file);
-                            Image screenShot = new Image();
-                            screenShot.Margin = new Thickness(15);
-                            screenShot.Width = 85;
-                            screenShot.Height = 85;
-                            screenShot.BeginInit();
-                            Uri screenShotUri = new Uri(file);
-                            screenShot.Source = new BitmapImage(screenShotUri);
-                            screenShot.EndInit();
-                            screenShots.Children.Add(screenShot);
-                            screenShot.DataContext = file;
-                            screenShot.MouseLeftButtonUp += SelectScreenShotHandler;
+
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<Game> results = currentGames.Where<Game>((Game someGame) =>
+                            {
+                                string someGameName = someGame.name;
+                                return someGameName == gameName;
+                            }).ToList<Game>();
+                            int countResults = results.Count;
+                            bool isHaveResults = countResults >= 1;
+                            if (isHaveResults)
+                            {
+
+                                FileInfo info = new FileInfo(file);
+                                Image screenShot = new Image();
+                                screenShot.Margin = new Thickness(15);
+                                screenShot.Width = 85;
+                                screenShot.Height = 85;
+                                screenShot.BeginInit();
+                                Uri screenShotUri = new Uri(file);
+                                screenShot.Source = new BitmapImage(screenShotUri);
+                                screenShot.EndInit();
+                                screenShots.Children.Add(screenShot);
+
+                                // screenShot.DataContext = file;
+
+                            
+                                Game currentGame = results[0];
+                                string currentGameId = currentGame.id;
+                                Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
+                                screenShotData.Add("name", file);
+                                screenShotData.Add("id", currentGameId);
+                                screenShot.DataContext = screenShotData;
+
+                                screenShot.MouseLeftButtonUp += SelectScreenShotHandler;
+
+                            }
+
                         }
                     }
                 }
@@ -92,11 +121,14 @@ namespace GamaManager.Dialogs
         {
             Image screenShot = ((Image)(sender));
             object data = screenShot.DataContext;
-            string name = ((string)(data));
-            SelectScreenShot(name);
+            // string name = ((string)(data));
+            Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+            string name = ((string)(screenShotData["name"]));
+            string id = ((string)(screenShotData["id"]));
+            SelectScreenShot(name, id, screenShotData);
         }
 
-        public void SelectScreenShot (string name)
+        public void SelectScreenShot (string name, string id, Dictionary<String, Object> screenShotData)
         {
             screenShotsControl.SelectedIndex = 1;
             actionBtns.Visibility = Visibility.Visible;
@@ -131,7 +163,10 @@ namespace GamaManager.Dialogs
             string rawSize = size.ToString();
             string mainScreenShotSizeLabelContent = rawSize + " " + measure;
             mainScreenShotSizeLabel.Text = mainScreenShotSizeLabelContent;
-            mainScreenShot.DataContext = name;
+
+            // mainScreenShot.DataContext = name;
+            mainScreenShot.DataContext = screenShotData;
+
         }
 
         public void InitConstants (string currentUserId)
@@ -186,7 +221,12 @@ namespace GamaManager.Dialogs
             try
             {
                 object mainScreenShotData = mainScreenShot.DataContext;
-                string path = ((string)(mainScreenShotData));
+
+                // string path = ((string)(mainScreenShotData));
+                Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(mainScreenShotData));
+                string path = ((string)(screenShotData["name"]));
+                string id = ((string)(screenShotData["id"]));
+
                 string ext = System.IO.Path.GetExtension(path);
                 string desc = descBox.Text;
                 string spoiler = "false";
@@ -196,7 +236,7 @@ namespace GamaManager.Dialogs
                 {
                     spoiler = "true";
                 }
-                string url = "http://localhost:4000/api/screenshots/add/?id=" + currentUserId + @"&desc=" + desc + @"&spoiler=" + spoiler + @"&ext=" + ext;
+                string url = "http://localhost:4000/api/screenshots/add/?id=" + currentUserId + @"&desc=" + desc + @"&spoiler=" + spoiler + @"&ext=" + ext + @"&game=" + id;
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();

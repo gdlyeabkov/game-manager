@@ -6326,14 +6326,49 @@
                                         Header="Мастерская"        
                                     >
                                         <StackPanel>
-
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Margin="5 0"
+                                                    VerticalAlignment="Center"
+                                                    Text="Просмотреть все доступные Мастерские"    
+                                                />
+                                                <StackPanel
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Margin="5 0"
+                                                        Text="Просмотреть"    
+                                                    />
+                                                    <Button
+                                                        VerticalAlignment="Center"
+                                                        Margin="5 0"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Самые популярные"
+                                                    />
+                                                    <Button
+                                                        VerticalAlignment="Center"
+                                                        Margin="5 0"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Последние"
+                                                    />
+                                                </StackPanel>
+                                            </DockPanel>
                                         </StackPanel>
                                     </TabItem>
                                     <TabItem
                                         Header="Новости"    
                                     >
                                         <StackPanel>
-
+                                            <TextBlock
+                                                Margin="15"
+                                                FontSize="24"
+                                                TextAlignment="Center"
+                                                Text="Больше ничего нет. Увы.&#10;Но вы можете помочь: поделитесь&#10;скриншотом, сделайте видео или&#10;начните новое обсуждение!"
+                                            />
                                         </StackPanel>
                                     </TabItem>
                                     <TabItem
@@ -6715,7 +6750,9 @@
             <TabItem
                 Visibility="Collapsed"
             >
-                <ScrollViewer>
+                <ScrollViewer
+                    x:Name="mainManualScroll"
+                >
                     <DockPanel
                         Background="Green"    
                     >
@@ -6757,6 +6794,7 @@
                                                         Text="Заголовок мануала"
                                                     />
                                                     <TextBlock
+                                                        x:Name="mainManualFromUserLabel"
                                                         Margin="15 5"
                                                         Text="от пользователя"
                                                     />
@@ -6790,6 +6828,7 @@
                                                         />
                                                     </StackPanel>
                                                     <TextBlock
+                                                        x:Name="mainManualFeedbackLabel"
                                                         Margin="5 10"
                                                         Text="Оценок: 0"
                                                     />
@@ -6810,7 +6849,7 @@
                                             Margin="10"
                                             Width="65"
                                             Height="20"
-                                            Click="IncreaseReviewAdvicesHandler"
+                                            Click="IncreaseManualLikesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6827,6 +6866,7 @@
                                             Margin="10"
                                             Width="65"
                                             Height="20"
+                                            Click="IncreaseManualDisLikesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6843,6 +6883,7 @@
                                             Margin="10"
                                             Width="100"
                                             Height="20"
+                                            Click="IncreaseManualLikesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6863,7 +6904,7 @@
                                             Margin="10"
                                             Width="125"
                                             Height="20"
-                                            Click="IncreaseReviewFunsHandler"
+                                            Click="IncreaseManualFavoritesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6884,7 +6925,7 @@
                                             Margin="10"
                                             Width="125"
                                             Height="20"
-                                            Click="IncreaseReviewFunsHandler"
+                                            Click="IncreaseManualLikesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6901,7 +6942,7 @@
                                             Margin="10"
                                             Width="50"
                                             Height="20"
-                                            Click="IncreaseReviewFunsHandler"
+                                            Click="IncreaseManualLikesHandler"
                                         >
                                             <Button.Content>
                                                 <StackPanel
@@ -6936,6 +6977,7 @@
                                                     Orientation="Horizontal"    
                                                 >
                                                     <Image
+                                                        x:Name="mainManualAuthorAvatar"
                                                         Margin="15 5"
                                                         Width="50"    
                                                         Height="50"    
@@ -6948,23 +6990,28 @@
                                                     </Image>
                                                     <StackPanel>
                                                         <TextBlock
+                                                            x:Name="mainManualAuthorNameLabel"
                                                             FontSize="14"
                                                             Text="Имя создателя"    
                                                         />
                                                         <TextBlock
+                                                            x:Name="mainManualAuthorStatusLabel"
                                                             Text="Статус создателя"    
                                                         />
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <TextBlock 
+                                                    x:Name="mainManualCategoriesLabel"
                                                     Margin="15 5"
                                                     Text="Категория:"    
                                                 />
                                                 <TextBlock 
+                                                    x:Name="mainManualLanguagesLabel"
                                                     Margin="15 5"
                                                     Text="Языки:"    
                                                 />
                                                 <TextBlock 
+                                                    x:Name="mainManualDateLabel"
                                                     Margin="15 5"
                                                     Text="Добавлен"    
                                                 />
@@ -6978,8 +7025,30 @@
                                                     Text="0 уникальных посетителей"    
                                                 />
                                                 <TextBlock 
+                                                    x:Name="mainManualFavoritesLabel"
                                                     Margin="15 5"
                                                     Text="0 добавили в избранное"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="15"
+                                                Background="LightSlateGray"    
+                                            >
+                                                <TextBlock 
+                                                    FontSize="16"
+                                                    Margin="15 5"
+                                                    Text="Оглавление руководства"    
+                                                />
+                                                <Separator />
+                                                <TextBlock 
+                                                    Margin="15 5"
+                                                    Text="Описание"    
+                                                    MouseLeftButtonUp="ScrollToManualDescHandler"
+                                                />
+                                                <TextBlock 
+                                                    Margin="15 5"
+                                                    Text="Комментарии"    
+                                                    MouseLeftButtonUp="ScrollToManualCommentsHandler"
                                                 />
                                             </StackPanel>
                                         </StackPanel>
@@ -6995,6 +7064,7 @@
                                             Kind="Chat"    
                                         />
                                         <TextBlock
+                                            x:Name="mainManualCountCommentsLabel"
                                             Margin="5"
                                             Text="Комментариев: 0"    
                                         />
@@ -7188,15 +7258,18 @@
                                 Margin="0 15"
                             >
                                 <RadioButton
+                                    x:Name="illustrationVisbilityForFriendsRadioBtn"
                                     IsChecked="True"
                                     Margin="15 0"
                                     Content="Для друзей"    
                                 />
                                 <RadioButton
+                                    x:Name="illustrationVisbilityForMeRadioBtn"
                                     Margin="15 0"
                                     Content="Для себя"    
                                 />
                                 <RadioButton
+                                    x:Name="illustrationVisbilityForNoOneRadioBtn"
                                     Margin="15 0"
                                     Content="не показывать"    
                                 />
@@ -7221,6 +7294,13 @@
                                 Margin="15 5"
                                 Content="Я подтверждаю, что являюсь автором этой иллюстрации"
                             />
+                            <ComboBox
+                                x:Name="illustrationGameSelector"
+                                Width="125"
+                                Height="25"
+                                HorizontalAlignment="Left"
+                                Margin="15 5"
+                            />
                             <StackPanel
                                 HorizontalAlignment="Right"
                                 Margin="15 5"    
@@ -7237,7 +7317,7 @@
                                     Height="25"
                                     Width="275"
                                     Content="Сохранить иллюстрацию в центре сообщества"    
-                                    Click="AddIllustationHandler"
+                                    Click="AddIllustrationHandler"
                                 />
                             </StackPanel>
                         </StackPanel>
@@ -7259,9 +7339,9 @@
                                 HorizontalAlignment="Center"
                             >
                                 <StackPanel
+                                    x:Name="mainIllustration"
                                     Margin="15"
                                     Background="LightGray" 
-                                    Width="1000"
                                 >
                                     <StackPanel
                                         Orientation="Horizontal"    
@@ -7279,12 +7359,249 @@
                                                 />
                                             </Image.Source>
                                         </Image>
-                                        <TextBlock
-                                            x:Name="mainIllustrationTitleLabel"
-                                            FontSize="18"
-                                            Margin="15"
-                                            Text="Заголовок иллюстрации"
-                                        />
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Margin="0 15"
+                                                    Orientation="Horizontal"
+                                                >
+                                                    <Image
+                                                        Margin="15 0"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel>
+                                                        <TextBlock
+                                                            x:Name="mainIllustrationUserNameLabel"
+                                                            Text="Имя пользователя"    
+                                                        />
+                                                        <TextBlock
+                                                            x:Name="mainIllustrationUserStatusLabel"
+                                                            Text="Статус пользователя"    
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <Image
+                                                    x:Name="mainIllustrationGameThumbnail"
+                                                    HorizontalAlignment="Right"
+                                                    Margin="15"
+                                                    Width="50"    
+                                                    Height="50"    
+                                                    ImageFailed="SetDefautAvatarHandler"
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                            </DockPanel>
+                                            <TextBlock
+                                                x:Name="mainIllustrationTitleLabel"
+                                                FontSize="18"
+                                                Margin="15"
+                                                Text="Заголовок иллюстрации"
+                                            />
+
+                                            <StackPanel
+                                                Margin="0 15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Margin="5 0"
+                                                        Kind="ThumbUp"    
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="mainIllustrationCountLikesLabel"
+                                                        Text="0"    
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Button
+                                                        Width="35"
+                                                        Height="20"
+                                                        Click="IncreaseIllustrationLikesHandler"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbUp"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="35"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbDown"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="100"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Medal"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Наградить"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
+                                                <Button
+                                                    HorizontalAlignment="Right"
+                                                    Width="65"
+                                                    Height="25"
+                                                    Margin="15 0"
+                                                >
+                                                    <Button.Content>
+                                                        <StackPanel
+                                                            Orientation="Horizontal"
+                                                        >
+                                                            <materialDesign:PackIcon
+                                                                Margin="5 0"
+                                                                Kind="Settings"    
+                                                            />
+                                                            <materialDesign:PackIcon
+                                                                Margin="5 0"
+                                                                Kind="ArrowDropDown"    
+                                                            />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+                                            </DockPanel>
+
+                                            <Separator
+                                                Margin="0 15"    
+                                            />
+
+                                            <StackPanel
+                                                x:Name="mainIllustrationComments"
+                                                Margin="0 15"
+                                            />
+
+                                            <StackPanel
+                                                x:Name="mainIllustrationSendCommentPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <Image
+                                                    Margin="15 0"
+                                                    Width="50"    
+                                                    Height="50"    
+                                                    ImageFailed="SetDefautAvatarHandler"
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                                <StackPanel>
+                                                    <TextBox
+                                                        x:Name="mainIllustrationCommentsBox"
+                                                        Width="250"
+                                                        Height="50"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="50"
+                                                                            Width="250"
+                                                                            Text="Оставить комментарий"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button 
+                                                        HorizontalAlignment="Right"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Margin="0 5"
+                                                        Content="Отправить"
+                                                        Click="SendIllustrationCommentHandler"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <TextBlock
+                                                x:Name="mainIllustrationCommentsLabel"
+                                                FontSize="14"
+                                                Margin="15 5"
+                                                Text="Просмотреть описание и комментарии (0)"    
+                                            />
+                                            <TextBlock
+                                                x:Name="mainIllustrationTagsLabel"
+                                                Margin="15 5"
+                                                Text="Метки: "    
+                                            />
+                                            
+                                        </StackPanel>
                                     </StackPanel>
                                     <TextBlock
                                         x:Name="mainIllustrationDescLabel"
@@ -7315,9 +7632,10 @@
                                 HorizontalAlignment="Center"
                             >
                                 <StackPanel
+                                    x:Name="mainCommunityScreenShot"
                                     Margin="15"
                                     Background="LightGray" 
-                                    Width="1000"
+                                    Width="1150"
                                 >
                                     <StackPanel
                                         Orientation="Horizontal"    
@@ -7335,6 +7653,251 @@
                                                 />
                                             </Image.Source>
                                         </Image>
+
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Margin="0 15"
+                                                    Orientation="Horizontal"
+                                                >
+                                                    <Image
+                                                        Margin="15 0"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel>
+                                                        <TextBlock
+                                                            x:Name="mainCommunityScreenShotUserNameLabel"
+                                                            Text="Имя пользователя"    
+                                                        />
+                                                        <TextBlock
+                                                            x:Name="mainCommunityScreenShotUserStatusLabel"
+                                                            Text="Статус пользователя"    
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <Image
+                                                    x:Name="mainCommunityScreenShotGameThumbnail"
+                                                    HorizontalAlignment="Right"
+                                                    Margin="15"
+                                                    Width="50"    
+                                                    Height="50"    
+                                                    ImageFailed="SetDefautAvatarHandler"
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                            </DockPanel>
+                                            <TextBlock
+                                                x:Name="mainCommunityScreenShotTitleLabel"
+                                                FontSize="18"
+                                                Margin="15"
+                                                Text="Заголовок скриншота"
+                                            />
+
+                                            <StackPanel
+                                                Margin="0 15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Margin="5 0"
+                                                        Kind="ThumbUp"    
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="mainCommunityScreenShotCountLikesLabel"
+                                                        Text="0"    
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Button
+                                                        Width="35"
+                                                        Height="20"
+                                                        Click="IncreaseCommunityScreenShotLikesHandler"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbUp"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="35"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="ThumbDown"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button
+                                                        Width="100"
+                                                        Height="20"
+                                                        Margin="5 0"
+                                                    >
+                                                        <Button.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"    
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Medal"    
+                                                                />
+                                                                <TextBlock
+                                                                    Margin="5 0"
+                                                                    Text="Наградить"    
+                                                                />
+                                                            </StackPanel>
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
+                                                <Button
+                                                    HorizontalAlignment="Right"
+                                                    Width="65"
+                                                    Height="25"
+                                                    Margin="15 0"
+                                                >
+                                                    <Button.Content>
+                                                        <StackPanel
+                                                            Orientation="Horizontal"
+                                                        >
+                                                            <materialDesign:PackIcon
+                                                                Margin="5 0"
+                                                                Kind="Settings"    
+                                                            />
+                                                            <materialDesign:PackIcon
+                                                                Margin="5 0"
+                                                                Kind="ArrowDropDown"    
+                                                            />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+                                            </DockPanel>
+
+                                            <Separator
+                                                Margin="0 15"    
+                                            />
+
+                                            <StackPanel
+                                                x:Name="mainCommunityScreenShotComments"
+                                                Margin="0 15"
+                                            />
+
+                                            <StackPanel
+                                                x:Name="mainCommunityScreenShotSendCommentPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <Image
+                                                    Margin="15 0"
+                                                    Width="50"    
+                                                    Height="50"    
+                                                    ImageFailed="SetDefautAvatarHandler"
+                                                >
+                                                    <Image.Source>
+                                                        <BitmapImage
+                                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                        />
+                                                    </Image.Source>
+                                                </Image>
+                                                <StackPanel>
+                                                    <TextBox
+                                                        x:Name="mainCommunityScreenShotCommentsBox"
+                                                        Width="250"
+                                                        Height="50"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Height="50"
+                                                                            Width="250"
+                                                                            Text="Оставить комментарий"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                    <Button 
+                                                        HorizontalAlignment="Right"
+                                                        Width="125"
+                                                        Height="25"
+                                                        Margin="0 5"
+                                                        Content="Отправить"
+                                                        Click="SendCommunityScreenShotCommentHandler"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <TextBlock
+                                                x:Name="mainCommunityScreenShotCommentsLabel"
+                                                FontSize="14"
+                                                Margin="15 5"
+                                                Text="Просмотреть описание и комментарии (0)"    
+                                            />
+                                            <TextBlock
+                                                x:Name="mainCommunityScreenShotTagsLabel"
+                                                Margin="15 5"
+                                                Text="Метки: "    
+                                            />
+
+                                        </StackPanel>
+
                                     </StackPanel>
                                     <Separator
                                         Margin="15 5"    

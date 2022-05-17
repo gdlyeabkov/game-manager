@@ -181,6 +181,92 @@
                 />
             </MenuItem>
         </Menu>
+        <DockPanel
+            DockPanel.Dock="Bottom"
+            Height="35"
+            Background="Cyan"
+        >
+            <Popup
+                x:Name="addGamePopup"
+                Width="250"
+                Height="80"
+                Placement="Mouse"
+                StaysOpen="False"
+            >
+                <Popup.Child>
+                    <StackPanel
+                        Background="LightGray"     
+                    >
+                        <TextBlock
+                            Margin="15 5"
+                            Text="Добавить сторонюю игру"    
+                            MouseLeftButtonUp="AddExternalGameHandler"
+                        />
+                        <TextBlock
+                            Margin="15 5"
+                            Text="Активировать"    
+                            MouseLeftButtonUp="OpenGameActivationHandler"
+                        />
+                        <TextBlock
+                            Margin="15 5"
+                            Text="Просмотреть игры в магазине"    
+                            MouseLeftButtonUp="OpenStoreHandler"
+                        />
+                    </StackPanel>
+                </Popup.Child>
+            </Popup>
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                MouseLeftButtonUp="ToggleAddGamePopupHandler"
+            >
+                <materialDesign:PackIcon
+                    Margin="5 0"
+                    VerticalAlignment="Center"
+                    Kind="AddBox"    
+                />
+                <TextBlock
+                    Margin="5 0"
+                    VerticalAlignment="Center"
+                    Text="Добавить игру"
+                />
+            </StackPanel>
+            <StackPanel
+                Margin="555 0"
+                HorizontalAlignment="Center"
+                MouseLeftButtonUp="OpenDownloadsHandler"
+            >
+                <TextBlock
+                    TextAlignment="Center"
+                    Margin="10 0"
+                    FontSize="14"
+                    Text="Загрузки"
+                />
+                <TextBlock
+                    TextAlignment="Center"
+                    Margin="10 0"
+                    Text="Управление"
+                />
+            </StackPanel>
+            <StackPanel
+                HorizontalAlignment="Right"
+                Margin="0 10"
+                Orientation="Horizontal"    
+                MouseLeftButtonUp="OpenFriendsDialogHandler"
+            >
+                <TextBlock
+                    Margin="10 0"
+                    Text="{x:Static p:Resources.friendsAndChatLabelContent}"
+                />
+                <materialDesign:PackIcon
+                    Margin="10 0"
+                    Width="15"
+                    Height="15"
+                    Kind="AddCircleOutline"    
+                />
+            </StackPanel>
+
+        </DockPanel>
         <StackPanel
             DockPanel.Dock="Top"
             Height="35"
@@ -416,6 +502,7 @@
                     MouseLeftButtonUp="OpenNewsHandler"
                 />
                 <materialDesign:PackIcon
+                    x:Name="notificationsPopupIcon"
                     Margin="10 0"
                     Kind="Email"
                     VerticalAlignment="Center"
@@ -429,6 +516,7 @@
                     StaysOpen="False"
                     Width="350"
                     Height="165"
+                    Closed="HideNotificationsPopupHightLightHandler"
                 >
                     <Popup.Child>
                         <StackPanel
@@ -543,26 +631,6 @@
                 Visibility="Collapsed"    
             >
                 <DockPanel>
-                    <StackPanel
-                        DockPanel.Dock="Bottom"
-                        Height="35"
-                        Background="Cyan"
-                    >
-                        <StackPanel
-                            Margin="0 10"
-                            Orientation="Horizontal"    
-                            MouseLeftButtonUp="OpenFriendsDialogHandler"
-                        >
-                            <TextBlock
-                                Margin="10 0"
-                                Text="{x:Static p:Resources.friendsAndChatLabelContent}"
-                            />
-                            <materialDesign:PackIcon
-                                Margin="10 0"
-                                Kind="Add"    
-                            />
-                        </StackPanel>
-                    </StackPanel>
                     <DockPanel
                         DockPanel.Dock="Left"    
                         Background="Green"
@@ -652,6 +720,7 @@
                                     HorizontalAlignment="Right"    
                                 >
                                     <Button
+                                        x:Name="addCustomReviewBtn"
                                         Margin="15"
                                         Width="125"
                                         Height="25"
@@ -3950,13 +4019,45 @@
                             Background="Blue"    
                         >
                             <DockPanel>
-                                <ScrollViewer>
+                                <ScrollViewer
+                                        
+                                >
                                     <StackPanel
+                                        x:Name="newsAside"
                                         Background="DarkCyan"
                                         Width="250"
                                         DockPanel.Dock="Left"    
                                     >
-                                    
+                                        <materialDesign:PackIcon
+                                            Kind="ChevronDoubleLeft"
+                                            Margin="15 15 15 5"
+                                            Width="24"
+                                            Height="24"
+                                            HorizontalAlignment="Right"
+                                            MouseLeftButtonUp="ToggleNewsAsideHandler"
+                                        />
+                                        <StackPanel
+                                            x:Name="newsAsideBody"
+                                        >
+                                            <TextBlock
+                                                FontSize="20"
+                                                Margin="15 5"
+                                                Text="НОВОСТНОЙ&#10;ЦЕНТР"    
+                                            />
+                                            <TextBlock
+                                                FontSize="16"
+                                                Margin="15 5"
+                                                Text="Поиск"    
+                                            />
+                                            <TextBox
+                                                Margin="15 5"
+                                                Height="30"
+                                            />
+                                            <Separator
+                                            
+                                            />
+                                        </StackPanel>
+
                                     </StackPanel>
                                 </ScrollViewer>
                                 <StackPanel
@@ -3965,10 +4066,12 @@
                                     
                                 </StackPanel>
                             </DockPanel>
+                            <!--
                             <StackPanel
                                 Margin="25"    
                             >
                             </StackPanel>
+                            -->
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -6838,6 +6941,7 @@
                                     >
                                         <StackPanel>
                                             <Button
+                                                x:Name="addCustomIllustrationBtn"
                                                 Margin="5"
                                                 HorizontalAlignment="Right"
                                                 Width="175"
@@ -7005,6 +7109,7 @@
                                     >
                                         <StackPanel>
                                             <Button
+                                                x:Name="addCustomManualBtn"
                                                 Margin="5"
                                                 HorizontalAlignment="Right"
                                                 Width="175"
@@ -7159,6 +7264,7 @@
                                 FontSize="16"
                             />
                             <Button
+                                x:Name="manualPhotoBtn"
                                 HorizontalAlignment="Left"
                                 Content="Выберите файл"
                                 Margin="15 5"
@@ -7920,6 +8026,7 @@
                                 FontSize="16"
                             />
                             <Button
+                                x:Name="illustrationPhotoBtn"
                                 HorizontalAlignment="Left"
                                 Content="Выберите файл"
                                 Margin="15 5"
@@ -14576,102 +14683,884 @@ E. Что произойдет, если положение Пункта 11 бу
                             <!--
                             ПОДАРОЧНЫЕ КАРТЫ
                             -->
-                            <local:HeaderControl
-                                DataContext="{ Binding ElementName=mainWindow}"    
-                            />
-                            <TextBlock
-                                FontSize="24"
-                                Margin="15"
-                                Text="ПОДАРОЧНЫЕ КАРТЫ"    
-                            />
-                            <TextBlock
-                                FontSize="14"
-                                Margin="15"
-                                Text="ПРЕПОДНЕСИТЕ ИДЕАЛЬНЫЙ ПОДАРОК ДРУГУ ИЛИ ЧЛЕНУ СЕМЬИ"    
-                            />
-                            <DockPanel>
-                                <Image
-                                    Margin="15"
-                                    Width="200"    
-                                    Height="200"    
-                                    ImageFailed="SetDefautAvatarHandler"
-                                >
-                                    <Image.Source>
-                                        <BitmapImage
-                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                        />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Orientation="Horizontal"
-                                    HorizontalAlignment="Right"
-                                >
-                                    <StackPanel>
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Электронные подарочные&#10;карты"    
-                                            FontSize="16"
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Теперь вы можете напрямую&#10;пополнить кошелёк Office ware game manager друга&#10;или члена семьи."
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Просто войдите в Office ware game manager, выберите&#10;друга и сумму подарка, а мы&#10;позаботимся обо всём остальном."
-                                        />
-                                        <Button
-                                            Width="125"
-                                            Height="25"
-                                            Content="Приобрести"    
-                                        />
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Активировать&#10;розничную&#10;подарочную карту"    
-                                            FontSize="16"
-                                        />
-                                        <Button
-                                            Width="125"
-                                            Height="25"
-                                            Content="Продолжить"    
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Розничные&#10;подарочные карты"    
-                                            FontSize="16"
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Для тех случаев, когда&#10;подарок в руках как нельзя&#10;кстати, подарочные карты&#10;Office ware game manager разных номиналов&#10;можно найти в розничных магазинах по всему миру."
-                                        />
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Розничные подарочные&#10;карты пригодятся и в том&#10;случае, если у вас есть&#10;наличные средства,&#10;которые вы хотите&#10;потратить в Office ware game manager."
-                                        />
-                                        <Button
-                                            Width="125"
-                                            Height="25"
-                                            Content="Найти поблизости"    
-                                        />
-                                    </StackPanel>
-                                </StackPanel>
-                            </DockPanel>
-                            <StackPanel
-                                Margin="25 15"
-                                HorizontalAlignment="Right"
+                            <TabControl
+                                x:Name="prizeCardsControl"
+                                SelectedIndex="0"    
                             >
-                                <TextBlock
-                                    FontSize="18"
-                                    Margin="15"
-                                    Text="О подарочных картах"    
-                                />
-                                <TextBlock
-                                    Margin="15"
-                                    Text="Подарочные карты подобны подарочным сертификатам,&#10;которые можно использовать для покупки игр, программ, устройств и&#10;любых других товаров."    
-                                />
-                            </StackPanel>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <local:HeaderControl
+                                            DataContext="{ Binding ElementName=mainWindow}"    
+                                        />
+                                        <TextBlock
+                                            FontSize="24"
+                                            Margin="15"
+                                            Text="ПОДАРОЧНЫЕ КАРТЫ"    
+                                        />
+                                        <TextBlock
+                                            FontSize="14"
+                                            Margin="15"
+                                            Text="ПРЕПОДНЕСИТЕ ИДЕАЛЬНЫЙ ПОДАРОК ДРУГУ ИЛИ ЧЛЕНУ СЕМЬИ"    
+                                        />
+                                        <DockPanel>
+                                            <Image
+                                                Margin="15"
+                                                Width="200"    
+                                                Height="200"    
+                                                ImageFailed="SetDefautAvatarHandler"
+                                            >
+                                                <Image.Source>
+                                                    <BitmapImage
+                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                    />
+                                                </Image.Source>
+                                            </Image>
+                                            <StackPanel
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                            >
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Электронные подарочные&#10;карты"    
+                                                        FontSize="16"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Теперь вы можете напрямую&#10;пополнить кошелёк Office ware game manager друга&#10;или члена семьи."
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Просто войдите в Office ware game manager, выберите&#10;друга и сумму подарка, а мы&#10;позаботимся обо всём остальном."
+                                                    />
+                                                    <Button
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Приобрести"    
+                                                        DataContext="1"
+                                                        Click="TogglePrizeCardsTabHandler"
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Активировать&#10;розничную&#10;подарочную карту"    
+                                                        FontSize="16"
+                                                    />
+                                                    <Button
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Продолжить"    
+                                                        DataContext="2"
+                                                        Click="TogglePrizeCardsTabHandler"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Розничные&#10;подарочные карты"    
+                                                        FontSize="16"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Для тех случаев, когда&#10;подарок в руках как нельзя&#10;кстати, подарочные карты&#10;Office ware game manager разных номиналов&#10;можно найти в розничных магазинах по всему миру."
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Розничные подарочные&#10;карты пригодятся и в том&#10;случае, если у вас есть&#10;наличные средства,&#10;которые вы хотите&#10;потратить в Office ware game manager."
+                                                    />
+                                                    <Button
+                                                        Width="125"
+                                                        Height="25"
+                                                        Content="Найти поблизости"    
+                                                        DataContext="3"
+                                                        Click="TogglePrizeCardsTabHandler"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <StackPanel
+                                            Margin="25 15"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <TextBlock
+                                                FontSize="18"
+                                                Margin="15"
+                                                Text="О подарочных картах"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Подарочные карты подобны подарочным сертификатам,&#10;которые можно использовать для покупки игр, программ, устройств и&#10;любых других товаров."    
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Главная > Аккаунт > Электронные подарочные карты"    
+                                        />
+                                        <TextBlock
+                                            FontSize="20"
+                                            Margin="15 5"
+                                            Text="ЭЛЕКТРОННЫЕ ПОДАРОЧНЫЕ КАРТЫ"    
+                                        />
+                                        <Separator
+                                            Margin="15 5"    
+                                        />
+                                        <DockPanel>
+                                            <StackPanel
+                                                Margin="25"    
+                                            >
+                                                <TextBlock
+                                                    Margin="15 5"    
+                                                    Text="Дарите ещё больше игр с помощью подарочных карт Steam. Теперь вы можете напрямую&#10;пополнить кошелёк Steam друга или члена семьи, отправив электронную подарочную карту."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"    
+                                                    Text="Отправьте подарочную карту прямо сейчас или узнайте о ней больше."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"    
+                                                    Text="Выберите номинал подарочной карты:"    
+                                                />
+                                                <StackPanel
+                                                    Background="DarkGray"    
+                                                >
+                                                    <StackPanel
+                                                        Margin="25"
+                                                        Background="SlateGray"
+                                                        DataContext="150"
+                                                        MouseLeftButtonUp="TogglePrizeCardsTabFromPriceHandler"
+                                                    >
+                                                        <Image
+                                                            Height="225"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Подарочная карта на 150 руб."    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="25"
+                                                        Background="SlateGray"
+                                                        DataContext="300"
+                                                        MouseLeftButtonUp="TogglePrizeCardsTabFromPriceHandler"
+                                                    >
+                                                        <Image
+                                                            Height="225"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Подарочная карта на 300 руб."    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="25"
+                                                        Background="SlateGray"
+                                                        DataContext="750"
+                                                        MouseLeftButtonUp="TogglePrizeCardsTabFromPriceHandler"
+                                                    >
+                                                        <Image
+                                                            Height="225"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Подарочная карта на 750 руб."    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="25"
+                                                        Background="SlateGray"
+                                                        DataContext="1500"
+                                                        MouseLeftButtonUp="TogglePrizeCardsTabFromPriceHandler"
+                                                    >
+                                                        <Image
+                                                            Height="225"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Подарочная карта на 1500 руб."    
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="25"
+                                                        Background="SlateGray"
+                                                        DataContext="3000"
+                                                        MouseLeftButtonUp="TogglePrizeCardsTabFromPriceHandler"
+                                                    >   
+                                                        <Image
+                                                            Height="225"    
+                                                        />
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Подарочная карта на 3000 руб."    
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel
+                                                Margin="25"
+                                                Width="315"
+                                                Background="DarkGray"
+                                                HorizontalAlignment="Right"
+                                            >
+                                                <TextBlock
+                                                    Margin="15 15 15 5"
+                                                    Text="ВАШ АККАУНТ STEAM"    
+                                                />
+                                                <StackPanel
+                                                    Margin="15 5"
+                                                    Background="SlateGray"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        Text="Активировать розничную подарочную карту"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="15 5"
+                                                    Background="SlateGray"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        Text="Добавить средства на мой аккаунт"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <local:HeaderControl
+                                            DataContext="{ Binding ElementName=mainWindow}"    
+                                        />
+                                        <TextBlock
+                                            FontSize="24"
+                                            Margin="15 5"
+                                            Text="КОД КОШЕЛЬКА ИЛИ ПОДАРОЧНОЙ КАРТЫ STEAM"    
+                                        />
+                                        <Separator />
+                                        <DockPanel>
+                                            <StackPanel>
+                                                <TextBlock
+                                                    FontSize="18"
+                                                    Margin="15 5"
+                                                    Text="ВВЕДИТЕ КОД С ПОДАРОЧНОЙ КАРТЫ, ЧТОБЫ ПОПОЛНИТЬ&#10;БАЛАНС ВАШЕГО КОШЕЛЬКА STEAM"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Код кошелька Steam"    
+                                                />
+                                                <TextBox
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15 5"
+                                                    Width="250"
+                                                    Height="25"
+                                                />
+                                                <Button
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15 5"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="Продолжить"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Обратите внимание: если активируемая подарочная карта не совпадает с вашей валютой, она будет&#10;автоматически конвертирована, если её можно активировать в вашей стране. Не все валюты&#10;подарочных карт можно активировать в любой стране."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Подарочные карты и коды кошелька Steam — простой способ&#10;пополнить ваш кошелёк Steam, или сделать подарок друзьям и&#10;близким."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Подарочные карты и коды кошелька Steam действуют так же, как подарочные&#10;сертификаты, которые можно использовать для покупки игр, программ и других&#10;товаров в Steam. Приобрести подарочные карты и коды кошелька Steam&#10;различного достоинства вы можете в магазинах по всему миру."    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Примечание: средства с подарочной карты и кода кошелька Steam при&#10;активации будут переведены в текущую валюту вашего кошелька Steam&#10;независимо от того, где они были приобретены."    
+                                                />
+                                                <Button
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15 5"
+                                                    Width="275"
+                                                    Height="25"
+                                                    Content="Частые вопросы о кодах кошелька Steam"    
+                                                />
+
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    HorizontalAlignment="Left"
+                                                    Text="Где можно приобрести подарочные карты Steam и коды&#10;кошелька?"    
+                                                />
+                                                <Button
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15 5"
+                                                    Width="275"
+                                                    Height="25"
+                                                    Content="Приобрести электронную подарочную карту"    
+                                                    DataContext="1"
+                                                    Click="TogglePrizeCardsTabHandler"
+                                                />
+                                                <Button
+                                                    HorizontalAlignment="Left"
+                                                    Margin="15 5"
+                                                    Width="325"
+                                                    Height="25"
+                                                    Content="Узнать, где можно приобрести в вашем регионе"    
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Background="SlateGray"
+                                                Margin="25"
+                                                Width="350"
+                                                Height="150"
+                                                HorizontalAlignment="Right"    
+                                            >
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Margin="15"
+                                                    Text="Ваш аккаунт Steam"    
+                                                />
+                                                <DockPanel>
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="0 pуб."
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        HorizontalAlignment="Right"
+                                                        Text="Баланс кошелька"
+                                                    />
+                                                </DockPanel>
+                                                <StackPanel
+                                                    Margin="15 5"
+                                                    Background="LightGray"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="5"
+                                                        Text="Просмотреть подробности"    
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="24"    
+                                            Text="Служба поддержки"
+                                            Margin="15"
+                                        />
+                                        <Separator />
+                                        <TextBlock
+                                            FontSize="18"    
+                                            Text="Где можно приобрести коды кошелька"    
+                                            Margin="15"
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <StackPanel
+                                            VerticalAlignment="Center"
+                                            Margin="25"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <StackPanel
+                                                VerticalAlignment="Center"
+                                                Background="SkyBlue"    
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="5"
+                                                    Text="Доставка подарка"
+                                                    DataContext="4"
+                                                    MouseLeftButtonUp="TogglePrizeCardsTabFromBreadCrumbsHandler"
+                                                />
+                                            </StackPanel>
+
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Записка к подарку"
+                                                Foreground="LightGray"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Информация о платеже"
+                                                Foreground="LightGray"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Проверка и покупка"
+                                                Foreground="LightGray"
+                                            />
+                                        </StackPanel>
+                                        <Separator
+                                            Margin="15 5"    
+                                        />
+                                        <TextBlock
+                                            FontSize="20"
+                                            Margin="15 5"
+                                            Text="ОТПРАВИТЬ СЕЙЧАС:"    
+                                        />
+                                        <DockPanel>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Width="650"
+                                                    Background="SlateGray"
+                                                    Margin="25"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Margin="15 5"    
+                                                        Text="Выберите друга, которому хотите отправить подарок."    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15 5"    
+                                                        Text="Примечание: при использовании данного способа также отправляется электронное&#10;письмо, чтобы ваш друг смог скорее узнать о подарке."    
+                                                    />
+                                                    <StackPanel
+                                                        Margin="0 15"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBox
+                                                            Width="250"
+                                                            Height="25"
+                                                            Margin="15 5 5 5"
+                                                        >
+                                                            <TextBox.Resources>
+                                                                <VisualBrush
+                                                                    x:Key="hinttext"
+                                                                    AlignmentX="Left"
+                                                                    Stretch="None"
+                                                                    TileMode="None"
+                                                                >
+                                                                    <VisualBrush.Visual>
+                                                                        <DockPanel>
+                                                                            <TextBlock
+                                                                                Width="250"
+                                                                                Height="25"
+                                                                                Text="Поиск по имени друга"
+                                                                                Foreground="#959595"
+                                                                                Background="White"
+                                                                            />
+                                                                        </DockPanel>
+                                                                    </VisualBrush.Visual>
+                                                                </VisualBrush>
+                                                            </TextBox.Resources>
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    <Setter Property="FontSize" Value="12" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                        <Button
+                                                            Margin="5"
+                                                            Width="75"
+                                                            Height="25"
+                                                            Content="Очистить"    
+                                                        />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Margin="15 5"
+                                                        Text="Ваши друзья"    
+                                                    />
+                                                    <StackPanel
+                                                        Margin="25 15"
+                                                        Background="DarkGray"    
+                                                    />
+                                                </StackPanel>
+                                                <Button
+                                                    Margin="25 5"
+                                                    HorizontalAlignment="Right"
+                                                    Content="Продолжить"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Click="OpenAddNoteToPrizeCardHandler"
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Height="100"
+                                                Margin="25"
+                                                Width="315"
+                                                Background="DarkGray"
+                                                HorizontalAlignment="Right"
+                                            >
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    Margin="15 15 15 5"
+                                                    Text="ДОСТАВКА ПОДАРКА"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Ваш подарок будет доставлен выбранным&#10;способом в цифровом виде."
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <StackPanel
+                                            VerticalAlignment="Center"
+                                            Margin="25"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Доставка подарка"
+                                                DataContext="4"
+                                                MouseLeftButtonUp="TogglePrizeCardsTabFromBreadCrumbsHandler"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <StackPanel
+                                                VerticalAlignment="Center"
+                                                Background="SkyBlue"    
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="5"
+                                                    Text="Записка к подарку"
+                                                />
+                                            </StackPanel>
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Информация о платеже"
+                                                Foreground="LightGray"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Проверка и покупка"
+                                                Foreground="LightGray"
+                                            />
+                                        </StackPanel>
+                                        <Separator
+                                            Margin="15 5"    
+                                        />
+                                        <TextBlock
+                                            FontSize="20"
+                                            Margin="15 5"
+                                            Text="ДОБАВЬТЕ К ПОДАРКУ ЗАПИСКУ"    
+                                        />
+                                        <DockPanel>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Width="650"
+                                                    Background="SlateGray"
+                                                    Margin="25"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Margin="15 5"    
+                                                        Text="Имя получателя"    
+                                                    />
+                                                    <TextBox
+                                                        HorizontalAlignment="Left"
+                                                        Width="250"
+                                                        Height="25"
+                                                        Margin="15 5"
+                                                    />
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Margin="15 5"    
+                                                        Text="Записка к подарку (осталось 160 из 160 символов)"
+                                                    />
+                                                    <TextBox
+                                                        HorizontalAlignment="Left"
+                                                        Width="500"
+                                                        Height="150"
+                                                        Margin="15 5"
+                                                    />
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition
+                                                                Height="35"    
+                                                            />
+                                                            <RowDefinition
+                                                                Height="35"    
+                                                            />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Grid.Column="0"
+                                                            Margin="15 0"
+                                                            Text="Ваши пожелания"
+                                                        />
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            Margin="15 0"
+                                                            Text="Ваша подпись"
+                                                        />
+                                                        <TextBox
+                                                            Grid.Row="1"
+                                                            Grid.Column="0"
+                                                            Margin="15 0"
+                                                            HorizontalAlignment="Left"
+                                                            Width="250"
+                                                            Height="25"
+                                                        />
+                                                        <TextBox
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Margin="15 0"
+                                                            HorizontalAlignment="Left"
+                                                            Width="250"
+                                                            Height="25"
+                                                        />
+                                                    </Grid>
+                                                </StackPanel>
+                                                <Button
+                                                    Margin="25 5"
+                                                    HorizontalAlignment="Right"
+                                                    Content="Продолжить"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Click="OpenSetPaymentMethodToPrizeCardHandler"
+                                                />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Height="100"
+                                                Margin="25"
+                                                Width="315"
+                                                Background="DarkGray"
+                                                HorizontalAlignment="Right"
+                                            >
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    Margin="15 15 15 5"
+                                                    Text="ДОСТАВКА ПОДАРКА"    
+                                                />
+                                                <TextBlock
+                                                    Margin="15 5"
+                                                    Text="Ваш подарок будет доставлен выбранным&#10;способом в цифровом виде."
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <StackPanel
+                                            VerticalAlignment="Center"
+                                            Margin="25"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Доставка подарка"
+                                                DataContext="4"
+                                                MouseLeftButtonUp="TogglePrizeCardsTabFromBreadCrumbsHandler"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Записка к подарку"
+                                                DataContext="5"
+                                                MouseLeftButtonUp="TogglePrizeCardsTabFromBreadCrumbsHandler"
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <StackPanel
+                                                VerticalAlignment="Center"
+                                                Background="SkyBlue"    
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="5"
+                                                    Text="Информация о платеже"
+                                                />
+                                            </StackPanel>
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Kind="ArrowRight"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Проверка и покупка"
+                                                Foreground="LightGray"
+                                            />
+                                        </StackPanel>
+                                        <Separator />
+                                        <DockPanel>
+                                            <StackPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    Margin="15"
+                                                    Text="Способ оплаты"    
+                                                />
+                                                <StackPanel
+                                                    Background="Gray"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="15"
+                                                        Text="Выберите способ оплаты"    
+                                                    />  
+                                                    <ComboBox
+                                                        VerticalContentAlignment="Center"
+                                                        SelectedIndex="0"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="15"
+                                                        Width="175"
+                                                        Height="30"
+                                                    >
+                                                        <ComboBoxItem
+                                                            Content="Visa"    
+                                                        />  
+                                                        <ComboBoxItem
+                                                            Content="MasterCard"    
+                                                        />
+                                                        <ComboBoxItem
+                                                            Content="Amerian Express"    
+                                                        />
+                                                        <ComboBoxItem
+                                                            Content="Мир"    
+                                                        />  
+                                                    </ComboBox>
+                                                    <StackPanel
+                                                        Margin="15"
+                                                        Background="LightGray"    
+                                                    >
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="В данный момент покупка с помощью выбранного способа оплаты невозможна.&#10;Приносим извинения за доставленные неудобства."    
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel
+                                                MinWidth="350"
+                                                Margin="25"
+                                                HorizontalAlignment="Right"
+                                                Background="Gray"    
+                                            >
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    Margin="15"
+                                                    Text="СПОСОБЫ ОПЛАТЫ"    
+                                                />
+                                                   <TextBlock
+                                                    Margin="15"
+                                                    Text="Мы принимаем следующие безопасные&#10;способы оплаты:"    
+                                                />
+                                                <StackPanel
+                                                    Margin="0 15"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Kind="Card"
+                                                        Width="25"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Kind="Card"
+                                                        Width="25"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Kind="Card"
+                                                        Width="25"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Kind="Card"
+                                                        Width="25"
+                                                        Height="25"
+                                                        Margin="15 0"
+                                                    />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Margin="15"
+                                                    Text="Предоставляемые вами при оплате сведения&#10;защищены по технологии Secure Socket Layer&#10;(SSL), имеющей цифровой сертификат."    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

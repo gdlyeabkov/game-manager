@@ -833,7 +833,7 @@ namespace GamaManager
             AddManual();
         }
 
-        public void AddManual()
+        public void AddManual ()
         {
             if (manualGameSelector.Items.Count >= 1)
             {
@@ -1113,6 +1113,29 @@ namespace GamaManager
                             {
                                 mainControl.SelectedIndex = 20;
                                 GetCommunityInfo();
+                                manualNameBox.Text = "";
+                                manualDescBox.Text = "";
+                                manualPhotoBtn.Content = "Выберите файл";
+                                manualCategoriesAchievementsBox.IsChecked = false;
+                                manualLangRuBtn.IsChecked = true;
+                                manualLangEngBtn.IsChecked = true;
+                                manualCategoriesCharactersBox.IsChecked = false;
+                                manualCategoriesClassesBox.IsChecked = false;
+                                manualCategoriesCooperativeBox.IsChecked = false;
+                                manualCategoriesCraftBox.IsChecked = false;
+                                manualCategoriesModesBox.IsChecked = false;
+                                manualCategoriesTutorialsBox.IsChecked = false;
+                                manualCategoriesRewardsBox.IsChecked = false;
+                                manualCategoriesMapsBox.IsChecked = false;
+                                manualCategoriesSettingsBox.IsChecked = false;
+                                manualCategoriesMultiplayerBox.IsChecked = false;
+                                manualCategoriesSecretsBox.IsChecked = false;
+                                manualCategoriesStoryBox.IsChecked = false;
+                                manualCategoriesTradeBox.IsChecked = false;
+                                manualCategoriesSpeedRunBox.IsChecked = false;
+                                manualCategoriesWeaponBox.IsChecked = false;
+                                manualWorkShopBox.IsChecked = false;
+                                drmBox.IsChecked = false;
                             }
                         }
                     }
@@ -1615,6 +1638,168 @@ namespace GamaManager
                 GetLastFriendRecommendations();
                 GetPopularGamesForFriends();
                 GetGamesByTags();/**/
+            }
+        }
+
+        public void GetRequestsInfo ()
+        {
+            int requestsCursor = 0;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<FriendRequest> requestsForMe = new List<FriendRequest>();
+                            List<FriendRequest> requests = myobj.requests;
+                            foreach (FriendRequest request in requests)
+                            {
+                                string recepientId = request.friend;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
+                                {
+                                    requestsForMe.Add(request);
+                                }
+                            }
+                            friendRequestsForMe.Children.Clear();
+                            int countRequestsForMe = requestsForMe.Count;
+                            bool isHaveRequests = countRequestsForMe >= 1;
+                            if (isHaveRequests)
+                            {
+                                foreach (FriendRequest requestForMe in requestsForMe)
+                                {
+                                    string requestId = requestForMe._id;
+                                    string senderId = requestForMe.user;
+                                    string friendId = requestForMe.friend;
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                User user = myInnerObj.user;
+                                                string senderLogin = user.login;
+                                                string senderName = user.name;
+                                                string insensitiveCaseSenderName = senderName.ToLower();
+                                                string friendRequestsForMeBoxContent = friendRequestsForMeBox.Text;
+                                                string insensitiveCaseKeywords = friendRequestsForMeBoxContent.ToLower();
+                                                bool isFriendFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
+                                                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                                                bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                                bool isRequestMatch = isFriendFound || isFilterDisabled;
+                                                if (isRequestMatch)
+                                                {
+                                                    requestsCursor++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GroupRequestsResponseInfo myobj = (GroupRequestsResponseInfo)js.Deserialize(objText, typeof(GroupRequestsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GroupRequest> requestsForMe = new List<GroupRequest>();
+                            List<GroupRequest> requests = myobj.requests;
+                            foreach (GroupRequest request in requests)
+                            {
+                                string recepientId = request.user;
+                                bool isRequestForMe = currentUserId == recepientId;
+                                if (isRequestForMe)
+                                {
+                                    requestsForMe.Add(request);
+                                }
+                            }
+                            myGroupRequests.Children.Clear();
+                            int countRequestsForMe = requestsForMe.Count;
+                            bool isHaveRequests = countRequestsForMe >= 1;
+                            if (isHaveRequests)
+                            {
+                                foreach (GroupRequest requestForMe in requestsForMe)
+                                {
+                                    string requestId = requestForMe._id;
+                                    string groupId = requestForMe.group;
+                                    string userId = requestForMe.user;
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                    innerWebRequest.Method = "GET";
+                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    {
+                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = innerReader.ReadToEnd();
+                                            GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                            status = myInnerObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                Group group = myInnerObj.group;
+                                                string groupName = group.name;
+                                                string insensitiveCaseSenderName = groupName.ToLower();
+                                                string myGroupRequestsBoxContent = myGroupRequestsBox.Text;
+                                                string insensitiveCaseKeywords = myGroupRequestsBoxContent.ToLower();
+                                                bool isGroupFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
+                                                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                                                bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                                bool isRequestMatch = isGroupFound || isFilterDisabled;
+                                                if (isRequestMatch)
+                                                {
+                                                    requestsCursor++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -3831,6 +4016,23 @@ namespace GamaManager
             GetIllustrations();
             GetManuals();
             GetReviews();
+            GetAddCommunityItemsAction();
+        }
+
+        public void GetAddCommunityItemsAction ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            int currentGamesCount = currentGames.Count;
+            bool isHaveInstalledGames = currentGamesCount >= 1;
+            addCustomManualBtn.IsEnabled = isHaveInstalledGames;
+            addCustomIllustrationBtn.IsEnabled = isHaveInstalledGames;
+            addCustomReviewBtn.IsEnabled = isHaveInstalledGames;
         }
 
         public void GetCommunityRecentGames ()
@@ -3960,6 +4162,7 @@ namespace GamaManager
                             if (isHaveReviews)
                             {
                                 reviews.HorizontalAlignment = HorizontalAlignment.Left;
+                                int communityItemsCursor = 0;
                                 foreach (Review totalReviewsItem in totalReviews)
                                 {
                                     string id = totalReviewsItem._id;
@@ -4030,6 +4233,8 @@ namespace GamaManager
                                                                 bool isHaveResults = countResults >= 1;
                                                                 if (isHaveResults)
                                                                 {
+
+                                                                    communityItemsCursor++;
 
                                                                     HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
                                                                     innerNestedWebRequest.Method = "GET";
@@ -4143,7 +4348,6 @@ namespace GamaManager
                                                                     }
 
                                                                 }
-
                                                             }
                                                         }
                                                     }
@@ -4154,16 +4358,19 @@ namespace GamaManager
                                         }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                TextBlock notFoundLabel = new TextBlock();
-                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                notFoundLabel.TextAlignment = TextAlignment.Center;
-                                notFoundLabel.FontSize = 18;
-                                notFoundLabel.Text = "Обзоров не найдено";
-                                reviews.HorizontalAlignment = HorizontalAlignment.Center;
-                                reviews.Children.Add(notFoundLabel);
+
+                                bool isNotCommunityItems = communityItemsCursor <= 0;
+                                if (isNotCommunityItems)
+                                {
+                                    TextBlock notFoundLabel = new TextBlock();
+                                    notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                    notFoundLabel.TextAlignment = TextAlignment.Center;
+                                    notFoundLabel.FontSize = 18;
+                                    notFoundLabel.Text = "Обзоров не найдено";
+                                    reviews.HorizontalAlignment = HorizontalAlignment.Center;
+                                    reviews.Children.Add(notFoundLabel);
+                                }
+
                             }
                         }
                     }
@@ -4460,6 +4667,7 @@ namespace GamaManager
                             if (isHaveCommunityScreenShots)
                             {
                                 communityScreenShots.HorizontalAlignment = HorizontalAlignment.Left;
+                                int communityItemsCursor = 0;
                                 foreach (ScreenShot totalCommunityScreenShotsItem in totalCommunityScreenShots)
                                 {
                                     string id = totalCommunityScreenShotsItem._id;
@@ -4508,7 +4716,7 @@ namespace GamaManager
                                                             bool isHaveResults = countResults >= 1;
                                                             if (isHaveResults)
                                                             {
-
+                                                                communityItemsCursor++;
                                                                 GameResponseInfo screenShotGame = results[0];
 
                                                                 HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/all");
@@ -4646,8 +4854,21 @@ namespace GamaManager
                                     }
 
                                 }
+
+                                bool isNotCommunityItems = communityItemsCursor <= 0;
+                                if (isNotCommunityItems)
+                                {
+                                    TextBlock notFoundLabel = new TextBlock();
+                                    notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                    notFoundLabel.TextAlignment = TextAlignment.Center;
+                                    notFoundLabel.FontSize = 18;
+                                    notFoundLabel.Text = "Скриншотов не найдено";
+                                    communityScreenShots.HorizontalAlignment = HorizontalAlignment.Center;
+                                    communityScreenShots.Children.Add(notFoundLabel);
+                                }
+
                             }
-                            else
+                            /*else
                             {
                                 TextBlock notFoundLabel = new TextBlock();
                                 notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
@@ -4656,7 +4877,7 @@ namespace GamaManager
                                 notFoundLabel.Text = "Скриншотов не найдено";
                                 communityScreenShots.HorizontalAlignment = HorizontalAlignment.Center;
                                 communityScreenShots.Children.Add(notFoundLabel);
-                            }
+                            }*/
                         }
                     }
                 }
@@ -4882,6 +5103,17 @@ namespace GamaManager
         public void GetCommunityTotalContent()
         {
 
+            object communityActivityControlGameData = communityActivityControl.DataContext;
+            bool isCommunityActivityControlGameDataExists = communityActivityControlGameData != null;
+            string communityActivityControlGameId = "";
+            if (isCommunityActivityControlGameDataExists)
+            {
+                communityActivityControlGameId = communityActivityControlGameData.ToString();
+            }
+            int communityActivityControlSelectedIndex = communityActivityControl.SelectedIndex;
+            bool isTotalCommunity = communityActivityControlSelectedIndex == 0;
+            bool isGameCommunity = !isTotalCommunity;
+
             object communityContentSortPanelData = communityContentSortPanel.DataContext;
             string sortType = communityContentSortPanelData.ToString();
             bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
@@ -4947,7 +5179,7 @@ namespace GamaManager
                                                         {
                                                             string someGameId = someGame._id;
                                                             bool isIdMatches = someGameId == gameId;
-                                                            return isIdMatches;
+                                                            return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity); ;
                                                         }).ToList<GameResponseInfo>();
                                                         int countResults = results.Count;
                                                         bool isHaveResults = countResults >= 1;
@@ -5185,7 +5417,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 bool isIdMatches = someGameId == gameId;
-                                                return isIdMatches;
+                                                return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity); ;
                                             }).ToList<GameResponseInfo>();
                                             int countResults = results.Count;
                                             bool isHaveResults = countResults >= 1;
@@ -5302,11 +5534,8 @@ namespace GamaManager
                                                             manualGameNameLabel.Margin = new Thickness(15);
                                                             manualGameNameLabel.Text = manualGameName;
                                                             manual.Children.Add(manualGameNameLabel);
-
-                                                            // communityElements.Add(manual);
                                                             totalManualsItem.body = manual;
                                                             communityElements.Add(totalManualsItem);
-
                                                             manual.DataContext = id;
                                                             manual.MouseLeftButtonUp += SelectManualHandler;
                                                         }
@@ -5343,7 +5572,6 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-
                             List<ScreenShot> totalCommunityScreenShots = myobj.screenShots;
                             communityScreenShots.Children.Clear();
                             int totalCommunityScreenShotsCount = totalCommunityScreenShots.Count;
@@ -5386,7 +5614,7 @@ namespace GamaManager
                                                         {
                                                             string someGameId = someGame._id;
                                                             bool isIdMatches = someGameId == gameId;
-                                                            return isIdMatches;
+                                                            return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity); ;
                                                         }).ToList<GameResponseInfo>();
                                                         int countResults = results.Count;
                                                         bool isHaveResults = countResults >= 1;
@@ -5502,11 +5730,8 @@ namespace GamaManager
                                                                         communityScreenShotGameNameLabel.Text = screenShotGameName;
                                                                         communityScreenShotGameNameLabel.Margin = new Thickness(15, 5, 15, 5);
                                                                         communityScreenShot.Children.Add(communityScreenShotGameNameLabel);
-
-                                                                        // communityElements.Add(communityScreenShot);
                                                                         totalCommunityScreenShotsItem.body = communityScreenShot;
                                                                         communityElements.Add(totalCommunityScreenShotsItem);
-
                                                                         communityScreenShot.DataContext = id;
                                                                         communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
                                                                     }
@@ -5615,7 +5840,7 @@ namespace GamaManager
                                                             {
                                                                 string someGameId = someGame._id;
                                                                 bool isIdMatches = someGameId == gameId;
-                                                                return isIdMatches;
+                                                                return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity); ;
                                                             }).ToList<GameResponseInfo>();
                                                             int countResults = results.Count;
                                                             bool isHaveResults = countResults >= 1;
@@ -5791,7 +6016,6 @@ namespace GamaManager
             }
             else
             {
-                // communityElements.Sort(new CommunityContentDateComparer());
                 communityElements = communityElements.OrderByDescending((CommunityContent x) =>
                 {
                     DateTime xDate = DateTime.Now;
@@ -5822,19 +6046,13 @@ namespace GamaManager
             }
 
             communityTotalContent.Children.Clear();
-            /*
-            var r = new Random();
-            communityElements = communityElements.OrderBy(x => r.Next()).ToList<UIElement>();
-            */
             int communityElementsCount = communityElements.Count;
             bool isHaveElements = communityElementsCount >= 1;
             if (isHaveElements)
             {
                 communityTotalContent.HorizontalAlignment = HorizontalAlignment.Left;
-                // foreach (UIElement communityElement in communityElements)
                 foreach (CommunityContent communityElement in communityElements)
                 {
-                    // communityTotalContent.Children.Add(communityElement);
                     UIElement communityElementBody = communityElement.body;
                     communityTotalContent.Children.Add(communityElementBody);
                 }
@@ -6162,16 +6380,7 @@ namespace GamaManager
                                     illustrations.Children.Add(notFoundLabel);
                                 }
                             }
-                            else
-                            {
-                                TextBlock notFoundLabel = new TextBlock();
-                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                notFoundLabel.TextAlignment = TextAlignment.Center;
-                                notFoundLabel.FontSize = 18;
-                                notFoundLabel.Text = "Иллюстраций не найдено";
-                                illustrations.HorizontalAlignment = HorizontalAlignment.Center;
-                                illustrations.Children.Add(notFoundLabel);
-                            }
+                            
                         }
                     }
                 }
@@ -6234,6 +6443,7 @@ namespace GamaManager
                             if (isHaveManuals)
                             {
                                 manuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                int communityItemsCursor = 0;
                                 foreach (Manual totalManualsItem in totalManuals)
                                 {
                                     string gameId = totalManualsItem.game;
@@ -6263,7 +6473,7 @@ namespace GamaManager
                                                 bool isHaveResults = countResults >= 1;
                                                 if (isHaveResults)
                                                 {
-
+                                                    communityItemsCursor++;
                                                     HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/all");
                                                     innerNestedWebRequest.Method = "GET";
                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
@@ -6392,16 +6602,19 @@ namespace GamaManager
                                         }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                TextBlock notFoundLabel = new TextBlock();
-                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                notFoundLabel.TextAlignment = TextAlignment.Center;
-                                notFoundLabel.FontSize = 18;
-                                notFoundLabel.Text = "Руководств не найдено";
-                                manuals.HorizontalAlignment = HorizontalAlignment.Center;
-                                manuals.Children.Add(notFoundLabel);
+
+                                bool isNotCommunityItems = communityItemsCursor <= 0;
+                                if (isNotCommunityItems)
+                                {
+                                    TextBlock notFoundLabel = new TextBlock();
+                                    notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                    notFoundLabel.TextAlignment = TextAlignment.Center;
+                                    notFoundLabel.FontSize = 18;
+                                    notFoundLabel.Text = "Руководств не найдено";
+                                    manuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                    manuals.Children.Add(notFoundLabel);
+                                }
+
                             }
                         }
                     }
@@ -11732,7 +11945,7 @@ namespace GamaManager
             dialog.Show();
         }
 
-        public void JoinToGameHandler(object sender, EventArgs e)
+        public void JoinToGameHandler (object sender, EventArgs e)
         {
             Dialogs.FriendsDialog dialog = ((Dialogs.FriendsDialog)(sender));
             object dialogData = dialog.DataContext;
@@ -11775,7 +11988,7 @@ namespace GamaManager
             RejectFriendRequest(friendId, requestId, request);
         }
 
-        public void GetFriendRequestsForMe()
+        public void GetFriendRequestsForMe ()
         {
             try
             {
@@ -12602,6 +12815,68 @@ namespace GamaManager
             ProfileItemSelected(selectedIndex);
         }
 
+        public void TogglePrizeCardsTabFromBreadCrumbsHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock breadCrumb = ((TextBlock)(sender));
+            object breadCrumbData = breadCrumb.DataContext;
+            string rawIndex = breadCrumbData.ToString();
+            int index = Int32.Parse(rawIndex);
+            TogglePrizeCardsTabFromBreadCrumbs(index);
+        }
+
+        public void TogglePrizeCardsTabFromBreadCrumbs (int index)
+        {
+            TogglePrizeCardsTab(index);
+        }
+
+        public void TogglePrizeCardsTabFromPriceHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel priceBlock = ((StackPanel)(sender));
+            object priceBlockData = priceBlock.DataContext;
+            string rawPrice = priceBlockData.ToString();
+            int price = Int32.Parse(rawPrice);
+            TogglePrizeCardsTabFromPrice(price);
+        }
+
+        public void OpenAddNoteToPrizeCardHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAddNoteToPrizeCard();
+        }
+
+        public void OpenAddNoteToPrizeCard ()
+        {
+            prizeCardsControl.SelectedIndex = 5;
+        }
+
+        public void OpenSetPaymentMethodToPrizeCardHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSetPaymentMethodToPrizeCard();
+        }
+
+        public void OpenSetPaymentMethodToPrizeCard ()
+        {
+            prizeCardsControl.SelectedIndex = 6;
+        }
+
+        public void TogglePrizeCardsTabFromPrice (int price)
+        {
+            TogglePrizeCardsTab(4);
+        }
+
+        public void TogglePrizeCardsTabHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string rawIndex = btnData.ToString();
+            int index = Int32.Parse(rawIndex);
+            TogglePrizeCardsTab(index);
+        }
+
+        public void TogglePrizeCardsTab (int index)
+        {
+            prizeCardsControl.SelectedIndex = index;
+        }
+
         private void ProfileItemSelected(int index)
         {
             if (isAppInit)
@@ -12673,7 +12948,7 @@ namespace GamaManager
             LibraryItemSelected(selectedIndex);
         }
 
-        private void LibraryItemSelected(int index)
+        private void LibraryItemSelected (int index)
         {
             bool isHome = index == 1;
             bool isCollections = index == 2;
@@ -12690,10 +12965,20 @@ namespace GamaManager
             }
             else if (isDownloads)
             {
-                mainControl.SelectedIndex = 4;
-                AddHistoryRecord();
+                OpenDownloads();
             }
             ResetMenu();
+        }
+
+        public void OpenDownloadsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenDownloads();
+        }
+
+        public void OpenDownloads ()
+        {
+            mainControl.SelectedIndex = 4;
+            AddHistoryRecord();
         }
 
         public void ResetMenu()
@@ -12725,7 +13010,7 @@ namespace GamaManager
 
         }
 
-        public void GetRequestsCount()
+        public void GetRequestsCount ()
         {
             int countRequests = 0;
 
@@ -12805,6 +13090,15 @@ namespace GamaManager
             string rawCountRequests = countRequests.ToString();
             string countNewRequestsLabelContent = "Новых приглашений: " + rawCountRequests;
             countNewRequestsLabel.Text = countNewRequestsLabelContent;
+            bool isHaveRequests = countRequests >= 1;
+            if (isHaveRequests)
+            {
+                notificationsPopupIcon.Foreground = System.Windows.Media.Brushes.Yellow;
+            }
+            else
+            {
+                notificationsPopupIcon.Foreground = System.Windows.Media.Brushes.Black;
+            }
         }
 
         public void SetUserStatus(string userStatus)
@@ -13063,6 +13357,7 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+            // newsAside.Height = news.ActualHeight;
         }
 
         public void StoreItemSelected(int index)
@@ -14491,14 +14786,14 @@ namespace GamaManager
             ToggleWindow();
         }
 
-        public void ToggleWindow()
+        public void ToggleWindow ()
         {
             if (isAppInit)
             {
                 int selectedWindowIndex = mainControl.SelectedIndex;
 
                 bool isProfileWindow = selectedWindowIndex == 1;
-                if (isProfileWindow || true)
+                if (isProfileWindow)
                 {
                     object mainControlData = mainControl.DataContext;
                     string userId = ((string)(mainControlData));
@@ -14590,6 +14885,7 @@ namespace GamaManager
                                 GetCommunityInfo();
                                 illustrationNameBox.Text = "";
                                 illustrationDescBox.Text = "";
+                                illustrationPhotoBtn.Content = "Выберите файл";
                             }
                         }
                     }
@@ -15850,12 +16146,12 @@ namespace GamaManager
             GetGamesList("");
         }
 
-        private void ReturnToProfileHandler(object sender, MouseButtonEventArgs e)
+        private void ReturnToProfileHandler (object sender, MouseButtonEventArgs e)
         {
             ReturnToProfile();
         }
 
-        public void ReturnToProfile()
+        public void ReturnToProfile ()
         {
             object mainControlData = mainControl.DataContext;
             string userId = ((string)(mainControlData));
@@ -16282,12 +16578,12 @@ namespace GamaManager
 
         }
 
-        public void AddExternalGameHandler(object sender, RoutedEventArgs e)
+        public void AddExternalGameHandler (object sender, RoutedEventArgs e)
         {
             AddExternalGame();
         }
 
-        public void AddExternalGame()
+        public void AddExternalGame ()
         {
             Dialogs.AddExternalGameDialog dialog = new Dialogs.AddExternalGameDialog(currentUserId);
             dialog.Closed += GetGamesListHandler;
@@ -16302,12 +16598,12 @@ namespace GamaManager
 
         }
 
-        private void OpenGameActivationHandler(object sender, RoutedEventArgs e)
+        private void OpenGameActivationHandler (object sender, RoutedEventArgs e)
         {
             OpenGameActivation();
         }
 
-        public void OpenGameActivation()
+        public void OpenGameActivation ()
         {
             Dialogs.ActivationGameDialog dialog = new Dialogs.ActivationGameDialog();
             dialog.Show();
@@ -16337,6 +16633,8 @@ namespace GamaManager
             notificationsPopup.IsOpen = toggleValue;*/
             notificationsPopup.IsOpen = true;
         }
+
+
 
         private void SelectAccountSettingsItemHandler(object sender, MouseButtonEventArgs e)
         {
@@ -17281,10 +17579,11 @@ namespace GamaManager
 
         private void PickFileHandler (object sender, RoutedEventArgs e)
         {
-            PickFile();
+            Button btn = ((Button)(sender));
+            PickFile(btn);
         }
 
-        public void PickFile ()
+        public void PickFile (Button btn)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.Title = "Выберите обложку";
@@ -17296,6 +17595,7 @@ namespace GamaManager
                 string path = ofd.FileName;
                 manualAttachmentExt = System.IO.Path.GetExtension(path);
                 manualAttachment = ImageFileToByteArray(path);
+                btn.Content = path;
             }
         }
 
@@ -17570,6 +17870,17 @@ namespace GamaManager
         public void HideCategoriesMenu()
         {
             categoriesMenuPopup.IsOpen = false;
+        }
+
+        public void OpenStoreHandler (object sender, RoutedEventArgs e)
+        {
+            OpenStore();
+        }
+
+        public void OpenStore ()
+        {
+            addGamePopup.IsOpen = false;
+            OpenPopularGames();
         }
 
         public void OpenPopularGames ()
@@ -20558,7 +20869,7 @@ namespace GamaManager
             OpenUserProfile(id);
         }
 
-        public void OpenUserProfile(string id)
+        public void OpenUserProfile (string id)
         {
             mainControl.DataContext = id;
             ReturnToProfile();
@@ -20796,6 +21107,7 @@ namespace GamaManager
 
         public void OpenPresentCards ()
         {
+            prizeCardsControl.SelectedIndex = 0;
             mainControl.SelectedIndex = 51;
         }
 
@@ -21664,9 +21976,11 @@ namespace GamaManager
 
         public void ShowGameCommunityAnnotations ()
         {
+            gameCommunityAnnotations.Children.Clear();
             string gameCommunityBoxContent = gameCommunityBox.Text;
             int gameCommunityBoxContentLength = gameCommunityBoxContent.Length;
             bool isHaveContent = gameCommunityBoxContentLength >= 1;
+            string insensitiveCaseGameCommunityBoxContent = gameCommunityBoxContent.ToLower();
             if (isHaveContent)
             {
                 try
@@ -21686,6 +22000,13 @@ namespace GamaManager
                             if (isOkStatus)
                             {
                                 List<GameResponseInfo> totalGames = myobj.games;
+                                totalGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                {
+                                    string someGameName = someGame.name;
+                                    string insensitiveCaseSomeGameName = someGameName.ToLower();
+                                    bool isKeywordsMatch = insensitiveCaseSomeGameName.Contains(insensitiveCaseGameCommunityBoxContent);
+                                    return isKeywordsMatch;
+                                }).ToList<GameResponseInfo>();
                                 foreach (GameResponseInfo totalGame in totalGames)
                                 {
                                     string totalGameId = totalGame._id;
@@ -21773,6 +22094,50 @@ namespace GamaManager
         public void OpenGameCommunity ()
         {
 
+        }
+
+        private void HideNotificationsPopupHightLightHandler (object sender, EventArgs e)
+        {
+            HideNotificationsPopupHightLight();
+        }
+
+        public void HideNotificationsPopupHightLight ()
+        {
+            notificationsPopupIcon.Foreground = System.Windows.Media.Brushes.Black;
+        }
+
+        private void ToggleNewsAsideHandler (object sender, MouseButtonEventArgs e)
+        {
+            PackIcon icon = ((PackIcon)(sender));
+            ToggleNewsAside(icon);
+        }
+
+        public void ToggleNewsAside (PackIcon icon)
+        {
+            Visibility newsAsideBodyVisibility = newsAsideBody.Visibility;
+            bool isVisible = newsAsideBodyVisibility == visible;
+            if (isVisible)
+            {
+                newsAsideBody.Visibility = invisible;
+                newsAside.Width = 50;
+                icon.Kind = PackIconKind.ChevronDoubleRight;
+            }
+            else
+            {
+                newsAsideBody.Visibility = visible;
+                newsAside.Width = 250;
+                icon.Kind = PackIconKind.ChevronDoubleLeft;
+            }
+        }
+
+        private void ToggleAddGamePopupHandler (object sender, MouseButtonEventArgs e)
+        {
+            ToggleAddGamePopup();
+        }
+
+        public void ToggleAddGamePopup ()
+        {
+            addGamePopup.IsOpen = true;
         }
 
     }

@@ -12583,53 +12583,105 @@
                                                 Margin="15 0"
                                                 Text="Все Мастерские"    
                                             />
-                                            <TextBox
-                                                HorizontalAlignment="Right"
-                                                Margin="25 0"
-                                                Height="30"
-                                                Width="250"    
+                                            <Popup
+                                                x:Name="workShopBoxPopup"
+                                                StaysOpen="False"
+                                                Width="150"
+                                                Height="150"
+                                                Placement="Mouse"
                                             >
-                                                <TextBox.Resources>
-                                                    <VisualBrush
-                                                        x:Key="hinttext"
-                                                        AlignmentX="Left"
-                                                        Stretch="None"
-                                                        TileMode="None"
-                                                    >
-                                                        <VisualBrush.Visual>
-                                                            <DockPanel>
-                                                                <TextBlock
-                                                                    Height="30"
-                                                                    Width="250"
-                                                                    Text="Найти игру"
-                                                                    Foreground="#959595"
-                                                                    Background="White"
-                                                                />
-                                                            </DockPanel>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </TextBox.Resources>
-                                                <TextBox.Style>
-                                                    <Style TargetType="TextBox">
-                                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                                        <Setter Property="FontSize" Value="12" />
-                                                        <Setter Property="Width" Value="Auto" />
-                                                        <Setter Property="Width" Value="Auto" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="Text" Value="">
-                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                            </Trigger>
-                                                            <Trigger Property="Text" Value="{x:Null}">
-                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBox.Style>
-                                            </TextBox>
+                                                <Popup.Child>
+                                                    <StackPanel
+                                                        x:Name="workShopBoxPopupBody"
+                                                        Background="LightGray"
+                                                    />
+                                                </Popup.Child>
+                                            </Popup>
+                                            <StackPanel
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal"    
+                                            >
+                                                <TextBox
+                                                    x:Name="workShopBox"
+                                                    HorizontalAlignment="Right"
+                                                    Margin="25 5 5 5"
+                                                    Height="25"
+                                                    Width="250"    
+                                                    TextChanged="GetWorkShopGamesHandler"
+                                                >
+                                                    <TextBox.Resources>
+                                                        <VisualBrush
+                                                            x:Key="hinttext"
+                                                            AlignmentX="Left"
+                                                            Stretch="None"
+                                                            TileMode="None"
+                                                        >
+                                                            <VisualBrush.Visual>
+                                                                <DockPanel>
+                                                                    <TextBlock
+                                                                        Height="30"
+                                                                        Width="250"
+                                                                        Text="Найти игру"
+                                                                        Foreground="#959595"
+                                                                        Background="White"
+                                                                    />
+                                                                </DockPanel>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </TextBox.Resources>
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                                            <Setter Property="FontSize" Value="12" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Setter Property="Width" Value="Auto" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Text" Value="">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                                <Trigger Property="Text" Value="{x:Null}">
+                                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                                <Button
+                                                    Margin="5 0 25 0"
+                                                    Width="24"
+                                                    Height="24"
+                                                >
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Kind="Search"    
+                                                        />
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
                                         </DockPanel>
-                                        <WrapPanel
-                                            x:Name="workShopItems"    
-                                        />
+                                        <DockPanel>
+                                            <WrapPanel
+                                                x:Name="workShopItems"    
+                                            />
+                                            <StackPanel
+                                                HorizontalAlignment="Right"
+                                                Margin="25"
+                                                Background="LightGray"
+                                            >
+                                                <TextBlock
+                                                    Margin="25 5"
+                                                    Text="СОРТИРОВАТЬ МАСТЕРСКИЕ"    
+                                                />
+                                                <TextBlock
+                                                    Margin="25 5"
+                                                    Text="Новейшие"    
+                                                />
+                                                <TextBlock
+                                                    Margin="25 5"
+                                                    Text="По алфавиту"    
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem
@@ -12671,7 +12723,7 @@
                             Margin="175 0"
                             Background="Blue"    
                         >
-                            <StackPanel>
+                            <DockPanel>
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="18"
@@ -12680,12 +12732,14 @@
                                     />
                                     <TextBlock
                                         Margin="25 10"
-                                        Text="Продавайте предметы участникам сообщества или приобретайте их, используя средства из кошелька Steam."    
+                                        Text="Продавайте предметы участникам сообщества или приобретайте их, используя средства&#10;из кошелька Steam."    
                                     />
                                 </StackPanel>
                                 <StackPanel
+                                    Background="LightGray"
+                                    HorizontalAlignment="Right"
                                     Orientation="Horizontal"    
-                                    Margin="0 15"    
+                                    Margin="15"    
                                 >
                                     <Image
                                         Margin="15"
@@ -12702,14 +12756,16 @@
                                         Margin="15 0"    
                                     >
                                         <TextBlock
+                                            Margin="0 5"    
                                             Text="Баланс кошелька 0 pуб."    
                                         />
                                         <TextBlock
+                                            Margin="0 5"    
                                             Text="Просмотреть инвентарь"    
                                         />
                                     </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -16051,6 +16107,7 @@ E. Что произойдет, если положение Пункта 11 бу
                                     Margin="50"
                                     Width="375"
                                     Height="85"
+                                    Click="OpenMoreCuratorsHandler"
                                 />
                             </DockPanel>
                         </StackPanel>
@@ -16365,6 +16422,161 @@ E. Что произойдет, если положение Пункта 11 бу
                                     </TabItem>
                                 </TabControl>
                             </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <!--
+                                Кураторы
+                            -->
+                            <local:HeaderControl
+                                DataContext="{ Binding ElementName=mainWindow }"    
+                            />
+                            <TextBlock
+                                Margin="15"
+                                Text="Кураторы Steam >Обзор кураторов"    
+                            />
+                            <TextBlock
+                                FontSize="24"
+                                Margin="15"
+                                Text="КУРАТОРЫ STEAM"    
+                            />
+                            <TextBlock
+                                FontSize="16"
+                                Margin="15"
+                                Text="Частные лица или организации, которые помогают другим найти интересные игры в каталоге Steam с помощью&#10;рекомендаций."    
+                            />
+                            <Separator />
+                            <TabControl>
+                                <TabItem
+                                    Header="Рекомендуемые"    
+                                >
+                                    <StackPanel>
+                                        
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Header="Самые популярные"    
+                                >
+                                    <StackPanel>
+
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Header="Подписки"    
+                                >
+                                    <StackPanel>
+                                        <StackPanel
+                                            Background="SlateGray"    
+                                        >
+                                            <TextBlock
+                                                TextAlignment="Center"
+                                                FontSize="20"
+                                                Margin="15"
+                                                Text="Вы не подписаны на кураторов Steam. Можете нажать здесь, чтобы узнать о кураторах&#10;больше."
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Header="Скрытые"    
+                                >
+                                    <StackPanel>
+                                        <StackPanel
+                                            Background="SlateGray"    
+                                        >
+                                            <TextBlock
+                                                TextAlignment="Center"
+                                                FontSize="20"
+                                                Margin="15"
+                                                Text="Под ваши параметры поиска не подходит ни один куратор Steam."
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Header="Подробнее"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="КТО ТАКИЕ КУРАТОРЫ STEAM?"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Кураторы Steam — это частные лица или организации, которые помогают другим найти интересные игры в каталоге Steam с помощью рекомендаций."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Вы можете подписаться на одного или более кураторов, чтобы их рекомендации отображались на главной странице Steam и в вашей ленте."    
+                                        />
+                                        <Button
+                                            Margin="15 5"
+                                            HorizontalAlignment="Left"
+                                            Height="25"
+                                            Width="175"
+                                            Content="Подробнее о кураторах"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="КАК СТАТЬ КУРАТОРОМ STEAM?"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Любая группа Сообщества Steam может стать куратором. По умолчанию у офицеров всех групп есть права на публикацию рекомендаций от имени куратора. Чтобы начать, посетите группу сообщества Steam, в которой вы являетесь офицером, и перейдите на вкладку «Куратор»."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Нажмите здесь, чтобы просмотреть все свои группы."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="КАК ВЫБИРАЮТСЯ РЕКОМЕНДУЕМЫЕ КУРАТОРЫ?"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Steam учитывает вашу последнюю активность и выбирает тех кураторов, которые, по нашему мнению, рекомендуют игры, совпадающие с вашими интересами."    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="КАК ИЗМЕНИТЬ ЯЗЫК ОТОБРАЖАЕМЫХ КУРАТОРОВ?"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Для фильтрации кураторов будут использоваться ваши настройки языка: кураторы, использующие выбранные языки, будут иметь приоритет над аналогичными&#10;кураторами на другом языке."    
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <!--
+                                Кураторы
+                            -->
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

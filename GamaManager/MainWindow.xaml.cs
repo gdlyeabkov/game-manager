@@ -22039,7 +22039,7 @@ namespace GamaManager
             SelectCommunityGameAnnotation(id);
         }
 
-        public void SelectCommunityGameAnnotation(string id)
+        public void SelectCommunityGameAnnotation (string id)
         {
             try
             {
@@ -22138,6 +22138,89 @@ namespace GamaManager
         public void ToggleAddGamePopup ()
         {
             addGamePopup.IsOpen = true;
+        }
+
+        private void OpenMoreCuratorsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenMoreCurators();
+        }
+
+        public void OpenMoreCurators ()
+        {
+            mainControl.SelectedIndex = 57;
+        }
+
+        private void GetWorkShopGamesHandler (object sender, TextChangedEventArgs e)
+        {
+            GetWorkShopGames();
+        }
+
+        private void GetWorkShopGames ()
+        {
+            workShopBoxPopupBody.Children.Clear();
+            string workShopBoxContent = workShopBox.Text;
+            string insensitiveCaseWorkShopBoxContent = workShopBoxContent.ToLower();
+            int workShopBoxContentLength = workShopBoxContent.Length;
+            bool isHaveContent = workShopBoxContentLength >= 1;
+            if (isHaveContent)
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> totalGames = myobj.games;
+                                totalGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                {
+                                    string someGameName = someGame.name;
+                                    string insensitiveCaseSomeGameName = someGameName.ToLower();
+                                    bool isKeywordsMatch = insensitiveCaseSomeGameName.Contains(insensitiveCaseWorkShopBoxContent);
+                                    return isKeywordsMatch;
+                                }).ToList<GameResponseInfo>();
+                                foreach (GameResponseInfo totalGame in totalGames)
+                                {
+                                    string totalGameId = totalGame._id;
+                                    string totalGameName = totalGame.name;
+                                    TextBlock gameCommunityAnnotation = new TextBlock();
+                                    gameCommunityAnnotation.Text = totalGameName;
+                                    gameCommunityAnnotation.Margin = new Thickness(15, 5, 15, 5);
+                                    gameCommunityAnnotation.DataContext = totalGameId;
+                                    gameCommunityAnnotation.MouseLeftButtonUp += SelectCommunityGameAnnotationFromWorkShopHandler;
+                                    workShopBoxPopupBody.Children.Add(gameCommunityAnnotation);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            workShopBoxPopup.IsOpen = isHaveContent;
+        }
+
+        public void SelectCommunityGameAnnotationFromWorkShopHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock annotation = ((TextBlock)(sender));
+            object annotationData = annotation.DataContext;
+            string id = ((string)(annotationData));
+            mainControl.SelectedIndex = 20;
+            communityControl.SelectedIndex = 5;
+            annotation.Text = "";
+            SelectCommunityGameAnnotation(id);
         }
 
     }

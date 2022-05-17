@@ -6499,7 +6499,10 @@
             <TabItem
                 Visibility="Collapsed"
             >
-                <ScrollViewer>
+                <ScrollViewer
+                    x:Name="mainCommunityScroll"
+                    ScrollChanged="DetectMainCommunityScrollHandler"    
+                >
                     <DockPanel
                         Background="Green"    
                     >
@@ -6508,16 +6511,237 @@
                             Background="Blue"    
                         >
                             <StackPanel>
-                                <TextBlock
-                                    Text="Активность сообщества"
-                                    FontSize="20"
-                                    Margin="15 10"
-                                />
-                                <TextBlock
-                                    Text="Фанатский и официальный контент для всех игр и программ в Office ware game manager."
-                                    FontSize="16"
-                                    Margin="15 10"
-                                />
+                                <Popup
+                                    x:Name="mainCommunityPopup"
+                                    Width="125"
+                                    Height="30"
+                                    StaysOpen="False"
+                                >
+                                    <Popup.Child>
+                                        <Button
+                                            Content="Наверх"
+                                            Width="125"
+                                            Height="30"
+                                            Click="ScrollMainCommunityToTopHandler"
+                                        />
+                                    </Popup.Child>
+                                </Popup>
+                                <TabControl
+                                    x:Name="communityActivityControl"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    SelectedIndex="0"
+                                    DataContext="{x:Null}"
+                                >
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
+                                        <StackPanel>
+                                            <TextBlock
+                                                Text="Активность сообщества"
+                                                FontSize="20"
+                                                Margin="15 10"
+                                            />  
+                                            <TextBlock
+                                                Text="Фанатский и официальный контент для всех игр и программ в Office ware game manager."
+                                                FontSize="16"
+                                                Margin="15 10"
+                                            />
+                                            <DockPanel
+                                                MinHeight="250"    
+                                            >
+                                                <StackPanel
+                                                    MinWidth="650"
+                                                    Margin="25"
+                                                    Background="LightGray"    
+                                                >
+                                                    <Grid
+                                                    x:Name="communityActivity"
+                                                    Margin="15"    
+                                                >
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock
+                                                        Grid.Row="0"
+                                                        Grid.Column="0"
+                                                        Text="Недавно запущенные игры"    
+                                                    />
+                                                        <TextBlock
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Text="Недавно просмотренные центры"    
+                                                    />
+                                                    </Grid>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Margin="25"    
+                                                    HorizontalAlignment="Right"
+                                                    Background="LightGray"
+                                                    MinWidth="350"
+                                                >
+                                                    <TextBlock
+                                                        Margin="15 15 15 5"
+                                                        Text="НАЙТИ ЦЕНТРЫ"    
+                                                    />
+                                                    <StackPanel
+                                                        Margin="0 5"
+                                                        Orientation="Horizontal"
+                                                    >
+                                                        <Popup
+                                                            x:Name="gameCommunityAnnotationsPopup"
+                                                            StaysOpen="False"
+                                                            Width="250"
+                                                            Height="250"
+                                                        >
+                                                            <Popup.Child>
+                                                                <StackPanel
+                                                                    x:Name="gameCommunityAnnotations"    
+                                                                    Background="LightGray"
+                                                                />
+                                                            </Popup.Child>
+                                                        </Popup>
+                                                        <TextBox
+                                                            x:Name="gameCommunityBox"
+                                                            VerticalAlignment="Center"
+                                                            Margin="10 15"
+                                                            Width="250"
+                                                            Height="25"
+                                                            TextChanged="ShowGameCommunityAnnotationsHandler"
+                                                        >
+                                                            <TextBox.Resources>
+                                                                <VisualBrush
+                                                                    x:Key="hinttext"
+                                                                    AlignmentX="Left"
+                                                                    Stretch="None"
+                                                                    TileMode="None"
+                                                                >
+                                                                    <VisualBrush.Visual>
+                                                                        <DockPanel>
+                                                                            <TextBlock
+                                                                                Height="25"
+                                                                                Width="250"
+                                                                                Text="Поиск по продуктам"
+                                                                                Foreground="#959595"
+                                                                                Background="White"
+                                                                            />
+                                                                        </DockPanel>
+                                                                    </VisualBrush.Visual>
+                                                                </VisualBrush>
+                                                            </TextBox.Resources>
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    <Setter Property="FontSize" Value="12" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                        <materialDesign:PackIcon
+                                                            VerticalAlignment="Center"
+                                                            Margin="10 15"
+                                                            Kind="Search"
+                                                            MouseLeftButtonUp="OpenGameCommunityHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <Separator
+                                                        Margin="15"    
+                                                    />
+                                                    <TextBlock
+                                                        Margin="15 15 15 5"
+                                                        Text="НАЙТИ ЛЮДЕЙ"    
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBox
+                                                            x:Name="findHumansBox"
+                                                            VerticalAlignment="Center"
+                                                            Margin="10 15"
+                                                            Width="250"
+                                                            Height="25"
+                                                        >
+                                                            <TextBox.Resources>
+                                                                <VisualBrush
+                                                                    x:Key="hinttext"
+                                                                    AlignmentX="Left"
+                                                                    Stretch="None"
+                                                                    TileMode="None"
+                                                                >
+                                                                    <VisualBrush.Visual>
+                                                                        <DockPanel>
+                                                                            <TextBlock
+                                                                                Height="25"
+                                                                                Width="250"
+                                                                                Text="Найти друзей"
+                                                                                Foreground="#959595"
+                                                                                Background="White"
+                                                                            />
+                                                                        </DockPanel>
+                                                                    </VisualBrush.Visual>
+                                                                </VisualBrush>
+                                                            </TextBox.Resources>
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    <Setter Property="FontSize" Value="12" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                        <materialDesign:PackIcon
+                                                        VerticalAlignment="Center"
+                                                        Margin="10 15"
+                                                        Kind="Search"    
+                                                        MouseLeftButtonUp="FindHumansHandler"
+                                                    />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
+                                        <DockPanel>
+                                            <TextBlock
+                                                x:Name="communityActivityGameNameLabel"
+                                                Margin="15"
+                                                Text="Название игры"
+                                                FontSize="16"
+                                            />
+                                            <Button
+                                                Margin="15"
+                                                HorizontalAlignment="Right"
+                                                Height="25"
+                                                Width="125"
+                                                Content="Страница в магазине"
+                                            />
+                                        </DockPanel>
+                                    </TabItem>
+                                </TabControl>
                                 <TabControl
                                     x:Name="communityControl"    
                                 >
@@ -6525,6 +6749,41 @@
                                         Header="Все"        
                                     >
                                         <StackPanel>
+                                            <StackPanel
+                                                x:Name="communityContentSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="communityContentSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortCommunityContentHandler"
+                                                />
+                                                <Button
+                                                    x:Name="communityContentSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortCommunityContentHandler"
+                                                />
+                                            </StackPanel>
                                             <WrapPanel
                                                 x:Name="communityTotalContent"
                                             />
@@ -6534,6 +6793,41 @@
                                         Header="Скриншоты"                                    
                                     >
                                         <StackPanel>
+                                            <StackPanel
+                                                x:Name="screenShotsSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="screenShotsSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortScreenShotsHandler"
+                                                />
+                                                <Button
+                                                    x:Name="screenShotsSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortScreenShotsHandler"
+                                                />
+                                            </StackPanel>
                                             <WrapPanel
                                                 x:Name="communityScreenShots"
                                             />
@@ -6551,6 +6845,41 @@
                                                 Content="Загрузите вашу иллюстрацию"
                                                 Click="OpenAddIllustrationPageHandler"    
                                             />
+                                            <StackPanel
+                                                x:Name="illustrationsSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="illustrationsSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortIllustrationsHandler"
+                                                />
+                                                <Button
+                                                    x:Name="illustrationsSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortIllustrationsHandler"
+                                                />
+                                            </StackPanel>
                                             <WrapPanel
                                                 x:Name="illustrations"
                                             />
@@ -6574,7 +6903,41 @@
                                         Header="Видео"        
                                     >
                                         <StackPanel>
-
+                                            <StackPanel
+                                                x:Name="videosSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="videosSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortVideosHandler"
+                                                />
+                                                <Button
+                                                    x:Name="videosSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortVideosHandler"
+                                                />
+                                            </StackPanel>
                                         </StackPanel>
                                     </TabItem>
                                     <TabItem
@@ -6588,27 +6951,38 @@
                                                     Text="Просмотреть все доступные Мастерские"    
                                                 />
                                                 <StackPanel
+                                                    x:Name="workShopSortPanel"
+                                                    Margin="15"
+                                                    Orientation="Horizontal"
                                                     HorizontalAlignment="Right"
-                                                    Orientation="Horizontal"    
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
                                                 >
                                                     <TextBlock
                                                         VerticalAlignment="Center"
-                                                        Margin="5 0"
-                                                        Text="Просмотреть"    
+                                                        Margin="15 0"
+                                                        Text="Просмотреть"
+                                                        FontSize="16"
                                                     />
                                                     <Button
+                                                        x:Name="workShopSortPanelPopularBtn"
                                                         VerticalAlignment="Center"
-                                                        Margin="5 0"
-                                                        Width="125"
+                                                        Margin="15 0"
+                                                        Width="175"
                                                         Height="25"
-                                                        Content="Самые популярные"
+                                                        Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                        Background="SkyBlue"
+                                                        DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                        Click="ToggleSortWorkShopHandler"
                                                     />
                                                     <Button
+                                                        x:Name="workShopSortPanelLastBtn"
                                                         VerticalAlignment="Center"
-                                                        Margin="5 0"
+                                                        Margin="15 0"
                                                         Width="125"
                                                         Height="25"
-                                                        Content="Последние"
+                                                        Content="ПОСЛЕДНИЕ"    
+                                                        DataContext="ПОСЛЕДНИЕ"
+                                                        Click="ToggleSortWorkShopHandler"
                                                     />
                                                 </StackPanel>
                                             </DockPanel>
@@ -6638,6 +7012,41 @@
                                                 Content="Добавить свое руководство"
                                                 Click="OpenAddManualPageHandler"    
                                             />
+                                            <StackPanel
+                                                x:Name="manualsSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="manualsSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortManualsHandler"
+                                                />
+                                                <Button
+                                                    x:Name="manualsSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortManualsHandler"
+                                                />
+                                            </StackPanel>
                                             <WrapPanel
                                                 x:Name="manuals"
                                             />
@@ -6647,6 +7056,41 @@
                                         Header="Обзоры"    
                                     >
                                         <StackPanel>
+                                            <StackPanel
+                                                x:Name="reviewsSortPanel"
+                                                Margin="15"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                            >
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Text="Просмотреть"
+                                                    FontSize="16"
+                                                />
+                                                <Button
+                                                    x:Name="reviewsSortPanelPopularBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="175"
+                                                    Height="25"
+                                                    Content="САМЫЕ ПОПУЛЯРНЫЕ"    
+                                                    Background="SkyBlue"
+                                                    DataContext="САМЫЕ ПОПУЛЯРНЫЕ"
+                                                    Click="ToggleSortReviewsHandler"
+                                                />
+                                                <Button
+                                                    x:Name="reviewsSortPanelLastBtn"
+                                                    VerticalAlignment="Center"
+                                                    Margin="15 0"
+                                                    Width="125"
+                                                    Height="25"
+                                                    Content="ПОСЛЕДНИЕ"    
+                                                    DataContext="ПОСЛЕДНИЕ"
+                                                    Click="ToggleSortReviewsHandler"
+                                                />
+                                            </StackPanel>
                                             <WrapPanel
                                                 x:Name="reviews"
                                             />
@@ -7158,7 +7602,7 @@
                                         <Button
                                             x:Name="mainManualFavoriteBtn"
                                             Margin="10"
-                                            Width="175"
+                                            Width="125"
                                             Height="20"
                                         >
                                             <Button.Content>
@@ -7166,6 +7610,7 @@
                                                     Orientation="Horizontal"    
                                                 >
                                                     <materialDesign:PackIcon
+                                                        x:Name="mainManualFavoriteBtnContentIcon"
                                                         Margin="5 0"
                                                         Kind="Star"    
                                                     />

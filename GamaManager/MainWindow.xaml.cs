@@ -835,291 +835,294 @@ namespace GamaManager
 
         public void AddManual()
         {
-            try
+            if (manualGameSelector.Items.Count >= 1)
             {
-                string manualNameBoxContent = manualNameBox.Text;
-                string manualDescBoxContent = manualDescBox.Text;
-                string manualLang = "";
-                object rawIsChecked = manualLangRuBtn.IsChecked;
-                bool isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
+                try
                 {
-                    manualLang = "русский";
-                }
-                rawIsChecked = manualLangEngBtn.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    manualLang = "english";
-                }
-                string manualCategories = "";
-                rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
+                    string manualNameBoxContent = manualNameBox.Text;
+                    string manualDescBoxContent = manualDescBox.Text;
+                    string manualLang = "";
+                    object rawIsChecked = manualLangRuBtn.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
                     {
-                        manualCategories += "|";
+                        manualLang = "русский";
                     }
-                    manualCategories += "Достижения";
-                }
-                rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
+                    rawIsChecked = manualLangEngBtn.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
                     {
-                        manualCategories += "|";
+                        manualLang = "english";
                     }
-                    manualCategories += "Достижения";
-                }
-                rawIsChecked = manualCategoriesCharactersBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
+                    string manualCategories = "";
+                    rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
                     {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Персонажи";
-                }
-                rawIsChecked = manualCategoriesClassesBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Классы";
-                }
-                rawIsChecked = manualCategoriesCooperativeBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Кооператив";
-                }
-                rawIsChecked = manualCategoriesCraftBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Крафтинг";
-                }
-                rawIsChecked = manualCategoriesModesBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Режимы игры";
-                }
-                rawIsChecked = manualCategoriesTutorialsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Основы игры";
-                }
-                rawIsChecked = manualCategoriesRewardsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Награды";
-                }
-                rawIsChecked = manualCategoriesMapsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Карты или уровни";
-                }
-                rawIsChecked = manualCategoriesSettingsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Модификации или настройки";
-                }
-                rawIsChecked = manualCategoriesMultiplayerBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Мультиплеер";
-                }
-                rawIsChecked = manualCategoriesSecretsBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Секреты";
-                }
-                rawIsChecked = manualCategoriesStoryBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Сюжет или история";
-                }
-                rawIsChecked = manualCategoriesTradeBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Обмен";
-                }
-                rawIsChecked = manualCategoriesSpeedRunBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Прохождения";
-                }
-                rawIsChecked = manualCategoriesWeaponBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Оружие";
-                }
-                rawIsChecked = manualWorkShopBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                if (isChecked)
-                {
-                    int manualCategoriesLength = manualCategories.Length;
-                    bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
-                    if (isManualCategoriesLengthExists)
-                    {
-                        manualCategories += "|";
-                    }
-                    manualCategories += "Мастерская";
-                }
-                rawIsChecked = drmBox.IsChecked;
-                isChecked = ((bool)(rawIsChecked));
-                bool isDrm = false;
-                string rawIsDrm = "false";
-                if (isChecked)
-                {
-                    isDrm = true;
-                    rawIsDrm = "true";
-                }
-
-                int manualGameSelectorSelectedIndex = manualGameSelector.SelectedIndex;
-                ItemCollection manualGameSelectorItems = manualGameSelector.Items;
-                object rawManualGameSelectorSelectedItem = manualGameSelectorItems[manualGameSelectorSelectedIndex];
-                ComboBoxItem manualGameSelectorSelectedItem = ((ComboBoxItem)(rawManualGameSelectorSelectedItem));
-                object manualGameSelectorSelectedItemData = manualGameSelectorSelectedItem.DataContext;
-                string gameId = ((string)(manualGameSelectorSelectedItemData));
-
-                string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId;
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
-                MultipartFormDataContent form = new MultipartFormDataContent();
-                byte[] imagebytearraystring = manualAttachment;
-                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
-                httpClient.Dispose();
-
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
                         {
-                            mainControl.SelectedIndex = 20;
-                            GetCommunityInfo();
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Достижения";
+                    }
+                    rawIsChecked = manualCategoriesAchievementsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Достижения";
+                    }
+                    rawIsChecked = manualCategoriesCharactersBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Персонажи";
+                    }
+                    rawIsChecked = manualCategoriesClassesBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Классы";
+                    }
+                    rawIsChecked = manualCategoriesCooperativeBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Кооператив";
+                    }
+                    rawIsChecked = manualCategoriesCraftBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Крафтинг";
+                    }
+                    rawIsChecked = manualCategoriesModesBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Режимы игры";
+                    }
+                    rawIsChecked = manualCategoriesTutorialsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Основы игры";
+                    }
+                    rawIsChecked = manualCategoriesRewardsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Награды";
+                    }
+                    rawIsChecked = manualCategoriesMapsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Карты или уровни";
+                    }
+                    rawIsChecked = manualCategoriesSettingsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Модификации или настройки";
+                    }
+                    rawIsChecked = manualCategoriesMultiplayerBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Мультиплеер";
+                    }
+                    rawIsChecked = manualCategoriesSecretsBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Секреты";
+                    }
+                    rawIsChecked = manualCategoriesStoryBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Сюжет или история";
+                    }
+                    rawIsChecked = manualCategoriesTradeBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Обмен";
+                    }
+                    rawIsChecked = manualCategoriesSpeedRunBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Прохождения";
+                    }
+                    rawIsChecked = manualCategoriesWeaponBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Оружие";
+                    }
+                    rawIsChecked = manualWorkShopBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        int manualCategoriesLength = manualCategories.Length;
+                        bool isManualCategoriesLengthExists = manualCategoriesLength >= 1;
+                        if (isManualCategoriesLengthExists)
+                        {
+                            manualCategories += "|";
+                        }
+                        manualCategories += "Мастерская";
+                    }
+                    rawIsChecked = drmBox.IsChecked;
+                    isChecked = ((bool)(rawIsChecked));
+                    bool isDrm = false;
+                    string rawIsDrm = "false";
+                    if (isChecked)
+                    {
+                        isDrm = true;
+                        rawIsDrm = "true";
+                    }
+
+                    int manualGameSelectorSelectedIndex = manualGameSelector.SelectedIndex;
+                    ItemCollection manualGameSelectorItems = manualGameSelector.Items;
+                    object rawManualGameSelectorSelectedItem = manualGameSelectorItems[manualGameSelectorSelectedIndex];
+                    ComboBoxItem manualGameSelectorSelectedItem = ((ComboBoxItem)(rawManualGameSelectorSelectedItem));
+                    object manualGameSelectorSelectedItemData = manualGameSelectorSelectedItem.DataContext;
+                    string gameId = ((string)(manualGameSelectorSelectedItemData));
+
+                    string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId;
+                    HttpClient httpClient = new HttpClient();
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    byte[] imagebytearraystring = manualAttachment;
+                    form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                    HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                    httpClient.Dispose();
+
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                mainControl.SelectedIndex = 20;
+                                GetCommunityInfo();
+                            }
                         }
                     }
-                }
 
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
         }
 
@@ -3502,13 +3505,15 @@ namespace GamaManager
                                         totalManuals = totalManuals.Where<Manual>((Manual content) =>
                                         {
                                             string contentGameId = content.game;
-                                            string userId = content.user;
-                                            bool isMyContent = userId == currentUserId;
                                             bool isFilterMatch = filter == contentGameId;
-                                            bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
-                                            return isAddManual;
+                                            bool isAddManual = isFilterMatch || isFilterDisabled;
+
+                                            string id = content._id;
+                                            bool isFavoriteManual = myFavoriteRelationIds.Contains(id);
+
+                                            return isAddManual && isFavoriteManual;
                                         }).ToList<Manual>();
-                                        contentManuals.Children.Clear();
+                                        contentFavoriteManuals.Children.Clear();
                                         int totalManualsCount = totalManuals.Count;
                                         bool isHaveManuals = totalManualsCount >= 1;
                                         if (isHaveManuals)
@@ -3517,12 +3522,14 @@ namespace GamaManager
                                             foreach (Manual totalManualsItem in totalManuals)
                                             {
                                                 string id = totalManualsItem._id;
+                                                /*
                                                 string userId = totalManualsItem.user;
                                                 bool isMyContent = userId == currentUserId;
                                                 bool isFavoriteManual = myFavoriteRelationIds.Contains(id);
-                                                if ((isMyContent || true) && isFavoriteManual)
+                                                if (isFavoriteManual)
                                                 {
-                                                    string title = totalManualsItem.title;
+                                                */
+                                                string title = totalManualsItem.title;
                                                     string desc = totalManualsItem.desc;
                                                     StackPanel manual = new StackPanel();
                                                     manual.Width = 500;
@@ -3549,7 +3556,7 @@ namespace GamaManager
                                                     contentFavoriteManuals.Children.Add(manual);
                                                     manual.DataContext = id;
                                                     manual.MouseLeftButtonUp += SelectManualHandler;
-                                                }
+                                                // }
                                             }
                                         }
                                         else
@@ -3818,6 +3825,7 @@ namespace GamaManager
 
         public void GetCommunityInfo ()
         {
+            GetCommunityRecentGames();
             GetCommunityTotalContent();
             GetCommunityScreenShots();
             GetIllustrations();
@@ -3825,8 +3833,97 @@ namespace GamaManager
             GetReviews();
         }
 
+        public void GetCommunityRecentGames ()
+        {
+            RowDefinitionCollection rows = communityActivity.RowDefinitions;
+            int rowsCount = rows.Count;
+            bool isHaveRows = rowsCount >= 2;
+            int lastRowIndex = 0;
+            if (isHaveRows)
+            {
+                UIElementCollection communityActivityChildren = communityActivity.Children;
+                int communityActivityChildrenCount = communityActivityChildren.Count;
+                int countExceptExistedLabels = 2;
+                int communityActivityChildrenCountExceptExistedLabels = communityActivityChildrenCount - countExceptExistedLabels;
+                communityActivity.Children.RemoveRange(countExceptExistedLabels, communityActivityChildrenCountExceptExistedLabels);
+                lastRowIndex = rowsCount - 1;
+                communityActivity.RowDefinitions.RemoveRange(1, lastRowIndex);
+            }
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            DateTime currentDate = DateTime.Now;
+            List<Game> recentGames = currentGames.Where<Game>((Game someGame) =>
+            {
+                string rawSomeGameDate = someGame.date;
+                DateTime someGameDate = DateTime.Parse(rawSomeGameDate);
+                TimeSpan interval = currentDate.Subtract(someGameDate);
+                double intervalDays = interval.TotalDays;
+                bool isRecent = intervalDays <= 14;
+                return isRecent;
+            }).ToList<Game>();
+            foreach (Game recentGame in recentGames)
+            {
+                string recentRunGameName = recentGame.name;
+                string recentRunGameHours = recentGame.hours;
+                RowDefinition row = new RowDefinition();
+                communityActivity.RowDefinitions.Add(row);
+                rows = communityActivity.RowDefinitions;
+                rowsCount = rows.Count;
+                lastRowIndex = rowsCount - 1;
+                StackPanel recentRunGame = new StackPanel();
+                recentRunGame.Background = System.Windows.Media.Brushes.LightGray;
+                recentRunGame.Margin = new Thickness(15);
+                recentRunGame.Orientation = Orientation.Horizontal;
+                Image recentRunGameThumbnail = new Image();
+                recentRunGameThumbnail.Width = 35;
+                recentRunGameThumbnail.Height = 35;
+                recentRunGameThumbnail.Margin = new Thickness(15, 5, 15, 5);
+                recentRunGameThumbnail.BeginInit();
+                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                recentRunGameThumbnail.EndInit();
+                recentRunGame.Children.Add(recentRunGameThumbnail);
+                StackPanel recentRunGameAside = new StackPanel();
+                recentRunGameAside.Margin = new Thickness(15, 0, 15, 0);
+                TextBlock recentRunGameAsideNameLabel = new TextBlock();
+                recentRunGameAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                recentRunGameAsideNameLabel.FontSize = 14;
+                recentRunGameAsideNameLabel.Text = recentRunGameName;
+                recentRunGameAside.Children.Add(recentRunGameAsideNameLabel);
+                TextBlock recentRunGameAsideHoursLabel = new TextBlock();
+                recentRunGameAsideHoursLabel.Margin = new Thickness(0, 5, 0, 5);
+                string recentRunGameAsideHoursLabelContent = recentRunGameHours + " ч.";
+                recentRunGameAsideHoursLabel.Text = recentRunGameAsideHoursLabelContent;
+                recentRunGameAside.Children.Add(recentRunGameAsideHoursLabel);
+                recentRunGame.Children.Add(recentRunGameAside);
+                communityActivity.Children.Add(recentRunGame);
+                Grid.SetRow(recentRunGame, lastRowIndex);
+                Grid.SetColumn(recentRunGame, 0);
+            }
+        }
+
         public void GetReviews ()
         {
+
+            object communityActivityControlGameData = communityActivityControl.DataContext;
+            bool isCommunityActivityControlGameDataExists = communityActivityControlGameData != null;
+            string communityActivityControlGameId = "";
+            if (isCommunityActivityControlGameDataExists)
+            {
+                communityActivityControlGameId = communityActivityControlGameData.ToString();
+            }
+            int communityActivityControlSelectedIndex = communityActivityControl.SelectedIndex;
+            bool isTotalCommunity = communityActivityControlSelectedIndex == 0;
+            bool isGameCommunity = !isTotalCommunity;
+
+            object reviewsSortPanelData = reviewsSortPanel.DataContext;
+            string sortType = reviewsSortPanelData.ToString();
+            bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
@@ -3844,6 +3941,19 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Review> totalReviews = myobj.reviews;
+                            
+                            if (isPopularSortType)
+                            {
+                                // totalReviews = totalReviews.OrderByDescending<Object, Int32>((Review review) => review.advices).ToList<Review>();
+                                totalReviews = totalReviews.OrderByDescending((Review review) => review.advices).ToList<Review>();
+                                // totalReviews.Sort(new ReviewAdviceComparer());
+                            }
+                            else
+                            {
+                                totalReviews = totalReviews.OrderByDescending((Review review) => review.date).ToList<Review>();
+                                // totalReviews.Sort(new ReviewDateComparer());
+                            }
+
                             reviews.Children.Clear();
                             int totalReviewsCount = totalReviews.Count;
                             bool isHaveReviews = totalReviewsCount >= 1;
@@ -3914,7 +4024,7 @@ namespace GamaManager
                                                                 {
                                                                     string someGameId = someGame._id;
                                                                     bool isIdMatches = someGameId == gameId;
-                                                                    return isIdMatches;
+                                                                    return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity);
                                                                 }).ToList<GameResponseInfo>();
                                                                 int countResults = results.Count;
                                                                 bool isHaveResults = countResults >= 1;
@@ -4300,6 +4410,22 @@ namespace GamaManager
 
         public void GetCommunityScreenShots ()
         {
+
+            object communityActivityControlGameData = communityActivityControl.DataContext;
+            bool isCommunityActivityControlGameDataExists = communityActivityControlGameData != null;
+            string communityActivityControlGameId = "";
+            if (isCommunityActivityControlGameDataExists)
+            {
+                communityActivityControlGameId = communityActivityControlGameData.ToString();
+            }
+            int communityActivityControlSelectedIndex = communityActivityControl.SelectedIndex;
+            bool isTotalCommunity = communityActivityControlSelectedIndex == 0;
+            bool isGameCommunity = !isTotalCommunity;
+
+            object screenShotsSortPanelData = screenShotsSortPanel.DataContext;
+            string sortType = screenShotsSortPanelData.ToString();
+            bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
@@ -4318,6 +4444,16 @@ namespace GamaManager
                         {
 
                             List<ScreenShot> totalCommunityScreenShots = myobj.screenShots;
+
+                            if (isPopularSortType)
+                            {
+                                totalCommunityScreenShots.Sort(new ScreenShotLikesComparer());
+                            }
+                            else
+                            {
+                                totalCommunityScreenShots.Sort(new ScreenShotDateComparer());
+                            }
+
                             communityScreenShots.Children.Clear();
                             int totalCommunityScreenShotsCount = totalCommunityScreenShots.Count;
                             bool isHaveCommunityScreenShots = totalCommunityScreenShotsCount >= 1;
@@ -4366,7 +4502,7 @@ namespace GamaManager
                                                             {
                                                                 string someGameId = someGame._id;
                                                                 bool isIdMatches = someGameId == gameId;
-                                                                return isIdMatches;
+                                                                return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity);
                                                             }).ToList<GameResponseInfo>();
                                                             int countResults = results.Count;
                                                             bool isHaveResults = countResults >= 1;
@@ -4745,8 +4881,14 @@ namespace GamaManager
 
         public void GetCommunityTotalContent()
         {
-            List<UIElement> communityElements = new List<UIElement>();
-            
+
+            object communityContentSortPanelData = communityContentSortPanel.DataContext;
+            string sortType = communityContentSortPanelData.ToString();
+            bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+
+            // List<UIElement> communityElements = new List<UIElement>();
+            List<CommunityContent> communityElements = new List<CommunityContent>();
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
@@ -4968,7 +5110,11 @@ namespace GamaManager
                                                                                         illustrationGameNameLabel.Text = illustrationGameName;
                                                                                         illustrationGameNameLabel.Margin = new Thickness(15, 5, 15, 5);
                                                                                         illustration.Children.Add(illustrationGameNameLabel);
-                                                                                        communityElements.Add(illustration);
+
+                                                                                        // communityElements.Add(illustration);
+                                                                                        totalIllustrationsItem.body = illustration;
+                                                                                        communityElements.Add(totalIllustrationsItem);
+                                                                                        
                                                                                         illustration.DataContext = id;
                                                                                         illustration.MouseLeftButtonUp += SelectIllustrationHandler;
                                                                                     }
@@ -5156,7 +5302,11 @@ namespace GamaManager
                                                             manualGameNameLabel.Margin = new Thickness(15);
                                                             manualGameNameLabel.Text = manualGameName;
                                                             manual.Children.Add(manualGameNameLabel);
-                                                            communityElements.Add(manual);
+
+                                                            // communityElements.Add(manual);
+                                                            totalManualsItem.body = manual;
+                                                            communityElements.Add(totalManualsItem);
+
                                                             manual.DataContext = id;
                                                             manual.MouseLeftButtonUp += SelectManualHandler;
                                                         }
@@ -5176,70 +5326,6 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-
-            /*
-            try
-            {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            List<ScreenShot> totalCommunityScreenShots = myobj.screenShots;
-                            communityScreenShots.Children.Clear();
-                            int totalCommunityScreenShotsCount = totalCommunityScreenShots.Count;
-                            bool isHaveCommunityScreenShots = totalCommunityScreenShotsCount >= 1;
-                            if (isHaveCommunityScreenShots)
-                            {
-                                foreach (ScreenShot totalCommunityScreenShotsItem in totalCommunityScreenShots)
-                                {
-                                    string id = totalCommunityScreenShotsItem._id;
-                                    StackPanel communityScreenShot = new StackPanel();
-                                    communityScreenShot.Width = 500;
-                                    communityScreenShot.Margin = new Thickness(15);
-                                    communityScreenShot.Background = System.Windows.Media.Brushes.LightGray;
-                                    Image communityScreenShotPhoto = new Image();
-                                    communityScreenShotPhoto.Margin = new Thickness(15);
-                                    communityScreenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                    communityScreenShotPhoto.Width = 50;
-                                    communityScreenShotPhoto.Height = 50;
-                                    communityScreenShotPhoto.BeginInit();
-                                    communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
-                                    communityScreenShotPhoto.EndInit();
-                                    communityScreenShot.Children.Add(communityScreenShotPhoto);
-                                    communityElements.Add(communityScreenShot);
-                                    communityScreenShot.DataContext = id;
-                                    communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
-                                }
-                            }
-                            else
-                            {
-                                TextBlock notFoundLabel = new TextBlock();
-                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                notFoundLabel.TextAlignment = TextAlignment.Center;
-                                notFoundLabel.FontSize = 18;
-                                notFoundLabel.Text = "Не найдено";
-                                communityScreenShots.Children.Add(notFoundLabel);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Net.WebException exception)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
-            }
-            */
 
             try
             {
@@ -5416,7 +5502,11 @@ namespace GamaManager
                                                                         communityScreenShotGameNameLabel.Text = screenShotGameName;
                                                                         communityScreenShotGameNameLabel.Margin = new Thickness(15, 5, 15, 5);
                                                                         communityScreenShot.Children.Add(communityScreenShotGameNameLabel);
-                                                                        communityElements.Add(communityScreenShot);
+
+                                                                        // communityElements.Add(communityScreenShot);
+                                                                        totalCommunityScreenShotsItem.body = communityScreenShot;
+                                                                        communityElements.Add(totalCommunityScreenShotsItem);
+
                                                                         communityScreenShot.DataContext = id;
                                                                         communityScreenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
                                                                     }
@@ -5635,7 +5725,11 @@ namespace GamaManager
                                                                             reviewFooterComments.Children.Add(reviewFooterCountCommentsLabel);
                                                                             reviewFooter.Children.Add(reviewFooterComments);
                                                                             review.Children.Add(reviewFooter);
-                                                                            communityElements.Add(review);
+
+                                                                            // communityElements.Add(review);
+                                                                            totalReviewsItem.body = review;
+                                                                            communityElements.Add(totalReviewsItem);
+
                                                                             review.DataContext = id;
                                                                             review.MouseLeftButtonUp += SelectReviewHandler;
                                                                         }
@@ -5660,17 +5754,89 @@ namespace GamaManager
                 this.Close();
             }
 
+            /*
+            if (isPopularSortType)
+            {
+                communityElements.Reverse();
+            }
+            */
+            if (isPopularSortType)
+            {
+                // communityElements.Sort(new CommunityContentLikeComparer());
+                communityElements = communityElements.OrderByDescending((CommunityContent x) =>
+                {
+                    int xLikes = 0;
+                    if (x is Review)
+                    {
+                        Review xReview = x as Review;
+                        xLikes = xReview.advices;
+                    }
+                    else if (x is Manual)
+                    {
+                        Manual xManual = x as Manual;
+                        xLikes = xManual.likes;
+                    }
+                    else if (x is Illustration)
+                    {
+                        Illustration xIllustration = x as Illustration;
+                        xLikes = xIllustration.likes;
+                    }
+                    else if (x is ScreenShot)
+                    {
+                        ScreenShot xScreenShot = x as ScreenShot;
+                        xLikes = xScreenShot.likes;
+                    }
+                    return xLikes;
+                }).ToList<CommunityContent>();
+            }
+            else
+            {
+                // communityElements.Sort(new CommunityContentDateComparer());
+                communityElements = communityElements.OrderByDescending((CommunityContent x) =>
+                {
+                    DateTime xDate = DateTime.Now;
+                    if (x is Review)
+                    {
+                        Review xReview = x as Review;
+                        xDate = xReview.date;
+                    }
+                    else if (x is Manual)
+                    {
+                        Manual xManual = x as Manual;
+                        xDate = xManual.date;
+                    }
+                    else if (x is Illustration)
+                    {
+                        Illustration xIllustration = x as Illustration;
+                        xDate = xIllustration.date;
+                    }
+                    else if (x is ScreenShot)
+                    {
+                        ScreenShot xScreenShot = x as ScreenShot;
+                        xDate = xScreenShot.date;
+                    }
+                    DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+                    long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+                    return xUnixTimeMilliseconds;
+                }).ToList<CommunityContent>();
+            }
+
             communityTotalContent.Children.Clear();
+            /*
             var r = new Random();
             communityElements = communityElements.OrderBy(x => r.Next()).ToList<UIElement>();
+            */
             int communityElementsCount = communityElements.Count;
             bool isHaveElements = communityElementsCount >= 1;
             if (isHaveElements)
             {
                 communityTotalContent.HorizontalAlignment = HorizontalAlignment.Left;
-                foreach (UIElement communityElement in communityElements)
+                // foreach (UIElement communityElement in communityElements)
+                foreach (CommunityContent communityElement in communityElements)
                 {
-                    communityTotalContent.Children.Add(communityElement);
+                    // communityTotalContent.Children.Add(communityElement);
+                    UIElement communityElementBody = communityElement.body;
+                    communityTotalContent.Children.Add(communityElementBody);
                 }
             }
             else
@@ -5687,6 +5853,22 @@ namespace GamaManager
 
         public void GetIllustrations ()
         {
+
+            object communityActivityControlGameData = communityActivityControl.DataContext;
+            bool isCommunityActivityControlGameDataExists = communityActivityControlGameData != null;
+            string communityActivityControlGameId = "";
+            if (isCommunityActivityControlGameDataExists)
+            {
+                communityActivityControlGameId = communityActivityControlGameData.ToString();
+            }
+            int communityActivityControlSelectedIndex = communityActivityControl.SelectedIndex;
+            bool isTotalCommunity = communityActivityControlSelectedIndex == 0;
+            bool isGameCommunity = !isTotalCommunity;
+
+            object illustrationsSortPanelData = illustrationsSortPanel.DataContext;
+            string sortType = illustrationsSortPanelData.ToString();
+            bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
@@ -5704,6 +5886,16 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Illustration> totalIllustrations = myobj.illustrations;
+
+                            if (isPopularSortType)
+                            {
+                                totalIllustrations.Sort(new IllustrationLikesComparer());
+                            }
+                            else
+                            {
+                                totalIllustrations.Sort(new IllustrationDateComparer());
+                            }
+
                             illustrations.Children.Clear();
                             int totalIllustrationsCount = totalIllustrations.Count;
                             bool isHaveIllustrations = totalIllustrationsCount >= 1;
@@ -5753,7 +5945,7 @@ namespace GamaManager
                                                             {
                                                                 string someGameId = someGame._id;
                                                                 bool isIdMatches = someGameId == gameId;
-                                                                return isIdMatches;
+                                                                return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity);
                                                             }).ToList<GameResponseInfo>();
                                                             int countResults = results.Count;
                                                             bool isHaveResults = countResults >= 1;
@@ -5991,8 +6183,24 @@ namespace GamaManager
             }
         }
 
-        public void GetManuals()
+        public void GetManuals ()
         {
+
+            object communityActivityControlGameData = communityActivityControl.DataContext;
+            bool isCommunityActivityControlGameDataExists = communityActivityControlGameData != null;
+            string communityActivityControlGameId = "";
+            if (isCommunityActivityControlGameDataExists)
+            {
+                communityActivityControlGameId = communityActivityControlGameData.ToString();
+            }
+            int communityActivityControlSelectedIndex = communityActivityControl.SelectedIndex;
+            bool isTotalCommunity = communityActivityControlSelectedIndex == 0;
+            bool isGameCommunity = !isTotalCommunity;
+
+            object manualsSortPanelData = manualsSortPanel.DataContext;
+            string sortType = manualsSortPanelData.ToString();
+            bool isPopularSortType = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
@@ -6010,6 +6218,16 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Manual> totalManuals = myobj.manuals;
+
+                            if (isPopularSortType)
+                            {
+                                totalManuals.Sort(new ManualLikeComparer());
+                            }
+                            else
+                            {
+                                totalManuals.Sort(new ManualDateComparer());
+                            }
+
                             manuals.Children.Clear();
                             int totalManualsCount = totalManuals.Count;
                             bool isHaveManuals = totalManualsCount >= 1;
@@ -6039,7 +6257,7 @@ namespace GamaManager
                                                 {
                                                     string someGameId = someGame._id;
                                                     bool isIdMatches = someGameId == gameId;
-                                                    return isIdMatches;
+                                                    return isIdMatches && ((isGameCommunity && someGameId == communityActivityControlGameId) || isTotalCommunity);
                                                 }).ToList<GameResponseInfo>();
                                                 int countResults = results.Count;
                                                 bool isHaveResults = countResults >= 1;
@@ -6462,9 +6680,11 @@ namespace GamaManager
                                                                             bool isFavorite = countMyFavoriteRelations >= 1;
                                                                             if (isFavorite)
                                                                             {
-                                                                                mainManualFavoriteBtnContentLabel.Text = "Удалить из избранного";
+                                                                                mainManualFavoriteBtnContentLabel.Text = "В избранном";
                                                                                 mainManualFavoriteBtn.Click -= IncreaseManualFavoritesHandler;
                                                                                 mainManualFavoriteBtn.Click += RemoveManualFavoritesHandler;
+                                                                                mainManualFavoriteBtn.MouseEnter += ShowRemoveContentMainManualFavoriteBtnHandler;
+                                                                                mainManualFavoriteBtn.MouseLeave += HideRemoveContentMainManualFavoriteBtnHandler;
                                                                             }
                                                                             else
                                                                             {
@@ -12355,6 +12575,15 @@ namespace GamaManager
             };
         }
 
+        public CustomPopupPlacement[] MainCommunityScrollPopupPlacementHandler (Size popupSize, Size targetSize, Point offset)
+        {
+            return new CustomPopupPlacement[]
+            {
+                new CustomPopupPlacement(new Point(650, 100), PopupPrimaryAxis.Vertical),
+                new CustomPopupPlacement(new Point(10, 20), PopupPrimaryAxis.Horizontal)
+            };
+        }
+
         private void FilterGamesHandler(object sender, TextChangedEventArgs e)
         {
             FilterGames();
@@ -12656,6 +12885,8 @@ namespace GamaManager
             bool isBroadcasts = index == 5;
             if (isMain)
             {
+                communityActivityControl.DataContext = null;
+                communityActivityControl.SelectedIndex = 0;
                 mainControl.SelectedIndex = 20;
                 GetCommunityInfo();
             }
@@ -14287,85 +14518,88 @@ namespace GamaManager
             AddIllustration();
         }
 
-        public void AddIllustration ()
+        public void AddIllustration()
         {
-            try
+            if (illustrationGameSelector.Items.Count >= 1)
             {
-                string illustrationNameBoxContent = illustrationNameBox.Text;
-                string illustrationDescBoxContent = illustrationDescBox.Text;
-                object rawIsChecked = drmBox.IsChecked;
-                bool isChecked = ((bool)(rawIsChecked));
-                bool isDrm = false;
-                string rawIsDrm = "false";
-                if (isChecked)
+                try
                 {
-                    isDrm = true;
-                    rawIsDrm = "true";
-                }
-
-                int illustrationGameSelectorSelectedIndex = illustrationGameSelector.SelectedIndex;
-                ItemCollection illustrationGameSelectorItems = illustrationGameSelector.Items;
-                object rawIllustrationGameSelectorSelectedItem = illustrationGameSelectorItems[illustrationGameSelectorSelectedIndex];
-                ComboBoxItem illustrationGameSelectorSelectedItem = ((ComboBoxItem)(rawIllustrationGameSelectorSelectedItem));
-                object illustrationGameSelectorSelectedItemData = illustrationGameSelectorSelectedItem.DataContext;
-                string gameId = ((string)(illustrationGameSelectorSelectedItemData));
-
-                string visibility = "Для друзей";
-                object rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForFriendsRadioBtn.IsChecked;
-                bool illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
-                if (illustrationVisbilityRadioBtnIsChecked)
-                {
-                    visibility = "Для друзей";
-                }
-                rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForMeRadioBtn.IsChecked;
-                illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
-                if (illustrationVisbilityRadioBtnIsChecked)
-                {
-                    visibility = "Для себя";
-                }
-                rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForNoOneRadioBtn.IsChecked;
-                illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
-                if (illustrationVisbilityRadioBtnIsChecked)
-                {
-                    visibility = "не показывать";
-                }
-
-                string url = "http://localhost:4000/api/illustrations/add/?id=" + currentUserId + @"&title=" + illustrationNameBoxContent + @"&desc=" + illustrationDescBoxContent + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId + @"&visibility=" + visibility;
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
-                MultipartFormDataContent form = new MultipartFormDataContent();
-                byte[] imagebytearraystring = manualAttachment;
-                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
-                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
-                httpClient.Dispose();
-
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    string illustrationNameBoxContent = illustrationNameBox.Text;
+                    string illustrationDescBoxContent = illustrationDescBox.Text;
+                    object rawIsChecked = drmBox.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    bool isDrm = false;
+                    string rawIsDrm = "false";
+                    if (isChecked)
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
+                        isDrm = true;
+                        rawIsDrm = "true";
+                    }
+
+                    int illustrationGameSelectorSelectedIndex = illustrationGameSelector.SelectedIndex;
+                    ItemCollection illustrationGameSelectorItems = illustrationGameSelector.Items;
+                    object rawIllustrationGameSelectorSelectedItem = illustrationGameSelectorItems[illustrationGameSelectorSelectedIndex];
+                    ComboBoxItem illustrationGameSelectorSelectedItem = ((ComboBoxItem)(rawIllustrationGameSelectorSelectedItem));
+                    object illustrationGameSelectorSelectedItemData = illustrationGameSelectorSelectedItem.DataContext;
+                    string gameId = ((string)(illustrationGameSelectorSelectedItemData));
+
+                    string visibility = "Для друзей";
+                    object rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForFriendsRadioBtn.IsChecked;
+                    bool illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
+                    if (illustrationVisbilityRadioBtnIsChecked)
+                    {
+                        visibility = "Для друзей";
+                    }
+                    rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForMeRadioBtn.IsChecked;
+                    illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
+                    if (illustrationVisbilityRadioBtnIsChecked)
+                    {
+                        visibility = "Для себя";
+                    }
+                    rawIllustrationVisbilityRadioBtnIsChecked = illustrationVisbilityForNoOneRadioBtn.IsChecked;
+                    illustrationVisbilityRadioBtnIsChecked = ((bool)(rawIllustrationVisbilityRadioBtnIsChecked));
+                    if (illustrationVisbilityRadioBtnIsChecked)
+                    {
+                        visibility = "не показывать";
+                    }
+
+                    string url = "http://localhost:4000/api/illustrations/add/?id=" + currentUserId + @"&title=" + illustrationNameBoxContent + @"&desc=" + illustrationDescBoxContent + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId + @"&visibility=" + visibility;
+                    HttpClient httpClient = new HttpClient();
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    byte[] imagebytearraystring = manualAttachment;
+                    form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                    HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                    httpClient.Dispose();
+
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
                         {
-                            mainControl.SelectedIndex = 20;
-                            GetCommunityInfo();
-                            illustrationNameBox.Text = "";
-                            illustrationDescBox.Text = "";
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                mainControl.SelectedIndex = 20;
+                                GetCommunityInfo();
+                                illustrationNameBox.Text = "";
+                                illustrationDescBox.Text = "";
+                            }
                         }
                     }
-                }
 
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
         }
 
@@ -21052,7 +21286,12 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
+                            mainManualFavoriteBtn.MouseEnter -= ShowRemoveContentMainManualFavoriteBtnHandler;
+                            mainManualFavoriteBtn.MouseLeave -= HideRemoveContentMainManualFavoriteBtnHandler;
+                            mainManualFavoriteBtnContentIcon.Kind = PackIconKind.Star;
+                            mainManualFavoriteBtnContentLabel.Text = "В избранное";
                             SelectManual(manualId);
+                            GetFavoriteManualsContent();
                         }
                     }
                 }
@@ -21090,6 +21329,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             SelectManual(manualId);
+                            GetFavoriteManualsContent();
                         }
                     }
                 }
@@ -21182,6 +21422,357 @@ namespace GamaManager
                 manualsListContentItem.Background = System.Windows.Media.Brushes.LightSlateGray;
             }
             contentManualsControl.SelectedIndex = index;
+        }
+
+        private void ToggleSortScreenShotsHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortScreenShots(sortType);
+        }
+
+        public void ToggleSortScreenShots (string sortType)
+        {
+            screenShotsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            screenShotsSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                screenShotsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                screenShotsSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            screenShotsSortPanel.DataContext = sortType;
+            GetCommunityScreenShots();
+        }
+
+        private void ToggleSortCommunityContentHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortCommunityContent(sortType);
+        }
+
+        public void ToggleSortCommunityContent (string sortType)
+        {
+            communityContentSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            communityContentSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                communityContentSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                communityContentSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            communityContentSortPanel.DataContext = sortType;
+            GetCommunityTotalContent();
+        }
+
+        private void ToggleSortIllustrationsHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortIllustrations(sortType);
+        }
+
+        public void ToggleSortIllustrations (string sortType)
+        {
+            illustrationsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            illustrationsSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                illustrationsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                illustrationsSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            illustrationsSortPanel.DataContext = sortType;
+            GetIllustrations();
+        }
+
+        private void ToggleSortWorkShopHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortWorkShop(sortType);
+        }
+
+        public void ToggleSortWorkShop (string sortType)
+        {
+            workShopSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            workShopSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                workShopSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                workShopSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            workShopSortPanel.DataContext = sortType;
+        }
+
+        private void ToggleSortVideosHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortVideos (sortType);
+        }
+
+        public void ToggleSortVideos (string sortType)
+        {
+            videosSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            videosSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                videosSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                videosSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            videosSortPanel.DataContext = sortType;
+        }
+
+        private void ToggleSortManualsHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString(); 
+            ToggleSortManuals(sortType);
+        }
+
+        public void ToggleSortManuals (string sortType)
+        {
+            manualsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            manualsSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                manualsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                manualsSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            manualsSortPanel.DataContext = sortType;
+            GetManuals();
+        }
+
+        private void ToggleSortReviewsHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string sortType = btnData.ToString();
+            ToggleSortReviews(sortType);
+        }
+
+        public void ToggleSortReviews (string sortType)
+        {
+            reviewsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.LightGray;
+            reviewsSortPanelLastBtn.Background = System.Windows.Media.Brushes.LightGray;
+            bool isPopular = sortType == "САМЫЕ ПОПУЛЯРНЫЕ";
+            if (isPopular)
+            {
+                reviewsSortPanelPopularBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            else
+            {
+                reviewsSortPanelLastBtn.Background = System.Windows.Media.Brushes.SkyBlue;
+            }
+            reviewsSortPanel.DataContext = sortType;
+            GetReviews();
+        }
+
+        private void FindHumansHandler (object sender, MouseButtonEventArgs e)
+        {
+            FindHumans();
+        }
+
+        public void FindHumans ()
+        {
+            string findHumansBoxContent = findHumansBox.Text;
+            findHumansBox.Text = "";
+            searchedFriendsBox.Text = findHumansBoxContent;
+            GetSearchedFriends();
+            mainControl.SelectedIndex = 49;
+        }
+
+        private void DetectMainCommunityScrollHandler (object sender, ScrollChangedEventArgs e)
+        {
+            ScrollViewer scroll = ((ScrollViewer)(sender));
+            DetectMainCommunityScroll(scroll);
+        }
+
+        public void DetectMainCommunityScroll (ScrollViewer scroll)
+        {
+            double offset = scroll.VerticalOffset;
+            bool isNotTop = offset > 0;
+            mainCommunityPopup.IsOpen = isNotTop;
+            mainCommunityPopup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback(MainCommunityScrollPopupPlacementHandler);
+        }
+
+        private void ScrollMainCommunityToTopHandler (object sender, RoutedEventArgs e)
+        {
+            ScrollMainCommunityToTop();
+        }
+
+        public void ScrollMainCommunityToTop ()
+        {
+            mainCommunityScroll.ScrollToTop();
+        }
+
+        public void ShowRemoveContentMainManualFavoriteBtnHandler(object sender, RoutedEventArgs e)
+        {
+            ShowRemoveContentMainManualFavoriteBtn();
+        }
+
+        public void ShowRemoveContentMainManualFavoriteBtn ()
+        {
+            mainManualFavoriteBtnContentIcon.Kind = PackIconKind.Close;
+            mainManualFavoriteBtnContentLabel.Text = "Удалить";
+        }
+
+        public void HideRemoveContentMainManualFavoriteBtnHandler (object sender, RoutedEventArgs e)
+        {
+            HideRemoveContentMainManualFavoriteBtn();
+        }
+
+        public void HideRemoveContentMainManualFavoriteBtn ()
+        {
+            mainManualFavoriteBtnContentIcon.Kind = PackIconKind.Star;
+            mainManualFavoriteBtnContentLabel.Text = "В избранном";
+        }
+
+        private void ShowGameCommunityAnnotationsHandler (object sender, TextChangedEventArgs e)
+        {
+            ShowGameCommunityAnnotations();
+        }
+
+        public void ShowGameCommunityAnnotations ()
+        {
+            string gameCommunityBoxContent = gameCommunityBox.Text;
+            int gameCommunityBoxContentLength = gameCommunityBoxContent.Length;
+            bool isHaveContent = gameCommunityBoxContentLength >= 1;
+            if (isHaveContent)
+            {
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> totalGames = myobj.games;
+                                foreach (GameResponseInfo totalGame in totalGames)
+                                {
+                                    string totalGameId = totalGame._id;
+                                    string totalGameName = totalGame.name;
+                                    TextBlock gameCommunityAnnotation = new TextBlock();
+                                    gameCommunityAnnotation.Text = totalGameName;
+                                    gameCommunityAnnotation.Margin = new Thickness(15, 5, 15, 5);
+                                    gameCommunityAnnotation.DataContext = totalGameId;
+                                    gameCommunityAnnotation.MouseLeftButtonUp += SelectCommunityGameAnnotationHandler;
+                                    gameCommunityAnnotations.Children.Add(gameCommunityAnnotation);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            gameCommunityAnnotationsPopup.IsOpen = isHaveContent;
+        }
+
+        public void SelectCommunityGameAnnotationHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock annotation = ((TextBlock)(sender));
+            object annotationData = annotation.DataContext;
+            string id = ((string)(annotationData));
+            SelectCommunityGameAnnotation(id);
+        }
+
+        public void SelectCommunityGameAnnotation(string id)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> games = myobj.games;
+                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                            {
+                                string gameId = game._id;
+                                bool isIdMatches = gameId == id;
+                                return isIdMatches;
+                            }).ToList<GameResponseInfo>();
+                            int countResults = gameResults.Count;
+                            bool isResultsFound = countResults >= 1;
+                            if (isResultsFound)
+                            {
+                                GameResponseInfo communityGame = gameResults[0];
+                                string communityGameName = communityGame.name;
+                                communityActivityGameNameLabel.Text = communityGameName;
+                                communityActivityControl.DataContext = id;
+                                communityActivityControl.SelectedIndex = 1;
+                                GetCommunityInfo();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void OpenGameCommunityHandler (object sender, MouseButtonEventArgs e)
+        {
+            OpenGameCommunity();
+        }
+
+        public void OpenGameCommunity ()
+        {
+
         }
 
     }
@@ -21564,7 +22155,7 @@ namespace GamaManager
         public string status;
     }
 
-    class Manual
+    public class Manual : CommunityContent
     {
         public string _id;
         public string title;
@@ -21592,7 +22183,7 @@ namespace GamaManager
         public string status;
     }
 
-    class Illustration
+    public class Illustration : CommunityContent
     {
         public string _id;
         public string title;
@@ -21617,7 +22208,7 @@ namespace GamaManager
         public string status;
     }
 
-    class ScreenShot
+    public class ScreenShot : CommunityContent
     {
         public string _id;
         public DateTime date;
@@ -21651,7 +22242,7 @@ namespace GamaManager
         public string status;
     }
 
-    class Review
+    public class Review : CommunityContent
     {
         public string _id;
         public string game;
@@ -22040,6 +22631,249 @@ namespace GamaManager
     {
         public string user;
         public string manual;
+    }
+
+    public class ReviewAdviceComparer : IComparer<Review>
+    {
+        public int Compare (Review x, Review y)
+        {
+            int xAdvices = x.advices;
+            int yAdvices = y.advices;
+            return xAdvices.CompareTo(yAdvices);
+        }
+    }
+
+    public class ReviewDateComparer : IComparer<Review>
+    {
+        public int Compare(Review x, Review y)
+        {
+            DateTime xDate = x.date;
+            DateTime yDate = y.date;
+            DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+            DateTimeOffset yDateTime = new DateTimeOffset(yDate);
+            long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+            long yUnixTimeMilliseconds = yDateTime.ToUnixTimeMilliseconds();
+            // return xDate.CompareTo(yDate);
+            return xUnixTimeMilliseconds.CompareTo(yUnixTimeMilliseconds);
+        }
+    }
+
+    public class ManualLikeComparer : IComparer<Manual>
+    {
+        public int Compare(Manual x, Manual y)
+        {
+            int xLikes = x.likes;
+            int yLikes = y.likes;
+            return xLikes.CompareTo(yLikes);
+        }
+    }
+
+    public class ManualDateComparer : IComparer<Manual>
+    {
+        public int Compare(Manual x, Manual y)
+        {
+            DateTime xDate = x.date;
+            DateTime yDate = y.date;
+            DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+            DateTimeOffset yDateTime = new DateTimeOffset(yDate);
+            long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+            long yUnixTimeMilliseconds = yDateTime.ToUnixTimeMilliseconds();
+            // return xDate.CompareTo(yDate);
+            return xUnixTimeMilliseconds.CompareTo(yUnixTimeMilliseconds);
+        }
+    }
+
+    public class WorkShopItemLikesComparer : IComparer<int>
+    {
+        public int Compare(int x, int y)
+        {
+            return 1;
+        }
+    }
+
+    public class WorkShopItemDateComparer : IComparer<int>
+    {
+        public int Compare(int x, int y)
+        {
+            return 1;
+        }
+    }
+
+    public class VideoLikesComparer : IComparer<int>
+    {
+        public int Compare(int x, int y)
+        {
+            return 1;
+        }
+    }
+
+    public class VideoDateComparer : IComparer<int>
+    {
+        public int Compare (int x, int y)
+        {
+            return 1;
+        }
+    }
+
+    public class IllustrationLikesComparer : IComparer<Illustration>
+    {
+        public int Compare (Illustration x, Illustration y)
+        {
+            int xLikes = x.likes;
+            int yLikes = y.likes;
+            return xLikes.CompareTo(yLikes);
+        }
+    }
+
+    public class IllustrationDateComparer : IComparer<Illustration>
+    {
+        public int Compare(Illustration x, Illustration y)
+        {
+            DateTime xDate = x.date;
+            DateTime yDate = y.date;
+            DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+            DateTimeOffset yDateTime = new DateTimeOffset(yDate);
+            long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+            long yUnixTimeMilliseconds = yDateTime.ToUnixTimeMilliseconds();
+            // return xDate.CompareTo(yDate);
+            return xUnixTimeMilliseconds.CompareTo(yUnixTimeMilliseconds);
+        }
+    }
+
+    public class ScreenShotLikesComparer : IComparer<ScreenShot>
+    {
+        public int Compare (ScreenShot x, ScreenShot y)
+        {
+            int xLikes = x.likes;
+            int yLikes = y.likes;
+            return xLikes.CompareTo(yLikes);
+        }
+    }
+
+    public class ScreenShotDateComparer : IComparer<ScreenShot>
+    {
+        public int Compare(ScreenShot x, ScreenShot y)
+        {
+            DateTime xDate = x.date;
+            DateTime yDate = y.date;
+            DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+            DateTimeOffset yDateTime = new DateTimeOffset(yDate);
+            long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+            long yUnixTimeMilliseconds = yDateTime.ToUnixTimeMilliseconds();
+            // return xDate.CompareTo(yDate);
+            return xUnixTimeMilliseconds.CompareTo(yUnixTimeMilliseconds);
+        }
+    }
+
+    public class CommunityContentLikeComparer
+    {
+        public int Compare (CommunityContent x, CommunityContent y)
+        {
+            int xLikes = 0;
+            if (x is Review)
+            {
+                Review xReview = x as Review;
+                xLikes = xReview.advices;
+            }
+            else if (x is Manual)
+            {
+                Manual xManual = x as Manual;
+                xLikes = xManual.likes;
+            }
+            else if (x is Illustration)
+            {
+                Illustration xIllustration = x as Illustration;
+                xLikes = xIllustration.likes;
+            }
+            else if (x is ScreenShot)
+            {
+                ScreenShot xScreenShot = x as ScreenShot;
+                xLikes = xScreenShot.likes;
+            }
+            int yLikes = 0;
+            if (y is Review)
+            {
+                Review yReview = y as Review;
+                yLikes = yReview.advices;
+            }
+            else if (y is Manual)
+            {
+                Manual yManual = y as Manual;
+                yLikes = yManual.likes;
+            }
+            else if (y is Illustration)
+            {
+                Illustration yIllustration = y as Illustration;
+                yLikes = yIllustration.likes;
+            }
+            else if (y is ScreenShot)
+            {
+                ScreenShot yScreenShot = y as ScreenShot;
+                yLikes = yScreenShot.likes;
+            }
+            return xLikes.CompareTo(yLikes);
+        }
+    }
+
+    public class CommunityContentDateComparer
+    {
+        public int Compare(CommunityContent x, CommunityContent y)
+        {
+            DateTime xDate = DateTime.Now;
+            DateTime yDate = DateTime.Now;
+            if (x is Review)
+            {
+                Review xReview = x as Review;
+                xDate = xReview.date;
+            }
+            else if (x is Manual)
+            {
+                Manual xManual = x as Manual;
+                xDate = xManual.date;
+            }
+            else if (x is Illustration)
+            {
+                Illustration xIllustration = x as Illustration;
+                xDate = xIllustration.date;
+            }
+            else if (x is ScreenShot)
+            {
+                ScreenShot xScreenShot = x as ScreenShot;
+                xDate = xScreenShot.date;
+            }
+            if (y is Review)
+            {
+                Review yReview = y as Review;
+                yDate = yReview.date;
+            }
+            else if (y is Manual)
+            {
+                Manual yManual = y as Manual;
+                yDate = yManual.date;
+            }
+            else if (y is Illustration)
+            {
+                Illustration yIllustration = y as Illustration;
+                yDate = yIllustration.date;
+            }
+            else if (y is ScreenShot)
+            {
+                ScreenShot yScreenShot = y as ScreenShot;
+                yDate = yScreenShot.date;
+            }
+            DateTimeOffset xDateTime = new DateTimeOffset(xDate);
+            DateTimeOffset yDateTime = new DateTimeOffset(yDate);
+            long xUnixTimeMilliseconds = xDateTime.ToUnixTimeMilliseconds();
+            long yUnixTimeMilliseconds = yDateTime.ToUnixTimeMilliseconds();
+            // return xDate.CompareTo(yDate);
+            return xUnixTimeMilliseconds.CompareTo(yUnixTimeMilliseconds);
+        }
+ 
+    }
+
+    public class CommunityContent
+    {
+        public UIElement body;
     }
 
 }

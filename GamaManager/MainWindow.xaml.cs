@@ -1639,8 +1639,227 @@ namespace GamaManager
                 GetPopularGamesForFriends();
                 GetGamesByTags();
                 GetFriendsForPresent();
-                GetNewsNotifications();/**/
+                GetNewsNotifications();
+                GetFriendActivitySettings();
+                GetFriendActivities();/**/
             }
+        }
+
+        public void GetFriendActivities ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
+                            {
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
+                            }
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ActivitiesResponseInfo myInnerObj = (ActivitiesResponseInfo)js.Deserialize(objText, typeof(ActivitiesResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<Activity> activities = myInnerObj.activities;
+                                        List<Activity> friendActivities = activities.Where<Activity>((Activity activity) =>
+                                        {
+                                            string activityUserId = activity.user;
+                                            bool isFriendActivity = friendsIds.Contains(activityUserId);
+                                            return isFriendActivity;
+                                        }).ToList<Activity>();
+                                        foreach (Activity friendActivity in friendActivities)
+                                        {
+                                            string friendActivityUserId = friendActivity.user;
+                                            string friendActivityContent = friendActivity.content;
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendActivityUserId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        bool isCreateGroup = friendActivityContent == "createGroup";
+                                                        bool isUploadScreenShot = friendActivityContent == "uploadScreenShot";
+                                                        User friendActivityUser = myNestedObj.user;
+                                                        string friendActivityUserName = friendActivityUser.name;
+                                                        StackPanel myFriendActivity = new StackPanel();
+                                                        myFriendActivity.Margin = new Thickness(15);
+                                                        myFriendActivity.Orientation = Orientation.Horizontal;
+                                                        Image myFriendActivityUserAvatar = new Image();
+                                                        myFriendActivityUserAvatar.Margin = new Thickness(15, 0, 15, 5);
+                                                        myFriendActivityUserAvatar.Width = 35;
+                                                        myFriendActivityUserAvatar.Height = 35;
+                                                        myFriendActivityUserAvatar.BeginInit();
+                                                        myFriendActivityUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendActivityUserId));
+                                                        myFriendActivityUserAvatar.EndInit();
+                                                        myFriendActivity.Children.Add(myFriendActivityUserAvatar);
+                                                        StackPanel myFriendActivityAside = new StackPanel();
+                                                        myFriendActivityAside.Margin = new Thickness(15);
+                                                        TextBlock myFriendActivityAsideUserNameLabel = new TextBlock();
+                                                        myFriendActivityAsideUserNameLabel.Text = friendActivityUserName;
+                                                        myFriendActivityAsideUserNameLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                        myFriendActivityAside.Children.Add(myFriendActivityAsideUserNameLabel);
+                                                        TextBlock myFriendActivityAsideUserActivityLabel = new TextBlock();
+                                                        string myFriendActivityAsideUserActivityLabelContent = "";
+                                                        if (isCreateGroup)
+                                                        {
+
+                                                            string groupId = friendActivity.data;
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                                            innerNestedWebRequest.Method = "GET";
+                                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                            {
+                                                                using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                {
+                                                                    js = new JavaScriptSerializer();
+                                                                    objText = innerNestedReader.ReadToEnd();
+                                                                    GroupResponseInfo myInnerNestedObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
+                                                                    status = myInnerNestedObj.status;
+                                                                    isOkStatus = status == "OK";
+                                                                    if (isOkStatus)
+                                                                    {
+                                                                        Group group = myInnerNestedObj.group;
+                                                                        string groupName = group.name;
+                                                                        myFriendActivityAsideUserActivityLabelContent = "Создал группу " + groupName;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        else if (isUploadScreenShot)
+                                                        {
+
+                                                            string screenShotId = friendActivity.data;
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/get/?id=" + screenShotId);
+                                                            innerNestedWebRequest.Method = "GET";
+                                                            innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                            using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                            {
+                                                                using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                                {
+                                                                    js = new JavaScriptSerializer();
+                                                                    objText = innerNestedReader.ReadToEnd();
+                                                                    ScreenShotResponseInfo myInnerNestedObj = (ScreenShotResponseInfo)js.Deserialize(objText, typeof(ScreenShotResponseInfo));
+                                                                    status = myInnerNestedObj.status;
+                                                                    isOkStatus = status == "OK";
+                                                                    if (isOkStatus)
+                                                                    {
+                                                                        ScreenShot screenShot = myInnerNestedObj.screenShot;
+                                                                        string screenShotDesc = screenShot.desc;
+                                                                        myFriendActivityAsideUserActivityLabelContent = "Загрузил скриншот " + screenShotDesc;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        myFriendActivityAsideUserActivityLabel.Text = myFriendActivityAsideUserActivityLabelContent;
+                                                        myFriendActivityAsideUserActivityLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                        myFriendActivityAside.Children.Add(myFriendActivityAsideUserActivityLabel);
+                                                        myFriendActivity.Children.Add(myFriendActivityAside);
+                                                        myFriendActivities.Children.Add(myFriendActivity);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetFriendActivitySettings ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            Settings currentSettings = loadedContent.settings;
+            FriendActivity currentFriendActivitySettings = currentSettings.friendActivity;
+            bool isAddFriend = currentFriendActivitySettings.isAddFriend;
+            bool isOpenAchievement = currentFriendActivitySettings.isOpenAchievement;
+            bool isBuyGame = currentFriendActivitySettings.isBuyGame;
+            bool isInviteGroup = currentFriendActivitySettings.isInviteGroup;
+            bool isCreateGroup = currentFriendActivitySettings.isCreateGroup;
+            bool isAddGameToWishList = currentFriendActivitySettings.isAddGameToWishList;
+            bool isAddReview = currentFriendActivitySettings.isAddReview;
+            bool isUploadScreenShot = currentFriendActivitySettings.isUploadScreenShot;
+            bool isAddVideo = currentFriendActivitySettings.isAddVideo;
+            bool isAddSubjectToFavorite = currentFriendActivitySettings.isAddSubjectToFavorite;
+            bool isDoAdvertisiment = currentFriendActivitySettings.isDoAdvertisiment;
+            bool isScheduleEvent = currentFriendActivitySettings.isScheduleEvent;
+            bool isSelectPlayerOfWeek = currentFriendActivitySettings.isSelectPlayerOfWeek;
+            bool isUpgradeUserToAdmin = currentFriendActivitySettings.isUpgradeUserToAdmin;
+            bool isReceiveComment = currentFriendActivitySettings.isReceiveComment;
+            bool isProductDoAdvertisiment = currentFriendActivitySettings.isProductDoAdvertisiment;
+            bool isWorkShopDoAdvertisiment = currentFriendActivitySettings.isWorkShopDoAdvertisiment;
+            bool isAddGameRecomendation = currentFriendActivitySettings.isAddGameRecomendation;
+            bool isAddSubject = currentFriendActivitySettings.isAddSubject;
+            bool isDetectFromScreenShot = currentFriendActivitySettings.isDetectFromScreenShot;
+            friendActivitySettingsAddFriendCheckBox.IsChecked = isAddFriend;
+            friendActivitySettingsOpenAchievementCheckBox.IsChecked = isOpenAchievement;
+            friendActivitySettingsBuyGameCheckBox.IsChecked = isBuyGame;
+            friendActivitySettingsInviteGroupCheckBox.IsChecked = isInviteGroup;
+            friendActivitySettingsCreateGroupCheckBox.IsChecked = isCreateGroup;
+            friendActivitySettingsAddGameToWishListCheckBox.IsChecked = isAddGameToWishList;
+            friendActivitySettingsAddReviewCheckBox.IsChecked = isAddReview;
+            friendActivitySettingsUploadScreenShotCheckBox.IsChecked = isUploadScreenShot;
+            friendActivitySettingsAddVideoCheckBox.IsChecked = isAddVideo;
+            friendActivitySettingsAddSubjectToFavoriteCheckBox.IsChecked = isAddSubjectToFavorite;
+            friendActivitySettingsDoAdvertisimentCheckBox.IsChecked = isDoAdvertisiment;
+            friendActivitySettingsScheduleEventCheckBox.IsChecked = isScheduleEvent;
+            friendActivitySettingsSelectPlayerOfWeekCheckBox.IsChecked = isSelectPlayerOfWeek;
+            friendActivitySettingsUpgradeUserToAdminCheckBox.IsChecked = isUpgradeUserToAdmin;
+            friendActivitySettingsReceiveCommentCheckBox.IsChecked = isReceiveComment;
+            friendActivitySettingsProductDoAdvertisimentCheckBox.IsChecked = isProductDoAdvertisiment;
+            friendActivitySettingsWorkShopDoAdvertisimentCheckBox.IsChecked = isWorkShopDoAdvertisiment;
+            friendActivitySettingsAddGameRecomendationCheckBox.IsChecked = isAddGameRecomendation;
+            friendActivitySettingsAddSubjectCheckBox.IsChecked = isAddSubject;
+            friendActivitySettingsDetectFromScreenShotCheckBox.IsChecked = isDetectFromScreenShot;
         }
 
         public void GetFriendsForPresent ()
@@ -10591,7 +10810,30 @@ namespace GamaManager
                         isFriendSendTalkMsgSound = true,
                         isFriendSendTalkEventNotification = true,
                         isFriendSendTalkEventSound = false,
-                        sendMsgBlinkWindowType = "always"
+                        sendMsgBlinkWindowType = "always",
+                        friendActivity = new FriendActivity()
+                        {
+                            isAddFriend = true,
+                            isOpenAchievement = true,
+                            isBuyGame = true,
+                            isInviteGroup = true,
+                            isCreateGroup = true,
+                            isAddGameToWishList = true,
+                            isAddReview = true,
+                            isUploadScreenShot = true,
+                            isAddVideo = true,
+                            isAddSubjectToFavorite = true,
+                            isDoAdvertisiment = true,
+                            isScheduleEvent = true,
+                            isSelectPlayerOfWeek = true,
+                            isUpgradeUserToAdmin = true,
+                            isReceiveComment = true,
+                            isProductDoAdvertisiment = true,
+                            isWorkShopDoAdvertisiment = true,
+                            isAddGameRecomendation = true,
+                            isAddSubject = true,
+                            isDetectFromScreenShot = true
+                        }
                     },
                     collections = new List<string>() { },
                     notifications = new Notifications() {
@@ -12885,8 +13127,7 @@ namespace GamaManager
                 bool isIcons = index == 6;
                 if (isActivity)
                 {
-                    mainControl.SelectedIndex = 13;
-                    AddHistoryRecord();
+                    OpenFriendsActivity();
                 }
                 else if (isProfile)
                 {
@@ -12912,6 +13153,124 @@ namespace GamaManager
                 }
                 ResetMenu();
             }
+        }
+
+        public void OpenFriendsActivity ()
+        {
+            mainControl.SelectedIndex = 13;
+            AddHistoryRecord();
+        }
+
+        public void OpenMyActivityHandler (object sender, RoutedEventArgs e)
+        {
+            OpenMyActivity();
+        }
+
+        public void OpenFriendsActivityHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFriendsActivity();
+        }
+
+        public void OpenMyActivity ()
+        {
+            mainControl.SelectedIndex = 58;
+        }
+
+        public void OpenFriendActivitySettingsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFriendActivitySettings();
+        }
+
+        public void SaveFriendActivitySettingsHandler (object sender, RoutedEventArgs e)
+        {
+            SaveFriendActivitySettings();
+        }
+
+        public void SaveFriendActivitySettings ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
+            Settings updatedSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
+            string currentLogoutDate = loadedContent.logoutDate;
+
+            FriendActivity updatedFriendActivitySettings = updatedSettings.friendActivity;
+
+            bool isAddFriend = ((bool)(friendActivitySettingsAddFriendCheckBox.IsChecked));
+            bool isOpenAchievement = ((bool)(friendActivitySettingsOpenAchievementCheckBox.IsChecked));
+            bool isBuyGame = ((bool)(friendActivitySettingsBuyGameCheckBox.IsChecked));
+            bool isInviteGroup = ((bool)(friendActivitySettingsInviteGroupCheckBox.IsChecked));
+            bool isCreateGroup = ((bool)(friendActivitySettingsCreateGroupCheckBox.IsChecked));
+            bool isAddGameToWishList = ((bool)(friendActivitySettingsAddGameToWishListCheckBox.IsChecked));
+            bool isAddReview = ((bool)(friendActivitySettingsAddReviewCheckBox.IsChecked));
+            bool isUploadScreenShot = ((bool)(friendActivitySettingsUploadScreenShotCheckBox.IsChecked));
+            bool isAddVideo = ((bool)(friendActivitySettingsAddVideoCheckBox.IsChecked));
+            bool isAddSubjectToFavorite = ((bool)(friendActivitySettingsAddSubjectToFavoriteCheckBox.IsChecked));
+            bool isDoAdvertisiment = ((bool)(friendActivitySettingsDoAdvertisimentCheckBox.IsChecked));
+            bool isScheduleEvent = ((bool)(friendActivitySettingsScheduleEventCheckBox.IsChecked));
+            bool isSelectPlayerOfWeek = ((bool)(friendActivitySettingsSelectPlayerOfWeekCheckBox.IsChecked));
+            bool isUpgradeUserToAdmin = ((bool)(friendActivitySettingsUpgradeUserToAdminCheckBox.IsChecked));
+            bool isReceiveComment = ((bool)(friendActivitySettingsReceiveCommentCheckBox.IsChecked));
+            bool isProductDoAdvertisiment = ((bool)(friendActivitySettingsProductDoAdvertisimentCheckBox.IsChecked));
+            bool isWorkShopDoAdvertisiment = ((bool)(friendActivitySettingsWorkShopDoAdvertisimentCheckBox.IsChecked));
+            bool isAddGameRecomendation = ((bool)(friendActivitySettingsAddGameRecomendationCheckBox.IsChecked));
+            bool isAddSubject = ((bool)(friendActivitySettingsAddSubjectCheckBox.IsChecked));
+            bool isDetectFromScreenShot = ((bool)(friendActivitySettingsDetectFromScreenShotCheckBox.IsChecked));
+
+            updatedFriendActivitySettings.isAddFriend = isAddFriend;
+            updatedFriendActivitySettings.isOpenAchievement = isOpenAchievement;
+            updatedFriendActivitySettings.isBuyGame = isBuyGame;
+            updatedFriendActivitySettings.isInviteGroup = isInviteGroup;
+            updatedFriendActivitySettings.isCreateGroup = isCreateGroup;
+            updatedFriendActivitySettings.isAddGameToWishList = isAddGameToWishList;
+            updatedFriendActivitySettings.isAddReview = isAddReview;
+            updatedFriendActivitySettings.isUploadScreenShot = isUploadScreenShot;
+            updatedFriendActivitySettings.isAddVideo = isAddVideo;
+            updatedFriendActivitySettings.isAddSubjectToFavorite = isAddSubjectToFavorite;
+            updatedFriendActivitySettings.isDoAdvertisiment = isDoAdvertisiment;
+            updatedFriendActivitySettings.isScheduleEvent = isScheduleEvent;
+            updatedFriendActivitySettings.isSelectPlayerOfWeek = isSelectPlayerOfWeek;
+            updatedFriendActivitySettings.isUpgradeUserToAdmin = isUpgradeUserToAdmin;
+            updatedFriendActivitySettings.isReceiveComment = isReceiveComment;
+            updatedFriendActivitySettings.isProductDoAdvertisiment = isProductDoAdvertisiment;
+            updatedFriendActivitySettings.isWorkShopDoAdvertisiment = isWorkShopDoAdvertisiment;
+            updatedFriendActivitySettings.isAddGameRecomendation = isAddGameRecomendation;
+            updatedFriendActivitySettings.isAddSubject = isAddSubject;
+            updatedFriendActivitySettings.isDetectFromScreenShot = isDetectFromScreenShot;
+
+            updatedSettings.friendActivity = updatedFriendActivitySettings;
+
+            string savedContent = js.Serialize(new SavedContent
+            {
+                games = currentGames,
+                friends = currentFriends,
+                settings = updatedSettings,
+                collections = currentCollections,
+                notifications = currentNotifications,
+                categories = currentCategories,
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+
+            OpenFriendsActivity();
+        }
+
+        public void OpenFriendActivitySettings ()
+        {
+            GetFriendActivitySettings();
+            mainControl.SelectedIndex = 59;
         }
 
         public void OpenGroupsSettings()
@@ -17380,12 +17739,12 @@ namespace GamaManager
             friendProfilePopup.IsOpen = false;
         }
 
-        private void AddGroupHandler(object sender, RoutedEventArgs e)
+        private void AddGroupHandler (object sender, RoutedEventArgs e)
         {
             AddGroup();
         }
 
-        public void AddGroup()
+        public void AddGroup ()
         {
             try
             {
@@ -17414,19 +17773,39 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        CreateGroupResponseInfo myobj = (CreateGroupResponseInfo)js.Deserialize(objText, typeof(CreateGroupResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            MessageBox.Show("Группа была создана", "Внимание");
-                            groupNameBox.Text = "";
-                            groupLangSelector.SelectedIndex = 0;
-                            groupCountrySelector.SelectedIndex = 0;
-                            groupFanPageBox.Text = "";
-                            groupTwitchBox.Text = "";
-                            groupYoutubeBox.Text = "";
-                            GetFriendsSettings();
+                            
+                            string data = myobj.id;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=createGroup&data=" + data);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        MessageBox.Show("Группа была создана", "Внимание");
+                                        groupNameBox.Text = "";
+                                        groupLangSelector.SelectedIndex = 0;
+                                        groupCountrySelector.SelectedIndex = 0;
+                                        groupFanPageBox.Text = "";
+                                        groupTwitchBox.Text = "";
+                                        groupYoutubeBox.Text = "";
+                                        GetFriendsSettings();
+                                    }
+                                }
+                            }
+
                         }
                     }
                 }
@@ -22573,6 +22952,30 @@ namespace GamaManager
         public bool isFriendSendTalkEventNotification;
         public bool isFriendSendTalkEventSound;
         public string sendMsgBlinkWindowType;
+        public FriendActivity friendActivity;
+    }
+
+    public class FriendActivity {
+        public bool isAddFriend;
+        public bool isOpenAchievement;
+        public bool isBuyGame;
+        public bool isInviteGroup;
+        public bool isCreateGroup;
+        public bool isAddGameToWishList;
+        public bool isAddReview;
+        public bool isUploadScreenShot;
+        public bool isAddVideo;
+        public bool isAddSubjectToFavorite;
+        public bool isDoAdvertisiment;
+        public bool isScheduleEvent;
+        public bool isSelectPlayerOfWeek;
+        public bool isUpgradeUserToAdmin;
+        public bool isReceiveComment;
+        public bool isProductDoAdvertisiment;
+        public bool isWorkShopDoAdvertisiment;
+        public bool isAddGameRecomendation;
+        public bool isAddSubject;
+        public bool isDetectFromScreenShot;
     }
 
     public class MusicSettings
@@ -23510,5 +23913,31 @@ namespace GamaManager
     {
         public UIElement body;
     }
+
+    public class CreateGroupResponseInfo
+    {
+        public string status;
+        public string id;
+    }
+
+    public class ActivitiesResponseInfo
+    {
+        public List<Activity> activities;
+        public string status;
+    }
+
+    public class Activity
+    {
+        public string user;
+        public string content;
+        public string data;
+    }
+
+    public class CreateScreenShotResponseInfo
+    {
+        public string status;
+        public string id;
+    }
+    
 
 }

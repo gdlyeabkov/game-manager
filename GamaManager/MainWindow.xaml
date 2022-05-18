@@ -3893,6 +3893,7 @@
                                                 Foreground="LightGray"
                                                 Text="Настройки ленты активности друзей"    
                                                 Margin="10 0"
+                                                MouseLeftButtonUp="OpenFriendActivitySettingsHandler"
                                             />
                                             <Separator
                                                 BorderBrush="LightGray"
@@ -3902,10 +3903,14 @@
                                             <TextBlock
                                                 Foreground="LightGray"
                                                 Margin="10 0"
-                                                Text="Моя активность"    
+                                                Text="Моя активность"
+                                                MouseLeftButtonUp="OpenMyActivityHandler"
                                             />
                                         </StackPanel>
                                     </DockPanel>
+                                    <StackPanel
+                                        x:Name="myFriendActivities"    
+                                    />
                                     <StackPanel
                                         Background="SlateGray"    
                                         Margin="15"
@@ -17022,9 +17027,545 @@ E. Что произойдет, если положение Пункта 11 бу
                             Margin="175 0"
                             Background="Blue"    
                         >
-                            <!--
-                                Кураторы
-                            -->
+                            <DockPanel>
+                                <StackPanel
+                                    Width="250"
+                                    DockPanel.Dock="Right"    
+                                >
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                >
+                                    <DockPanel
+                                        Margin="0 25"
+                                    >
+                                        <TextBlock
+                                            Margin="10 0"
+                                            FontSize="24"
+                                            Foreground="Cyan"
+                                            Text="Моя активность"    
+                                        />
+                                        <StackPanel
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Text="Настройки ленты активности друзей"    
+                                                Margin="10 0"
+                                                MouseLeftButtonUp="OpenFriendActivitySettingsHandler"
+                                            />
+                                            <Separator
+                                                BorderBrush="LightGray"
+                                                BorderThickness="1"
+                                                Margin="10 0"
+                                            />
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Margin="10 0"
+                                                Text="Активность друзей"    
+                                                MouseLeftButtonUp="OpenFriendsActivityHandler"
+                                            />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </StackPanel>
+                            </DockPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <DockPanel>
+                                <StackPanel
+                                    Width="250"
+                                    DockPanel.Dock="Right"    
+                                >
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                    <StackPanel
+                                        Background="Black"
+                                        Height="100"
+                                        Margin="25"
+                                    />
+                                </StackPanel>
+                                <StackPanel>
+                                    <StackPanel
+                                        Background="LightSlateGray"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <Image
+                                            VerticalAlignment="Center"
+                                            Margin="15"
+                                            Width="50"    
+                                            Height="50"    
+                                        >
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                />
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Foreground="LightGray"
+                                            Text="Пользователь"    
+                                            Margin="10 0"
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Kind="ChevronDoubleRight"    
+                                        />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Foreground="LightGray"
+                                            Margin="10 0"
+                                            Text="Активность друзей"
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Kind="ChevronDoubleRight"    
+                                        />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Foreground="LightGray"
+                                            Margin="10 0"
+                                            Text="Настройки ленты активности друзей"
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="DarkGray"    
+                                    >
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Пользователь из моего списка друзей:"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Добавляет друга?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddFriendCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Открывает достижение?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsOpenAchievementCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Покупает игру или делает предзаказ?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsBuyGameCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"  
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Вступает в группу?"
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsInviteGroupCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Создаёт группу?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsCreateGroupCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Добавляет игру в список желаемого?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddGameToWishListCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Публикует обзор продукта?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddReviewCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Загружает скриншот?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsUploadScreenShotCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"  
+                                                Background="LightGray"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Добавляет видео?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddVideoCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Добавляет предмет в избранное?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddSubjectToFavoriteCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Группа, в которой я состою:"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Делает объявление?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsDoAdvertisimentCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Планирует событие?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsScheduleEventCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Выбирает игрока недели?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsSelectPlayerOfWeekCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"  
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Повышает участника до администратора??"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsUpgradeUserToAdminCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Получает комментарий?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsReceiveCommentCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Работы Мастерской, в которых я заинтересован::"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Продукт Greenlight делает объявление?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsProductDoAdvertisimentCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel
+                                                Margin="15"
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Продукт Мастерской делает объявление?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsWorkShopDoAdvertisimentCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Когда куратор, на которого я подписан:"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Рекомендует игру?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddGameRecomendationCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Когда пользователь, на которого я подписан:"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="Создает предмет?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsAddSubjectCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <TextBlock
+                                            Margin="15"
+                                            Text="Когда я:"    
+                                        />
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="Black"        
+                                        >
+                                            <DockPanel
+                                                Margin="15"
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Foreground="SlateGray"
+                                                    Margin="15"
+                                                    Text="На чьём-то скриншоте?"    
+                                                />
+                                                <CheckBox
+                                                    x:Name="friendActivitySettingsDetectFromScreenShotCheckBox"
+                                                    Margin="15"
+                                                    HorizontalAlignment="Right"    
+                                                />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 15"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                        >
+                                            <Button
+                                                Content="Отмена"
+                                                Width="125"
+                                                Height="25"
+                                                Margin="15 0"
+                                                Click="OpenFriendsActivityHandler"
+                                            />
+                                            <Button
+                                                Content="Сохранить изменения"
+                                                Width="150"
+                                                Height="25"
+                                                Margin="15 0"
+                                                Click="SaveFriendActivitySettingsHandler"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                            <StackPanel
+                                Margin="25"    
+                            >
+
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

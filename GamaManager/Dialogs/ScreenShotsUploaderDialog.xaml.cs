@@ -245,13 +245,11 @@ namespace GamaManager.Dialogs
             UploadScreenShot();
         }
 
-        public void UploadScreenShot ()
+        async public void UploadScreenShot ()
         {
             try
             {
                 object mainScreenShotData = mainScreenShot.DataContext;
-
-                // string path = ((string)(mainScreenShotData));
                 Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(mainScreenShotData));
                 string path = ((string)(screenShotData["name"]));
                 string id = ((string)(screenShotData["id"]));
@@ -273,6 +271,12 @@ namespace GamaManager.Dialogs
                 string uploadedFileName = "hash." + ext;
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", uploadedFileName);
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                CreateScreenShotResponseInfo myScreenShotObj = (CreateScreenShotResponseInfo)js.Deserialize(responseBody, typeof(CreateScreenShotResponseInfo));
+                string screenShotId = myScreenShotObj.id;
                 httpClient.Dispose();
 
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
@@ -282,14 +286,31 @@ namespace GamaManager.Dialogs
                 {
                     using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            this.Close();
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=uploadScreenShot&data=" + screenShotId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        this.Close();
+                                    }
+                                }
+                            }
                         }
                     }
                 }

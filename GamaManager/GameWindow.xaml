@@ -10,7 +10,6 @@
         Width="800"
         WindowState="Maximized"
         Loaded="Window_Loaded"
-        KeyUp="GlobalHotKeyHandler"
     >
     <DockPanel
         x:Name="game"

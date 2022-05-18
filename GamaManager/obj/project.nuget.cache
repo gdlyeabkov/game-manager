@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "3YcjrL3TgUL1rz7sbS5W1L3QT/F1PET7zG4HqPF5HQ9YKft1zydMdBKbXYE8mzD6j5zP7lUbHY4R0wj74+CeqQ==",
+  "dgSpecHash": "ey3S+um1AagHxp4eRnzAeHuVrc+NR+sMbzM5a5OGmHO4Cd147Fidb9aHRnGe89y3tLTePZJdQhqNHngUlqZ3ww==",
   "success": true,
   "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ПК\\.nuget\\packages\\extended.wpf.toolkit\\4.3.0\\extended.wpf.toolkit.4.3.0.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\imapx\\2.0.0.18\\imapx.2.0.0.18.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\mousekeyboardactivitymonitor\\4.0.5150.10665\\mousekeyboardactivitymonitor.4.0.5150.10665.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\toggleswitch\\1.2.0\\toggleswitch.1.2.0.nupkg.sha512"
   ],
   "logs": []

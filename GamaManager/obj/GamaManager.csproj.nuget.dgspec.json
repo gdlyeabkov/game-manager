@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[1.0.6, )"
             },
+            "MouseKeyboardActivityMonitor": {
+              "target": "Package",
+              "version": "[4.0.5150.10665, )"
+            },
             "ToggleSwitch": {
               "target": "Package",
               "version": "[1.2.0, )"

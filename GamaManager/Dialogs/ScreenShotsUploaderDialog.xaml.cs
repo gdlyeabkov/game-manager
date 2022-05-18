@@ -43,6 +43,15 @@ namespace GamaManager.Dialogs
 
         public void GetScreenShots (string filter)
         {
+            screenShotsFilter.Items.Clear();
+            ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+            screenShotsFilterItem.Content = @"Выбрать игру";
+            screenShotsFilter.Items.Add(screenShotsFilterItem);
+            screenShotsFilterItem = new ComboBoxItem();
+            screenShotsFilterItem.Content = @"Все игры";
+            screenShotsFilter.Items.Add(screenShotsFilterItem);
+
+
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
@@ -52,7 +61,7 @@ namespace GamaManager.Dialogs
             {
                 DirectoryInfo gameInfo = new DirectoryInfo(game);
                 string gameName = gameInfo.Name;
-                ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+                screenShotsFilterItem = new ComboBoxItem();
                 screenShotsFilterItem.Content = gameName;
                 screenShotsFilter.Items.Add(screenShotsFilterItem);
                 string[] files = Directory.GetFileSystemEntries(game);
@@ -85,7 +94,6 @@ namespace GamaManager.Dialogs
                             bool isHaveResults = countResults >= 1;
                             if (isHaveResults)
                             {
-
                                 FileInfo info = new FileInfo(file);
                                 Image screenShot = new Image();
                                 screenShot.Margin = new Thickness(15);
@@ -96,24 +104,43 @@ namespace GamaManager.Dialogs
                                 screenShot.Source = new BitmapImage(screenShotUri);
                                 screenShot.EndInit();
                                 screenShots.Children.Add(screenShot);
-
-                                // screenShot.DataContext = file;
-
-                            
                                 Game currentGame = results[0];
                                 string currentGameId = currentGame.id;
                                 Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
                                 screenShotData.Add("name", file);
                                 screenShotData.Add("id", currentGameId);
                                 screenShot.DataContext = screenShotData;
-
                                 screenShot.MouseLeftButtonUp += SelectScreenShotHandler;
-
                             }
-
                         }
                     }
                 }
+            }
+            ItemCollection screenShotsFilterItems = screenShotsFilter.Items;
+            int screenShotsFilterItemsCount = screenShotsFilterItems.Count;
+            bool isHaveItems = screenShotsFilterItemsCount >= 1;
+            if (isHaveItems)
+            {
+                int index = 0;
+                List<ComboBoxItem> screenShotsFilterItemsList = new List<ComboBoxItem>();
+                foreach (object rawScreenShotsFilterItem in screenShotsFilterItems)
+                {
+                    screenShotsFilterItem = ((ComboBoxItem)(rawScreenShotsFilterItem));
+                    screenShotsFilterItemsList.Add(screenShotsFilterItem);
+                }
+                int founedIndex = screenShotsFilterItemsList.FindIndex((ComboBoxItem localScreenShotsFilterItem) =>
+                {
+                    object rawLocalScreenShotsFilterItemContent = localScreenShotsFilterItem.Content;
+                    string localScreenShotsFilterItemContent = ((string)(rawLocalScreenShotsFilterItemContent));
+                    bool isLocalFound = localScreenShotsFilterItemContent == filter;
+                    return isLocalFound;
+                });
+                bool isFound = founedIndex >= 0;
+                if (isFound)
+                {
+                    index = founedIndex;
+                }
+                screenShotsFilter.SelectedIndex = index;
             }
         }
 
@@ -174,13 +201,15 @@ namespace GamaManager.Dialogs
             this.currentUserId = currentUserId;
         }
 
-        private void SelectScreenShotsFilterHandler (object sender, SelectionChangedEventArgs e)
+        // private void SelectScreenShotsFilterHandler (object sender, SelectionChangedEventArgs e)
+        // private void SelectScreenShotsFilterHandler (object sender, RoutedEventArgs e)
+        private void SelectScreenShotsFilterHandler (object sender, EventArgs e)
         {
             int selectedIndex = screenShotsFilter.SelectedIndex;
             SelectScreenShotsFilter(selectedIndex);
         }
 
-        public void SelectScreenShotsFilter(int selectedIndex)
+        public void SelectScreenShotsFilter (int selectedIndex)
         {
             if (isAppInit)
             {

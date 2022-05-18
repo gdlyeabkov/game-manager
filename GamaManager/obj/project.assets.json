@@ -274,6 +274,15 @@
           }
         }
       },
+      "MouseKeyboardActivityMonitor/4.0.5150.10665": {
+        "type": "package",
+        "compile": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        },
+        "runtime": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        }
+      },
       "ToggleSwitch/1.2.0": {
         "type": "package",
         "compile": {
@@ -353,6 +362,15 @@
         "type": "package",
         "build": {
           "build/net45/Microsoft.VCRTForwarders.140.targets": {}
+        }
+      },
+      "MouseKeyboardActivityMonitor/4.0.5150.10665": {
+        "type": "package",
+        "compile": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        },
+        "runtime": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
         }
       },
       "ToggleSwitch/1.2.0": {
@@ -436,6 +454,15 @@
           "build/net45/Microsoft.VCRTForwarders.140.targets": {}
         }
       },
+      "MouseKeyboardActivityMonitor/4.0.5150.10665": {
+        "type": "package",
+        "compile": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        },
+        "runtime": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        }
+      },
       "ToggleSwitch/1.2.0": {
         "type": "package",
         "compile": {
@@ -515,6 +542,15 @@
         "type": "package",
         "build": {
           "build/net45/Microsoft.VCRTForwarders.140.targets": {}
+        }
+      },
+      "MouseKeyboardActivityMonitor/4.0.5150.10665": {
+        "type": "package",
+        "compile": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        },
+        "runtime": {
+          "lib/net20/MouseKeyboardActivityMonitor.dll": {}
         }
       },
       "ToggleSwitch/1.2.0": {
@@ -668,6 +704,20 @@
         "runtimes/win10-x86/native/release/vcruntime140_app.dll"
       ]
     },
+    "MouseKeyboardActivityMonitor/4.0.5150.10665": {
+      "sha512": "phBROtrPYSici1SCvhK8W9AwvF8tW0fSiHh7AXmr5HnpQZXC655IuyrSHRh1zRLn6q0wSqyB/cImxyhgaNbZVA==",
+      "type": "package",
+      "path": "mousekeyboardactivitymonitor/4.0.5150.10665",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/_._",
+        "lib/net20/MouseKeyboardActivityMonitor.dll",
+        "lib/net20/MouseKeyboardActivityMonitor.xml",
+        "mousekeyboardactivitymonitor.4.0.5150.10665.nupkg.sha512",
+        "mousekeyboardactivitymonitor.nuspec"
+      ]
+    },
     "ToggleSwitch/1.2.0": {
       "sha512": "Rhv4kXlH8Zo8Hb5ZEBECwONAF9HKmYyz1AR5RFyOrU5trbyyu1FCjDQ9E1Njo8ocsfYdjzbsdxgYYEQ3Oh9v9w==",
       "type": "package",
@@ -688,6 +738,7 @@
       "Extended.Wpf.Toolkit >= 4.3.0",
       "ImapX >= 2.0.0.18",
       "Microsoft.VCRTForwarders.140 >= 1.0.6",
+      "MouseKeyboardActivityMonitor >= 4.0.5150.10665",
       "ToggleSwitch >= 1.2.0"
     ]
   },
@@ -740,6 +791,10 @@
           "Microsoft.VCRTForwarders.140": {
             "target": "Package",
             "version": "[1.0.6, )"
+          },
+          "MouseKeyboardActivityMonitor": {
+            "target": "Package",
+            "version": "[4.0.5150.10665, )"
           },
           "ToggleSwitch": {
             "target": "Package",

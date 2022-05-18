@@ -70,24 +70,18 @@
                 Height="25"
                 Margin="15 0"
                 SelectedIndex="0"
-                SelectionChanged="SelectScreenShotsFilterHandler"
-            >
-                <ComboBoxItem
-                    Visibility="Collapsed"
-                    Content="Выбрать игру"
-                />
-                <ComboBoxItem
-                    Content="Все игры"
-                />
-            </ComboBox>
+                DropDownClosed="SelectScreenShotsFilterHandler"
+            />
         </StackPanel>
-        <WrapPanel
-            x:Name="screenShots"
-            Width="350"
-            DockPanel.Dock="Left"    
-        >
-            <Image />
-        </WrapPanel>
+        <ScrollViewer>
+            <WrapPanel
+                x:Name="screenShots"
+                Width="350"
+                DockPanel.Dock="Left"    
+            >
+                <Image />
+            </WrapPanel>
+        </ScrollViewer>
         <TabControl
             x:Name="screenShotsControl"    
             Width="400"

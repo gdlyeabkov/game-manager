@@ -186,6 +186,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -269,7 +271,8 @@ namespace GamaManager.Dialogs
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();

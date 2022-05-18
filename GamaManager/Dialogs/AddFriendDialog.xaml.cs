@@ -266,6 +266,8 @@ namespace GamaManager.Dialogs
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
                                         Recommendations currentRecommendations = loadedContent.recommendations;
+                                        // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                        string currentLogoutDate = loadedContent.logoutDate;
                                         updatedFriends.Add(new FriendSettings()
                                         {
                                             id = friendId,
@@ -287,7 +289,8 @@ namespace GamaManager.Dialogs
                                             notifications = currentNotifications,
                                             categories = currentCategories,
                                             recentChats = currentRecentChats,
-                                            recommendations = currentRecommendations
+                                            recommendations = currentRecommendations,
+                                            logoutDate = currentLogoutDate
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         string eventData = currentUserId + "|" + friendId;

@@ -181,7 +181,9 @@ namespace GamaManager.Dialogs
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
-            Recommendations currentRecommendations = loadedContent.recommendations; 
+            Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string localGameName = game.name;
@@ -203,7 +205,8 @@ namespace GamaManager.Dialogs
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }

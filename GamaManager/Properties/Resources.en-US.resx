@@ -126,6 +126,9 @@
   <data name="accessToMainInfoLabelContent" xml:space="preserve">
     <value>Access to main info:</value>
   </data>
+  <data name="accountInfoLabelContent" xml:space="preserve">
+    <value>Account info</value>
+  </data>
   <data name="activateGameLabelContent" xml:space="preserve">
     <value>Activate</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="addFriendDialogTitleContent" xml:space="preserve">
     <value>Add friend</value>
+  </data>
+  <data name="addGameBtnContent" xml:space="preserve">
+    <value>Add game</value>
   </data>
   <data name="aggrementBoxContent" xml:space="preserve">
     <value>Office ware game manager® SUBSCRIBER AGREEMENT
@@ -482,14 +488,32 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="communityMenuItemDiscussionsLabelContent" xml:space="preserve">
     <value>Discussions</value>
   </data>
+  <data name="communityMenuItemMainLabelContent" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="communityMenuItemStreamsLabelContent" xml:space="preserve">
+    <value>Streams</value>
+  </data>
+  <data name="communityMenuItemTradeLabelContent" xml:space="preserve">
+    <value>Trade</value>
+  </data>
+  <data name="communityMenuItemWorkShopLabelContent" xml:space="preserve">
+    <value>Workshop</value>
+  </data>
   <data name="communityMenuLabelContent" xml:space="preserve">
     <value>Community</value>
+  </data>
+  <data name="controlLabelContent" xml:space="preserve">
+    <value>Control</value>
   </data>
   <data name="darkThemeNameLabelContent" xml:space="preserve">
     <value>Dark</value>
   </data>
   <data name="defaultThemeNameLabelContent" xml:space="preserve">
     <value>Default</value>
+  </data>
+  <data name="downloadsLabelContent" xml:space="preserve">
+    <value>Downloads</value>
   </data>
   <data name="editProfileAboutLabelContent" xml:space="preserve">
     <value>About</value>
@@ -534,7 +558,8 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
     <value>Exit</value>
   </data>
   <data name="exitDescLabelContent" xml:space="preserve">
-    <value>You are about to exit the Office ware game manager. You'll need to re-enter&amp;#10;your username and password in order to log back into Office ware Game Manager.</value>
+    <value>You are about to exit the Office ware game manager. You'll need to re-enter
+your username and password in order to log back into Office ware Game Manager.</value>
   </data>
   <data name="exitLabelContent" xml:space="preserve">
     <value>Exit</value>
@@ -561,7 +586,9 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
     <value> from </value>
   </data>
   <data name="gameInfoDescLabelContent" xml:space="preserve">
-    <value>This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and&amp;#10;play time. This setting also affects whether others can see your "In Game" status and the name&amp;#10;of the running game.</value>
+    <value>This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and
+play time. This setting also affects whether others can see your "In Game" status and the name
+of the running game.</value>
   </data>
   <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
     <value>Login to another account</value>
@@ -584,8 +611,23 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="groupsLabelContent" xml:space="preserve">
     <value>Groups</value>
   </data>
+  <data name="helpMenuItemAboutOfficeWareGameManagerLabelContent" xml:space="preserve">
+    <value>About Office ware game manager</value>
+  </data>
   <data name="helpMenuItemLabelContent" xml:space="preserve">
     <value>Help</value>
+  </data>
+  <data name="helpMenuItemLawInfoLabelContent" xml:space="preserve">
+    <value>Law info</value>
+  </data>
+  <data name="helpMenuItemPrivacyInfoLabelContent" xml:space="preserve">
+    <value>Privacy info</value>
+  </data>
+  <data name="helpMenuItemSubAgreementLabelContent" xml:space="preserve">
+    <value>Sub agreement</value>
+  </data>
+  <data name="helpMenuItemSubSupportServiceLabelContent" xml:space="preserve">
+    <value>Sub support service</value>
   </data>
   <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
     <value>About system</value>
@@ -653,8 +695,14 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="pressHereForPrintLabelContent" xml:space="preserve">
     <value>Press here for print</value>
   </data>
+  <data name="profileMenuItemActivityLabelContent" xml:space="preserve">
+    <value>Activity</value>
+  </data>
   <data name="profileMenuItemContentLabelContent" xml:space="preserve">
     <value>Content</value>
+  </data>
+  <data name="profileMenuItemEquipmentLabelContent" xml:space="preserve">
+    <value>Equipment</value>
   </data>
   <data name="profileMenuItemIconsLabelContent" xml:space="preserve">
     <value>Icons</value>
@@ -666,10 +714,14 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
     <value>Public</value>
   </data>
   <data name="readAllAggrementLabelContent" xml:space="preserve">
-    <value>Read the entire agreement. You must accept&amp;#10;the terms of the Office ware Game Manager Subscription Agreement to continue.</value>
+    <value>Read the entire agreement. You must accept
+the terms of the Office ware Game Manager Subscription Agreement to continue.</value>
   </data>
   <data name="registerGameLabelContent" xml:space="preserve">
-    <value>To register a product with Office ware game manager and add it&amp;#10;to your library, enter here the activation key&amp;#10;included with your retail copy of the game or other&amp;#10;purchase from Office ware game manager. Click Next to continue.</value>
+    <value>To register a product with Office ware game manager and add it
+to your library, enter here the activation key
+included with your retail copy of the game or other
+purchase from Office ware game manager. Click Next to continue.</value>
   </data>
   <data name="requireContinueLabelContent" xml:space="preserve">
     <value>Do you want to continue?</value>
@@ -704,11 +756,26 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="storeMenuItemNewsLabelContent" xml:space="preserve">
     <value>News</value>
   </data>
+  <data name="storeMenuItemPointsStoreLabelContent" xml:space="preserve">
+    <value>Points store</value>
+  </data>
+  <data name="storeMenuItemPopularLabelContent" xml:space="preserve">
+    <value>Popular</value>
+  </data>
+  <data name="storeMenuItemRecomendationsLabelContent" xml:space="preserve">
+    <value>Recomendations</value>
+  </data>
   <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
     <value>Stats</value>
   </data>
+  <data name="storeMenuItemWishesListLabelContent" xml:space="preserve">
+    <value>Wishes list</value>
+  </data>
   <data name="storeMenuLabelContent" xml:space="preserve">
     <value>Store</value>
+  </data>
+  <data name="storeSettingsLabelContent" xml:space="preserve">
+    <value>Store settings</value>
   </data>
   <data name="summerThemeNameLabelContent" xml:space="preserve">
     <value>Summer</value>
@@ -728,10 +795,19 @@ This Agreement was amended on August 28, 2020 (the "Revised Date"). If you were 
   <data name="uploadingLabelContent" xml:space="preserve">
     <value>Uploading</value>
   </data>
+  <data name="viewMenuItemHiddenGamesLabelContent" xml:space="preserve">
+    <value>Hidden games</value>
+  </data>
   <data name="viewMenuItemLabelContent" xml:space="preserve">
     <value>View</value>
   </data>
   <data name="viewMenuItemPlayerLabelContent" xml:space="preserve">
     <value>Player</value>
+  </data>
+  <data name="viewMenuItemScreenShotsLabelContent" xml:space="preserve">
+    <value>Screenshots</value>
+  </data>
+  <data name="walletLabelContent" xml:space="preserve">
+    <value>Wallet</value>
   </data>
 </root>

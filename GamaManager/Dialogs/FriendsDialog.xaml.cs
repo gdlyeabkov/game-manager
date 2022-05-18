@@ -1306,6 +1306,8 @@ namespace GamaManager.Dialogs
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
                             Recommendations currentRecommendations = loadedContent.recommendations;
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -1325,7 +1327,8 @@ namespace GamaManager.Dialogs
                                     notifications = currentNotifications,
                                     categories = currentCategories,
                                     recentChats = currentRecentChats,
-                                    recommendations = currentRecommendations
+                                    recommendations = currentRecommendations,
+                                    logoutDate = currentLogoutDate
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                             }
@@ -1394,6 +1397,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> updatedRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             bool isOpenNewChatInNewWindow = currentSettings.isOpenNewChatInNewWindow;
 
             Application app = Application.Current;
@@ -1462,7 +1467,8 @@ namespace GamaManager.Dialogs
                             notifications = currentNotifications,
                             categories = currentCategories,
                             recentChats = updatedRecentChats,
-                            recommendations = currentRecommendations
+                            recommendations = currentRecommendations,
+                            logoutDate = currentLogoutDate
                         });
                         File.WriteAllText(saveDataFilePath, savedContent);
                         dialog.SelectChat(friend);
@@ -1588,6 +1594,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate; ;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == currentFriendId;
@@ -1607,7 +1615,8 @@ namespace GamaManager.Dialogs
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1638,6 +1647,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -1658,7 +1669,8 @@ namespace GamaManager.Dialogs
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1690,6 +1702,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<FriendSettings> updatedFriends = currentFriends;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
@@ -1710,7 +1724,8 @@ namespace GamaManager.Dialogs
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");
@@ -1996,6 +2011,8 @@ namespace GamaManager.Dialogs
                                                     List<string> currentCategories = loadedContent.categories;
                                                     List<string> currentRecentChats = loadedContent.recentChats;
                                                     Recommendations currentRecommendations = loadedContent.recommendations;
+                                                    // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                                    string currentLogoutDate = loadedContent.logoutDate;
                                                     // List<FriendSettings> updatedFriends = currentFriends;
                                                     int countTalkResults = updatedFriends.Count<FriendSettings>((FriendSettings someFriendSettingsItem) =>
                                                     {
@@ -2026,7 +2043,8 @@ namespace GamaManager.Dialogs
                                                             notifications = currentNotifications,
                                                             categories = currentCategories,
                                                             recentChats = currentRecentChats,
-                                                            recommendations = currentRecommendations
+                                                            recommendations = currentRecommendations,
+                                                            logoutDate = currentLogoutDate
                                                         });
                                                         File.WriteAllText(saveDataFilePath, savedContent);
                                                     }
@@ -2144,6 +2162,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
             {
                 return friend.id == talkId;
@@ -2163,7 +2183,8 @@ namespace GamaManager.Dialogs
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFriends(currentUserId, "");

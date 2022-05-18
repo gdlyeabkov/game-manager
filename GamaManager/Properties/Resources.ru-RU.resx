@@ -126,6 +126,9 @@
   <data name="accessToMainInfoLabelContent" xml:space="preserve">
     <value>Доступ к основным данным:</value>
   </data>
+  <data name="accountInfoLabelContent" xml:space="preserve">
+    <value>Об аккаунте</value>
+  </data>
   <data name="activateGameLabelContent" xml:space="preserve">
     <value>Активировать</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="addFriendDialogTitleContent" xml:space="preserve">
     <value>Добавить друга</value>
+  </data>
+  <data name="addGameBtnContent" xml:space="preserve">
+    <value>Добавить игру</value>
   </data>
   <data name="aggrementBoxContent" xml:space="preserve">
     <value>СОГЛАШЕНИЕ ПОДПИСЧИКА Office ware game manager®
@@ -482,14 +488,32 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="communityMenuItemDiscussionsLabelContent" xml:space="preserve">
     <value>Обсуждения</value>
   </data>
+  <data name="communityMenuItemMainLabelContent" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="communityMenuItemStreamsLabelContent" xml:space="preserve">
+    <value>Трансляции</value>
+  </data>
+  <data name="communityMenuItemTradeLabelContent" xml:space="preserve">
+    <value>Торговая площадка</value>
+  </data>
+  <data name="communityMenuItemWorkShopLabelContent" xml:space="preserve">
+    <value>Мастерская</value>
+  </data>
   <data name="communityMenuLabelContent" xml:space="preserve">
     <value>Сообщество</value>
+  </data>
+  <data name="controlLabelContent" xml:space="preserve">
+    <value>Управление</value>
   </data>
   <data name="darkThemeNameLabelContent" xml:space="preserve">
     <value>Тьма</value>
   </data>
   <data name="defaultThemeNameLabelContent" xml:space="preserve">
     <value>По умолчанию</value>
+  </data>
+  <data name="downloadsLabelContent" xml:space="preserve">
+    <value>Загрузки</value>
   </data>
   <data name="editProfileAboutLabelContent" xml:space="preserve">
     <value>О себе</value>
@@ -534,7 +558,8 @@ E. Что произойдет, если положение Пункта 11 бу
     <value>Выйти</value>
   </data>
   <data name="exitDescLabelContent" xml:space="preserve">
-    <value>Вы собираетесь выйти из Office ware game manager. Вам потребуется заново ввести&amp;#10;ваши логин и парроль, чтобы снова войти в Office ware game manager.</value>
+    <value>Вы собираетесь выйти из Office ware game manager. Вам потребуется заново ввести
+ваши логин и парроль, чтобы снова войти в Office ware game manager.</value>
   </data>
   <data name="exitLabelContent" xml:space="preserve">
     <value>Выход</value>
@@ -564,7 +589,9 @@ E. Что произойдет, если положение Пункта 11 бу
     <value> из </value>
   </data>
   <data name="gameInfoDescLabelContent" xml:space="preserve">
-    <value>В эту категорию входят список всех игр на вашем аккаунте Office ware game manager, список желаемого, достижения и&amp;#10;время в игре. Также эта настройка влияет на то, видны ли другим ваш статус «В игре» и название&amp;#10;запущенной игры.</value>
+    <value>В эту категорию входят список всех игр на вашем аккаунте Office ware game manager, список желаемого, достижения и
+время в игре. Также эта настройка влияет на то, видны ли другим ваш статус «В игре» и название
+запущенной игры.</value>
   </data>
   <data name="gameManagerMenuItemLoginToAnotherAccountLabelContent" xml:space="preserve">
     <value>Войти в другой аккаунт</value>
@@ -587,8 +614,23 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="groupsLabelContent" xml:space="preserve">
     <value>Группы</value>
   </data>
+  <data name="helpMenuItemAboutOfficeWareGameManagerLabelContent" xml:space="preserve">
+    <value>О Office ware game manager</value>
+  </data>
   <data name="helpMenuItemLabelContent" xml:space="preserve">
     <value>Справка</value>
+  </data>
+  <data name="helpMenuItemLawInfoLabelContent" xml:space="preserve">
+    <value>Правовая информация</value>
+  </data>
+  <data name="helpMenuItemPrivacyInfoLabelContent" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="helpMenuItemSubAgreementLabelContent" xml:space="preserve">
+    <value>Соглашение подписчика</value>
+  </data>
+  <data name="helpMenuItemSubSupportServiceLabelContent" xml:space="preserve">
+    <value>Служба поддержки подписчика</value>
   </data>
   <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
     <value>О системе</value>
@@ -659,8 +701,14 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="pressHereForPrintLabelContent" xml:space="preserve">
     <value>Нажмите здесь для печати</value>
   </data>
+  <data name="profileMenuItemActivityLabelContent" xml:space="preserve">
+    <value>Активность</value>
+  </data>
   <data name="profileMenuItemContentLabelContent" xml:space="preserve">
     <value>Контент</value>
+  </data>
+  <data name="profileMenuItemEquipmentLabelContent" xml:space="preserve">
+    <value>Инвернтарь</value>
   </data>
   <data name="profileMenuItemIconsLabelContent" xml:space="preserve">
     <value>Значки</value>
@@ -672,10 +720,14 @@ E. Что произойдет, если положение Пункта 11 бу
     <value>Открытый</value>
   </data>
   <data name="readAllAggrementLabelContent" xml:space="preserve">
-    <value>Прочитайте данное соглашение полностью. Необходимо принять&amp;#10;условия соглашения подписчика Office ware game manager, чтобы продолжить.</value>
+    <value>Прочитайте данное соглашение полностью. Необходимо принять
+условия соглашения подписчика Office ware game manager, чтобы продолжить.</value>
   </data>
   <data name="registerGameLabelContent" xml:space="preserve">
-    <value>To register a product with Office ware game manager and add it&amp;#10;to your library, enter here the activation key&amp;#10;included with your retail copy of the game or other&amp;#10;purchase from Office ware game manager. Click Next to continue.</value>
+    <value>Чтобы зарегистрировать продукт в диспетчере игр Office ware и добавить его
+в свою библиотеку, введите здесь ключ активации,
+прилагаемый к вашей розничной копии игры или другой
+покупке в диспетчере игр Office ware. Нажмите «Далее», чтобы продолжить.</value>
   </data>
   <data name="requireContinueLabelContent" xml:space="preserve">
     <value>Вы хотите продолжить?</value>
@@ -710,11 +762,26 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="storeMenuItemNewsLabelContent" xml:space="preserve">
     <value>Новости</value>
   </data>
+  <data name="storeMenuItemPointsStoreLabelContent" xml:space="preserve">
+    <value>Магазин очков</value>
+  </data>
+  <data name="storeMenuItemPopularLabelContent" xml:space="preserve">
+    <value>Популярное</value>
+  </data>
+  <data name="storeMenuItemRecomendationsLabelContent" xml:space="preserve">
+    <value>Рекомендации</value>
+  </data>
   <data name="storeMenuItemStatsLabelContent" xml:space="preserve">
     <value>Статистика</value>
   </data>
+  <data name="storeMenuItemWishesListLabelContent" xml:space="preserve">
+    <value>Список желаемого</value>
+  </data>
   <data name="storeMenuLabelContent" xml:space="preserve">
     <value>Магазин</value>
+  </data>
+  <data name="storeSettingsLabelContent" xml:space="preserve">
+    <value>Настройки магазина</value>
   </data>
   <data name="summerThemeNameLabelContent" xml:space="preserve">
     <value>Лето</value>
@@ -734,10 +801,19 @@ E. Что произойдет, если положение Пункта 11 бу
   <data name="uploadingLabelContent" xml:space="preserve">
     <value>Загрузка игры</value>
   </data>
+  <data name="viewMenuItemHiddenGamesLabelContent" xml:space="preserve">
+    <value>Скрытые игры</value>
+  </data>
   <data name="viewMenuItemLabelContent" xml:space="preserve">
     <value>Вид</value>
   </data>
   <data name="viewMenuItemPlayerLabelContent" xml:space="preserve">
     <value>Проигрыватель</value>
+  </data>
+  <data name="viewMenuItemScreenShotsLabelContent" xml:space="preserve">
+    <value>Скриншоты</value>
+  </data>
+  <data name="walletLabelContent" xml:space="preserve">
+    <value>Мой кошелек</value>
   </data>
 </root>

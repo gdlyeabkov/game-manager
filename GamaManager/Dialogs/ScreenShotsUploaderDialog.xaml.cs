@@ -74,7 +74,7 @@ namespace GamaManager.Dialogs
                         string insensitiveCaseFilter = filter.ToLower();
                         string insensitiveCaseGameName = gameName.ToLower();
                         int filterLength = filter.Length;
-                        bool isNotFilter = filterLength <= 0;
+                        bool isNotFilter = filterLength <= 0 || filter == "Выбрать игру" || filter == "Все игры";
                         bool isWordsMatches = insensitiveCaseGameName.Contains(insensitiveCaseFilter);
                         bool isFilterMatches = isWordsMatches || isNotFilter;
                         if (isFilterMatches)

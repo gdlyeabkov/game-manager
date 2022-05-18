@@ -88,6 +88,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Account info.
+        /// </summary>
+        public static string accountInfoLabelContent {
+            get {
+                return ResourceManager.GetString("accountInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Activate.
         /// </summary>
         public static string activateGameLabelContent {
@@ -120,6 +129,15 @@ namespace GamaManager.Properties {
         public static string addFriendDialogTitleContent {
             get {
                 return ResourceManager.GetString("addFriendDialogTitleContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Add game.
+        /// </summary>
+        public static string addGameBtnContent {
+            get {
+                return ResourceManager.GetString("addGameBtnContent", resourceCulture);
             }
         }
         
@@ -209,11 +227,56 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Main.
+        /// </summary>
+        public static string communityMenuItemMainLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuItemMainLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Streams.
+        /// </summary>
+        public static string communityMenuItemStreamsLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuItemStreamsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Trade.
+        /// </summary>
+        public static string communityMenuItemTradeLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuItemTradeLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Workshop.
+        /// </summary>
+        public static string communityMenuItemWorkShopLabelContent {
+            get {
+                return ResourceManager.GetString("communityMenuItemWorkShopLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Community.
         /// </summary>
         public static string communityMenuLabelContent {
             get {
                 return ResourceManager.GetString("communityMenuLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Control.
+        /// </summary>
+        public static string controlLabelContent {
+            get {
+                return ResourceManager.GetString("controlLabelContent", resourceCulture);
             }
         }
         
@@ -232,6 +295,15 @@ namespace GamaManager.Properties {
         public static string defaultThemeNameLabelContent {
             get {
                 return ResourceManager.GetString("defaultThemeNameLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Downloads.
+        /// </summary>
+        public static string downloadsLabelContent {
+            get {
+                return ResourceManager.GetString("downloadsLabelContent", resourceCulture);
             }
         }
         
@@ -362,7 +434,8 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на You are about to exit the Office ware game manager. You&apos;ll need to re-enter&amp;#10;your username and password in order to log back into Office ware Game Manager..
+        ///   Ищет локализованную строку, похожую на You are about to exit the Office ware game manager. You&apos;ll need to re-enter
+        ///your username and password in order to log back into Office ware Game Manager..
         /// </summary>
         public static string exitDescLabelContent {
             get {
@@ -452,7 +525,9 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and&amp;#10;play time. This setting also affects whether others can see your &quot;In Game&quot; status and the name&amp;#10;of the running game..
+        ///   Ищет локализованную строку, похожую на This category includes a list of all the games in your Office ware game manager account, a wishlist, achievements, and
+        ///play time. This setting also affects whether others can see your &quot;In Game&quot; status and the name
+        ///of the running game..
         /// </summary>
         public static string gameInfoDescLabelContent {
             get {
@@ -524,11 +599,56 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на About Office ware game manager.
+        /// </summary>
+        public static string helpMenuItemAboutOfficeWareGameManagerLabelContent {
+            get {
+                return ResourceManager.GetString("helpMenuItemAboutOfficeWareGameManagerLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Help.
         /// </summary>
         public static string helpMenuItemLabelContent {
             get {
                 return ResourceManager.GetString("helpMenuItemLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Law info.
+        /// </summary>
+        public static string helpMenuItemLawInfoLabelContent {
+            get {
+                return ResourceManager.GetString("helpMenuItemLawInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Privacy info.
+        /// </summary>
+        public static string helpMenuItemPrivacyInfoLabelContent {
+            get {
+                return ResourceManager.GetString("helpMenuItemPrivacyInfoLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sub agreement.
+        /// </summary>
+        public static string helpMenuItemSubAgreementLabelContent {
+            get {
+                return ResourceManager.GetString("helpMenuItemSubAgreementLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sub support service.
+        /// </summary>
+        public static string helpMenuItemSubSupportServiceLabelContent {
+            get {
+                return ResourceManager.GetString("helpMenuItemSubSupportServiceLabelContent", resourceCulture);
             }
         }
         
@@ -740,11 +860,29 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Activity.
+        /// </summary>
+        public static string profileMenuItemActivityLabelContent {
+            get {
+                return ResourceManager.GetString("profileMenuItemActivityLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Content.
         /// </summary>
         public static string profileMenuItemContentLabelContent {
             get {
                 return ResourceManager.GetString("profileMenuItemContentLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Equipment.
+        /// </summary>
+        public static string profileMenuItemEquipmentLabelContent {
+            get {
+                return ResourceManager.GetString("profileMenuItemEquipmentLabelContent", resourceCulture);
             }
         }
         
@@ -776,7 +914,8 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Read the entire agreement. You must accept&amp;#10;the terms of the Office ware Game Manager Subscription Agreement to continue..
+        ///   Ищет локализованную строку, похожую на Read the entire agreement. You must accept
+        ///the terms of the Office ware Game Manager Subscription Agreement to continue..
         /// </summary>
         public static string readAllAggrementLabelContent {
             get {
@@ -893,6 +1032,33 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Points store.
+        /// </summary>
+        public static string storeMenuItemPointsStoreLabelContent {
+            get {
+                return ResourceManager.GetString("storeMenuItemPointsStoreLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Popular.
+        /// </summary>
+        public static string storeMenuItemPopularLabelContent {
+            get {
+                return ResourceManager.GetString("storeMenuItemPopularLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Recomendations.
+        /// </summary>
+        public static string storeMenuItemRecomendationsLabelContent {
+            get {
+                return ResourceManager.GetString("storeMenuItemRecomendationsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Stats.
         /// </summary>
         public static string storeMenuItemStatsLabelContent {
@@ -902,11 +1068,29 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Wishes list.
+        /// </summary>
+        public static string storeMenuItemWishesListLabelContent {
+            get {
+                return ResourceManager.GetString("storeMenuItemWishesListLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Store.
         /// </summary>
         public static string storeMenuLabelContent {
             get {
                 return ResourceManager.GetString("storeMenuLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Store settings.
+        /// </summary>
+        public static string storeSettingsLabelContent {
+            get {
+                return ResourceManager.GetString("storeSettingsLabelContent", resourceCulture);
             }
         }
         
@@ -965,6 +1149,15 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Hidden games.
+        /// </summary>
+        public static string viewMenuItemHiddenGamesLabelContent {
+            get {
+                return ResourceManager.GetString("viewMenuItemHiddenGamesLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на View.
         /// </summary>
         public static string viewMenuItemLabelContent {
@@ -979,6 +1172,24 @@ namespace GamaManager.Properties {
         public static string viewMenuItemPlayerLabelContent {
             get {
                 return ResourceManager.GetString("viewMenuItemPlayerLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Screenshots.
+        /// </summary>
+        public static string viewMenuItemScreenShotsLabelContent {
+            get {
+                return ResourceManager.GetString("viewMenuItemScreenShotsLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Wallet.
+        /// </summary>
+        public static string walletLabelContent {
+            get {
+                return ResourceManager.GetString("walletLabelContent", resourceCulture);
             }
         }
     }

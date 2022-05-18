@@ -95,6 +95,8 @@ namespace GamaManager.Dialogs
             List<string> updatedCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             updatedCategories.Add(categoryNameBoxContent);
 
             foreach (Border request in requests.Children)
@@ -145,7 +147,8 @@ namespace GamaManager.Dialogs
                 notifications = currentNotifications,
                 categories = updatedCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
 

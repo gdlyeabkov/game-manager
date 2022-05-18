@@ -1638,7 +1638,8 @@ namespace GamaManager
                 GetLastFriendRecommendations();
                 GetPopularGamesForFriends();
                 GetGamesByTags();
-                GetFriendsForPresent(); /**/
+                GetFriendsForPresent();
+                GetNewsNotifications();/**/
             }
         }
 
@@ -7350,6 +7351,8 @@ namespace GamaManager
                             List<string> currentCategories = loadedContent.categories; 
                             List<string> currentRecentChats = loadedContent.recentChats;
                             Recommendations currentRecommendations = loadedContent.recommendations;
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                             {
                                 return friend.id == friendId;
@@ -7369,7 +7372,8 @@ namespace GamaManager
                                     notifications = currentNotifications,
                                     categories = currentCategories,
                                     recentChats = currentRecentChats,
-                                    recommendations = currentRecommendations
+                                    recommendations = currentRecommendations,
+                                    logoutDate = currentLogoutDate
                                 });
                                 File.WriteAllText(saveDataFilePath, savedContent);
                                 mainControl.DataContext = currentUserId;
@@ -7567,6 +7571,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -7604,7 +7610,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -7902,6 +7909,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
@@ -7938,7 +7947,8 @@ namespace GamaManager
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetGameCollections();
@@ -7994,6 +8004,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             foreach (Game updatedGame in updatedGames)
             {
                 string updatedGameName = updatedGame.name;
@@ -8023,7 +8035,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -9258,6 +9271,8 @@ namespace GamaManager
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
                             Recommendations currentRecommendations = loadedContent.recommendations;
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
                             List<FriendSettings> updatedFriends = loadedContent.friends;
                             int updatedFriendsCount = updatedFriends.Count;
                             for (int i = updatedFriendsCount - 1; i >= 0; i--)
@@ -9280,7 +9295,8 @@ namespace GamaManager
                                 notifications = currentNotifications,
                                 categories = currentCategories,
                                 recentChats = currentRecentChats,
-                                recommendations = currentRecommendations
+                                recommendations = currentRecommendations,
+                                logoutDate = currentLogoutDate
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                         }
@@ -10469,7 +10485,9 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
-            List <Game> results = updatedGames.Where<Game>((Game game) =>
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
+            List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 return game.name == name;
             }).ToList<Game>();
@@ -10488,7 +10506,8 @@ namespace GamaManager
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, saveDataFileContent);
                 GetGameCollections();
@@ -10595,7 +10614,9 @@ namespace GamaManager
                         isSoundTracks = true,
                         isNotReleases = true,
                         exceptTags = new List<string>() { }
-                    }
+                    },
+                    // logoutDate = DateTime.Now
+                    logoutDate = DateTime.Now.ToString("F")
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -10838,6 +10859,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate; 
+            string currentLogoutDate = loadedContent.logoutDate;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             DateTime currentDate = DateTime.Now;
@@ -10884,7 +10907,8 @@ namespace GamaManager
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -10990,6 +11014,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             object gameNameLabelData = gameNameLabel.DataContext;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -11017,7 +11043,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             gameActionLabel.Content = Properties.Resources.playBtnLabelContent;
@@ -11552,6 +11579,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<Game> results = updatedGames.Where((Game someGame) =>
             {
 
@@ -11710,7 +11739,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string keywords = keywordsLabel.Text;
@@ -12271,6 +12301,8 @@ namespace GamaManager
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
                                         Recommendations currentRecommendations = loadedContent.recommendations;
+                                        // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                        string currentLogoutDate = loadedContent.logoutDate;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -12293,7 +12325,8 @@ namespace GamaManager
                                             notifications = currentNotifications,
                                             categories = currentCategories,
                                             recentChats = currentRecentChats,
-                                            recommendations = currentRecommendations
+                                            recommendations = currentRecommendations,
+                                            logoutDate = currentLogoutDate
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         GetFriendsSettings();
@@ -12614,6 +12647,8 @@ namespace GamaManager
                                         List<string> currentCategories = loadedContent.categories;
                                         List<string> currentRecentChats = loadedContent.recentChats;
                                         Recommendations currentRecommendations = loadedContent.recommendations;
+                                        // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                        string currentLogoutDate = loadedContent.logoutDate;
                                         List<FriendSettings> updatedFriends = currentFriends;
                                         updatedFriends.Add(new FriendSettings()
                                         {
@@ -12636,7 +12671,8 @@ namespace GamaManager
                                             notifications = currentNotifications,
                                             categories = currentCategories,
                                             recentChats = currentRecentChats,
-                                            recommendations = currentRecommendations
+                                            recommendations = currentRecommendations,
+                                            logoutDate = currentLogoutDate
                                         });
                                         File.WriteAllText(saveDataFilePath, savedContent);
                                         MessageBox.Show(msgContent, "Внимание");
@@ -13175,7 +13211,7 @@ namespace GamaManager
             StoreItemSelected(selectedIndex);
         }
 
-        public void GetNews()
+        public void GetNews ()
         {
             try
             {
@@ -13308,6 +13344,7 @@ namespace GamaManager
                                 newsItem.Children.Add(newsItemFooter);
                                 news.Children.Add(newsItem);
                             }
+
                         }
                     }
                 }
@@ -13318,6 +13355,67 @@ namespace GamaManager
                 this.Close();
             }
             // newsAside.Height = news.ActualHeight;
+        }
+
+        public void GetNewsNotifications ()
+        {
+
+            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/news/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        NewsResponseInfo myobj = (NewsResponseInfo)js.Deserialize(objText, typeof(NewsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<News> newsList = myobj.news;
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
+                            // Debugger.Log(0, "debug", Environment.NewLine + @"currentLogoutDate: " + currentLogoutDate.ToLongDateString() + @", currentLogoutTime: " + currentLogoutDate.ToLongTimeString() + Environment.NewLine);
+                            int countUnreadedNews = newsList.Count<News>((News newsItem) =>
+                            {
+                                DateTime newsItemDate = newsItem.date;
+                                
+                                // TimeSpan interval = currentLogoutDate.Subtract(newsItemDate);
+                                TimeSpan interval = DateTime.Parse(currentLogoutDate).Subtract(newsItemDate);
+                                
+                                double intervalSeconds = interval.TotalSeconds;
+                                Debugger.Log(0, "debug", Environment.NewLine + @"newsDate: " + newsItemDate.ToLongDateString() + @", newsTime: " + newsItemDate.ToLongTimeString() + ", intervalSeconds: " + intervalSeconds.ToString() + Environment.NewLine);
+                                bool isUnreaded = intervalSeconds <= -1;
+                                return isUnreaded;
+                            });
+                            bool isHaveUnreadedNews = countUnreadedNews >= 1;
+                            Debugger.Log(0, "debug", Environment.NewLine + @"countUnreadedNews: " + countUnreadedNews.ToString() + @", isHaveUnreadedNews: " + isHaveUnreadedNews.ToString() + Environment.NewLine);
+                            if (isHaveUnreadedNews)
+                            {
+                                newsPopupIcon.Foreground = System.Windows.Media.Brushes.Yellow;
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void StoreItemSelected(int index)
@@ -13403,6 +13501,8 @@ namespace GamaManager
                             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                             Recommendations currentRecommendations = loadedContent.recommendations;
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
                             List<string> exceptTags = currentRecommendations.exceptTags;
 
                             totalGames = totalGames.Where((GameResponseInfo game) =>
@@ -13744,6 +13844,8 @@ namespace GamaManager
                             List<string> currentCategories = loadedContent.categories;
                             List<string> currentRecentChats = loadedContent.recentChats;
                             Recommendations currentRecommendations = loadedContent.recommendations;
+                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                            string currentLogoutDate = loadedContent.logoutDate;
                             foreach (StackPanel profileTheme in profileThemes.Children)
                             {
                                 bool isSelectedTheme = ((TextBlock)(profileTheme.Children[1])).Foreground == System.Windows.Media.Brushes.Blue;
@@ -13766,7 +13868,8 @@ namespace GamaManager
                                         notifications = currentNotifications,
                                         categories = currentCategories,
                                         recentChats = currentRecentChats,
-                                        recommendations = currentRecommendations
+                                        recommendations = currentRecommendations,
+                                        logoutDate = currentLogoutDate
                                     });
                                     File.WriteAllText(saveDataFilePath, savedContent);
                                     break;
@@ -14686,15 +14789,12 @@ namespace GamaManager
             ClientClosed();
         }
 
-        public void ClientClosed()
+        public void ClientClosed ()
         {
             if (isAppInit)
             {
                 DecreaseUserToStats();
-
-                // SetUserStatus("offline");
                 UpdateUserStatus("offline");
-
                 client.EmitAsync("user_is_toggle_status", "offline");
             }
         }
@@ -14939,6 +15039,8 @@ namespace GamaManager
         public void Logout ()
         {
 
+            // System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
             Application app = Application.Current;
             WindowCollection windows = app.Windows;
             IEnumerable<Window> myWindows = windows.OfType<Window>();
@@ -14949,7 +15051,15 @@ namespace GamaManager
             JavaScriptSerializer js = new JavaScriptSerializer();
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            Recommendations currentRecommendations = loadedContent.recommendations;
+
+            string savedContent = "";
             
             bool isRestoreChats = currentSettings.isRestoreChats;
             if (isRestoreChats)
@@ -14966,14 +15076,11 @@ namespace GamaManager
                 {
                     ChatDialog chatDialog = ((ChatDialog)(chatWindows[0]));
                     List<string> chats = chatDialog.chats;
-                    List<Game> currentGames = loadedContent.games;
-                    List<FriendSettings> currentFriends = loadedContent.friends;
-                    List<string> currentCollections = loadedContent.collections;
-                    Notifications currentNotifications = loadedContent.notifications;
-                    List<string> currentCategories = loadedContent.categories;
                     List<string> updatedRecentChats = loadedContent.recentChats;
+                    // DateTime currentLogoutDate = loadedContent.logoutDate;
+                    string currentLogoutDate = loadedContent.logoutDate;
                     updatedRecentChats = chats;
-                    string savedContent = js.Serialize(new SavedContent
+                    savedContent = js.Serialize(new SavedContent
                     {
                         games = currentGames,
                         friends = currentFriends,
@@ -14981,11 +15088,38 @@ namespace GamaManager
                         collections = currentCollections,
                         notifications = currentNotifications,
                         categories = currentCategories,
-                        recentChats = updatedRecentChats
+                        recentChats = updatedRecentChats,
+                        logoutDate = currentLogoutDate
                     });
                     File.WriteAllText(saveDataFilePath, savedContent);
                 }
             }
+
+            List<string> currentRecentChats = loadedContent.recentChats;
+            
+            // DateTime updatedLogoutDate = loadedContent.logoutDate;
+            // DateTime updatedLogoutDate = DateTime.Parse(loadedContent.logoutDate);
+            string updatedLogoutDate = loadedContent.logoutDate;
+
+            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+            
+            // updatedLogoutDate = DateTime.Now;
+            updatedLogoutDate = DateTime.Now.ToString("F");
+            
+            // Debugger.Log(0, "debug", Environment.NewLine + "updatedLogoutDate: " + updatedLogoutDate.ToLongTimeString() + Environment.NewLine);
+            savedContent = js.Serialize(new SavedContent
+            {
+                games = currentGames,
+                friends = currentFriends,
+                settings = currentSettings,
+                collections = currentCollections,
+                notifications = currentNotifications,
+                categories = currentCategories,
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations,
+                logoutDate = updatedLogoutDate
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
 
             List<Window> notLoginWindows = myWindows.Where(window =>
             {
@@ -16169,6 +16303,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             string gameCollectionNameLabelContent = gameCollectionNameLabel.Text;
             object rawCurrentGameCollection = gameCollectionNameLabel.DataContext;
             string currentGameCollection = ((string)(rawCurrentGameCollection));
@@ -16207,7 +16343,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetGamesList("");
@@ -16504,6 +16641,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             List<Game> results = updatedGames.Where<Game>((Game game) =>
             {
                 string gameName = game.name;
@@ -16527,7 +16666,8 @@ namespace GamaManager
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
             }
@@ -16579,6 +16719,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 14;
             GetNews();
             AddHistoryRecord();
+            newsPopupIcon.Foreground = System.Windows.Media.Brushes.Black;
         }
 
         private void ToggleNotificationsPopupHandler(object sender, MouseButtonEventArgs e)
@@ -16672,8 +16813,8 @@ namespace GamaManager
                             string userPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId;
                             try
                             {
-                                Directory.Delete(userPath, true);
                                 Logout();
+                                Directory.Delete(userPath, true);
                             }
                             catch (System.Net.WebException)
                             {
@@ -16958,6 +17099,8 @@ namespace GamaManager
                                             List<string> currentCategories = loadedContent.categories;
                                             List<string> currentRecentChats = loadedContent.recentChats;
                                             Recommendations currentRecommendations = loadedContent.recommendations;
+                                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                            string currentLogoutDate = loadedContent.logoutDate;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -16977,7 +17120,8 @@ namespace GamaManager
                                                     notifications = currentNotifications,
                                                     categories = currentCategories,
                                                     recentChats = currentRecentChats,
-                                                    recommendations = currentRecommendations
+                                                    recommendations = currentRecommendations,
+                                                    logoutDate = currentLogoutDate
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                                 GetOnlineFriends();
@@ -17043,6 +17187,8 @@ namespace GamaManager
                                             List<string> currentCategories = loadedContent.categories; 
                                             List<string> currentRecentChats = loadedContent.recentChats;
                                             Recommendations currentRecommendations = loadedContent.recommendations;
+                                            // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                            string currentLogoutDate = loadedContent.logoutDate;
                                             List<FriendSettings> cachedFriends = updatedFriends.Where<FriendSettings>((FriendSettings friend) =>
                                             {
                                                 return friend.id == friendId;
@@ -17062,7 +17208,8 @@ namespace GamaManager
                                                     notifications = currentNotifications,
                                                     categories = currentCategories,
                                                     recentChats = currentRecentChats,
-                                                    recommendations = currentRecommendations
+                                                    recommendations = currentRecommendations,
+                                                    logoutDate = currentLogoutDate
                                                 });
                                                 File.WriteAllText(saveDataFilePath, savedContent);
                                             }
@@ -19281,6 +19428,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             int selectedLangIndex = langSelector.SelectedIndex;
             ItemCollection langSelectorItems = langSelector.Items;
             object rawSelectedLang = langSelectorItems[selectedLangIndex];
@@ -19297,7 +19446,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();
@@ -19904,6 +20054,8 @@ namespace GamaManager
                 List<string> currentCategories = loadedContent.categories; 
                 List<string> currentRecentChats = loadedContent.recentChats;
                 Recommendations currentRecommendations = loadedContent.recommendations;
+                // DateTime currentLogoutDate = loadedContent.logoutDate;
+                string currentLogoutDate = loadedContent.logoutDate;
                 updatedSettings.familyView = true;
                 string familyViewPinCodeBoxContent = familyViewPinCodeBox.Password;
                 updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -19938,7 +20090,8 @@ namespace GamaManager
                     notifications = currentNotifications,
                     categories = currentCategories,
                     recentChats = currentRecentChats,
-                    recommendations = currentRecommendations
+                    recommendations = currentRecommendations,
+                    logoutDate = currentLogoutDate
                 });
                 File.WriteAllText(saveDataFilePath, savedContent);
                 GetFamilyView();
@@ -20047,6 +20200,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories; 
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             updatedSettings.familyView = false;
             string familyViewPinCodeBoxContent = "";
             updatedSettings.familyViewCode = familyViewPinCodeBoxContent;
@@ -20059,7 +20214,8 @@ namespace GamaManager
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             GetFamilyView();
@@ -20391,6 +20547,8 @@ namespace GamaManager
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             updatedNotifications.isNotificationsEnabled = ((bool)(notificationsEnabledCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListWithDiscount = ((bool)(notificationsProductFromWantListWithDiscountCheckBox.IsChecked));
             updatedNotifications.notificationsProductFromWantListUpdateAcccess = ((bool)(notificationsProductFromWantListUpdateAcccessCheckBox.IsChecked));
@@ -20400,18 +20558,57 @@ namespace GamaManager
             updatedNotifications.notificationsGroupUpdateGameReview = ((bool)(notificationsGroupUpdateGameReviewCheckBox.IsChecked));
             updatedNotifications.notificationsUpdateIcon = ((bool)(notificationsUpdateIconCheckBox.IsChecked));
             updatedNotifications.notificationsUpdateGames = ((bool)(notificationsUpdateGamesCheckBox.IsChecked));
-            string savedContent = js.Serialize(new SavedContent
+            string rawDiscountValue = "true";
+            bool notificationsStartYearlyDiscount = updatedNotifications.notificationsStartYearlyDiscount;
+            if (notificationsStartYearlyDiscount)
             {
-                games = currentGames,
-                friends = currentFriends,
-                settings = currentSettings,
-                collections = currentCollections,
-                notifications = updatedNotifications,
-                categories = currentCategories,
-                recentChats = currentRecentChats,
-                recommendations = currentRecommendations
-            });
-            File.WriteAllText(saveDataFilePath, savedContent);
+                rawDiscountValue = "true";
+            }
+            else
+            {
+                rawDiscountValue = "false";
+            }
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/discount/set/?id=" + currentUserId + @"&value=" + rawDiscountValue);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PointsStoreItemResponseInfo myobj = (PointsStoreItemResponseInfo)js.Deserialize(objText, typeof(PointsStoreItemResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+
+                            string savedContent = js.Serialize(new SavedContent
+                            {
+                                games = currentGames,
+                                friends = currentFriends,
+                                settings = currentSettings,
+                                collections = currentCollections,
+                                notifications = updatedNotifications,
+                                categories = currentCategories,
+                                recentChats = currentRecentChats,
+                                recommendations = currentRecommendations,
+                                logoutDate = currentLogoutDate
+                            });
+                            File.WriteAllText(saveDataFilePath, savedContent);
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
         }
 
         private void OpenAddPaymentVariantHandler (object sender, MouseButtonEventArgs e)
@@ -20758,6 +20955,8 @@ namespace GamaManager
                                                         List<string> currentCategories = loadedContent.categories;
                                                         List<string> currentRecentChats = loadedContent.recentChats;
                                                         Recommendations currentRecommendations = loadedContent.recommendations;
+                                                        // DateTime currentLogoutDate = loadedContent.logoutDate;
+                                                        string currentLogoutDate = loadedContent.logoutDate;
                                                         updatedFriends.Add(new FriendSettings()
                                                         {
                                                             id = friendId,
@@ -20779,7 +20978,8 @@ namespace GamaManager
                                                             notifications = currentNotifications,
                                                             categories = currentCategories,
                                                             recentChats = currentRecentChats,
-                                                            recommendations = currentRecommendations
+                                                            recommendations = currentRecommendations,
+                                                            logoutDate = currentLogoutDate
                                                         });
                                                         File.WriteAllText(saveDataFilePath, savedContent);
                                                         string eventData = currentUserId + "|" + friendId;
@@ -22064,6 +22264,10 @@ namespace GamaManager
         public void HideNotificationsPopupHightLight ()
         {
             notificationsPopupIcon.Foreground = System.Windows.Media.Brushes.Black;
+            countNewRequestsLabel.Text = @"Новых комментариев: 0";
+            countNewRequestsLabel.Text = @"Новых предметов: 0";
+            countNewRequestsLabel.Text = @"Новых приглашений: 0";
+            countNewRequestsLabel.Text = @"Новых подарков: 0";
         }
 
         private void ToggleNewsAsideHandler (object sender, MouseButtonEventArgs e)
@@ -22216,6 +22420,8 @@ namespace GamaManager
         public List<String> categories;
         public List<String> recentChats;
         public Recommendations recommendations;
+        // public DateTime logoutDate;
+        public string logoutDate;
     }
 
     class Recommendations {

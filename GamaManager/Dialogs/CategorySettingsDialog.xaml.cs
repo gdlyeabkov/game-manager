@@ -68,6 +68,8 @@ namespace GamaManager.Dialogs
             List<string> updatedCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.categories;
             Recommendations currentRecommendations = loadedContent.recommendations;
+            // DateTime currentLogoutDate = loadedContent.logoutDate;
+            string currentLogoutDate = loadedContent.logoutDate;
             int countCategories = updatedCategories.Count;
             int countFriends = updatedFriends.Count;
             for (int i = 0; i < countCategories; i++)
@@ -145,7 +147,8 @@ namespace GamaManager.Dialogs
                 notifications = currentNotifications,
                 categories = updatedCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentRecommendations
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             Cancel();

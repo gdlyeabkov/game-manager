@@ -72,7 +72,7 @@
                 Header="{x:Static p:Resources.viewMenuItemLabelContent}"    
             >
                 <MenuItem
-                    Header="Скрытые игры"
+                    Header="{x:Static p:Resources.viewMenuItemHiddenGamesLabelContent}"
                     Click="OpenHiddenGamesHandler"
                 />
                 <MenuItem
@@ -80,7 +80,7 @@
                     Click="OpenPlayerHandler"
                 />
                 <MenuItem
-                    Header="Скриншоты"
+                    Header="{x:Static p:Resources.viewMenuItemScreenShotsLabelContent}"
                     Click="ShowScreenShotUploadersDialogHandler"
                 />
                 <MenuItem
@@ -154,20 +154,20 @@
                 Header="{x:Static p:Resources.helpMenuItemLabelContent}"    
             >
                 <MenuItem
-                    Header="Служба поддержки подписчика"
+                    Header="{x:Static p:Resources.helpMenuItemSubSupportServiceLabelContent}"
                     Click="OpenSupportServiceHandler"
                 />
                 <Separator />
                 <MenuItem
-                    Header="Политика конфиденциальности"
+                    Header="{x:Static p:Resources.helpMenuItemPrivacyInfoLabelContent}"
                     Click="OpenPrivacyInfoHandler"
                 />
                 <MenuItem
-                    Header="Правовая информация"
+                    Header="{x:Static p:Resources.helpMenuItemLawInfoLabelContent}"
                     Click="OpenLawInfoHandler"
                 />
                 <MenuItem
-                    Header="Соглашение подписчика"
+                    Header="{x:Static p:Resources.helpMenuItemSubAgreementLabelContent}"
                     Click="OpenSubAggermentHandler"
                 />
                 <Separator />
@@ -176,7 +176,7 @@
                     Click="OpenSystemInfoDialogHandler"
                 />
                 <MenuItem
-                    Header="О Office ware game manager"
+                    Header="{x:Static p:Resources.helpMenuItemAboutOfficeWareGameManagerLabelContent}"
                     Click="OpenAboutManagerDialogHandler"
                 />
             </MenuItem>
@@ -228,7 +228,7 @@
                 <TextBlock
                     Margin="5 0"
                     VerticalAlignment="Center"
-                    Text="Добавить игру"
+                    Text="{x:Static p:Resources.addGameBtnContent}"
                 />
             </StackPanel>
             <StackPanel
@@ -240,12 +240,12 @@
                     TextAlignment="Center"
                     Margin="10 0"
                     FontSize="14"
-                    Text="Загрузки"
+                    Text="{x:Static p:Resources.downloadsLabelContent}"
                 />
                 <TextBlock
                     TextAlignment="Center"
                     Margin="10 0"
-                    Text="Управление"
+                    Text="{x:Static p:Resources.controlLabelContent}"
                 />
             </StackPanel>
             <StackPanel
@@ -307,16 +307,16 @@
                         Content="{x:Static p:Resources.storeMenuLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Популярное"    
+                        Content="{x:Static p:Resources.storeMenuItemPopularLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Рекомендации"    
+                        Content="{x:Static p:Resources.storeMenuItemRecomendationsLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Список желаемого"    
+                        Content="{x:Static p:Resources.storeMenuItemWishesListLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Магазин очков"    
+                        Content="{x:Static p:Resources.storeMenuItemPointsStoreLabelContent}"    
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.storeMenuItemNewsLabelContent}"
@@ -363,19 +363,19 @@
                         Content="{x:Static p:Resources.communityMenuLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Главная"    
+                        Content="{x:Static p:Resources.communityMenuItemMainLabelContent}"
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.communityMenuItemDiscussionsLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Мастерская"    
+                        Content="{x:Static p:Resources.communityMenuItemWorkShopLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Торговая площадка"    
+                        Content="{x:Static p:Resources.communityMenuItemTradeLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Трансляции"    
+                        Content="{x:Static p:Resources.communityMenuItemStreamsLabelContent}"
                     />
                 </ComboBox>
                 <ComboBox
@@ -392,7 +392,7 @@
                         Content="Имя пользователя"    
                     />
                     <ComboBoxItem
-                        Content="Активность"    
+                        Content="{x:Static p:Resources.profileMenuItemActivityLabelContent}"
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.profileMenuItemProfileLabelContent}"
@@ -410,7 +410,7 @@
                         Content="{x:Static p:Resources.profileMenuItemIconsLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Инвернтарь"    
+                        Content="{x:Static p:Resources.profileMenuItemEquipmentLabelContent}"    
                     />
                 </ComboBox>
                 <materialDesign:PackIcon
@@ -494,6 +494,7 @@
                     </Popup.Child>
                 </Popup>
                 <materialDesign:PackIcon
+                    x:Name="newsPopupIcon"
                     Margin="10 0"
                     Kind="Megaphone"
                     VerticalAlignment="Center"
@@ -589,19 +590,19 @@
                         Content="Имя пользователя"    
                     />
                     <ComboBoxItem
-                        Content="Мой профиль"    
+                        Content="{x:Static p:Resources.myProfileLabelContent}"
                     />
                     <ComboBoxItem
-                        Content="Об аккаунте"    
+                        Content="{x:Static p:Resources.accountInfoLabelContent}"        
                     />
                     <ComboBoxItem
                         Content="{x:Static p:Resources.logoutLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Настройки магазина"    
+                        Content="{x:Static p:Resources.storeSettingsLabelContent}"    
                     />
                     <ComboBoxItem
-                        Content="Мой кошелек"    
+                        Content="{x:Static p:Resources.walletLabelContent}"    
                     />
                 </ComboBox>
                 <materialDesign:PackIcon

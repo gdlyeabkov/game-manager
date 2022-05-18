@@ -12766,6 +12766,449 @@
                                     </StackPanel>
                                 </StackPanel>
                             </DockPanel>
+                            <DockPanel
+                                Height="30"
+                                Background="LightGray"
+                            >
+                                <StackPanel
+                                    Height="30"
+                                    Background="LightGray"
+                                    Orientation="Horizontal"    
+                                >
+                                    <Button
+                                        BorderThickness="0"
+                                        Width="175"
+                                        Height="30"
+                                        Margin="15 0"
+                                        Content="Активные слоты"    
+                                    />
+                                    <Button
+                                        BorderThickness="0"
+                                        Width="175"
+                                        Height="30"
+                                        Margin="15 0"
+                                        Content="История сделок"    
+                                    />
+                                </StackPanel>
+                                <Button
+                                    Margin="15 0"
+                                    Content="Продать предмет"
+                                    Width="125"
+                                    Height="25"
+                                    HorizontalAlignment="Right"
+                                />
+                            </DockPanel>
+                            <TabControl>
+                                <TabItem>
+                                    <StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                            Margin="0 15"
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="18"
+                                                Text="Мои лоты на продажу"
+                                                Margin="15 0 5 0"
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Text="(0)"    
+                                                Margin="5 0"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="SlateGray"    
+                                        >
+                                            <TextBlock
+                                                Text="У вас нет предметов, выставленных на продажу через Торговую площадку. Вы можете продать предметы из инвентаря или нажать&#13;расположенную выше кнопку «Продать предмет»."    
+                                                Margin="15"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                            Margin="0 15"
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="18"
+                                                Text="Мои запросы на покупку"
+                                                Margin="15 0 5 0"
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Text="(0)"    
+                                                Margin="5 0"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="SlateGray"    
+                                        >
+                                            <TextBlock
+                                                Text="Нет запросов на покупку"    
+                                                Margin="15"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem>
+                                    <StackPanel>
+                                        <StackPanel
+                                            Margin="15"
+                                            Background="SlateGray"    
+                                        >
+                                            <TextBlock
+                                                Text="Операций на Торговой площадке сообщества не обнаружено."    
+                                                Margin="15"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                            <DockPanel>
+                                <TabControl
+                                    MinHeight="500"
+                                    Width="750"
+                                    Margin="15"    
+                                >
+                                    <TabItem
+                                        Header="Популярные"    
+                                    >
+                                        <StackPanel>
+                                            <DockPanel
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Width="500"
+                                                    Text="НАЗВАНИЕ"
+                                                    Margin="10 5"
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="КОЛ-ВО"
+                                                    Margin="10 5"    
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="Цена"
+                                                    Margin="10 5"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Image
+                                                        VerticalAlignment="Center"
+                                                        Margin="15"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Название товара"
+                                                            Margin="5"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Товар из игры"
+                                                            Margin="5"
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Right"
+                                                >
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Width="100"
+                                                        Text="0"
+                                                        Margin="5"
+                                                    />
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Width="100"
+                                                        TextAlignment="Center"
+                                                        Text="Цена&#13;товара"
+                                                        Margin="5"
+                                                    />
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <Button
+                                                Content="Все"
+                                                Width="125"
+                                                Height="25"
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Новые"    
+                                    >
+                                        <StackPanel>
+                                            <DockPanel
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Width="500"
+                                                    Text="НАЗВАНИЕ"
+                                                    Margin="10 5"
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="Продавец"
+                                                    Margin="10 5"    
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="Цена"
+                                                    Margin="10 5"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Image
+                                                        VerticalAlignment="Center"
+                                                        Margin="15"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Название товара"
+                                                            Margin="5"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Товар из игры"
+                                                            Margin="5"
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Right"
+                                                >
+                                                    <Image
+                                                        VerticalAlignment="Center"
+                                                        Margin="15"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Width="100"
+                                                        TextAlignment="Center"
+                                                        Text="Цена&#13;товара"
+                                                        Margin="5"
+                                                    />
+                                                    <Button
+                                                        Margin="15 0"
+                                                        Content="Купить"
+                                                        Width="125"
+                                                        Height="25"
+                                                    />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Header="Недавно проданные"    
+                                    >
+                                        <StackPanel>
+                                            <DockPanel
+                                                Background="LightGray"    
+                                            >
+                                                <TextBlock
+                                                    Width="500"
+                                                    Text="НАЗВАНИЕ"
+                                                    Margin="10 5"
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="Продавец"
+                                                    Margin="10 5"    
+                                                />
+                                                <TextBlock
+                                                    Width="100"
+                                                    Text="Цена"
+                                                    Margin="10 5"    
+                                                />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <Image
+                                                        VerticalAlignment="Center"
+                                                        Margin="15"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <StackPanel
+                                                        VerticalAlignment="Center"
+                                                        Margin="15 0"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Название товара"
+                                                            Margin="5"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Товар из игры"
+                                                            Margin="5"
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                    HorizontalAlignment="Right"
+                                                >
+                                                    <Image
+                                                        VerticalAlignment="Center"
+                                                        Margin="15"
+                                                        Width="50"    
+                                                        Height="50"    
+                                                        ImageFailed="SetDefautAvatarHandler"
+                                                    >
+                                                        <Image.Source>
+                                                            <BitmapImage
+                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                            />
+                                                        </Image.Source>
+                                                    </Image>
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Width="100"
+                                                        TextAlignment="Center"
+                                                        Text="Цена&#13;товара"
+                                                        Margin="5"
+                                                    />
+                                                    <Button
+                                                        Margin="15 0"
+                                                        Content="Купить"
+                                                        Width="125"
+                                                        Height="25"
+                                                    />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
+                                <StackPanel>
+                                    <StackPanel
+                                        Height="150"
+                                        Width="350"
+                                        Background="LightGray"
+                                        Margin="15"    
+                                        HorizontalAlignment="Right"    
+                                    >
+                                        <TextBlock
+                                            Margin="15"    
+                                            Text="Частые вопросы о Торговой площадке"    
+                                        />
+                                        <TextBlock
+                                            Margin="15"    
+                                            Text="Вступайте в группу Торговой площадки&#10;для обсуждений и официальных&#10;объявлений"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        MinHeight="250"
+                                        Width="350"
+                                        Background="LightGray"
+                                        Margin="15"    
+                                        HorizontalAlignment="Right"    
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Прочтите требования к безопасности для&#13;использования Торговой площадки"    
+                                        />
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Поиск предметов"    
+                                        />
+                                        <Button
+                                            Margin="15 5"
+                                            HorizontalAlignment="Left"
+                                            Width="250"
+                                            Height="25"
+                                        >
+                                            <Button.Content>
+                                                <DockPanel>
+                                                    <TextBlock
+                                                        Margin="5 0"
+                                                        Text="Дополнительные настройки поиска"    
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Margin="5 0"
+                                                        Kind="ChevronDoubleDown"    
+                                                        HorizontalAlignment="Right"
+                                                    />
+                                                </DockPanel>
+                                            </Button.Content>
+                                        </Button>
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Фильтр по игре"    
+                                        />
+                                        <Button
+                                            Margin="15 5"
+                                            Width="75"
+                                            Height="25"
+                                        >
+                                            <Button.Content>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        Margin="5 0"
+                                                        Text="Ещё"    
+                                                    />
+                                                    <materialDesign:PackIcon
+                                                        Margin="5 0"
+                                                        Kind="ChevronDoubleDown"    
+                                                    />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -15211,9 +15654,11 @@ E. Что произойдет, если положение Пункта 11 бу
                                                         Orientation="Horizontal"    
                                                     >
                                                         <TextBox
+                                                            x:Name="friendsForPresentBox"
                                                             Width="250"
                                                             Height="25"
                                                             Margin="15 5 5 5"
+                                                            TextChanged="FilterFriendsForPresentHandler"
                                                         >
                                                             <TextBox.Resources>
                                                                 <VisualBrush
@@ -15257,6 +15702,7 @@ E. Что произойдет, если положение Пункта 11 бу
                                                             Width="75"
                                                             Height="25"
                                                             Content="Очистить"    
+                                                            Click="ClearFriendsForPresentBoxHandler"
                                                         />
                                                     </StackPanel>
                                                     <TextBlock
@@ -15264,8 +15710,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                                         Text="Ваши друзья"    
                                                     />
                                                     <StackPanel
+                                                        x:Name="friendsForPresent"
                                                         Margin="25 15"
-                                                        Background="DarkGray"    
+                                                        Background="DarkGray"
                                                     />
                                                 </StackPanel>
                                                 <Button

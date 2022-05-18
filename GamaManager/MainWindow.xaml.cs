@@ -1637,16 +1637,21 @@ namespace GamaManager
                 GetAllFriendRecommendations();
                 GetLastFriendRecommendations();
                 GetPopularGamesForFriends();
-                GetGamesByTags();/**/
+                GetGamesByTags();
+                GetFriendsForPresent(); /**/
             }
         }
 
-        public void GetRequestsInfo ()
+        public void GetFriendsForPresent ()
         {
-            int requestsCursor = 0;
+            string friendsForPresentBoxContent = friendsForPresentBox.Text;
+            int friendsForPresentBoxContentLength = friendsForPresentBoxContent.Length;
+            string insensitiveCaseFriendsForPresentBoxContent = friendsForPresentBoxContent.ToLower();
+            bool isFilterDisabled = friendsForPresentBoxContentLength <= 0;
+            friendsForPresent.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1655,60 +1660,70 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-                        FriendRequestsResponseInfo myobj = (FriendRequestsResponseInfo)js.Deserialize(objText, typeof(FriendRequestsResponseInfo));
+                        FriendsResponseInfo myobj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            List<FriendRequest> requestsForMe = new List<FriendRequest>();
-                            List<FriendRequest> requests = myobj.requests;
-                            foreach (FriendRequest request in requests)
+                            List<Friend> friendRecords = myobj.friends.Where<Friend>((Friend joint) =>
                             {
-                                string recepientId = request.friend;
-                                bool isRequestForMe = currentUserId == recepientId;
-                                if (isRequestForMe)
-                                {
-                                    requestsForMe.Add(request);
-                                }
+                                string userId = joint.user;
+                                bool isMyFriend = userId == currentUserId;
+                                return isMyFriend;
+                            }).ToList<Friend>();
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendRecord in friendRecords)
+                            {
+                                string localFriendId = friendRecord.friend;
+                                friendsIds.Add(localFriendId);
                             }
-                            friendRequestsForMe.Children.Clear();
-                            int countRequestsForMe = requestsForMe.Count;
-                            bool isHaveRequests = countRequestsForMe >= 1;
-                            if (isHaveRequests)
+                            int friendsCursor = -1;
+                            foreach (Friend myFriend in friendRecords)
                             {
-                                foreach (FriendRequest requestForMe in requestsForMe)
+                                string friendId = myFriend.friend;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                                 {
-                                    string requestId = requestForMe._id;
-                                    string senderId = requestForMe.user;
-                                    string friendId = requestForMe.friend;
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
-                                    innerWebRequest.Method = "GET";
-                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
-                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                     {
-                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
                                         {
-                                            js = new JavaScriptSerializer();
-                                            objText = innerReader.ReadToEnd();
-                                            UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-                                            status = myInnerObj.status;
-                                            isOkStatus = status == "OK";
-                                            if (isOkStatus)
+                                            User friend = myInnerObj.user;
+                                            string myFriendName = friend.name;
+                                            string insensitiveCaseFriendName = myFriendName.ToLower();
+                                            bool isKeywordsMatch = insensitiveCaseFriendName.Contains(insensitiveCaseFriendsForPresentBoxContent);
+                                            bool isFilterMatch = isFilterDisabled || isKeywordsMatch;
+                                            if (isFilterMatch)
                                             {
-                                                User user = myInnerObj.user;
-                                                string senderLogin = user.login;
-                                                string senderName = user.name;
-                                                string insensitiveCaseSenderName = senderName.ToLower();
-                                                string friendRequestsForMeBoxContent = friendRequestsForMeBox.Text;
-                                                string insensitiveCaseKeywords = friendRequestsForMeBoxContent.ToLower();
-                                                bool isFriendFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
-                                                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
-                                                bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
-                                                bool isRequestMatch = isFriendFound || isFilterDisabled;
-                                                if (isRequestMatch)
-                                                {
-                                                    requestsCursor++;
-                                                }
+                                                friendsCursor++;
+                                                StackPanel friendForPresent = new StackPanel();
+                                                friendForPresent.Orientation = Orientation.Horizontal;
+                                                RadioButton friendForPresentRadioBtn = new RadioButton();
+                                                friendForPresentRadioBtn.VerticalAlignment = VerticalAlignment.Center;
+                                                friendForPresentRadioBtn.Margin = new Thickness(15, 0, 15, 0);
+                                                bool isDefaultCheck = friendsCursor == 0;
+                                                friendForPresentRadioBtn.IsChecked = isDefaultCheck;
+                                                friendForPresentRadioBtn.Click += FriendForPresentCheckedHandler;
+                                                friendForPresent.Children.Add(friendForPresentRadioBtn);
+                                                Image friendForPresentAvatar = new Image();
+                                                friendForPresentAvatar.Width = 35;
+                                                friendForPresentAvatar.Height = 35;
+                                                friendForPresentAvatar.Margin = new Thickness(5);
+                                                friendForPresentAvatar.BeginInit();
+                                                friendForPresentAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendId));
+                                                friendForPresentAvatar.EndInit();
+                                                friendForPresent.Children.Add(friendForPresentAvatar);
+                                                TextBlock friendForPresentNameLabel = new TextBlock();
+                                                friendForPresentNameLabel.Text = myFriendName;
+                                                friendForPresent.Children.Add(friendForPresentNameLabel);
+                                                friendsForPresent.Children.Add(friendForPresent);
                                             }
                                         }
                                     }
@@ -1718,88 +1733,33 @@ namespace GamaManager
                     }
                 }
             }
-            catch (System.Net.WebException)
+            catch (System.Net.WebException exception)
             {
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-            try
+        }
+
+        public void FriendForPresentCheckedHandler (object sender, RoutedEventArgs e)
+        {
+            RadioButton radioBtn = ((RadioButton)(sender));
+            FriendForPresentChecked(radioBtn);
+        }
+
+        public void FriendForPresentChecked (RadioButton radioBtn)
+        {
+            object rawIsChecked = radioBtn.IsChecked;
+            bool isChecked = ((bool)(rawIsChecked));
+            if (isChecked)
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                foreach (StackPanel friendsForPresent in friendsForPresent.Children)
                 {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        GroupRequestsResponseInfo myobj = (GroupRequestsResponseInfo)js.Deserialize(objText, typeof(GroupRequestsResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            List<GroupRequest> requestsForMe = new List<GroupRequest>();
-                            List<GroupRequest> requests = myobj.requests;
-                            foreach (GroupRequest request in requests)
-                            {
-                                string recepientId = request.user;
-                                bool isRequestForMe = currentUserId == recepientId;
-                                if (isRequestForMe)
-                                {
-                                    requestsForMe.Add(request);
-                                }
-                            }
-                            myGroupRequests.Children.Clear();
-                            int countRequestsForMe = requestsForMe.Count;
-                            bool isHaveRequests = countRequestsForMe >= 1;
-                            if (isHaveRequests)
-                            {
-                                foreach (GroupRequest requestForMe in requestsForMe)
-                                {
-                                    string requestId = requestForMe._id;
-                                    string groupId = requestForMe.group;
-                                    string userId = requestForMe.user;
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
-                                    innerWebRequest.Method = "GET";
-                                    innerWebRequest.UserAgent = ".NET Framework Test Client";
-                                    using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
-                                    {
-                                        using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
-                                        {
-                                            js = new JavaScriptSerializer();
-                                            objText = innerReader.ReadToEnd();
-                                            GroupResponseInfo myInnerObj = (GroupResponseInfo)js.Deserialize(objText, typeof(GroupResponseInfo));
-                                            status = myInnerObj.status;
-                                            isOkStatus = status == "OK";
-                                            if (isOkStatus)
-                                            {
-                                                Group group = myInnerObj.group;
-                                                string groupName = group.name;
-                                                string insensitiveCaseSenderName = groupName.ToLower();
-                                                string myGroupRequestsBoxContent = myGroupRequestsBox.Text;
-                                                string insensitiveCaseKeywords = myGroupRequestsBoxContent.ToLower();
-                                                bool isGroupFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
-                                                int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
-                                                bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
-                                                bool isRequestMatch = isGroupFound || isFilterDisabled;
-                                                if (isRequestMatch)
-                                                {
-                                                    requestsCursor++;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    UIElementCollection friendsForPresentChildren = friendsForPresent.Children;
+                    UIElement rawSomeRadioButton = friendsForPresentChildren[0];
+                    RadioButton someRadioButton = ((RadioButton)(rawSomeRadioButton));
+                    someRadioButton.IsChecked = false;
                 }
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
+                radioBtn.IsChecked = true;
             }
         }
 
@@ -22221,6 +22181,27 @@ namespace GamaManager
             communityControl.SelectedIndex = 5;
             annotation.Text = "";
             SelectCommunityGameAnnotation(id);
+        }
+
+        private void ClearFriendsForPresentBoxHandler (object sender, RoutedEventArgs e)
+        {
+            ClearFriendsForPresentBox();
+        }
+
+        public void ClearFriendsForPresentBox ()
+        {
+            friendsForPresentBox.Text = "";
+            GetFriendsForPresent();
+        }
+
+        private void FilterFriendsForPresentHandler (object sender, TextChangedEventArgs e)
+        {
+            FilterFriendsForPresent();
+        }
+
+        public void FilterFriendsForPresent ()
+        {
+            GetFriendsForPresent();
         }
 
     }

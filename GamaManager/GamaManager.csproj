@@ -398,6 +398,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FriendActivityAsideControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -519,6 +523,9 @@
     </Compile>
     <Compile Include="Dialogs\UpdateNickDialog.xaml.cs">
       <DependentUpon>UpdateNickDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FriendActivityAsideControl.xaml.cs">
+      <DependentUpon>FriendActivityAsideControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameIntegrationManager.cs" />
     <Compile Include="GamePage.xaml.cs">

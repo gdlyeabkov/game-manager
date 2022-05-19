@@ -48,58 +48,82 @@ namespace GamaManager.Dialogs
 
         public void Ok ()
         {
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-            List<Game> currentGames = loadedContent.games;
-            List<FriendSettings> updatedFriends = loadedContent.friends;
-            Settings currentSettings = loadedContent.settings;
-            List<string> currentCollections = loadedContent.collections;
-            Notifications currentNotifications = loadedContent.notifications;
-            List<string> currentCategories = loadedContent.categories;
-            List<string> currentRecentChats = loadedContent.recentChats;
-            Recommendations updatedRecommendations = loadedContent.recommendations;
-            // DateTime currentLogoutDate = loadedContent.logoutDate;
-            string currentLogoutDate = loadedContent.logoutDate;
-            object rawIsChecked = earlyAccessCheckBox.IsChecked;
-            bool isChecked = ((bool)(rawIsChecked));
-            updatedRecommendations.isEarlyAccess = isChecked;
-            rawIsChecked = notReleasesCheckBox.IsChecked;
-            isChecked = ((bool)(rawIsChecked));
-            updatedRecommendations.isNotReleases = isChecked;
-            rawIsChecked = softWareCheckBox.IsChecked;
-            isChecked = ((bool)(rawIsChecked));
-            updatedRecommendations.isSoftWare = isChecked;
-            rawIsChecked = soundTracksCheckBox.IsChecked;
-            isChecked = ((bool)(rawIsChecked));
-            updatedRecommendations.isSoundTracks = isChecked;
-            rawIsChecked = videoCheckBox.IsChecked;
-            isChecked = ((bool)(rawIsChecked));
-            updatedRecommendations.isVideo = isChecked;
-            updatedRecommendations.exceptTags.Clear();
-            foreach (DockPanel tag in tags.Children)
+            try
             {
-                object tagData = tag.DataContext;
-                string title = ((string)(tagData));
-                updatedRecommendations.exceptTags.Add(title);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=addGameToWishList&data=addGameToWishList");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GameTagsResponseInfo myObj = (GameTagsResponseInfo)js.Deserialize(objText, typeof(GameTagsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                            js = new JavaScriptSerializer();
+                            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                            List<Game> currentGames = loadedContent.games;
+                            List<FriendSettings> updatedFriends = loadedContent.friends;
+                            Settings currentSettings = loadedContent.settings;
+                            List<string> currentCollections = loadedContent.collections;
+                            Notifications currentNotifications = loadedContent.notifications;
+                            List<string> currentCategories = loadedContent.categories;
+                            List<string> currentRecentChats = loadedContent.recentChats;
+                            Recommendations updatedRecommendations = loadedContent.recommendations;
+                            string currentLogoutDate = loadedContent.logoutDate;
+                            object rawIsChecked = earlyAccessCheckBox.IsChecked;
+                            bool isChecked = ((bool)(rawIsChecked));
+                            updatedRecommendations.isEarlyAccess = isChecked;
+                            rawIsChecked = notReleasesCheckBox.IsChecked;
+                            isChecked = ((bool)(rawIsChecked));
+                            updatedRecommendations.isNotReleases = isChecked;
+                            rawIsChecked = softWareCheckBox.IsChecked;
+                            isChecked = ((bool)(rawIsChecked));
+                            updatedRecommendations.isSoftWare = isChecked;
+                            rawIsChecked = soundTracksCheckBox.IsChecked;
+                            isChecked = ((bool)(rawIsChecked));
+                            updatedRecommendations.isSoundTracks = isChecked;
+                            rawIsChecked = videoCheckBox.IsChecked;
+                            isChecked = ((bool)(rawIsChecked));
+                            updatedRecommendations.isVideo = isChecked;
+                            updatedRecommendations.exceptTags.Clear();
+                            foreach (DockPanel tag in tags.Children)
+                            {
+                                object tagData = tag.DataContext;
+                                string title = ((string)(tagData));
+                                updatedRecommendations.exceptTags.Add(title);
+                            }
+                            string savedContent = js.Serialize(new SavedContent
+                            {
+                                games = currentGames,
+                                friends = updatedFriends,
+                                settings = currentSettings,
+                                collections = currentCollections,
+                                notifications = currentNotifications,
+                                categories = currentCategories,
+                                recentChats = currentRecentChats,
+                                recommendations = updatedRecommendations,
+                                logoutDate = currentLogoutDate
+                            });
+                            File.WriteAllText(saveDataFilePath, savedContent);
+                            Cancel();
+                        }
+                    }
+                }
             }
-            string savedContent = js.Serialize(new SavedContent
+            catch (System.Net.WebException exception)
             {
-                games = currentGames,
-                friends = updatedFriends,
-                settings = currentSettings,
-                collections = currentCollections,
-                notifications = currentNotifications,
-                categories = currentCategories,
-                recentChats = currentRecentChats,
-                recommendations = updatedRecommendations,
-                logoutDate = currentLogoutDate
-            });
-            File.WriteAllText(saveDataFilePath, savedContent);
-            Cancel();
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void CancelHandler(object sender, RoutedEventArgs e)

@@ -1740,10 +1740,14 @@ namespace GamaManager.Dialogs
             OpenFriendProfile(friend);
         }
 
-        async public void OpenFriendProfile(string friendId)
+        async public void OpenFriendProfile (string friendId)
         {
-            mainControl.DataContext = friendId;
-            mainControl.SelectedIndex = 1;
+            // mainControl.DataContext = friendId;
+            // mainControl.SelectedIndex = 1;
+
+            mainWindow.mainControl.DataContext = friendId;
+            mainWindow.ReturnToProfile();
+
             this.Close();
         }
 
@@ -2767,7 +2771,7 @@ namespace GamaManager.Dialogs
             GetTalks();
         }
 
-        public void OpenUserProfileHandler(object sender, RoutedEventArgs e)
+        public void OpenUserProfileHandler (object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = ((MenuItem)(sender));
             object menuItemData = menuItem.DataContext;
@@ -2775,7 +2779,7 @@ namespace GamaManager.Dialogs
             OpenUserProfile(id);
         }
 
-        public void OpenUserProfile(string id)
+        public void OpenUserProfile (string id)
         {
             mainWindow.mainControl.DataContext = id;
             mainWindow.ReturnToProfile();

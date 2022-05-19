@@ -875,3 +875,5 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\SetWishListDialog.
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\HeaderControl.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\HeaderControl.baml
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\MouseKeyboardActivityMonitor.dll
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\FriendActivityAsideControl.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\FriendActivityAsideControl.baml

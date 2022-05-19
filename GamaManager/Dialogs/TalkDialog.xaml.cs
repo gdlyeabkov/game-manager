@@ -2898,15 +2898,16 @@ namespace GamaManager.Dialogs
 
         public void ToggleAsideHandler(object sender, RoutedEventArgs e)
         {
-            ToogleAside();
+            PackIcon icon = ((PackIcon)(sender));
+            ToogleAside(icon);
         }
 
-        public void ToogleAside()
+        public void ToogleAside (PackIcon icon)
         {
             Visibility visible = Visibility.Visible;
             Visibility invisible = Visibility.Collapsed;
             Visibility talkAsideVisibility = talkAside.Visibility;
-            bool isVisible = talkAsideVisibility == visible;
+            /*bool isVisible = talkAsideVisibility == visible;
             if (isVisible)
             {
                 talkAside.Visibility = invisible;
@@ -2914,7 +2915,25 @@ namespace GamaManager.Dialogs
             else
             {
                 talkAside.Visibility = visible;
+            }*/
+
+            Visibility talkAsideBodyVisibility = talkAsideBody.Visibility;
+            bool isVisible = talkAsideBodyVisibility == visible;
+            if (isVisible)
+            {
+                usersBox.Visibility = invisible;
+                talkAsideBody.Visibility = invisible;
+                talkAside.Width = 50;
+                icon.Kind = PackIconKind.ChevronDoubleRight;
             }
+            else
+            {
+                usersBox.Visibility = visible;
+                talkAsideBody.Visibility = visible;
+                talkAside.Width = 250;
+                icon.Kind = PackIconKind.ChevronDoubleLeft;
+            }
+
         }
 
         public void HideMsgPopupHandler(object sender, RoutedEventArgs e)

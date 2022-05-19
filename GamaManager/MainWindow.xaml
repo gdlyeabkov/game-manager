@@ -637,14 +637,104 @@
                         Background="Green"
                     >
                         <StackPanel
-                            DockPanel.Dock="Top"    
-                            Height="30"
+                            DockPanel.Dock="Top"
                         >
+                            <StackPanel
+                                Height="20"
+                                Orientation="Horizontal"    
+                                Margin="0 5"
+                            >
+                                <StackPanel
+                                    Width="250"
+                                    Margin="15 0"
+                                >
+                                    <TextBlock
+                                        Text="Библиотека"    
+                                        FontSize="18"
+                                    />
+                                </StackPanel>
+                                <materialDesign:PackIcon
+                                    Kind="Apps"
+                                    MouseLeftButtonUp="OpenCollectionsHandler"
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                Margin="5"
+                                Height="30"
+                                Orientation="Horizontal"    
+                            >
+                                <ComboBox
+                                    Margin="15 5"
+                                    Width="175"
+                                    Height="25"
+                                    SelectedIndex="0"    
+                                >
+                                    <ComboBoxItem
+                                        Content="Игры"    
+                                    />
+                                    <ComboBoxItem
+                                        Content="Инструменты"    
+                                    />
+                                    <Separator />
+                                    <ComboBoxItem
+                                        Content="Группировать по коллекциям"    
+                                    />
+                                </ComboBox>
+                                <materialDesign:PackIcon
+                                    Kind="Recent"    
+                                    Margin="15 0"
+                                    VerticalAlignment="Center"
+                                />
+                                <materialDesign:PackIcon
+                                    Kind="PlayCircleOutline"    
+                                    Margin="15 0"
+                                    VerticalAlignment="Center"
+                                />
+                            </StackPanel>
                             <TextBox
                                 x:Name="keywordsLabel"
                                 Margin="5"
+                                Height="25"
                                 TextChanged="FilterGamesHandler"
-                            />
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                        x:Key="hinttext"
+                                        AlignmentX="Left"
+                                        Stretch="None"
+                                        TileMode="None"
+                                    >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Height="35"
+                                                    Width="750"
+                                                    Text="Поиск по названию"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                         </StackPanel>
                         <ScrollViewer>
                             <StackPanel
@@ -2118,7 +2208,9 @@
                                     />
                                 </ComboBox>
                             </DockPanel>
-                            <TabControl>
+                            <TabControl
+                                x:Name="contentControl"    
+                            >
                                 <TabItem
                                     Header="Скриншоты"    
                                 >
@@ -3849,33 +3941,411 @@
                                     DockPanel.Dock="Right"    
                                 >
                                     <StackPanel
-                                        Background="Black"
-                                        Height="100"
+                                        Orientation="Horizontal"
                                         Margin="25"
-                                    />
+                                    >
+                                        <TextBox
+                                            Margin="5 0"
+                                            Width="150"
+                                            Height="25"
+                                            Background="Black"
+                                            Foreground="Gray"
+                                            KeyUp="DetectFriendSearchHandler"
+                                        >
+                                            <TextBox.Resources>
+                                                <VisualBrush
+                                                    x:Key="hinttext"
+                                                    AlignmentX="Left"
+                                                    Stretch="None"
+                                                    TileMode="None"
+                                                >
+                                                    <VisualBrush.Visual>
+                                                        <DockPanel>
+                                                            <TextBlock
+                                                                Height="25"
+                                                                Width="150"
+                                                                Text="Найти друзей"
+                                                                Foreground="Gray"
+                                                                Background="White"
+                                                            />
+                                                        </DockPanel>
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </TextBox.Resources>
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="FontSize" Value="12" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <Button
+                                            Width="25"
+                                            Height="25"
+                                            Margin="5 0"
+                                        >
+                                            <Button.Content>
+                                                <materialDesign:PackIcon
+                                                    Kind="Search"    
+                                                />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Background="Black"
+                                        Margin="25"
+                                    >
+                                        <materialDesign:PackIcon
+                                            Margin="15"
+                                            Foreground="Gray"
+                                            Kind="User"
+                                        />
+                                        <StackPanel
+                                            Margin="15 0"
+                                        >
+                                            <TextBlock
+                                                Text="Список друзей"    
+                                                Margin="0 5"
+                                                Foreground="Gray"
+                                                FontSize="14"
+                                            />
+                                            <TextBlock
+                                                Text="0 из 0 в сети"    
+                                                Margin="0 5"
+                                                Foreground="SkyBlue"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="Black"
+                                        Margin="25"
+                                    >
+                                        <TextBlock
+                                            Margin="15 15"
+                                            Foreground="Gray"
+                                            Text="Добавить друзей"    
+                                        />
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                            Margin="5 15"
+                                        >
+                                            <TextBox
+                                                Margin="5 0"
+                                                Width="150"
+                                                Height="25"
+                                                Background="LightGray"
+                                                Foreground="Gray"
+                                                KeyUp="DetectFriendSearchHandler"
+                                            >
+                                                <TextBox.Resources>
+                                                    <VisualBrush
+                                                        x:Key="hinttext"
+                                                        AlignmentX="Left"
+                                                        Stretch="None"
+                                                        TileMode="None"
+                                                    >
+                                                        <VisualBrush.Visual>
+                                                            <DockPanel>
+                                                                <TextBlock
+                                                                    Height="25"
+                                                                    Width="150"
+                                                                    Text="Поиск друзей или игроков"
+                                                                    Foreground="Gray"
+                                                                    Background="White"
+                                                                />
+                                                            </DockPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </TextBox.Resources>
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                            <Trigger Property="Text" Value="{x:Null}">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Margin="5 0"
+                                            >
+                                                <Button.Content>
+                                                    <materialDesign:PackIcon
+                                                        Kind="Search"    
+                                                    />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="Black"
+                                        Margin="25"
+                                    >
+                                        <StackPanel
+                                            Orientation="Horizontal"    
+                                        >
+                                            <Image
+                                                Margin="15"
+                                                Width="25"    
+                                                Height="25"    
+                                                ImageFailed="SetDefautAvatarHandler"
+                                            >
+                                                <Image.Source>
+                                                    <BitmapImage
+                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                                    />
+                                                </Image.Source>
+                                            </Image>
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Имя пользователя"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <Separator />
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"
+                                            MouseLeftButtonUp="ReturnToProfileHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Search"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Открыть мой профиль"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"
+                                            MouseLeftButtonUp="OpenEditProfileHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Note"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Редактировать мой профиль"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <Separator />
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenGameRecommendationsHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Mouse"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Игры"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="User"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Друзья"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenGroupsSettingsHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Group"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Группы"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenEquipmentHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Storage"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Инвентарь"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenTradeOffersHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Sync"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Предложения обмена"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            DataContext="0"
+                                            MouseLeftButtonUp="OpenContentTabHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Camera"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Скриншоты"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            DataContext="2"
+                                            MouseLeftButtonUp="OpenContentTabHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="TV"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Видео"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            DataContext="6"
+                                            MouseLeftButtonUp="OpenContentTabHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Note"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Руководства"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            DataContext="3"
+                                            MouseLeftButtonUp="OpenContentTabHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Engine"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Моя Мастерская"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Margin="0 10"
+                                            Orientation="Horizontal"    
+                                            MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                                        >
+                                            <materialDesign:PackIcon
+                                                Margin="5 0"
+                                                Kind="Chat"
+                                                Foreground="Gray"
+                                            />
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Text="Моя история комментариев"    
+                                                Foreground="Gray"
+                                            />
+                                        </StackPanel>
+                                    </StackPanel>
                                     <StackPanel
                                         Background="Black"
                                         Height="100"
                                         Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
+                                    >
+                                        <TextBlock
+                                            Foreground="Gray"
+                                            Margin="15 15 15 5"
+                                            Text="Запланированные события"    
+                                        />
+                                        <TextBlock
+                                            Foreground="Gray"
+                                            Margin="15 5"
+                                            Text="В ближайшие 30 дней событий нет"    
+                                        />
+                                        <TextBlock
+                                            Foreground="White"
+                                            Margin="15 5"
+                                            Text="Все события"    
+                                            MouseLeftButtonUp="OpenAllEventsHandler"
+                                        />
+                                    </StackPanel>
                                 </StackPanel>
-                                <StackPanel
-                                >
+                                <StackPanel>
                                     <DockPanel
                                         Margin="0 25"
                                     >
@@ -3931,6 +4401,7 @@
                                                 </Image.Source>
                                             </Image>
                                             <TextBox
+                                                x:Name="activityStatusBox"
                                                 Width="750"
                                                 Height="45"    
                                             >
@@ -3977,14 +4448,63 @@
                                             Margin="15"
                                             Orientation="Horizontal"
                                         >
+                                            <Popup
+                                                x:Name="bindGamePopup"
+                                                StaysOpen="False"
+                                                Width="250"
+                                                Height="350"
+                                                Placement="Mouse"
+                                            >
+                                                <Popup.Child>
+                                                    <StackPanel
+                                                        Background="LightGray"    
+                                                    >
+                                                        <StackPanel
+                                                            Orientation="Horizontal"    
+                                                        >
+                                                            <TextBox
+                                                                x:Name="bindGamePopupBox"
+                                                                Margin="5"
+                                                                Height="25"
+                                                                Width="235"
+                                                                TextChanged="GetGamesForBindGamePopupHandler"
+                                                            />
+                                                            <materialDesign:PackIcon
+                                                                Foreground="White"
+                                                                Kind="Search"    
+                                                                VerticalAlignment="Center"
+                                                                Margin="10"
+                                                            />
+                                                        </StackPanel>
+                                                        <StackPanel
+                                                            x:Name="bindGamePopupList"    
+                                                        />
+                                                    </StackPanel>
+                                                </Popup.Child>    
+                                            </Popup>
                                             <Button
+                                                x:Name="bindGameBtn"    
                                                 Height="25"
-                                                Width="125"
+                                                Width="150"
                                                 Margin="15 0"
-                                                Content="Связать с игрой"    
                                                 Foreground="White"
                                                 Background="SkyBlue"
-                                            />
+                                                Click="OpenBindGamePopupHandler"
+                                            >
+                                                <Button.Content>
+                                                    <DockPanel>
+                                                        <TextBlock
+                                                            x:Name="bindGameBtnContentLabel"    
+                                                            HorizontalAlignment="Left"
+                                                            Text="Связать с игрой"    
+                                                        />
+                                                        <materialDesign:PackIcon
+                                                            HorizontalAlignment="Right"
+                                                            Kind="ArrowDropDown"    
+                                                        />
+                                                    </DockPanel>    
+                                                </Button.Content>
+                                            </Button>
                                             <materialDesign:PackIcon
                                                 Height="25"
                                                 Width="125"
@@ -3999,6 +4519,7 @@
                                                 Content="Опубликовать"    
                                                 Foreground="White"
                                                 Background="LightGray"
+                                                Click="PublishActivityStatusHandler"
                                             />
                                         </StackPanel>
                                     </StackPanel>
@@ -17028,38 +17549,11 @@ E. Что произойдет, если положение Пункта 11 бу
                             Background="Blue"    
                         >
                             <DockPanel>
-                                <StackPanel
-                                    Width="250"
-                                    DockPanel.Dock="Right"    
-                                >
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                </StackPanel>
-                                <StackPanel
-                                >
+                                <local:FriendActivityAsideControl
+                                    DataContext="{ Binding ElementName=mainWindow }"
+                                    DockPanel.Dock="Right"
+                                />
+                                <StackPanel>
                                     <DockPanel
                                         Margin="0 25"
                                     >
@@ -17092,6 +17586,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                             />
                                         </StackPanel>
                                     </DockPanel>
+                                    <StackPanel
+                                        x:Name="myActivities"    
+                                    />
                                 </StackPanel>
                             </DockPanel>
                             <StackPanel
@@ -17115,36 +17612,6 @@ E. Что произойдет, если положение Пункта 11 бу
                             Background="Blue"    
                         >
                             <DockPanel>
-                                <StackPanel
-                                    Width="250"
-                                    DockPanel.Dock="Right"    
-                                >
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    />
-                                </StackPanel>
                                 <StackPanel>
                                     <StackPanel
                                         Background="LightSlateGray"
@@ -17566,6 +18033,504 @@ E. Что произойдет, если положение Пункта 11 бу
                             >
 
                             </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Margin="0 15"
+                            >
+                                <Image
+                                    Margin="15 0"
+                                    Width="50"    
+                                    Height="50"    
+                                    ImageFailed="SetDefautAvatarHandler"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock
+                                    Margin="15"
+                                    FontSize="20"
+                                    Text="Имя пользователя"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Инвентарь"
+                                    FontSize="14"
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                Orientation="Horizontal"  
+                                HorizontalAlignment="Right"
+                                Margin="0 15"
+                            >
+                                <Button
+                                    Margin="15 0"
+                                    Width="175"    
+                                    Height="30"
+                                    Content="Предложения по обмену"
+                                    Click="OpenTradeOffersHandler"
+                                />
+                                <ComboBox
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Margin="15 0"
+                                    Width="50"
+                                    Height="30"
+                                    SelectedIndex="0"    
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"    
+                                        Content="..."
+                                    />
+                                    <ComboBoxItem
+                                        Content="История обмена"
+                                    />
+                                    <ComboBoxItem
+                                        Content="История инвернтаря"
+                                    />
+                                    <ComboBoxItem
+                                        Content="История подарков"
+                                    />
+                                    <ComboBoxItem
+                                        Content="Настройки приватности"
+                                    />
+                                </ComboBox>
+                            </StackPanel>
+                            <TabControl
+                                x:Name="equipmentControl"
+                                MinHeight="350"    
+                            >
+                                <TabItem
+                                    Header="Office ware game manager"    
+                                >
+                                    
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Margin="0 15"
+                            >
+                                <Image
+                                    Margin="15 0"
+                                    Width="50"    
+                                    Height="50"    
+                                    ImageFailed="SetDefautAvatarHandler"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock
+                                    Margin="15"
+                                    FontSize="20"
+                                    Text="Имя пользователя"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Инвентарь"
+                                    FontSize="14"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Предложения по обмену"
+                                    FontSize="14"
+                                />
+                            </StackPanel>
+                            <DockPanel>
+                                <StackPanel
+                                    Width="750"
+                                >
+                                    <StackPanel
+                                        Margin="25"
+                                        Background="LightGray"
+                                        Height="250"
+                                    >
+                                        <TextBlock
+                                            TextAlignment="Center"
+                                            Margin="15"
+                                            Text="Нет входящих предложений обмена."    
+                                            FontSize="24"
+                                        />
+                                        <TextBlock
+                                            TextAlignment="Center"
+                                            Margin="15"
+                                            Text="Друзья могут отправлять вам предложения обмена,&#10;которые можно принять или отклонить — либо&#10;отправить контрпредложение."    
+                                            FontSize="20"
+                                        />
+                                        <TextBlock
+                                            TextAlignment="Center"
+                                            Margin="15"
+                                            Text="Узнать больше о предложениях обмена в Steam."    
+                                            FontSize="20"
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="25"
+                                    Background="SlateGray"
+                                    Height="650"
+                                    Width="250"
+                                    HorizontalAlignment="Right"
+                                >
+                                    <Button
+                                        HorizontalAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        Margin="15 5"
+                                        Height="65"
+                                        Width="175"
+                                        Content="Новое предложение&#10;обмена"    
+                                    />
+                                    <Separator />
+                                    <StackPanel
+                                        Margin="0 10"
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            FontSize="14"
+                                            Text="Полученные предложения"    
+                                        />
+                                        <TextBlock
+                                            Foreground="SkyBlue"
+                                            Margin="15 5"
+                                            Text="(Ожидают: 0)"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="0 10"
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            FontSize="14"
+                                            Text="История полученных предложений"    
+                                        />
+                                        <TextBlock
+                                            Foreground="SkyBlue"
+                                            Margin="15 5"
+                                            Text="(0)"    
+                                        />
+                                    </StackPanel>
+                                    <Separator />
+                                    <StackPanel
+                                        Margin="0 10"
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            FontSize="14"
+                                            Text="Отправленные предложения"    
+                                        />
+                                        <TextBlock
+                                            Foreground="SkyBlue"
+                                            Margin="15 5"
+                                            Text="(Ожидают: 0)"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="0 10"
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            FontSize="14"
+                                            Text="История отправленных"    
+                                        />
+                                        <TextBlock
+                                            Foreground="SkyBlue"
+                                            Margin="15 5"
+                                            Text="предложений (0)"    
+                                        />
+                                    </StackPanel>
+                                    <Separator />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="История обмена"    
+                                    />
+                                    <Separator
+                                        
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Кто может отправлять мне предложения обмена?"    
+                                    />
+                                    <Separator />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Темы для обмена"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Частые вопросы"    
+                                    />
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Margin="0 15"
+                            >
+                                <Image
+                                    Margin="15 0"
+                                    Width="50"    
+                                    Height="50"    
+                                    ImageFailed="SetDefautAvatarHandler"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock
+                                    Margin="15"
+                                    FontSize="20"
+                                    Text="Имя пользователя"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="История комментариев"
+                                    FontSize="14"
+                                />
+                            </StackPanel>
+                            <DockPanel>
+                                <StackPanel>
+                                    <StackPanel
+                                        x:Name="discussionComments"    
+                                    />
+                                    <StackPanel
+                                        Margin="15"
+                                        Background="LightGray"    
+                                    >
+                                        <TextBlock
+                                            Margin="15 5"
+                                            Text="Обсуждения 1–0 из 0"
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel
+                                    Margin="25"
+                                    Width="300"
+                                    HorizontalAlignment="Right"    
+                                >
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Margin="5 15"
+                                    >
+                                        <TextBox
+                                            x:Name="discussionCommentsBox"
+                                            Margin="5 0"
+                                            Width="150"
+                                            Height="25"
+                                            Background="LightGray"
+                                            Foreground="Gray"
+                                            TextChanged="GetCommentsHistoryHandler"
+                                        >
+                                            <TextBox.Resources>
+                                                <VisualBrush
+                                                    x:Key="hinttext"
+                                                    AlignmentX="Left"
+                                                    Stretch="None"
+                                                    TileMode="None"
+                                                >
+                                                    <VisualBrush.Visual>
+                                                        <DockPanel>
+                                                            <TextBlock
+                                                                Height="25"
+                                                                Width="150"
+                                                                Text="Поиск по комментариям"
+                                                                Foreground="Gray"
+                                                                Background="White"
+                                                            />
+                                                        </DockPanel>
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </TextBox.Resources>
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="FontSize" Value="12" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Setter Property="Width" Value="Auto" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <Button
+                                            Width="25"
+                                            Height="25"
+                                            Margin="5 0"
+                                        >
+                                            <Button.Content>
+                                                <materialDesign:PackIcon
+                                                    Kind="Search"    
+                                                />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Background="Black"    
+                                    >
+                                        <TextBlock
+                                            Foreground="Gray"
+                                            Margin="15"
+                                            Text="Фильтр"    
+                                        />
+                                        <Separator />
+                                        <Button
+                                            HorizontalAlignment="Left"
+                                            Margin="15"
+                                            Height="25"
+                                            Width="175"
+                                            Content="Обновить фильтры"
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                Margin="0 15"
+                            >
+                                <Image
+                                    Margin="15 0"
+                                    Width="50"    
+                                    Height="50"    
+                                    ImageFailed="SetDefautAvatarHandler"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock
+                                    Margin="15"
+                                    FontSize="20"
+                                    Text="Имя пользователя"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Активность друзей"
+                                    FontSize="14"
+                                />
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Kind="ChevronDoubleRight"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="События"
+                                    FontSize="14"
+                                />
+                            </StackPanel>
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Vertical"    
+                                >
+                                    <StackPanel
+                                        Margin="15"
+                                    >
+                                        <TextBlock
+                                            x:Name="friendsActivityEventsDateLabel"
+                                            Margin="15 5"
+                                            Text="Месяц года"
+                                        />
+                                        <Separator />
+                                    </StackPanel>
+                                </StackPanel>
+                                <Calendar
+                                    Margin="15"
+                                    HorizontalAlignment="Right"
+                                    DisplayDateChanged="RefreshFriendActivityEventsDateLabelHandler"
+                                />
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

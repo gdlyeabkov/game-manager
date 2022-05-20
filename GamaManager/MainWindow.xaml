@@ -184,7 +184,7 @@
         <DockPanel
             DockPanel.Dock="Bottom"
             Height="35"
-            Background="Cyan"
+            Background="LightGray"
         >
             <Popup
                 x:Name="addGamePopup"
@@ -270,7 +270,7 @@
         <StackPanel
             DockPanel.Dock="Top"
             Height="35"
-            Background="Red"
+            Background="LightGray"
         >
             <StackPanel
                 Orientation="Horizontal"    
@@ -634,7 +634,7 @@
                 <DockPanel>
                     <DockPanel
                         DockPanel.Dock="Left"    
-                        Background="Green"
+                        Background="LIghtGray"
                     >
                         <StackPanel
                             DockPanel.Dock="Top"
@@ -681,60 +681,350 @@
                                     />
                                 </ComboBox>
                                 <materialDesign:PackIcon
+                                    x:Name="sortGamesByRecentActivityIcon"
                                     Kind="Recent"    
                                     Margin="15 0"
                                     VerticalAlignment="Center"
+                                    MouseLeftButtonUp="ToggleRecentActivityHandler"
                                 />
                                 <materialDesign:PackIcon
+                                    x:Name="sortGamesByReady2GoIcon"
                                     Kind="PlayCircleOutline"    
                                     Margin="15 0"
                                     VerticalAlignment="Center"
+                                    MouseLeftButtonUp="ToggleReady2GoHandler"
                                 />
                             </StackPanel>
-                            <TextBox
-                                x:Name="keywordsLabel"
-                                Margin="5"
-                                Height="25"
-                                TextChanged="FilterGamesHandler"
+                            <StackPanel
+                                Orientation="Horizontal"    
                             >
-                                <TextBox.Resources>
-                                    <VisualBrush
-                                        x:Key="hinttext"
-                                        AlignmentX="Left"
-                                        Stretch="None"
-                                        TileMode="None"
-                                    >
-                                        <VisualBrush.Visual>
-                                            <DockPanel>
+                                <TextBox
+                                    x:Name="keywordsLabel"
+                                    Margin="5"
+                                    Height="25"
+                                    Width="250"
+                                    TextChanged="FilterGamesHandler"
+                                >
+                                    <TextBox.Resources>
+                                        <VisualBrush
+                                            x:Key="hinttext"
+                                            AlignmentX="Left"
+                                            Stretch="None"
+                                            TileMode="None"
+                                        >
+                                            <VisualBrush.Visual>
+                                                <DockPanel>
+                                                    <TextBlock
+                                                        Margin="5"
+                                                        Height="35"
+                                                        Width="750"
+                                                        Text="Поиск по названию"
+                                                        Foreground="#959595"
+                                                        Background="White"
+                                                    />
+                                                </DockPanel>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </TextBox.Resources>
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="FontSize" Value="12" />
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Setter Property="Width" Value="Auto" />
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="{x:Null}">
+                                                    <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                                <materialDesign:PackIcon
+                                    x:Name="clearGamesListFilterIcon"
+                                    Kind="Close"
+                                    VerticalAlignment="Center"
+                                    Margin="5 0"
+                                    MouseLeftButtonUp="ClearGameListFilterHandler"
+                                />
+                                <materialDesign:PackIcon
+                                    Kind="HorizontalLine"
+                                    VerticalAlignment="Center"
+                                    Margin="5 0"
+                                    MouseLeftButtonUp="OpenKeywordsLabelFilterPopupHandler"
+                                />
+                                <Popup
+                                    x:Name="keywordsLabelFilterPopup"
+                                    StaysOpen="False"
+                                    Placement="Right"
+                                    PlacementTarget="{Binding ElementName=keywordsLabel}"
+                                    Width="500"
+                                    Height="350"
+                                >
+                                    <Popup.Child>
+                                        <StackPanel
+                                            Background="LightGray"    
+                                        >
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
                                                 <TextBlock
                                                     Margin="5"
-                                                    Height="35"
-                                                    Width="750"
-                                                    Text="Поиск по названию"
-                                                    Foreground="#959595"
-                                                    Background="White"
+                                                    Text="Игроки"
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    FontSize="16"
+                                                    Foreground="Blue"
                                                 />
-                                            </DockPanel>
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </TextBox.Resources>
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                        <Setter Property="FontSize" Value="12" />
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="">
-                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                            </Trigger>
-                                            <Trigger Property="Text" Value="{x:Null}">
-                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Состояние игры"
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    FontSize="16"
+                                                    Foreground="Blue"
+                                                />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Жанр"
+                                                    Grid.Row="0"
+                                                    Grid.Column="2"
+                                                    FontSize="16"
+                                                    Foreground="Blue"
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="Одиночная игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Готовые к запуску"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="1"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Экшен"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="2"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="Многопользовательская игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Установленные локально"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Приключение"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="3"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="Кооперативная игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Запущенные"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="3"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Казуальная игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="4"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Незапущенные"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="4"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Инди"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="5"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="MMO"    
+                                                />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Поддержка устройств"
+                                                    Grid.Row="6"
+                                                    Grid.Column="0"
+                                                    FontSize="16"
+                                                    Foreground="Blue"
+                                                />
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Text="Особенности"
+                                                    Grid.Row="6"
+                                                    Grid.Column="1"
+                                                    FontSize="16"
+                                                    Foreground="Blue"
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="6"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Гонки"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="7"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="Контроллеры (полная поддержка)"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="7"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Коллекционные карточки"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="7"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Ролевая игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="8"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="Контроллеры (частичная поддержка)"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="8"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Мастерская"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="8"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Симулятор"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="9"
+                                                    Grid.Column="0"
+                                                    Margin="5"
+                                                    Content="VR"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="9"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Достижения"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="9"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Спортивная игра"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="10"
+                                                    Grid.Column="1"
+                                                    Margin="5"
+                                                    Content="Remove play together"    
+                                                />
+                                                <CheckBox
+                                                    Grid.Row="10"
+                                                    Grid.Column="2"
+                                                    Margin="5"
+                                                    Content="Стратегия"    
+                                                />
+                                            </Grid>
+                                            <TextBlock
+                                                Margin="5"
+                                                Text="Метки в магазине"    
+                                            />
+                                            <TextBox
+                                                Margin="5"
+                                                HorizontalAlignment="Left"
+                                                Width="275"
+                                                Height="25"
+                                            >
+                                                <TextBox.Resources>
+                                                    <VisualBrush
+                                                        x:Key="hinttext"
+                                                        AlignmentX="Left"
+                                                        Stretch="None"
+                                                        TileMode="None"
+                                                    >
+                                                        <VisualBrush.Visual>
+                                                            <DockPanel>
+                                                                <TextBlock
+                                                                    Margin="5"
+                                                                    Height="35"
+                                                                    Width="750"
+                                                                    Text="Введите метку"
+                                                                    Foreground="#959595"
+                                                                    Background="White"
+                                                                />
+                                                            </DockPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </TextBox.Resources>
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                            <Trigger Property="Text" Value="{x:Null}">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Popup.Child>
+                                </Popup>
+                            </StackPanel>
                         </StackPanel>
                         <ScrollViewer>
                             <StackPanel
@@ -743,100 +1033,415 @@
                             />
                         </ScrollViewer>
                     </DockPanel>
-                    <StackPanel
+                    <ScrollViewer
                         DockPanel.Dock="Right"
-                        Background="Blue"
                     >
                         <StackPanel
-                            x:Name="activeGame"
+                            Background="White"
                         >
                             <StackPanel
-                                Orientation="Horizontal"    
+                                x:Name="activeGame"
                             >
-                                <Image
-                                    x:Name="gamePhoto"
-                                    Margin="15"
-                                    Width="100"
-                                    Height="100"
-                                >
-                                    <Image.Source>
-                                        <BitmapImage
-                                            UriSource="https://steamunlocked.net/wp-content/uploads/2020/07/guns-gore-and-cannoli-2-free-download.jpg"
-                                        />
-                                    </Image.Source>
-                                </Image>
                                 <StackPanel
-                                    Margin="15"    
+                                    Orientation="Horizontal"    
+                                >
+                                    <Image
+                                        x:Name="gamePhoto"
+                                        Margin="15"
+                                        Width="100"
+                                        Height="100"
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://steamunlocked.net/wp-content/uploads/2020/07/guns-gore-and-cannoli-2-free-download.jpg"
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <StackPanel
+                                        Margin="15"    
+                                    >
+                                        <TextBlock
+                                            x:Name="gameNameLabel"
+                                            Margin="0 15"
+                                            FontSize="18"
+                                            Text="Игра"    
+                                        />
+                                        <Button
+                                            x:Name="gameActionLabel"
+                                            HorizontalAlignment="Left"
+                                            Height="35"
+                                            Width="125"
+                                            Content="Установить"
+                                            Click="GameActionHandler"    
+                                        />
+                                    </StackPanel>
+                                    <materialDesign:PackIcon
+                                        x:Name="removeGameBtn"
+                                        Width="24"
+                                        Height="24"
+                                        Kind="Close"    
+                                        MouseLeftButtonUp="RemoveGameHandler"
+                                        Visibility="Collapsed"
+                                    />
+                                    <!--
+                                    <Button
+                                        x:Name="removeGameBtn"
+                                        Width="24"
+                                        Height="24"
+                                        Content="X"    
+                                        Click="RemoveGameHandler"
+                                        Visibility="Collapsed"
+                                    />
+                                -->
+                                </StackPanel>
+                                <StackPanel
+                                    x:Name="gameDetails"
+                                    Visibility="Collapsed"
+                                    Margin="0 15"    
+                                >
+                                    <StackPanel
+                                        HorizontalAlignment="Right"    
+                                    >
+                                        <Button
+                                            x:Name="addCustomReviewBtn"
+                                            Margin="15"
+                                            Width="125"
+                                            Height="25"
+                                            Content="Написать обзор"    
+                                            Click="OpenAddReviewHandler"
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                    Background="LightGray"
                                 >
                                     <TextBlock
-                                        x:Name="gameNameLabel"
-                                        Margin="0 15"
-                                        FontSize="18"
-                                        Text="Игра"    
+                                        Text="Поиск групп"
+                                        Margin="15"
+                                        MouseLeftButtonUp="SearchGroupsHandler"
                                     />
-                                    <Button
-                                        x:Name="gameActionLabel"
-                                        HorizontalAlignment="Left"
-                                        Height="35"
-                                        Width="125"
-                                        Content="Установить"
-                                        Click="GameActionHandler"    
+                                    <TextBlock
+                                        Text="Обсуждения"
+                                        Margin="15"
+                                        MouseLeftButtonUp="OpenDiscussionsHandler"
                                     />
                                 </StackPanel>
-                                <materialDesign:PackIcon
-                                    x:Name="removeGameBtn"
-                                    Width="24"
-                                    Height="24"
-                                    Kind="Close"    
-                                    MouseLeftButtonUp="RemoveGameHandler"
+                            </StackPanel>
+                            <StackPanel
+                                x:Name="ads"
+                                Margin="0 25"    
+                            >
+                                <StackPanel>
+                                    <DockPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBlock
+                                                FontSize="14"
+                                                VerticalAlignment="Center"
+                                                Margin="10 0"
+                                                Text="Что нового"    
+                                            />
+                                            <materialDesign:PackIcon
+                                                VerticalAlignment="Center"
+                                                Margin="10 0"
+                                                Kind="Settings"    
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right"    
+                                        >
+                                            <materialDesign:PackIcon
+                                                Width="32"
+                                                Height="32"
+                                                Kind="ChevronLeft"    
+                                                Margin="15 0 5 0"
+                                                DataContext="{Binding ElementName=newGamesSectionScroll}"
+                                                MouseLeftButtonUp="MoveSectionHandler"
+                                            />
+                                            <materialDesign:PackIcon
+                                                Width="32"
+                                                Height="32"
+                                                Kind="ChevronRight"    
+                                                Margin="5 0"
+                                                DataContext="{Binding ElementName=newGamesSectionScroll}"
+                                                MouseLeftButtonUp="MoveSectionHandler"
+                                            />
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <ScrollViewer
+                                        x:Name="newGamesSectionScroll"
+                                    >
+                                        <StackPanel
+                                            x:Name="newGamesSection"
+                                            Orientation="Horizontal"    
+                                            MinHeight="150"
+                                        />
+                                    </ScrollViewer>
+                                </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                    HorizontalAlignment="Center"
+                                    MouseLeftButtonUp="OpenAddGameSectionHandler"
+                                >
+                                    <TextBlock
+                                        x:Name="addGameSectionLabel"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Text="Добавить новый раздел"    
+                                        Margin="10 0"
+                                    />
+                                    <materialDesign:PackIcon
+                                        x:Name="addGameSectionIcon"
+                                        VerticalAlignment="Center"
+                                        Kind="PlusCircleOutline"
+                                        Margin="10 0"
+                                    />
+                                </StackPanel>
+                                <StackPanel
+                                    x:Name="addGameSection"
                                     Visibility="Collapsed"
+                                >
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <ComboBox
+                                            Width="125"
+                                            Height="25"
+                                            FontSize="14"
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            SelectedIndex="0"
+                                            SelectionChanged="ToggleAddNewGameSectionHandler"
+                                        >
+                                            <ComboBoxItem
+                                                Visibility="Collapsed"
+                                                Content="Выбрать раздел"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Без категории"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Все игры"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Недавние игры"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Список коллекций"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="Во что сыграть?"    
+                                            />
+                                            <Separator />
+                                            <ComboBoxItem
+                                                Content="Удалить этот раздел"    
+                                            />
+                                        </ComboBox>
+                                        <Separator
+                                            Width="850"    
+                                        />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Margin="25"
+                                        Orientation="Horizontal"    
+                                    >
+                                        <materialDesign:PackIcon
+                                            Margin="25"
+                                            Kind="ArrowTopLeft"    
+                                        />
+                                        <TextBlock
+                                            FontSize="18"
+                                            Margin="25"
+                                            Text="Выберите что хотите видеть в этом разделе.&#10;Также его можно изменить или удалить!"    
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel 
+                                    x:Name="gameSections"    
                                 />
                                 <!--
-                                <Button
-                                    x:Name="removeGameBtn"
-                                    Width="24"
-                                    Height="24"
-                                    Content="X"    
-                                    Click="RemoveGameHandler"
-                                    Visibility="Collapsed"
-                                />
-                            -->
-                            </StackPanel>
-                            <StackPanel
-                                x:Name="gameDetails"
-                                Visibility="Collapsed"
-                                Margin="0 15"    
-                            >
-                                <StackPanel
-                                    HorizontalAlignment="Right"    
-                                >
-                                    <Button
-                                        x:Name="addCustomReviewBtn"
-                                        Margin="15"
-                                        Width="125"
-                                        Height="25"
-                                        Content="Написать обзор"    
-                                        Click="OpenAddReviewHandler"
-                                    />
+                                <StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <TextBlock
+                                            FontSize="14"
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Text="Недавние игры"    
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Kind="ChevronDown"    
+                                        />
+                                        <Separator
+                                            Width="850"    
+                                        />
+                                        <materialDesign:PackIcon
+                                            Width="32"
+                                            Height="32"
+                                            Kind="ChevronLeft"    
+                                            Margin="15 0 5 0"
+                                            DataContext="{Binding ElementName=recentGamesSectionScroll}"
+                                            MouseLeftButtonUp="MoveSectionHandler"
+                                        />
+                                        <materialDesign:PackIcon
+                                            Width="32"
+                                            Height="32"
+                                            Kind="ChevronRight"    
+                                            Margin="5 0"
+                                            DataContext="{Binding ElementName=recentGamesSectionScroll}"
+                                            MouseLeftButtonUp="MoveSectionHandler"
+                                        />
+                                    </StackPanel>
+                                    <ScrollViewer
+                                        x:Name="recentGamesSectionScroll"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"
+                                    >
+                                        <StackPanel
+                                            x:Name="recentGamesSection"
+                                            Orientation="Horizontal"    
+                                            MinHeight="150"
+                                        />
+                                    </ScrollViewer>
                                 </StackPanel>
-                            </StackPanel>
-                            <StackPanel
-                                Orientation="Horizontal"    
-                                Background="LightGray"
-                            >
-                                <TextBlock
-                                    Text="Поиск групп"
-                                    Margin="15"
-                                    MouseLeftButtonUp="SearchGroupsHandler"
-                                />
-                                <TextBlock
-                                    Text="Обсуждения"
-                                    Margin="15"
-                                    MouseLeftButtonUp="OpenDiscussionsHandler"
-                                />
+                                <StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <TextBlock
+                                            FontSize="14"
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Text="Все игры"    
+                                        />
+                                        <TextBlock
+                                            x:Name="allGamesSectionCountLabel"
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Text="(0)"    
+                                        />
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Kind="ChevronDown"    
+                                        />
+                                        <ComboBox
+                                            Height="25"
+                                            Width="125"
+                                            Margin="15 0"
+                                            SelectedIndex="0"
+                                        >
+                                            <ComboBoxItem
+                                                Content="По алфавиту"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По играющим друзьям"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По проценту достижений"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По времени в игре"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По дате запуска"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По дате выхода"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По размере на диске"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По оценке на Metacritic"    
+                                            />
+                                            <ComboBoxItem
+                                                Content="По обзорам"    
+                                            />
+                                        </ComboBox>
+                                        <Separator
+                                            Width="750"    
+                                        />
+                                        <materialDesign:PackIcon
+                                            Kind="ChevronDoubleUp"    
+                                            Margin="15 0"
+                                            MouseLeftButtonUp="ToggleAllGamesSectionDisplayHandler"
+                                        />
+                                    </StackPanel>
+                                    <ScrollViewer
+                                        x:Name="allGamesSectionScroll"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"
+                                    >
+                                        <WrapPanel
+                                            MinHeight="150"
+                                        />
+                                    </ScrollViewer>
+                                </StackPanel>
+                                <StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="14"
+                                                VerticalAlignment="Center"
+                                                Margin="10 0"
+                                                Text="Во что сыграть?"    
+                                            />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="10 0"
+                                                Text="Эти игры вы еще не пробовали, но они нравятся похожим на вас игрокам."    
+                                            />
+                                        </StackPanel>
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Center"
+                                            Margin="10 0"
+                                            Kind="ChevronDown"    
+                                        />
+                                        <Separator
+                                            Width="550"    
+                                        />
+                                        <materialDesign:PackIcon
+                                            Width="32"
+                                            Height="32"
+                                            Kind="ChevronLeft"    
+                                            Margin="15 0 5 0"
+                                            DataContext="{Binding ElementName=offerGamesSectionScroll}"
+                                            MouseLeftButtonUp="MoveSectionHandler"
+                                        />
+                                        <materialDesign:PackIcon
+                                            Width="32"
+                                            Height="32"
+                                            Kind="ChevronRight"    
+                                            Margin="5 0"
+                                            DataContext="{Binding ElementName=offerGamesSectionScroll}"
+                                            MouseLeftButtonUp="MoveSectionHandler"
+                                        />
+                                    </StackPanel>
+                                    <ScrollViewer
+                                        x:Name="offerGamesSectionScroll"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"
+                                    >
+                                        <StackPanel
+                                            x:Name="offerGamesSection"
+                                            Orientation="Horizontal"    
+                                            MinHeight="150"
+                                        />
+                                    </ScrollViewer>
+                                </StackPanel>
+                                -->
                             </StackPanel>
                         </StackPanel>
-                    </StackPanel>
+                    </ScrollViewer>
                 </DockPanel>
             </TabItem>
             <TabItem
@@ -18530,6 +19135,670 @@ E. Что произойдет, если положение Пункта 11 бу
                                     HorizontalAlignment="Right"
                                     DisplayDateChanged="RefreshFriendActivityEventsDateLabelHandler"
                                 />
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="Green"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="Blue"    
+                        >
+                            <local:HeaderControl
+                                DataContext="{ Binding ElementName=mainWindow }"    
+                            />
+                            <TextBlock
+                                Margin="15"
+                                FontSize="16"
+                                Text="Все продукты"    
+                            />
+                            <DockPanel>
+                                <StackPanel>
+                                    <DockPanel
+                                        Margin="0 15"
+                                        Background="LightGray"
+                                    >
+                                        <StackPanel
+                                            Margin="0 15"
+                                            Orientation="Horizontal"    
+                                        >
+                                            <TextBox
+                                                x:Name="searchGamesBox"
+                                                Width="250"
+                                                Height="25"
+                                                Margin="5 0"
+                                                TextChanged="SearchGamesHandler"
+                                            >
+                                                <TextBox.Resources>
+                                                    <VisualBrush
+                                                        x:Key="hinttext"
+                                                        AlignmentX="Left"
+                                                        Stretch="None"
+                                                        TileMode="None"
+                                                    >
+                                                        <VisualBrush.Visual>
+                                                            <DockPanel>
+                                                                <TextBlock
+                                                                    Margin="5"
+                                                                    Height="35"
+                                                                    Width="750"
+                                                                    Text="Введите искомое слово или метку"
+                                                                    Foreground="#959595"
+                                                                    Background="White"
+                                                                />
+                                                            </DockPanel>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </TextBox.Resources>
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="FontSize" Value="12" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Setter Property="Width" Value="Auto" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Text" Value="">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                            <Trigger Property="Text" Value="{x:Null}">
+                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                            <Button
+                                                Width="125"
+                                                Height="25"
+                                                Content="Поиск"
+                                                Click="SearchGamesHandler"
+                                            />
+                                        </StackPanel>
+                                        <StackPanel
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal"    
+                                            Margin="50 0"
+                                        >
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="5 0"
+                                                Text="Сортировать по"    
+                                            />
+                                            <ComboBox
+                                                x:Name="searchedGamesSortSelector"
+                                                Width="150"
+                                                Height="25"
+                                                Margin="5 0"
+                                                SelectedIndex="0"
+                                                SelectionChanged="SearchGamesBySortHandler"
+                                            >
+                                                <ComboBoxItem
+                                                    Content="релевантности"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="дате выхода"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="названию"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="возрастанию цены"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="убыванию цены"    
+                                                />
+                                                <ComboBoxItem
+                                                    Content="обзорам"    
+                                                />
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <DockPanel
+                                        Margin="0 15"
+                                        Background="LightGray"    
+                                    >
+                                        <TextBlock
+                                            x:Name="searchGameResultsLabel"
+                                            Margin="15"
+                                            Text="Результатов по вашему запросу: 0. Некоторые продукты (0) скрыты согласно вашим настройкам."    
+                                        />
+                                        <materialDesign:PackIcon
+                                            Margin="15"
+                                            Kind="Settings"
+                                            HorizontalAlignment="Right"
+                                        />
+                                    </DockPanel>
+                                    <StackPanel
+                                        x:Name="searchedGames"    
+                                    />
+                                </StackPanel>
+                                <StackPanel>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Цена"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <Slider
+                                                        x:Name="searchedGamesPriceSlider"
+                                                        Margin="10"    
+                                                        Minimum="0"
+                                                        Maximum="13"
+                                                        Value="13"
+                                                        ValueChanged="TogglePriceValueHandler"
+                                                    />
+                                                    <TextBlock
+                                                        x:Name="searchedGamesPriceLabel"
+                                                        Margin="10"
+                                                        Text="Любая цена"    
+                                                        TextAlignment="Center"
+                                                    />
+                                                    <Separator />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Скидки"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Язык"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Русский"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="English"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Предпочтения"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Не показывать скрытое"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Не показывать купленное"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Не показывать желаемое"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Метки"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Стратегия"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Экшен"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Приключение"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Дизайн и иллюстрация"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Утилиты"
+                                                    />
+                                                    <TextBox
+                                                        Margin="10"
+                                                        Height="25"
+                                                        Width="125"
+                                                    >
+                                                        <TextBox.Resources>
+                                                            <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                <VisualBrush.Visual>
+                                                                    <DockPanel>
+                                                                        <TextBlock
+                                                                            Margin="5"
+                                                                            Height="35"
+                                                                            Width="750"
+                                                                            Text="Найти другие метки"
+                                                                            Foreground="#959595"
+                                                                            Background="White"
+                                                                        />
+                                                                    </DockPanel>
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </TextBox.Resources>
+                                                        <TextBox.Style>
+                                                            <Style TargetType="TextBox">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                                <Setter Property="FontSize" Value="12" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Setter Property="Width" Value="Auto" />
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="Text" Value="">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                                        <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBox.Style>
+                                                    </TextBox>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Категории"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Игры"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Программы"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Дополнительный контент"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Демо"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Саундтреки"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Видео"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Модификации"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Устройства"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Наборы"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Количество игроков"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Для одного игрока"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Для нескольких игроков"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Против игроков"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Против игроков (по сети)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Против игроков (LAN)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Против игроков (Общий экран)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Коопретивная игра"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Коопретив (по сети)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Коопретив (LAN)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Коопретив (Общий экран)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Общий экран"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Кросплатформенная игра"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Особенности"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Поддержка Steam Controller"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Высококачественное аудио"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Достижения Steam"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Контроллер (полностью)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Коллекционные карточки"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Имеются субтитры"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Мастерская Steam"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Предметы для SteamVR"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Контроллер (частично)"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Steam Cloud"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Имеется античит Valve"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Включает Source SDK"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Remote Play на телефоне"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Remote Play на планшете"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Remote Play на телевизоре"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Remote Play Together"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Виртуальная реальность"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Только VR"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Поддержка VR"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Шлемы"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Valve Index"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="HTC Vive"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Oculus Rift"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Windows Mixed Reality"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Устройства ввода"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Контроллеры движения"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Геймпад"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Клавиатура и мышь"
+                                                    />
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Игровая зона"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Сидя"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Стоя"
+                                                    />
+                                                    <CheckBox
+                                                        Margin="10"
+                                                        Content="Большая комната"
+                                                    />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                    <Border
+                                        Margin="15"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                    >
+                                        <Border.Child>
+                                            <StackPanel>
+                                                <StackPanel
+                                                    Background="LightGray"    
+                                                    MouseLeftButtonUp="HideStoreSearchFiltersItemHandler"
+                                                >
+                                                    <TextBlock
+                                                        Margin="10"
+                                                        Text="Операционная система"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <CheckBox
+                                                        x:Name="searchedGamesWindowsPlatformCheckbox"
+                                                        Margin="10"
+                                                        Content="Windows"
+                                                        Click="SearchGamesHandler"
+                                                    />
+                                                    <CheckBox
+                                                        x:Name="searchedGamesMacOSPlatformCheckbox"
+                                                        Margin="10"
+                                                        Content="macOS"
+                                                        Click="SearchGamesHandler"
+                                                    />
+                                                    <CheckBox
+                                                        x:Name="searchedGamesLinuxPlatformCheckbox"
+                                                        Margin="10"
+                                                        Content="Linux"
+                                                        Click="SearchGamesHandler"
+                                                    />
+                                                </StackPanel>
+
+                                            </StackPanel>
+                                        </Border.Child>
+                                    </Border>
+                                </StackPanel>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>

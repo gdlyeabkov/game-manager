@@ -1971,7 +1971,8 @@ namespace GamaManager
                 GetFriendActivities();
                 GetMyActivities();
                 GetEquipmentGames();
-                GetGameSections();/**/
+                GetGameSections();
+                InitAddGameSection();/**/
             }
         }
 
@@ -2014,55 +2015,7 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-
                                         string allGamesSectionCountLabelContent = "(0)";
-                                        /*object rawAllGamesSection = allGamesSectionScroll.Content;
-                                        bool isRow = rawAllGamesSection is StackPanel;
-                                        if (isRow)
-                                        {
-
-                                            totalGames = totalGames.Take(6).ToList<GameResponseInfo>();
-                                            int totalGamesCount = totalGames.Count;
-                                            string rawTotalGamesCount = totalGamesCount.ToString();
-                                            allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
-                                            StackPanel allGamesSection = ((StackPanel)(rawAllGamesSection));
-                                            foreach (GameResponseInfo totalGamesItem in totalGames)
-                                            {
-                                                string totalGamesItemName = totalGamesItem.name;
-                                                Image allGamesSectionItem = new Image();
-                                                allGamesSectionItem.Width = 150;
-                                                allGamesSectionItem.Height = 250;
-                                                allGamesSectionItem.Margin = new Thickness(15);
-                                                allGamesSectionItem.BeginInit();
-                                                allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
-                                                allGamesSectionItem.EndInit();
-                                                allGamesSection.Children.Add(allGamesSectionItem);
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
-                                            int totalGamesCount = totalGames.Count;
-                                            string rawTotalGamesCount = totalGamesCount.ToString();
-                                            allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
-                                            WrapPanel allGamesSection = ((WrapPanel)(rawAllGamesSection));
-                                            foreach (GameResponseInfo totalGamesItem in totalGames)
-                                            {
-                                                string totalGamesItemName = totalGamesItem.name;
-                                                Image allGamesSectionItem = new Image();
-                                                allGamesSectionItem.Width = 150;
-                                                allGamesSectionItem.Height = 250;
-                                                allGamesSectionItem.Margin = new Thickness(15);
-                                                allGamesSectionItem.BeginInit();
-                                                allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
-                                                allGamesSectionItem.EndInit();
-                                                allGamesSection.Children.Add(allGamesSectionItem);
-
-                                            }
-                                        }
-                                        allGamesSectionCountLabel.Text = allGamesSectionCountLabelContent;*/
-
                                         Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                                         string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
                                         string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
@@ -2070,6 +2023,7 @@ namespace GamaManager
                                         string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                                         SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                                         List<Game> currentGames = loadedContent.games;
+                                        List<string> currentCollections = loadedContent.collections;
                                         List<string> currentSections = loadedContent.sections;
                                         DateTime currentDate = DateTime.Now;
                                         List<Game> recentGames = currentGames.Where<Game>((Game totalGamesItem) =>
@@ -2081,27 +2035,6 @@ namespace GamaManager
                                             bool isRecent = intervalDays <= 14;
                                             return isRecent;
                                         }).ToList<Game>();
-                                        /*foreach (Game recentGamesItem in recentGames)
-                                        {
-                                            string lastPlayDate = recentGamesItem.date;
-                                            string recentGamesItemName = recentGamesItem.name;
-                                            StackPanel recentGamesSectionItem = new StackPanel();
-                                            TextBlock recentGamesSectionItemDateLabel = new TextBlock();
-                                            recentGamesSectionItemDateLabel.Text = lastPlayDate;
-                                            recentGamesSectionItemDateLabel.TextAlignment = TextAlignment.Center;
-                                            recentGamesSectionItem.Children.Add(recentGamesSectionItemDateLabel);
-                                            Image recentGamesSectionItemThumbnail = new Image();
-                                            recentGamesSectionItemThumbnail.Width = 150;
-                                            recentGamesSectionItemThumbnail.Height = 250;
-                                            recentGamesSectionItemThumbnail.Margin = new Thickness(15);
-                                            recentGamesSectionItemThumbnail.BeginInit();
-                                            recentGamesSectionItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentGamesItemName));
-                                            recentGamesSectionItemThumbnail.EndInit();
-                                            recentGamesSectionItem.Children.Add(recentGamesSectionItemThumbnail);
-                                            recentGamesSection.Children.Add(recentGamesSectionItem);
-
-                                        }*/
-
                                         List<GameRelation> gameRelations = myInnerObj.relations;
                                         List<GameResponseInfo> offerGames = totalGames.OrderByDescending((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
                                         offerGames = offerGames.Where((GameResponseInfo someGame) =>
@@ -2121,19 +2054,6 @@ namespace GamaManager
                                             bool isGoodGame = someGamelikes >= 1;
                                             return isGoodGame && isNotPlayed;
                                         }).ToList<GameResponseInfo>();
-                                        /*foreach (GameResponseInfo offerGamesItem in offerGames)
-                                        {
-                                            string offerGamesItemName = offerGamesItem.name;
-                                            Image offerGamesSectionItem = new Image();
-                                            offerGamesSectionItem.Width = 150;
-                                            offerGamesSectionItem.Height = 250;
-                                            offerGamesSectionItem.Margin = new Thickness(15);
-                                            offerGamesSectionItem.BeginInit();
-                                            offerGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + offerGamesItemName));
-                                            offerGamesSectionItem.EndInit();
-                                            offerGamesSection.Children.Add(offerGamesSectionItem);
-                                        }*/
-
                                         List<GameResponseInfo> newGames = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
                                         {
                                             DateTime totalGamesItemDate = totalGamesItem.date;
@@ -2176,6 +2096,8 @@ namespace GamaManager
 
                                         }
 
+                                        Separator separator = null;
+
                                         foreach (string currentSection in currentSections)
                                         {
                                             bool isWithoutCategorySection = currentSection == "Без категории";
@@ -2183,22 +2105,12 @@ namespace GamaManager
                                             bool isRecentGamesSection = currentSection == "Недавние игры";
                                             bool isCollectionListSection = currentSection == "Список коллекций";
                                             bool isOfferGamesSection = currentSection == "Во что сыграть?";
+                                            bool isCollectionGamesSection = currentCollections.Contains(currentSection);
                                             if (isRecentGamesSection)
                                             {
                                                 StackPanel section = new StackPanel();
                                                 StackPanel sectionHeader = new StackPanel();
                                                 sectionHeader.Orientation = Orientation.Horizontal;
-                                                /*TextBlock sectionHeaderLabel = new TextBlock();
-                                                sectionHeaderLabel.Text = currentSection;
-                                                sectionHeaderLabel.FontSize = 14;
-                                                sectionHeaderLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderLabel.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderLabel);
-                                                PackIcon sectionHeaderIcon = new PackIcon();
-                                                sectionHeaderIcon.Kind = PackIconKind.ChevronDown;
-                                                sectionHeaderIcon.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderIcon.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderIcon);*/
                                                 ComboBox sectionHeaderSelector = new ComboBox();
                                                 sectionHeaderSelector.Width = 125;
                                                 sectionHeaderSelector.Height = 25;
@@ -2209,6 +2121,20 @@ namespace GamaManager
                                                 sectionHeaderSelectorItem.Content = currentSection;
                                                 sectionHeaderSelectorItem.Visibility = invisible;
                                                 sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderSelectorItem.Content = currentCollection;
+                                                    sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                }
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderSelectorItem.Content = separator;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
                                                 sectionHeaderSelectorItem = new ComboBoxItem();
                                                 sectionHeaderSelectorItem.Content = "Без категории";
                                                 sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
@@ -2234,7 +2160,6 @@ namespace GamaManager
                                                 Separator sectionHeaderSeparator = new Separator();
                                                 sectionHeaderSeparator.Width = 850;
                                                 sectionHeader.Children.Add(sectionHeaderSeparator);
-
                                                 PackIcon sectionHeaderLeftArrowIcon = new PackIcon();
                                                 sectionHeaderLeftArrowIcon.Width = 32;
                                                 sectionHeaderLeftArrowIcon.Height = 32;
@@ -2249,7 +2174,6 @@ namespace GamaManager
                                                 sectionHeaderRightArrowIcon.Margin = new Thickness(15, 0, 5, 0);
                                                 sectionHeaderRightArrowIcon.MouseLeftButtonUp += MoveSectionHandler;
                                                 sectionHeader.Children.Add(sectionHeaderRightArrowIcon);
-
                                                 section.Children.Add(sectionHeader);
                                                 ScrollViewer sectionFooterScroll = new ScrollViewer();
                                                 sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
@@ -2258,7 +2182,6 @@ namespace GamaManager
                                                 sectionFooter.Orientation = Orientation.Horizontal;
                                                 sectionFooter.MinHeight = 150;
                                                 sectionFooterScroll.Content = sectionFooter;
-
                                                 foreach (Game recentGamesItem in recentGames)
                                                 {
                                                     string lastPlayDate = recentGamesItem.date;
@@ -2277,15 +2200,11 @@ namespace GamaManager
                                                     recentGamesSectionItemThumbnail.EndInit();
                                                     recentGamesSectionItem.Children.Add(recentGamesSectionItemThumbnail);
                                                     sectionFooter.Children.Add(recentGamesSectionItem);
-
                                                 }
-
                                                 section.Children.Add(sectionFooterScroll);
                                                 gameSections.Children.Add(section);
-
                                                 sectionHeaderLeftArrowIcon.DataContext = sectionFooterScroll;
                                                 sectionHeaderRightArrowIcon.DataContext = sectionFooterScroll;
-
                                             }
                                             else if (isOfferGamesSection)
                                             {
@@ -2293,24 +2212,6 @@ namespace GamaManager
                                                 StackPanel sectionHeader = new StackPanel();
                                                 sectionHeader.Orientation = Orientation.Horizontal;
                                                 StackPanel sectionHeaderAside = new StackPanel();
-                                                /*TextBlock sectionHeaderAsideLabel = new TextBlock();
-                                                sectionHeaderAsideLabel.Text = currentSection;
-                                                sectionHeaderAsideLabel.FontSize = 14;
-                                                sectionHeaderAsideLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderAsideLabel.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeaderAside.Children.Add(sectionHeaderAsideLabel);
-                                                TextBlock sectionHeaderAsideDescLabel = new TextBlock();
-                                                sectionHeaderAsideDescLabel.Text = @"Эти игры вы еще не пробовали, но они нравятся похожим на вас игрокам.";
-                                                sectionHeaderAsideDescLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderAsideDescLabel.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeaderAside.Children.Add(sectionHeaderAsideDescLabel);
-                                                sectionHeader.Children.Add(sectionHeaderAside);
-                                                PackIcon sectionHeaderIcon = new PackIcon();
-                                                sectionHeaderIcon.Kind = PackIconKind.ChevronDown;
-                                                sectionHeaderIcon.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderIcon.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderIcon);*/
-
                                                 ComboBox sectionHeaderAsideSelector = new ComboBox();
                                                 sectionHeaderAsideSelector.Width = 125;
                                                 sectionHeaderAsideSelector.Height = 25;
@@ -2322,6 +2223,20 @@ namespace GamaManager
                                                 sectionHeaderAsideSelectorItem.Content = currentSection;
                                                 sectionHeaderAsideSelectorItem.Visibility = invisible;
                                                 sectionHeaderAsideSelector.Items.Add(sectionHeaderAsideSelectorItem);
+
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderAsideSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderAsideSelectorItem.Content = currentCollection;
+                                                    sectionHeaderAsideSelector.Items.Add(sectionHeaderAsideSelectorItem);
+                                                }
+                                                sectionHeaderAsideSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderAsideSelectorItem.Content = separator;
+                                                sectionHeaderAsideSelector.Items.Add(sectionHeaderAsideSelectorItem);
+
                                                 sectionHeaderAsideSelectorItem = new ComboBoxItem();
                                                 sectionHeaderAsideSelectorItem.Content = "Без категории";
                                                 sectionHeaderAsideSelector.Items.Add(sectionHeaderAsideSelectorItem);
@@ -2350,11 +2265,9 @@ namespace GamaManager
                                                 sectionHeaderAsideDescLabel.Margin = new Thickness(10, 0, 10, 0);
                                                 sectionHeaderAside.Children.Add(sectionHeaderAsideDescLabel);
                                                 sectionHeader.Children.Add(sectionHeaderAside);
-
                                                 Separator sectionHeaderSeparator = new Separator();
                                                 sectionHeaderSeparator.Width = 850;
                                                 sectionHeader.Children.Add(sectionHeaderSeparator);
-
                                                 PackIcon sectionHeaderLeftArrowIcon = new PackIcon();
                                                 sectionHeaderLeftArrowIcon.Width = 32;
                                                 sectionHeaderLeftArrowIcon.Height = 32;
@@ -2369,7 +2282,6 @@ namespace GamaManager
                                                 sectionHeaderRightArrowIcon.Margin = new Thickness(15, 0, 5, 0);
                                                 sectionHeaderRightArrowIcon.MouseLeftButtonUp += MoveSectionHandler;
                                                 sectionHeader.Children.Add(sectionHeaderRightArrowIcon);
-
                                                 section.Children.Add(sectionHeader);
                                                 ScrollViewer sectionFooterScroll = new ScrollViewer();
                                                 sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
@@ -2378,7 +2290,6 @@ namespace GamaManager
                                                 sectionFooter.Orientation = Orientation.Horizontal;
                                                 sectionFooter.MinHeight = 150;
                                                 sectionFooterScroll.Content = sectionFooter;
-
                                                 foreach (GameResponseInfo offerGamesItem in offerGames)
                                                 {
                                                     string offerGamesItemName = offerGamesItem.name;
@@ -2391,36 +2302,16 @@ namespace GamaManager
                                                     offerGamesSectionItem.EndInit();
                                                     sectionFooter.Children.Add(offerGamesSectionItem);
                                                 }
-
                                                 section.Children.Add(sectionFooterScroll);
                                                 gameSections.Children.Add(section);
-
                                                 sectionHeaderLeftArrowIcon.DataContext = sectionFooterScroll;
                                                 sectionHeaderRightArrowIcon.DataContext = sectionFooterScroll;
-
                                             }
                                             else if (isAllGamesSection)
                                             {
                                                 StackPanel section = new StackPanel();
                                                 StackPanel sectionHeader = new StackPanel();
                                                 sectionHeader.Orientation = Orientation.Horizontal;
-                                                /*TextBlock sectionHeaderLabel = new TextBlock();
-                                                sectionHeaderLabel.Text = currentSection;
-                                                sectionHeaderLabel.FontSize = 14;
-                                                sectionHeaderLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderLabel.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderLabel);
-                                                sectionHeaderLabel = new TextBlock();
-                                                sectionHeaderLabel.Text = allGamesSectionCountLabelContent;
-                                                sectionHeaderLabel.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderLabel.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderLabel);
-                                                PackIcon sectionHeaderIcon = new PackIcon();
-                                                sectionHeaderIcon.Kind = PackIconKind.ChevronDown;
-                                                sectionHeaderIcon.VerticalAlignment = VerticalAlignment.Center;
-                                                sectionHeaderIcon.Margin = new Thickness(10, 0, 10, 0);
-                                                sectionHeader.Children.Add(sectionHeaderIcon);*/
-
                                                 ComboBox sectionHeaderSelector = new ComboBox();
                                                 sectionHeaderSelector.Width = 125;
                                                 sectionHeaderSelector.Height = 25;
@@ -2431,6 +2322,277 @@ namespace GamaManager
                                                 sectionHeaderSelectorItem.Content = currentSection;
                                                 sectionHeaderSelectorItem.Visibility = invisible;
                                                 sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderSelectorItem.Content = currentCollection;
+                                                    sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                }
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderSelectorItem.Content = separator;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Без категории";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Все игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Недавние игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Список коллекций";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Во что сыграть?";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Удалить этот раздел";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+
+                                                // sectionHeaderSelector.DataContext = section;
+                                                
+                                                sectionHeaderSelector.SelectionChanged += ToggleSectionHeaderSelectorHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                TextBlock sectionHeaderLabel = new TextBlock();
+                                                sectionHeaderLabel.Text = "Сортировка";
+                                                sectionHeaderLabel.FontSize = 14;
+                                                sectionHeaderLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                sectionHeader.Children.Add(sectionHeaderLabel);
+                                                sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По алфавиту";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По играющим друзьям";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По проценту достижений";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По времени в игре";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате запуска";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате выхода";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По оценке на Metacritic";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По обзорам";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+                                                sectionHeaderSelector.SelectionChanged += SortGameSectionHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                Separator sectionHeaderSeparator = new Separator();
+                                                sectionHeaderSeparator.Width = 600;
+                                                sectionHeader.Children.Add(sectionHeaderSeparator);
+                                                PackIcon sectionHeaderToggleIcon = new PackIcon();
+                                                sectionHeaderToggleIcon.Kind = PackIconKind.ChevronDoubleUp;
+                                                sectionHeaderToggleIcon.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderToggleIcon.MouseLeftButtonUp += ToggleAllGamesSectionDisplayHandler;
+                                                sectionHeader.Children.Add(sectionHeaderToggleIcon);
+                                                section.Children.Add(sectionHeader);
+                                                ScrollViewer sectionFooterScroll = new ScrollViewer();
+                                                sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                sectionFooterScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                WrapPanel sectionFooter = new WrapPanel();
+                                                sectionFooter.MinHeight = 150;
+                                                sectionFooterScroll.Content = sectionFooter;
+                                                totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+                                                int totalGamesCount = totalGames.Count;
+                                                string rawTotalGamesCount = totalGamesCount.ToString();
+                                                allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                                WrapPanel allGamesSection = ((WrapPanel)(sectionFooter));
+                                                foreach (GameResponseInfo totalGamesItem in totalGames)
+                                                {
+                                                    string totalGamesItemName = totalGamesItem.name;
+                                                    Image allGamesSectionItem = new Image();
+                                                    allGamesSectionItem.Width = 150;
+                                                    allGamesSectionItem.Height = 250;
+                                                    allGamesSectionItem.Margin = new Thickness(15);
+                                                    allGamesSectionItem.BeginInit();
+                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                                    allGamesSectionItem.EndInit();
+                                                    allGamesSection.Children.Add(allGamesSectionItem);
+                                                }
+                                                section.Children.Add(sectionFooterScroll);
+                                                gameSections.Children.Add(section);
+                                                sectionHeaderToggleIcon.DataContext = sectionFooterScroll;
+
+                                                Dictionary<String, Object> sectionHeaderSelectorData = new Dictionary<String, Object>();
+                                                sectionHeaderSelectorData.Add("section", currentSection);
+                                                sectionHeaderSelectorData.Add("body", allGamesSection);
+                                                sectionHeaderSelector.DataContext = sectionHeaderSelectorData;
+
+                                            }
+                                            else if (isWithoutCategorySection)
+                                            {
+                                                StackPanel section = new StackPanel();
+                                                StackPanel sectionHeader = new StackPanel();
+                                                sectionHeader.Orientation = Orientation.Horizontal;
+                                                ComboBox sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.FontSize = 14;
+                                                sectionHeaderSelector.VerticalAlignment = VerticalAlignment.Center;
+                                                sectionHeaderSelector.Margin = new Thickness(10, 0, 10, 0);
+                                                ComboBoxItem sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = currentSection;
+                                                sectionHeaderSelectorItem.Visibility = invisible;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderSelectorItem.Content = currentCollection;
+                                                    sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                }
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderSelectorItem.Content = separator;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Без категории";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Все игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Недавние игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Список коллекций";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Во что сыграть?";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Удалить этот раздел";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+
+                                                sectionHeaderSelector.DataContext = section;
+
+                                                sectionHeaderSelector.SelectionChanged += ToggleSectionHeaderSelectorHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По алфавиту";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По играющим друзьям";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По проценту достижений";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По времени в игре";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате запуска";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате выхода";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По оценке на Metacritic";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По обзорам";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+                                                sectionHeaderSelector.SelectionChanged += SortGameSectionHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                Separator sectionHeaderSeparator = new Separator();
+                                                sectionHeaderSeparator.Width = 750;
+                                                sectionHeader.Children.Add(sectionHeaderSeparator);
+                                                PackIcon sectionHeaderToggleIcon = new PackIcon();
+                                                sectionHeaderToggleIcon.Kind = PackIconKind.ChevronDoubleUp;
+                                                sectionHeaderToggleIcon.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderToggleIcon.MouseLeftButtonUp += ToggleAllGamesSectionDisplayHandler;
+                                                sectionHeader.Children.Add(sectionHeaderToggleIcon);
+                                                section.Children.Add(sectionHeader);
+                                                ScrollViewer sectionFooterScroll = new ScrollViewer();
+                                                sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                sectionFooterScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                WrapPanel sectionFooter = new WrapPanel();
+                                                sectionFooter.MinHeight = 150;
+                                                sectionFooterScroll.Content = sectionFooter;
+                                                totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+                                                int totalGamesCount = totalGames.Count;
+                                                string rawTotalGamesCount = totalGamesCount.ToString();
+                                                allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                                WrapPanel allGamesSection = ((WrapPanel)(sectionFooter));
+                                                foreach (GameResponseInfo totalGamesItem in totalGames)
+                                                {
+                                                    string totalGamesItemName = totalGamesItem.name;
+                                                    Image allGamesSectionItem = new Image();
+                                                    allGamesSectionItem.Width = 150;
+                                                    allGamesSectionItem.Height = 250;
+                                                    allGamesSectionItem.Margin = new Thickness(15);
+                                                    allGamesSectionItem.BeginInit();
+                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                                    allGamesSectionItem.EndInit();
+                                                    allGamesSection.Children.Add(allGamesSectionItem);
+                                                }
+                                                section.Children.Add(sectionFooterScroll);
+                                                gameSections.Children.Add(section);
+                                                sectionHeaderToggleIcon.DataContext = sectionFooterScroll;
+
+                                                Dictionary<String, Object> sectionHeaderSelectorData = new Dictionary<String, Object>();
+                                                sectionHeaderSelectorData.Add("section", currentSection);
+                                                sectionHeaderSelectorData.Add("body", allGamesSection);
+                                                sectionHeaderSelector.DataContext = sectionHeaderSelectorData;
+
+                                            }
+                                            else if (isCollectionListSection)
+                                            {
+                                                StackPanel section = new StackPanel();
+                                                StackPanel sectionHeader = new StackPanel();
+                                                sectionHeader.Orientation = Orientation.Horizontal;
+                                                ComboBox sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.FontSize = 14;
+                                                sectionHeaderSelector.VerticalAlignment = VerticalAlignment.Center;
+                                                sectionHeaderSelector.Margin = new Thickness(10, 0, 10, 0);
+                                                ComboBoxItem sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = currentSection;
+                                                sectionHeaderSelectorItem.Visibility = invisible;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderSelectorItem.Content = currentCollection;
+                                                    sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                }
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderSelectorItem.Content = separator;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+
                                                 sectionHeaderSelectorItem = new ComboBoxItem();
                                                 sectionHeaderSelectorItem.Content = "Без категории";
                                                 sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
@@ -2453,7 +2615,6 @@ namespace GamaManager
                                                 sectionHeaderSelector.DataContext = section;
                                                 sectionHeaderSelector.SelectionChanged += ToggleSectionHeaderSelectorHandler;
                                                 sectionHeader.Children.Add(sectionHeaderSelector);
-
                                                 sectionHeaderSelector = new ComboBox();
                                                 sectionHeaderSelector.Height = 25;
                                                 sectionHeaderSelector.Width = 125;
@@ -2487,13 +2648,6 @@ namespace GamaManager
                                                 Separator sectionHeaderSeparator = new Separator();
                                                 sectionHeaderSeparator.Width = 750;
                                                 sectionHeader.Children.Add(sectionHeaderSeparator);
-
-                                                PackIcon sectionHeaderToggleIcon = new PackIcon();
-                                                sectionHeaderToggleIcon.Kind = PackIconKind.ChevronDoubleUp;
-                                                sectionHeaderToggleIcon.Margin = new Thickness(15, 0, 15, 0);
-                                                sectionHeaderToggleIcon.MouseLeftButtonUp += ToggleAllGamesSectionDisplayHandler;
-                                                sectionHeader.Children.Add(sectionHeaderToggleIcon);
-                                                
                                                 section.Children.Add(sectionHeader);
                                                 ScrollViewer sectionFooterScroll = new ScrollViewer();
                                                 sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
@@ -2501,31 +2655,363 @@ namespace GamaManager
                                                 WrapPanel sectionFooter = new WrapPanel();
                                                 sectionFooter.MinHeight = 150;
                                                 sectionFooterScroll.Content = sectionFooter;
-
                                                 totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
                                                 int totalGamesCount = totalGames.Count;
                                                 string rawTotalGamesCount = totalGamesCount.ToString();
                                                 allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
                                                 WrapPanel allGamesSection = ((WrapPanel)(sectionFooter));
-                                                foreach (GameResponseInfo totalGamesItem in totalGames)
+                                                foreach (string currentCollection in currentCollections)
                                                 {
-                                                    string totalGamesItemName = totalGamesItem.name;
-                                                    Image allGamesSectionItem = new Image();
-                                                    allGamesSectionItem.Width = 150;
-                                                    allGamesSectionItem.Height = 250;
-                                                    allGamesSectionItem.Margin = new Thickness(15);
-                                                    allGamesSectionItem.BeginInit();
-                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
-                                                    allGamesSectionItem.EndInit();
-                                                    allGamesSection.Children.Add(allGamesSectionItem);
-
+                                                    Border gameCollection = new Border();
+                                                    gameCollection.Margin = new Thickness(25);
+                                                    gameCollection.Padding = new Thickness(1.5);
+                                                    gameCollection.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                    gameCollection.BorderThickness = new Thickness(2);
+                                                    gameCollection.CornerRadius = new CornerRadius(5);
+                                                    StackPanel gameCollectionBody = new StackPanel();
+                                                    gameCollectionBody.Width = 175;
+                                                    gameCollectionBody.Height = 175;
+                                                    gameCollection.Child = gameCollectionBody;
+                                                    TextBlock gameCollectionBodyNameLabel = new TextBlock();
+                                                    gameCollectionBodyNameLabel.TextAlignment = TextAlignment.Center;
+                                                    gameCollectionBodyNameLabel.Margin = new Thickness(0, 125, 0, 0);
+                                                    gameCollectionBodyNameLabel.Text = currentCollection;
+                                                    gameCollectionBody.Children.Add(gameCollectionBodyNameLabel);
+                                                    TextBlock gameCollectionBodyCountGamesLabel = new TextBlock();
+                                                    gameCollectionBodyCountGamesLabel.TextAlignment = TextAlignment.Center;
+                                                    gameCollectionBodyCountGamesLabel.Margin = new Thickness(0, 15, 0, 0);
+                                                    List<Game> gamesForCollection = currentGames.Where<Game>((Game game) =>
+                                                    {
+                                                        List<string> gameCollections = game.collections;
+                                                        bool isGameForCollection = gameCollections.Contains(currentCollection);
+                                                        return isGameForCollection;
+                                                    }).ToList<Game>();
+                                                    int countGamesForCollection = gamesForCollection.Count;
+                                                    string rawCountGamesForCollection = countGamesForCollection.ToString();
+                                                    gameCollectionBodyCountGamesLabel.Text = rawCountGamesForCollection;
+                                                    gameCollectionBody.Children.Add(gameCollectionBodyCountGamesLabel);
+                                                    allGamesSection.Children.Add(gameCollection);
+                                                    gameCollection.DataContext = currentCollection;
+                                                    gameCollection.MouseLeftButtonUp += SelectGameCollectionHandler;
+                                                    ContextMenu gameCollectionContextMenu = new ContextMenu();
+                                                    MenuItem gameCollectionContextMenuItem = new MenuItem();
+                                                    gameCollectionContextMenuItem.Header = "Переименовать коллекцию";
+                                                    gameCollectionContextMenuItem.DataContext = currentCollection;
+                                                    gameCollectionContextMenuItem.Click += RenameGameCollectionHandler;
+                                                    gameCollectionContextMenu.Items.Add(gameCollectionContextMenuItem);
+                                                    gameCollectionContextMenuItem = new MenuItem();
+                                                    gameCollectionContextMenuItem.Header = "Удалить коллекцию";
+                                                    gameCollectionContextMenuItem.DataContext = currentCollection;
+                                                    gameCollectionContextMenuItem.Click += RemoveGameCollectionHandler;
+                                                    gameCollectionContextMenu.Items.Add(gameCollectionContextMenuItem);
+                                                    gameCollection.ContextMenu = gameCollectionContextMenu;
+                                                    int imageWidth = 35;
+                                                    int imageHeight = 35;
+                                                    DrawingVisual drawingVisual = new DrawingVisual();
+                                                    using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+                                                    {
+                                                        SkewTransform transform = new SkewTransform();
+                                                        transform.AngleX = 15;
+                                                        transform.AngleY = 15;
+                                                        drawingContext.PushTransform(transform);
+                                                        foreach (Game gameForCollection in gamesForCollection)
+                                                        {
+                                                            int frameIndex = gamesForCollection.IndexOf(gameForCollection);
+                                                            string currentGameId = gameForCollection.id;
+                                                            string currentGameName = gameForCollection.name;
+                                                            string currentGameCover = gameForCollection.cover;
+                                                            bool isCoverSet = currentGameCover != "";
+                                                            bool isCoverFound = File.Exists(currentGameCover);
+                                                            bool isCoverExists = isCoverSet && isCoverFound;
+                                                            Uri coverUri = null;
+                                                            bool isCustomGame = currentGameId == "mockId";
+                                                            bool isNotCustomGame = !isCustomGame;
+                                                            if (isCoverExists)
+                                                            {
+                                                                coverUri = new Uri(currentGameCover);
+                                                            }
+                                                            else if (isNotCustomGame)
+                                                            {
+                                                                coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                            }
+                                                            else
+                                                            {
+                                                                coverUri = new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png");
+                                                            }
+                                                            BitmapFrame frame = BitmapDecoder.Create(coverUri, BitmapCreateOptions.None, BitmapCacheOption.OnLoad).Frames.First();
+                                                            drawingContext.DrawImage(frame, new Rect(frameIndex * 35, 0, imageWidth, imageHeight));
+                                                        }
+                                                    }
+                                                    VisualBrush visualBrush = new VisualBrush(drawingVisual);
+                                                    gameCollectionBody.Background = visualBrush;
                                                 }
-                                                
+
                                                 section.Children.Add(sectionFooterScroll);
                                                 gameSections.Children.Add(section);
+                                            }
+                                            else if (isCollectionGamesSection)
+                                            {
+                                                StackPanel section = new StackPanel();
+                                                StackPanel sectionHeader = new StackPanel();
+                                                sectionHeader.Orientation = Orientation.Horizontal;
+                                                ComboBox sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.FontSize = 14;
+                                                sectionHeaderSelector.VerticalAlignment = VerticalAlignment.Center;
+                                                sectionHeaderSelector.Margin = new Thickness(10, 0, 10, 0);
+                                                ComboBoxItem sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = currentSection;
+                                                sectionHeaderSelectorItem.Visibility = invisible;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    sectionHeaderSelectorItem = new ComboBoxItem();
+                                                    sectionHeaderSelectorItem.Content = currentCollection;
+                                                    sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                }
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                separator = new Separator();
+                                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                                separator.BorderThickness = new Thickness(1);
+                                                sectionHeaderSelectorItem.Content = separator;
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Без категории";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Все игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Недавние игры";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Список коллекций";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Во что сыграть?";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "Удалить этот раздел";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+                                                sectionHeaderSelector.DataContext = section;
+                                                sectionHeaderSelector.SelectionChanged += ToggleSectionHeaderSelectorHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                sectionHeaderSelector = new ComboBox();
+                                                sectionHeaderSelector.Height = 25;
+                                                sectionHeaderSelector.Width = 125;
+                                                sectionHeaderSelector.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По алфавиту";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По играющим друзьям";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По проценту достижений";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По времени в игре";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате запуска";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По дате выхода";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По оценке на Metacritic";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelectorItem = new ComboBoxItem();
+                                                sectionHeaderSelectorItem.Content = "По обзорам";
+                                                sectionHeaderSelector.Items.Add(sectionHeaderSelectorItem);
+                                                sectionHeaderSelector.SelectedIndex = 0;
+                                                sectionHeaderSelector.SelectionChanged += SortGameSectionHandler;
+                                                sectionHeader.Children.Add(sectionHeaderSelector);
+                                                Separator sectionHeaderSeparator = new Separator();
+                                                sectionHeaderSeparator.Width = 750;
+                                                sectionHeader.Children.Add(sectionHeaderSeparator);
+                                                PackIcon sectionHeaderToggleIcon = new PackIcon();
+                                                sectionHeaderToggleIcon.Kind = PackIconKind.ChevronDoubleUp;
+                                                sectionHeaderToggleIcon.Margin = new Thickness(15, 0, 15, 0);
+                                                sectionHeaderToggleIcon.MouseLeftButtonUp += ToggleAllGamesSectionDisplayHandler;
+                                                sectionHeader.Children.Add(sectionHeaderToggleIcon);
+                                                section.Children.Add(sectionHeader);
+                                                ScrollViewer sectionFooterScroll = new ScrollViewer();
+                                                sectionFooterScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                sectionFooterScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                                                WrapPanel sectionFooter = new WrapPanel();
+                                                sectionFooter.MinHeight = 150;
+                                                sectionFooterScroll.Content = sectionFooter;
+                                                totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+                                                int totalGamesCount = totalGames.Count;
+                                                string rawTotalGamesCount = totalGamesCount.ToString();
+                                                allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                                WrapPanel allGamesSection = ((WrapPanel)(sectionFooter));
 
-                                                // sectionHeaderToggleIcon.DataContext = sectionFooter;
+                                                List<Game> collectionGames = currentGames.Where<Game>((Game game) =>
+                                                {
+                                                    List<string> gameCollections = game.collections;
+                                                    bool isGameForCollection = gameCollections.Contains(currentSection);
+                                                    bool isHiddenGame = game.isHidden;
+                                                    bool isDisplayedGame = !isHiddenGame;
+                                                    bool isShowGame = isGameForCollection && isDisplayedGame;
+                                                    return isShowGame;
+                                                }).ToList();
+                                                foreach (Game currentGame in currentGames)
+                                                {
+                                                    List<string> currentGameCollections = currentGame.collections;
+                                                    bool isGameForCurrentCollection = currentGameCollections.Contains(currentSection);
+                                                    bool isHiddenGame = currentGame.isHidden;
+                                                    bool isDisplayedGame = !isHiddenGame;
+                                                    bool isShowGame = isGameForCurrentCollection && isDisplayedGame;
+                                                    if (isShowGame)
+                                                    {
+                                                        string currentGameId = currentGame.id;
+                                                        string currentGameName = currentGame.name;
+                                                        string currentGameCover = currentGame.cover;
+                                                        bool isCoverSet = currentGameCover != "";
+                                                        bool isCoverFound = File.Exists(currentGameCover);
+                                                        bool isCoverExists = isCoverSet && isCoverFound;
+                                                        Image gameCollectionItem = new Image();
+                                                        gameCollectionItem.Width = 100;
+                                                        gameCollectionItem.Height = 100;
+                                                        gameCollectionItem.Margin = new Thickness(25);
+                                                        gameCollectionItem.BeginInit();
+                                                        Uri coverUri = null;
+                                                        if (isCoverExists)
+                                                        {
+                                                            coverUri = new Uri(currentGameCover);
+                                                        }
+                                                        else
+                                                        {
+                                                            coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                        }
+                                                        gameCollectionItem.Source = new BitmapImage(coverUri);
+                                                        gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
+                                                        gameCollectionItem.EndInit();
+                                                        sectionFooter.Children.Add(gameCollectionItem);
+                                                        gameCollectionItem.DataContext = currentGameName;
+                                                        // gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
+                                                        ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+                                                        MenuItem gameCollectionItemContextMenuItem = new MenuItem();
+                                                        gameCollectionItemContextMenuItem.Header = "Играть";
+                                                        gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                                                        gameCollectionItemContextMenuItem.Click += RunGameHandler;
+                                                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                        gameCollectionItemContextMenuItem = new MenuItem();
+                                                        gameCollectionItemContextMenuItem.Header = "Добавить в";
+                                                        MenuItem gameCollectionItemNestedContextMenuItem;
+                                                        Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData;
+                                                        foreach (string currentCollection in currentCollections)
+                                                        {
+                                                            gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                            gameCollectionItemNestedContextMenuItem.Header = currentCollection;
+                                                            gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                            gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                            gameCollectionItemNestedContextMenuItemData.Add("collection", currentCollection);
+                                                            gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                            gameCollectionItemNestedContextMenuItem.Click += AddGameToCollectionHandler;
+                                                            gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                            bool isDisabledCollection = currentGameCollections.Contains(currentCollection);
+                                                            if (isDisabledCollection)
+                                                            {
+                                                                gameCollectionItemNestedContextMenuItem.IsEnabled = false;
+                                                            }
+                                                        }
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        gameCollectionItemNestedContextMenuItem.Header = "Создать коллекцию";
+                                                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                        gameCollectionItemNestedContextMenuItemData.Add("collection", currentSection);
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                        gameCollectionItemNestedContextMenuItem.Click += CreateCollectionFromMenuHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                        gameCollectionItemContextMenuItem = new MenuItem();
+                                                        string gameCollectionItemContextMenuItemHeaderContent = "Убрать из " + currentSection;
+                                                        gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                                                        Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                        gameCollectionItemContextMenuItemData.Add("collection", currentSection);
+                                                        gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                        gameCollectionItemContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                                                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                        gameCollectionItemContextMenuItem = new MenuItem();
+                                                        gameCollectionItemContextMenuItem.Header = "Управление";
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        gameCollectionItemNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                        gameCollectionItemNestedContextMenuItem.Click += CreateShortcutHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        bool IsCoverSet = currentGameCover != "";
+                                                        if (IsCoverSet)
+                                                        {
+                                                            gameCollectionItemNestedContextMenuItem.Header = "Удалить свою обложку";
+                                                        }
+                                                        else
+                                                        {
+                                                            gameCollectionItemNestedContextMenuItem.Header = "Задать свою обложку";
+                                                        }
+                                                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                        gameCollectionItemNestedContextMenuItemData.Add("collection", currentSection);
+                                                        gameCollectionItemNestedContextMenuItemData.Add("cover", currentGameCover);
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                        gameCollectionItemNestedContextMenuItem.Click += ToggleGameCoverHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        gameCollectionItemNestedContextMenuItem.Header = "Просмотреть локальные файлы";
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                        gameCollectionItemNestedContextMenuItem.Click += ShowGamesLocalFilesHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        isHiddenGame = currentGame.isHidden;
+                                                        if (isHiddenGame)
+                                                        {
+                                                            gameCollectionItemNestedContextMenuItem.Header = "Убрать из скрытого";
+                                                        }
+                                                        else
+                                                        {
+                                                            gameCollectionItemNestedContextMenuItem.Header = "Скрыть игру";
+                                                        }
+                                                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                        gameCollectionItemNestedContextMenuItemData.Add("collection", currentSection);
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                        gameCollectionItemNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                        gameCollectionItemNestedContextMenuItem.Header = "Удалить с утройства";
+                                                        gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                        gameCollectionItemNestedContextMenuItemData.Add("collection", currentSection);
+                                                        gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                        gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                                                        gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                        gameCollectionItemContextMenuItem = new MenuItem();
+                                                        gameCollectionItemContextMenuItem.Header = "Свойства";
+                                                        gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                        gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                        bool isCustomGame = currentGameId == "mockId";
+                                                        gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                                                        gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                        gameCollectionItemContextMenuItem.Click += OpenGameSettingsHandler;
+                                                        gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                        gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
+                                                    }
+                                                }
+                                                section.Children.Add(sectionFooterScroll);
+                                                gameSections.Children.Add(section);
                                                 sectionHeaderToggleIcon.DataContext = sectionFooterScroll;
+
+                                                Dictionary<String, Object> sectionHeaderSelectorData = new Dictionary<String, Object>();
+                                                sectionHeaderSelectorData.Add("section", currentSection);
+                                                sectionHeaderSelectorData.Add("body", allGamesSection);
+                                                sectionHeaderSelector.DataContext = sectionHeaderSelectorData;
 
                                             }
                                         }
@@ -2542,6 +3028,1208 @@ namespace GamaManager
             {
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
+            }
+        }
+
+        public void InitAddGameSection ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<string> currentCollections = loadedContent.collections;
+            ComboBoxItem addGameSectionSelectorItem = new ComboBoxItem();
+            Separator separator = new Separator();
+            separator.BorderBrush = System.Windows.Media.Brushes.Black;
+            separator.BorderThickness = new Thickness(1);
+            addGameSectionSelectorItem.Content = separator;
+            addGameSectionSelector.Items.Insert(0, addGameSectionSelectorItem);
+            foreach (string currentCollection in currentCollections)
+            {
+                addGameSectionSelectorItem = new ComboBoxItem();
+                addGameSectionSelectorItem.Content = currentCollection;
+                addGameSectionSelector.Items.Insert(0, addGameSectionSelectorItem);
+            }
+        }
+
+        public void SortGameSectionHandler (object sender, RoutedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            SortGameSection(selector);
+        }
+
+
+        public void SortGameSection (ComboBox selector)
+        {
+            if (isAppInit)
+            {
+                int sortTypeIndex = selector.SelectedIndex;
+                bool isSortByAlphabet = sortTypeIndex == 0;
+                bool isSortByFriends = sortTypeIndex == 1;
+                bool isSortByAchiviements = sortTypeIndex == 2;
+                bool isSortByTime = sortTypeIndex == 3;
+                bool isSortByLaunchDate = sortTypeIndex == 4;
+                bool isSortByExitDate = sortTypeIndex == 5;
+                bool isSortBySize = sortTypeIndex == 6;
+                bool isSortByMetacritic = sortTypeIndex == 7;
+                bool isSortByReviews = sortTypeIndex == 8;
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> totalGames = myobj.games;
+
+                                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                                js = new JavaScriptSerializer();
+                                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                                List<Game> currentGames = loadedContent.games;
+                                List<string> currentCollections = loadedContent.collections;
+
+                                object rawSelectorData = selector.DataContext;
+                                Dictionary<String, Object> selectorData = ((Dictionary<String, Object>)(rawSelectorData));
+                                string section = ((string)(selectorData["section"]));
+                                object body = selectorData["body"];
+                                bool isAllGamesSection = section == "Все игры";
+                                bool isWithoutCategorySection = section == "Без категории";
+                                bool isCollectionGamesSection = currentCollections.Contains(section);
+                                bool isRow = body is StackPanel;
+                                if (isAllGamesSection)
+                                {
+                                    string allGamesSectionCountLabelContent = "";
+                                    if (isRow)
+                                    {
+                                        StackPanel allGamesSectionScrollContent = ((StackPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(6).ToList<GameResponseInfo>();
+                                        
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 150;
+                                            allGamesSectionItem.Height = 250;
+                                            allGamesSectionItem.Margin = new Thickness(15);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        WrapPanel allGamesSectionScrollContent = ((WrapPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 150;
+                                            allGamesSectionItem.Height = 250;
+                                            allGamesSectionItem.Margin = new Thickness(15);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }
+                                    }
+                                }
+                                else if (isWithoutCategorySection)
+                                {
+                                    string allGamesSectionCountLabelContent = "";
+                                    if (isRow)
+                                    {
+                                        StackPanel allGamesSectionScrollContent = ((StackPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(6).ToList<GameResponseInfo>();
+
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 150;
+                                            allGamesSectionItem.Height = 250;
+                                            allGamesSectionItem.Margin = new Thickness(15);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        WrapPanel allGamesSectionScrollContent = ((WrapPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 150;
+                                            allGamesSectionItem.Height = 250;
+                                            allGamesSectionItem.Margin = new Thickness(15);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }
+                                    }
+                                }
+                                else if (isCollectionGamesSection)
+                                {
+
+                                    List<Game> collectionGames = currentGames.Where<Game>((Game game) =>
+                                    {
+                                        List<string> gameCollections = game.collections;
+                                        bool isGameForCollection = gameCollections.Contains(section);
+                                        bool isHiddenGame = game.isHidden;
+                                        bool isDisplayedGame = !isHiddenGame;
+                                        bool isShowGame = isGameForCollection && isDisplayedGame;
+                                        return isShowGame;
+                                    }).ToList();
+                                    
+                                    string allGamesSectionCountLabelContent = "";
+                                    if (isRow)
+                                    {
+                                        StackPanel allGamesSectionScrollContent = ((StackPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(6).ToList<GameResponseInfo>();
+
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        /*foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 100;
+                                            allGamesSectionItem.Height = 100;
+                                            allGamesSectionItem.Margin = new Thickness(25);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }*/
+                                        foreach (Game currentGame in currentGames)
+                                        {
+                                            List<string> currentGameCollections = currentGame.collections;
+                                            bool isGameForCurrentCollection = currentGameCollections.Contains(section);
+                                            bool isHiddenGame = currentGame.isHidden;
+                                            bool isDisplayedGame = !isHiddenGame;
+                                            bool isShowGame = isGameForCurrentCollection && isDisplayedGame;
+                                            if (isShowGame)
+                                            {
+                                                string currentGameId = currentGame.id;
+                                                string currentGameName = currentGame.name;
+                                                string currentGameCover = currentGame.cover;
+                                                bool isCoverSet = currentGameCover != "";
+                                                bool isCoverFound = File.Exists(currentGameCover);
+                                                bool isCoverExists = isCoverSet && isCoverFound;
+                                                Image gameCollectionItem = new Image();
+                                                gameCollectionItem.Width = 100;
+                                                gameCollectionItem.Height = 100;
+                                                gameCollectionItem.Margin = new Thickness(25);
+                                                gameCollectionItem.BeginInit();
+                                                Uri coverUri = null;
+                                                if (isCoverExists)
+                                                {
+                                                    coverUri = new Uri(currentGameCover);
+                                                }
+                                                else
+                                                {
+                                                    coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                }
+                                                gameCollectionItem.Source = new BitmapImage(coverUri);
+                                                gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
+                                                gameCollectionItem.EndInit();
+                                                allGamesSectionScrollContent.Children.Add(gameCollectionItem);
+                                                gameCollectionItem.DataContext = currentGameName;
+                                                // gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
+                                                ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+                                                MenuItem gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Играть";
+                                                gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemContextMenuItem.Click += RunGameHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Добавить в";
+                                                MenuItem gameCollectionItemNestedContextMenuItem;
+                                                Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData;
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                    gameCollectionItemNestedContextMenuItem.Header = currentCollection;
+                                                    gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                    gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                    gameCollectionItemNestedContextMenuItemData.Add("collection", currentCollection);
+                                                    gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                    gameCollectionItemNestedContextMenuItem.Click += AddGameToCollectionHandler;
+                                                    gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                    bool isDisabledCollection = currentGameCollections.Contains(currentCollection);
+                                                    if (isDisabledCollection)
+                                                    {
+                                                        gameCollectionItemNestedContextMenuItem.IsEnabled = false;
+                                                    }
+                                                }
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Создать коллекцию";
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += CreateCollectionFromMenuHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                string gameCollectionItemContextMenuItemHeaderContent = "Убрать из " + section;
+                                                gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                                                Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                gameCollectionItemContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Управление";
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                                                gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemNestedContextMenuItem.Click += CreateShortcutHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                bool IsCoverSet = currentGameCover != "";
+                                                if (IsCoverSet)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Удалить свою обложку";
+                                                }
+                                                else
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Задать свою обложку";
+                                                }
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItemData.Add("cover", currentGameCover);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += ToggleGameCoverHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Просмотреть локальные файлы";
+                                                gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemNestedContextMenuItem.Click += ShowGamesLocalFilesHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                isHiddenGame = currentGame.isHidden;
+                                                if (isHiddenGame)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Убрать из скрытого";
+                                                }
+                                                else
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Скрыть игру";
+                                                }
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Удалить с утройства";
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Свойства";
+                                                gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                bool isCustomGame = currentGameId == "mockId";
+                                                gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                                                gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                gameCollectionItemContextMenuItem.Click += OpenGameSettingsHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        WrapPanel allGamesSectionScrollContent = ((WrapPanel)(body));
+                                        allGamesSectionScrollContent.Children.Clear();
+                                        totalGames = totalGames.Take(18).ToList<GameResponseInfo>();
+
+                                        if (isSortByAlphabet)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByFriends)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.name).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByAchiviements)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.date).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByTime)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.genre).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                int countHours = 0;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        GameRelationsResponseInfo myInnerObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<GameRelation> relations = myInnerObj.relations;
+                                                            List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                                            {
+                                                                string localGameId = relation.game;
+                                                                string localUserId = relation.user;
+                                                                bool isMyGame = currentUserId == localUserId;
+                                                                bool isCurrentGame = localGameId == someGameId;
+                                                                bool isLocalGamePayed = isMyGame && isCurrentGame;
+                                                                return isLocalGamePayed;
+                                                            }).ToList<GameRelation>();
+                                                            int countUserGameRelations = userGameRelations.Count;
+                                                            bool isHaveRelations = countUserGameRelations >= 1;
+                                                            if (isHaveRelations)
+                                                            {
+                                                                GameRelation userGameRelation = userGameRelations[0];
+                                                                string rawHours = userGameRelation.hours;
+                                                                countHours = Int32.Parse(rawHours);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                return countHours;
+                                            }).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByLaunchDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.likes).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByExitDate)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.platform).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortBySize)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.price).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByMetacritic)
+                                        {
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.maxUsers).ToList<GameResponseInfo>();
+                                        }
+                                        else if (isSortByReviews)
+                                        {
+                                            // totalGames = totalGames.OrderBy((GameResponseInfo someGame) => someGame.users).ToList<GameResponseInfo>();
+                                            totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
+                                            {
+                                                string someGameId = someGame._id;
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                innerWebRequest.Method = "GET";
+                                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                                {
+                                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerReader.ReadToEnd();
+                                                        ReviewsResponseInfo myInnerObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                        status = myInnerObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<Review> totalReviews = myInnerObj.reviews;
+                                                            int countGameReviews = totalReviews.Count<Review>((Review someReview) =>
+                                                            {
+                                                                string someReviewGameId = someReview.game;
+                                                                bool isCurrentGameReview = someGameId == someReviewGameId;
+                                                                return isCurrentGameReview;
+                                                            });
+                                                            return countGameReviews;
+                                                        }
+                                                        else
+                                                        {
+                                                            return 0;
+                                                        }
+                                                    }
+                                                }
+                                            }).ToList<GameResponseInfo>();
+                                        }
+
+                                        int totalGamesCount = totalGames.Count;
+                                        string rawTotalGamesCount = totalGamesCount.ToString();
+                                        allGamesSectionCountLabelContent = "(" + rawTotalGamesCount + ")";
+                                        /*foreach (GameResponseInfo totalGamesItem in totalGames)
+                                        {
+                                            string totalGamesItemName = totalGamesItem.name;
+                                            Image allGamesSectionItem = new Image();
+                                            allGamesSectionItem.Width = 100;
+                                            allGamesSectionItem.Height = 100;
+                                            allGamesSectionItem.Margin = new Thickness(25);
+                                            allGamesSectionItem.BeginInit();
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.EndInit();
+                                            allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
+                                        }*/
+                                        foreach (Game currentGame in currentGames)
+                                        {
+                                            List<string> currentGameCollections = currentGame.collections;
+                                            bool isGameForCurrentCollection = currentGameCollections.Contains(section);
+                                            bool isHiddenGame = currentGame.isHidden;
+                                            bool isDisplayedGame = !isHiddenGame;
+                                            bool isShowGame = isGameForCurrentCollection && isDisplayedGame;
+                                            if (isShowGame)
+                                            {
+                                                string currentGameId = currentGame.id;
+                                                string currentGameName = currentGame.name;
+                                                string currentGameCover = currentGame.cover;
+                                                bool isCoverSet = currentGameCover != "";
+                                                bool isCoverFound = File.Exists(currentGameCover);
+                                                bool isCoverExists = isCoverSet && isCoverFound;
+                                                Image gameCollectionItem = new Image();
+                                                gameCollectionItem.Width = 100;
+                                                gameCollectionItem.Height = 100;
+                                                gameCollectionItem.Margin = new Thickness(25);
+                                                gameCollectionItem.BeginInit();
+                                                Uri coverUri = null;
+                                                if (isCoverExists)
+                                                {
+                                                    coverUri = new Uri(currentGameCover);
+                                                }
+                                                else
+                                                {
+                                                    coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                }
+                                                gameCollectionItem.Source = new BitmapImage(coverUri);
+                                                gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
+                                                gameCollectionItem.EndInit();
+                                                allGamesSectionScrollContent.Children.Add(gameCollectionItem);
+                                                gameCollectionItem.DataContext = currentGameName;
+                                                // gameCollectionItem.MouseLeftButtonUp += SelectGameCollectionItemHandler;
+                                                ContextMenu gameCollectionItemContextMenu = new ContextMenu();
+                                                MenuItem gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Играть";
+                                                gameCollectionItemContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemContextMenuItem.Click += RunGameHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Добавить в";
+                                                MenuItem gameCollectionItemNestedContextMenuItem;
+                                                Dictionary<String, Object> gameCollectionItemNestedContextMenuItemData;
+                                                foreach (string currentCollection in currentCollections)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                    gameCollectionItemNestedContextMenuItem.Header = currentCollection;
+                                                    gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                    gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                    gameCollectionItemNestedContextMenuItemData.Add("collection", currentCollection);
+                                                    gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                    gameCollectionItemNestedContextMenuItem.Click += AddGameToCollectionHandler;
+                                                    gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                    bool isDisabledCollection = currentGameCollections.Contains(currentCollection);
+                                                    if (isDisabledCollection)
+                                                    {
+                                                        gameCollectionItemNestedContextMenuItem.IsEnabled = false;
+                                                    }
+                                                }
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Создать коллекцию";
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("name", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += CreateCollectionFromMenuHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                string gameCollectionItemContextMenuItemHeaderContent = "Убрать из " + section;
+                                                gameCollectionItemContextMenuItem.Header = gameCollectionItemContextMenuItemHeaderContent;
+                                                Dictionary<String, Object> gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                gameCollectionItemContextMenuItem.Click += RemoveGameFromCollectionHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Управление";
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Создать ярлык на рабочем столе";
+                                                gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemNestedContextMenuItem.Click += CreateShortcutHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                bool IsCoverSet = currentGameCover != "";
+                                                if (IsCoverSet)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Удалить свою обложку";
+                                                }
+                                                else
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Задать свою обложку";
+                                                }
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItemData.Add("cover", currentGameCover);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += ToggleGameCoverHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Просмотреть локальные файлы";
+                                                gameCollectionItemNestedContextMenuItem.DataContext = currentGameName;
+                                                gameCollectionItemNestedContextMenuItem.Click += ShowGamesLocalFilesHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                isHiddenGame = currentGame.isHidden;
+                                                if (isHiddenGame)
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Убрать из скрытого";
+                                                }
+                                                else
+                                                {
+                                                    gameCollectionItemNestedContextMenuItem.Header = "Скрыть игру";
+                                                }
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += ToggleGameVisibilityHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemNestedContextMenuItem = new MenuItem();
+                                                gameCollectionItemNestedContextMenuItem.Header = "Удалить с утройства";
+                                                gameCollectionItemNestedContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemNestedContextMenuItemData.Add("game", currentGameName);
+                                                gameCollectionItemNestedContextMenuItemData.Add("collection", section);
+                                                gameCollectionItemNestedContextMenuItem.DataContext = gameCollectionItemNestedContextMenuItemData;
+                                                gameCollectionItemNestedContextMenuItem.Click += RemoveGameFromCollectionsMenuHandler;
+                                                gameCollectionItemContextMenuItem.Items.Add(gameCollectionItemNestedContextMenuItem);
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItemContextMenuItem = new MenuItem();
+                                                gameCollectionItemContextMenuItem.Header = "Свойства";
+                                                gameCollectionItemContextMenuItemData = new Dictionary<String, Object>();
+                                                gameCollectionItemContextMenuItemData.Add("game", currentGameName);
+                                                bool isCustomGame = currentGameId == "mockId";
+                                                gameCollectionItemContextMenuItemData.Add("isCustomGame", isCustomGame);
+                                                gameCollectionItemContextMenuItem.DataContext = gameCollectionItemContextMenuItemData;
+                                                gameCollectionItemContextMenuItem.Click += OpenGameSettingsHandler;
+                                                gameCollectionItemContextMenu.Items.Add(gameCollectionItemContextMenuItem);
+                                                gameCollectionItem.ContextMenu = gameCollectionItemContextMenu;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException exception)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
             }
         }
 
@@ -2582,7 +4270,9 @@ namespace GamaManager
                 double updatedOffset = offset + 100;
                 sectionScroll.ScrollToHorizontalOffset(updatedOffset);
                 leftArrowIcon.Foreground = System.Windows.Media.Brushes.Black;
-                if (updatedOffset >= sectionScroll.ScrollableWidth)
+                double scrollableWidth = sectionScroll.ScrollableWidth;
+                bool isEndOffset = updatedOffset >= scrollableWidth;
+                if (isEndOffset)
                 {
                     icon.Foreground = System.Windows.Media.Brushes.LightGray;
                 }
@@ -2595,7 +4285,8 @@ namespace GamaManager
                 double updatedOffset = offset - 100;
                 sectionScroll.ScrollToHorizontalOffset(updatedOffset);
                 rightArrowIcon.Foreground = System.Windows.Media.Brushes.Black;
-                if (updatedOffset <= 0)
+                bool isStartOffset = updatedOffset <= 0;
+                if (isStartOffset)
                 {
                     icon.Foreground = System.Windows.Media.Brushes.LightGray;
                 }
@@ -2606,29 +4297,11 @@ namespace GamaManager
         {
             PackIcon icon = ((PackIcon)(sender));
             object rawIconData = icon.DataContext;
-            // Dictionary<String, Object> iconData = ((Dictionary<String, Object>)(rawIconData));
             ToggleAllGamesSectionDisplay(rawIconData);
         }
 
-        // public void ToggleAllGamesSectionDisplay (Dictionary<String, Object> iconData)
         public void ToggleAllGamesSectionDisplay (object scroll)
         {
-            /*object rawAllGamesSection = allGamesSectionScroll.Content;
-            bool isRow = rawAllGamesSection is StackPanel;
-            if (isRow)
-            {
-                allGamesSectionScroll.Content = new WrapPanel();
-            }
-            else
-            {
-                StackPanel allGamesSectionScrollContent = new StackPanel();
-                allGamesSectionScrollContent.Orientation = Orientation.Horizontal;
-                allGamesSectionScroll.Content = allGamesSectionScrollContent;
-            }
-            GetGameSections();*/
-
-            /*TextBlock label = ((TextBlock)(iconData["label"]));
-            object content = iconData["content"];*/
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
@@ -9359,7 +11032,7 @@ namespace GamaManager
             ShowOffers();
         }
 
-        public void GetGameCollections()
+        public void GetGameCollections ()
         {
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -9560,7 +11233,7 @@ namespace GamaManager
             SelectGameCollection(collectionName);
         }
 
-        public void SelectGameCollection(string name)
+        public void SelectGameCollection (string name)
         {
 
             /*AdornerLayer layer = AdornerLayer.GetAdornerLayer(adornerWrap);
@@ -9988,7 +11661,7 @@ namespace GamaManager
             SelectGameCollectionItem(name);
         }
 
-        public void SelectGameCollectionItem(string name)
+        public void SelectGameCollectionItem (string name)
         {
             Dictionary<String, Object> myGameData = null;
             foreach (StackPanel game in games.Children)
@@ -12342,7 +14015,16 @@ namespace GamaManager
                                         bool isGameInstalled = countGameSearchResults >= 1;
                                         bool isGameNotInstalled = !isGameInstalled;
                                         bool isSortByReady2GoDisabled = !isSortByReady2GoEnabled;
-                                        bool isSortByReady2Go = (isSortByReady2GoEnabled && isGameInstalled) || isSortByReady2GoDisabled;
+
+                                        object rawKeywordsLabelFilterPopupLocalInstalledCheckBoxIsChecked = keywordsLabelFilterPopupLocalInstalledCheckBox.IsChecked;
+                                        bool keywordsLabelFilterPopupLocalInstalledCheckBoxIsChecked = ((bool)(rawKeywordsLabelFilterPopupLocalInstalledCheckBoxIsChecked));
+                                        object rawKeywordsLabelFilterPopupReady2GoCheckBoxIsChecked = keywordsLabelFilterPopupReady2GoCheckBox.IsChecked;
+                                        bool keywordsLabelFilterPopupReady2GoCheckBoxIsChecked = ((bool)(rawKeywordsLabelFilterPopupReady2GoCheckBoxIsChecked));
+                                        bool keywordsLabelFilterPopupLocalInstalledCheckBoxIsNotChecked = !keywordsLabelFilterPopupLocalInstalledCheckBoxIsChecked;
+                                        bool keywordsLabelFilterPopupReady2GoCheckBoxIsNotChecked = !keywordsLabelFilterPopupReady2GoCheckBoxIsChecked;
+
+                                        bool isSortByReady2Go = ((isSortByReady2GoEnabled && isGameInstalled) || isSortByReady2GoDisabled);
+                                        // bool isSortByReady2Go = ((isSortByReady2GoEnabled || keywordsLabelFilterPopupLocalInstalledCheckBoxIsChecked || keywordsLabelFilterPopupReady2GoCheckBoxIsChecked) && isGameInstalled) || (isSortByReady2GoDisabled && keywordsLabelFilterPopupLocalInstalledCheckBoxIsNotChecked && keywordsLabelFilterPopupReady2GoCheckBoxIsChecked);
                                         if (isSortByReady2Go)
                                         {
 
@@ -17618,7 +19300,7 @@ namespace GamaManager
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
             Recommendations currentRecommendations = loadedContent.recommendations;
-
+            List<string> currentSections = loadedContent.sections;
             string savedContent = "";
             
             bool isRestoreChats = currentSettings.isRestoreChats;
@@ -17638,7 +19320,6 @@ namespace GamaManager
                     List<string> chats = chatDialog.chats;
                     List<string> updatedRecentChats = loadedContent.recentChats;
                     string currentLogoutDate = loadedContent.logoutDate;
-                    List<string> currentSections = loadedContent.sections;
                     updatedRecentChats = chats;
                     savedContent = js.Serialize(new SavedContent
                     {
@@ -17657,17 +19338,9 @@ namespace GamaManager
             }
 
             List<string> currentRecentChats = loadedContent.recentChats;
-            
-            // DateTime updatedLogoutDate = loadedContent.logoutDate;
-            // DateTime updatedLogoutDate = DateTime.Parse(loadedContent.logoutDate);
             string updatedLogoutDate = loadedContent.logoutDate;
-
             System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
-            
-            // updatedLogoutDate = DateTime.Now;
             updatedLogoutDate = DateTime.Now.ToString("F");
-            
-            // Debugger.Log(0, "debug", Environment.NewLine + "updatedLogoutDate: " + updatedLogoutDate.ToLongTimeString() + Environment.NewLine);
             savedContent = js.Serialize(new SavedContent
             {
                 games = currentGames,
@@ -17678,7 +19351,8 @@ namespace GamaManager
                 categories = currentCategories,
                 recentChats = currentRecentChats,
                 recommendations = currentRecommendations,
-                logoutDate = updatedLogoutDate
+                logoutDate = updatedLogoutDate,
+                sections = currentSections
             });
             File.WriteAllText(saveDataFilePath, savedContent);
 
@@ -18138,7 +19812,10 @@ namespace GamaManager
 
         public void GetScreenShots (string filter, bool isInit)
         {
-            List<Image> unSortedScreenShots = new List<Image>();
+            
+            // List<Image> unSortedScreenShots = new List<Image>();
+            List<Canvas> unSortedScreenShots = new List<Canvas>();
+
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
@@ -18198,14 +19875,32 @@ namespace GamaManager
                     bool isScreenShot = ext == ".jpg";
                     if (isScreenShot)
                     {
-                        Image screenShot = new Image();
+                        // Image screenShot = new Image();
+                        Canvas screenShot = new Canvas();
                         screenShot.Margin = new Thickness(15);
                         screenShot.Width = 250;
                         screenShot.Height = 250;
                         screenShot.BeginInit();
                         Uri screenShotUri = new Uri(file);
-                        screenShot.Source = new BitmapImage(screenShotUri);
-                        screenShot.EndInit();
+
+                        // screenShot.Source = new BitmapImage(screenShotUri);
+                        VisualBrush screenShotBrush = new VisualBrush();
+                        Image screenShotBrushVisual = new Image();
+                        screenShotBrushVisual.Margin = new Thickness(15);
+                        screenShotBrushVisual.Width = 250;
+                        screenShotBrushVisual.Height = 250;
+                        screenShotBrushVisual.BeginInit();
+                        screenShotBrushVisual.Source = new BitmapImage(screenShotUri);
+                        screenShotBrushVisual.EndInit();
+                        screenShotBrush.Visual = screenShotBrushVisual;
+                        screenShot.Background = screenShotBrush;
+                        CheckBox screenShotCheckBox = new CheckBox();
+                        screenShotCheckBox.Visibility = invisible;
+                        screenShot.Children.Add(screenShotCheckBox);
+                        Canvas.SetTop(screenShotCheckBox, 25);
+                        Canvas.SetLeft(screenShotCheckBox, 25);
+
+                        // screenShot.EndInit();
                         string insensitiveCaseFilter = filter.ToLower();
                         string insensitiveCaseGameName = gameName.ToLower();
                         int filterLength = filter.Length;
@@ -18240,13 +19935,23 @@ namespace GamaManager
                 }
             }
 
-            List<Image> sortedScreenShots = new List<Image>();
+            // List<Image> sortedScreenShots = new List<Image>();
+            List<Canvas> sortedScreenShots = new List<Canvas>();
+            
             sortedScreenShots = unSortedScreenShots;
             int sortIndex = screenShotsSortBox.SelectedIndex;
             bool isAsc = sortIndex == 1;
             bool isDesc = sortIndex == 2;
             if (isAsc)
             {
+                /*sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
+                {
+                    object data = screenShot.DataContext;
+                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                    object rawDate = screenShotData["date"];
+                    DateTime date = ((DateTime)(rawDate));
+                    return date;
+                }).ToList<Image>();*/
                 sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
                 {
                     object data = screenShot.DataContext;
@@ -18254,10 +19959,18 @@ namespace GamaManager
                     object rawDate = screenShotData["date"];
                     DateTime date = ((DateTime)(rawDate));
                     return date;
-                }).ToList<Image>();
+                }).ToList<Canvas>();
             }
             else if (isDesc)
             {
+                /*sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
+                {
+                    object data = screenShot.DataContext;
+                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                    object rawDate = screenShotData["date"];
+                    DateTime date = ((DateTime)(rawDate));
+                    return date;
+                }).ToList<Image>();*/
                 sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
                 {
                     object data = screenShot.DataContext;
@@ -18265,7 +19978,7 @@ namespace GamaManager
                     object rawDate = screenShotData["date"];
                     DateTime date = ((DateTime)(rawDate));
                     return date;
-                }).ToList<Image>();
+                }).ToList<Canvas>();
             }
             UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
             UIElement container = screenShotsContainerChildren[2];
@@ -19256,7 +20969,7 @@ namespace GamaManager
             dialog.Show();
         }
 
-        public void GetGamesListHandler(object sender, EventArgs e)
+        public void GetGamesListHandler (object sender, EventArgs e)
         {
             GetGamesList("");
             GetDownloads();
@@ -22402,15 +24115,72 @@ namespace GamaManager
 
         public void ToggleScreenShotsManagement ()
         {
+
+            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+            UIElement container = screenShotsContainerChildren[2];
+            bool isWall = container is StackPanel;
+            
             Visibility screenShotsManagementVisibility = screenShotsManagement.Visibility;
             bool isVisible = screenShotsManagementVisibility == visible;
             if (isVisible)
             {
                 screenShotsManagement.Visibility = invisible;
+                if (isWall)
+                {
+                    StackPanel wallContainer = ((StackPanel)(container));
+                    UIElementCollection wallContainerChildren = wallContainer.Children;
+                    foreach (UIElement wallContainerChild in wallContainerChildren)
+                    {
+                        Canvas screenShot = ((Canvas)(wallContainerChild));
+                        UIElementCollection screenShotChildren = screenShot.Children;
+                        UIElement rawCheckBox = screenShotChildren[0];
+                        CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                        checkBox.Visibility = invisible;
+                    }
+                }
+                else
+                {
+                    WrapPanel rowContainer = ((WrapPanel)(container));
+                    UIElementCollection rowContainerChildren = rowContainer.Children;
+                    foreach (UIElement rowContainerChild in rowContainerChildren)
+                    {
+                        Canvas screenShot = ((Canvas)(rowContainerChild));
+                        UIElementCollection screenShotChildren = screenShot.Children;
+                        UIElement rawCheckBox = screenShotChildren[0];
+                        CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                        checkBox.Visibility = invisible;
+                    }
+                }
             }
             else
             {
                 screenShotsManagement.Visibility = visible;
+                if (isWall)
+                {
+                    StackPanel wallContainer = ((StackPanel)(container));
+                    UIElementCollection wallContainerChildren = wallContainer.Children;
+                    foreach (UIElement wallContainerChild in wallContainerChildren)
+                    {
+                        Canvas screenShot = ((Canvas)(wallContainerChild));
+                        UIElementCollection screenShotChildren = screenShot.Children;
+                        UIElement rawCheckBox = screenShotChildren[0];
+                        CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                        checkBox.Visibility = visible;
+                    }
+                }
+                else
+                {
+                    WrapPanel rowContainer = ((WrapPanel)(container));
+                    UIElementCollection rowContainerChildren = rowContainer.Children;
+                    foreach (UIElement rowContainerChild in rowContainerChildren)
+                    {
+                        Canvas screenShot = ((Canvas)(rowContainerChild));
+                        UIElementCollection screenShotChildren = screenShot.Children;
+                        UIElement rawCheckBox = screenShotChildren[0];
+                        CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                        checkBox.Visibility = visible;
+                    }
+                }
             }
         }
 
@@ -25420,11 +27190,13 @@ namespace GamaManager
                 object rawSelectorSelectedItemContent = selectorSelectedItem.Content;
                 string selectorSelectedItemContent = rawSelectorSelectedItemContent.ToString();
                 bool isRemove = selectorSelectedItemContent == "Удалить этот раздел";
+                bool isNotDefaultHeader = selectorSelectedItemContent != "Выбрать раздел";
                 if (isRemove)
                 {
-                    RemoveGameSection(null);
+                    // RemoveGameSection(null);
+                    RemoveAddGameSection();
                 }
-                else
+                else if (isNotDefaultHeader)
                 {
                     Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                     string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -25458,55 +27230,61 @@ namespace GamaManager
                     });
                     File.WriteAllText(saveDataFilePath, savedContent);
 
-                    RemoveGameSection(null);
+                    // RemoveGameSection(null);
+                    RemoveAddGameSection();
                     GetGameSections();
 
                 }
             }
         }
 
-        public void RemoveGameSection (StackPanel section)
+        public void RemoveAddGameSection ()
         {
             addGameSection.Visibility = invisible;
             addGameSectionLabel.Foreground = System.Windows.Media.Brushes.Black;
             addGameSectionIcon.Foreground = System.Windows.Media.Brushes.Black;
+            addGameSectionSelector.SelectedIndex = 0;
+        }
 
-            if (section != null)
+        public void RemoveGameSection (StackPanel section)
+        {
+            /*addGameSection.Visibility = invisible;
+            addGameSectionLabel.Foreground = System.Windows.Media.Brushes.Black;
+            addGameSectionIcon.Foreground = System.Windows.Media.Brushes.Black;*/
+
+            int sectionIndex = gameSections.Children.IndexOf(section);
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            List<FriendSettings> updatedFriends = loadedContent.friends;
+            Settings currentSettings = loadedContent.settings;
+            List<string> currentCollections = loadedContent.collections;
+            Notifications currentNotifications = loadedContent.notifications;
+            List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
+            string currentLogoutDate = loadedContent.logoutDate;
+            List<string> updatedSections = loadedContent.sections;
+            updatedSections.RemoveAt(sectionIndex);
+            string savedContent = js.Serialize(new SavedContent
             {
-                int sectionIndex = gameSections.Children.IndexOf(section);
-                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-                List<Game> currentGames = loadedContent.games;
-                List<FriendSettings> updatedFriends = loadedContent.friends;
-                Settings currentSettings = loadedContent.settings;
-                List<string> currentCollections = loadedContent.collections;
-                Notifications currentNotifications = loadedContent.notifications;
-                List<string> currentCategories = loadedContent.categories;
-                List<string> currentRecentChats = loadedContent.recentChats;
-                Recommendations currentRecommendations = loadedContent.recommendations;
-                string currentLogoutDate = loadedContent.logoutDate;
-                List<string> updatedSections = loadedContent.sections;
-                updatedSections.RemoveAt(sectionIndex);
-                string savedContent = js.Serialize(new SavedContent
-                {
-                    games = currentGames,
-                    friends = updatedFriends,
-                    settings = currentSettings,
-                    collections = currentCollections,
-                    notifications = currentNotifications,
-                    categories = currentCategories,
-                    recentChats = currentRecentChats,
-                    recommendations = currentRecommendations,
-                    logoutDate = currentLogoutDate,
-                    sections = updatedSections
-                });
-                File.WriteAllText(saveDataFilePath, savedContent);
-                gameSections.Children.Remove(section);
-            }
+                games = currentGames,
+                friends = updatedFriends,
+                settings = currentSettings,
+                collections = currentCollections,
+                notifications = currentNotifications,
+                categories = currentCategories,
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate,
+                sections = updatedSections
+            });
+            File.WriteAllText(saveDataFilePath, savedContent);
+            gameSections.Children.Remove(section);
 
         }
 

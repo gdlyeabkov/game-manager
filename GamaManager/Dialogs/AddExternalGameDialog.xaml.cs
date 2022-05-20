@@ -164,8 +164,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentRecommendations = loadedContent.recommendations;
-            // DateTime currentLogoutDate = loadedContent.logoutDate;
             string currentLogoutDate = loadedContent.logoutDate;
+            List<string> currentSections = loadedContent.sections;
             object gameNameLabelData = path;
             string gameUploadedPath = ((string)(gameNameLabelData));
             string gameHours = "0";
@@ -194,7 +194,8 @@ namespace GamaManager.Dialogs
                 categories = currentCategories,
                 recentChats = currentRecentChats,
                 recommendations = currentRecommendations,
-                logoutDate = currentLogoutDate
+                logoutDate = currentLogoutDate,
+                sections = currentSections
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             string gamePath = path;

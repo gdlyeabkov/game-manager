@@ -79,6 +79,7 @@ namespace GamaManager.Dialogs
                             List<string> currentRecentChats = loadedContent.recentChats;
                             Recommendations updatedRecommendations = loadedContent.recommendations;
                             string currentLogoutDate = loadedContent.logoutDate;
+                            List<string> currentSections = loadedContent.sections;
                             object rawIsChecked = earlyAccessCheckBox.IsChecked;
                             bool isChecked = ((bool)(rawIsChecked));
                             updatedRecommendations.isEarlyAccess = isChecked;
@@ -111,7 +112,8 @@ namespace GamaManager.Dialogs
                                 categories = currentCategories,
                                 recentChats = currentRecentChats,
                                 recommendations = updatedRecommendations,
-                                logoutDate = currentLogoutDate
+                                logoutDate = currentLogoutDate,
+                                sections = currentSections
                             });
                             File.WriteAllText(saveDataFilePath, savedContent);
                             Cancel();
@@ -307,8 +309,8 @@ namespace GamaManager.Dialogs
             string saveDataFileContent = File.ReadAllText(saveDataFilePath);
             SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
             Recommendations currentRecommendations = loadedContent.recommendations;
-            // DateTime currentLogoutDate = loadedContent.logoutDate;
             string currentLogoutDate = loadedContent.logoutDate;
+            List<string> currentSections = loadedContent.sections;
             bool isEarlyAccess = currentRecommendations.isEarlyAccess;
             bool isNotReleases = currentRecommendations.isNotReleases;
             bool isSoftWare = currentRecommendations.isSoftWare;

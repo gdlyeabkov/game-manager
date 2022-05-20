@@ -819,10 +819,12 @@
                                                     Content="Одиночная игра"    
                                                 />
                                                 <CheckBox
+                                                    x:Name="keywordsLabelFilterPopupReady2GoCheckBox"
                                                     Grid.Row="1"
                                                     Grid.Column="1"
                                                     Margin="5"
-                                                    Content="Готовые к запуску"    
+                                                    Content="Готовые к запуску"
+                                                    Click="GetGamesListHandler"
                                                 />
                                                 <CheckBox
                                                     Grid.Row="1"
@@ -837,10 +839,12 @@
                                                     Content="Многопользовательская игра"    
                                                 />
                                                 <CheckBox
+                                                    x:Name="keywordsLabelFilterPopupLocalInstalledCheckBox"
                                                     Grid.Row="2"
                                                     Grid.Column="1"
                                                     Margin="5"
                                                     Content="Установленные локально"    
+                                                    Click="GetGamesListHandler"
                                                 />
                                                 <CheckBox
                                                     Grid.Row="2"
@@ -1208,6 +1212,7 @@
                                         Orientation="Horizontal"    
                                     >
                                         <ComboBox
+                                            x:Name="addGameSectionSelector"
                                             Width="125"
                                             Height="25"
                                             FontSize="14"
@@ -1449,7 +1454,7 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
@@ -1460,10 +1465,10 @@
                                         <GradientStopCollection>
                                             <GradientStop
                                                 x:Name="profileThemeAside"
-                                                Color="Blue"
+                                                Color="LightGray"
                                             />
                                             <GradientStop
-                                                Color="Blue"
+                                                Color="LightGray"
                                             />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
@@ -1838,11 +1843,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <DockPanel>
                                 <Image
@@ -2762,11 +2767,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <DockPanel>
                                 <Image
@@ -4534,422 +4539,17 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <DockPanel>
-                                <StackPanel
-                                    Width="250"
-                                    DockPanel.Dock="Right"    
-                                >
-                                    <StackPanel
-                                        Orientation="Horizontal"
-                                        Margin="25"
-                                    >
-                                        <TextBox
-                                            Margin="5 0"
-                                            Width="150"
-                                            Height="25"
-                                            Background="Black"
-                                            Foreground="Gray"
-                                            KeyUp="DetectFriendSearchHandler"
-                                        >
-                                            <TextBox.Resources>
-                                                <VisualBrush
-                                                    x:Key="hinttext"
-                                                    AlignmentX="Left"
-                                                    Stretch="None"
-                                                    TileMode="None"
-                                                >
-                                                    <VisualBrush.Visual>
-                                                        <DockPanel>
-                                                            <TextBlock
-                                                                Height="25"
-                                                                Width="150"
-                                                                Text="Найти друзей"
-                                                                Foreground="Gray"
-                                                                Background="White"
-                                                            />
-                                                        </DockPanel>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </TextBox.Resources>
-                                            <TextBox.Style>
-                                                <Style TargetType="TextBox">
-                                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                                    <Setter Property="FontSize" Value="12" />
-                                                    <Setter Property="Width" Value="Auto" />
-                                                    <Setter Property="Width" Value="Auto" />
-                                                    <Style.Triggers>
-                                                        <Trigger Property="Text" Value="">
-                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                        </Trigger>
-                                                        <Trigger Property="Text" Value="{x:Null}">
-                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBox.Style>
-                                        </TextBox>
-                                        <Button
-                                            Width="25"
-                                            Height="25"
-                                            Margin="5 0"
-                                        >
-                                            <Button.Content>
-                                                <materialDesign:PackIcon
-                                                    Kind="Search"    
-                                                />
-                                            </Button.Content>
-                                        </Button>
-                                    </StackPanel>
-                                    <StackPanel
-                                        Orientation="Horizontal"
-                                        Background="Black"
-                                        Margin="25"
-                                    >
-                                        <materialDesign:PackIcon
-                                            Margin="15"
-                                            Foreground="Gray"
-                                            Kind="User"
-                                        />
-                                        <StackPanel
-                                            Margin="15 0"
-                                        >
-                                            <TextBlock
-                                                Text="Список друзей"    
-                                                Margin="0 5"
-                                                Foreground="Gray"
-                                                FontSize="14"
-                                            />
-                                            <TextBlock
-                                                Text="0 из 0 в сети"    
-                                                Margin="0 5"
-                                                Foreground="SkyBlue"
-                                            />
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel
-                                        Background="Black"
-                                        Margin="25"
-                                    >
-                                        <TextBlock
-                                            Margin="15 15"
-                                            Foreground="Gray"
-                                            Text="Добавить друзей"    
-                                        />
-                                        <StackPanel
-                                            Orientation="Horizontal"
-                                            Margin="5 15"
-                                        >
-                                            <TextBox
-                                                Margin="5 0"
-                                                Width="150"
-                                                Height="25"
-                                                Background="LightGray"
-                                                Foreground="Gray"
-                                                KeyUp="DetectFriendSearchHandler"
-                                            >
-                                                <TextBox.Resources>
-                                                    <VisualBrush
-                                                        x:Key="hinttext"
-                                                        AlignmentX="Left"
-                                                        Stretch="None"
-                                                        TileMode="None"
-                                                    >
-                                                        <VisualBrush.Visual>
-                                                            <DockPanel>
-                                                                <TextBlock
-                                                                    Height="25"
-                                                                    Width="150"
-                                                                    Text="Поиск друзей или игроков"
-                                                                    Foreground="Gray"
-                                                                    Background="White"
-                                                                />
-                                                            </DockPanel>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </TextBox.Resources>
-                                                <TextBox.Style>
-                                                    <Style TargetType="TextBox">
-                                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                                        <Setter Property="FontSize" Value="12" />
-                                                        <Setter Property="Width" Value="Auto" />
-                                                        <Setter Property="Width" Value="Auto" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="Text" Value="">
-                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                            </Trigger>
-                                                            <Trigger Property="Text" Value="{x:Null}">
-                                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBox.Style>
-                                            </TextBox>
-                                            <Button
-                                                Width="25"
-                                                Height="25"
-                                                Margin="5 0"
-                                            >
-                                                <Button.Content>
-                                                    <materialDesign:PackIcon
-                                                        Kind="Search"    
-                                                    />
-                                                </Button.Content>
-                                            </Button>
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel
-                                        Background="Black"
-                                        Margin="25"
-                                    >
-                                        <StackPanel
-                                            Orientation="Horizontal"    
-                                        >
-                                            <Image
-                                                Margin="15"
-                                                Width="25"    
-                                                Height="25"    
-                                                ImageFailed="SetDefautAvatarHandler"
-                                            >
-                                                <Image.Source>
-                                                    <BitmapImage
-                                                        UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                    />
-                                                </Image.Source>
-                                            </Image>
-                                            <TextBlock
-                                                Margin="15"
-                                                Text="Имя пользователя"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <Separator />
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"
-                                            MouseLeftButtonUp="ReturnToProfileHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Search"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Открыть мой профиль"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"
-                                            MouseLeftButtonUp="OpenEditProfileHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Note"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Редактировать мой профиль"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <Separator />
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenGameRecommendationsHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Mouse"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Игры"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenFriendsSettingsHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="User"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Друзья"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenGroupsSettingsHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Group"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Группы"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenEquipmentHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Storage"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Инвентарь"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenTradeOffersHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Sync"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Предложения обмена"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            DataContext="0"
-                                            MouseLeftButtonUp="OpenContentTabHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Camera"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Скриншоты"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            DataContext="2"
-                                            MouseLeftButtonUp="OpenContentTabHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="TV"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Видео"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            DataContext="6"
-                                            MouseLeftButtonUp="OpenContentTabHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Note"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Руководства"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            DataContext="3"
-                                            MouseLeftButtonUp="OpenContentTabHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Engine"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Моя Мастерская"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                        <StackPanel
-                                            Margin="0 10"
-                                            Orientation="Horizontal"    
-                                            MouseLeftButtonUp="OpenCommentsHistoryHandler"
-                                        >
-                                            <materialDesign:PackIcon
-                                                Margin="5 0"
-                                                Kind="Chat"
-                                                Foreground="Gray"
-                                            />
-                                            <TextBlock
-                                                Margin="5 0"
-                                                Text="Моя история комментариев"    
-                                                Foreground="Gray"
-                                            />
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel
-                                        Background="Black"
-                                        Height="100"
-                                        Margin="25"
-                                    >
-                                        <TextBlock
-                                            Foreground="Gray"
-                                            Margin="15 15 15 5"
-                                            Text="Запланированные события"    
-                                        />
-                                        <TextBlock
-                                            Foreground="Gray"
-                                            Margin="15 5"
-                                            Text="В ближайшие 30 дней событий нет"    
-                                        />
-                                        <TextBlock
-                                            Foreground="White"
-                                            Margin="15 5"
-                                            Text="Все события"    
-                                            MouseLeftButtonUp="OpenAllEventsHandler"
-                                        />
-                                    </StackPanel>
-                                </StackPanel>
+                                <local:FriendActivityAsideControl
+                                    DataContext="{ Binding ElementName=mainWindow }"
+                                    DockPanel.Dock="Right"
+                                />
                                 <StackPanel>
                                     <DockPanel
                                         Margin="0 25"
@@ -5213,11 +4813,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <StackPanel>
                                 <StackPanel
@@ -5242,7 +4842,7 @@
                                     <ScrollViewer>
                                         <StackPanel
                                             x:Name="accountSettingsTabs"
-                                            Background="DarkCyan"
+                                            Background="DarkGray"
                                             Width="250"
                                             DockPanel.Dock="Left"    
                                         >
@@ -15551,11 +15151,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                    Background="Green"    
-                >
+                        Background="LightGray"    
+                    >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <TextBlock
                                 Margin="15"

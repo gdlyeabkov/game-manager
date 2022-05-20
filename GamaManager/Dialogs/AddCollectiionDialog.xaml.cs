@@ -56,6 +56,10 @@ namespace GamaManager.Dialogs
             List<string> updatedCollections = loadedContent.collections;
             Notifications currentNotifications = loadedContent.notifications;
             List<string> currentCategories = loadedContent.categories;
+            List<string> currentRecentChats = loadedContent.recentChats;
+            Recommendations currentRecommendations = loadedContent.recommendations;
+            string currentLogoutDate = loadedContent.logoutDate;
+            List<string> currentSections = loadedContent.sections;
             string collectionNameBoxContent = collectionNameBox.Text;
             updatedCollections.Add(collectionNameBoxContent);
             string savedContent = js.Serialize(new SavedContent
@@ -65,7 +69,11 @@ namespace GamaManager.Dialogs
                 settings = currentSettings,
                 collections = updatedCollections,
                 notifications = currentNotifications,
-                categories = currentCategories
+                categories = currentCategories,
+                recentChats = currentRecentChats,
+                recommendations = currentRecommendations,
+                logoutDate = currentLogoutDate,
+                sections = currentSections
             });
             File.WriteAllText(saveDataFilePath, savedContent);
             this.Close();

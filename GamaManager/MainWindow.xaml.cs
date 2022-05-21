@@ -161,6 +161,11 @@ namespace GamaManager
 
         }
 
+        public void GetMyUserSubsHandler (object sender, TextChangedEventArgs e)
+        {
+            GetMyUserSubs();
+        }
+
         public void GetFriendsHandler(object sender, TextChangedEventArgs e)
         {
             GetFriends();
@@ -2186,7 +2191,286 @@ namespace GamaManager
                 GetEquipmentGames();
                 GetGameSections();
                 InitAddGameSection();
-                // InitCommunityContentSettings();/**/
+                GetEquipmentInfo();
+                GetIconsInfo();
+                GetGamesHistory();
+                GetMyUserSubs();/**/
+            }
+        }
+
+        public void GetMyUserSubs ()
+        {
+
+            string userSubsBoxContent = userSubsBox.Text;
+            string insensitiveCaseKeywords = userSubsBoxContent.ToLower();
+
+            myUserSubs.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserSubsResponseInfo myobj = (UserSubsResponseInfo)js.Deserialize(objText, typeof(UserSubsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<UserSub> subs = myobj.subs;
+                            List<UserSub> mySubs = subs.Where<UserSub>((UserSub userSub) =>
+                            {
+                                string userSubUserId = userSub.user;
+                                bool isMySub = userSubUserId == currentUserId;
+                                return isMySub;
+                            }).ToList<UserSub>();
+                            foreach (UserSub mySub in mySubs)
+                            {
+                                string userId = mySub.sub;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (StreamReader innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myobj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string name = user.name;
+
+                                            string insensitiveCaseSenderName = name.ToLower();
+                                            bool isSubFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
+                                            int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                                            bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                            bool isSubMatch = isSubFound || isFilterDisabled;
+                                            if (isSubMatch)
+                                            {
+                                                string userStatus = user.status;
+                                                StackPanel myUserSub = new StackPanel();
+                                                myUserSub.Margin = new Thickness(15);
+                                                myUserSub.Width = 250;
+                                                myUserSub.Height = 50;
+                                                myUserSub.Orientation = Orientation.Horizontal;
+                                                myUserSub.Background = System.Windows.Media.Brushes.DarkCyan;
+                                                Image myUserSubIcon = new Image();
+                                                myUserSubIcon.Width = 50;
+                                                myUserSubIcon.Height = 50;
+                                                myUserSubIcon.BeginInit();
+                                                myUserSubIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                                myUserSubIcon.EndInit();
+                                                myUserSubIcon.ImageFailed += SetDefautAvatarHandler;
+                                                myUserSub.Children.Add(myUserSubIcon);
+                                                Separator myUserSubStatus = new Separator();
+                                                myUserSubStatus.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
+                                                myUserSubStatus.LayoutTransform = new RotateTransform(90);
+                                                myUserSub.Children.Add(myUserSubStatus);
+                                                TextBlock myUserSubNameLabel = new TextBlock();
+                                                myUserSubNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                                myUserSubNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                myUserSubNameLabel.Width = 75;
+                                                myUserSubNameLabel.Text = name;
+                                                myUserSub.Children.Add(myUserSubNameLabel);
+                                                CheckBox myUserSubCheckBox = new CheckBox();
+                                                Visibility friendSubsListManagementVisibility = friendSubsListManagement.Visibility;
+                                                bool isVisible = friendSubsListManagementVisibility == visible;
+                                                if (isVisible)
+                                                {
+                                                    myUserSubCheckBox.Visibility = visible;
+                                                }
+                                                else
+                                                {
+                                                    myUserSubCheckBox.Visibility = invisible;
+                                                }
+                                                myUserSubCheckBox.Margin = new Thickness(5, 15, 5, 15);
+                                                myUserSub.Children.Add(myUserSubCheckBox);
+                                                myUserSubs.Children.Add(myUserSub);
+                                                myUserSub.DataContext = userId;
+                                                myUserSub.MouseMove += ShowFriendInfoHandler;
+                                                mainControl.DataContext = userId;
+                                                myUserSub.MouseLeftButtonUp += ReturnToProfileHandler;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }             
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetGamesHistory ()
+        {
+            try
+            {
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+                        GameSessionsResponseInfo myInnerObj = (GameSessionsResponseInfo)js.Deserialize(objText, typeof(GameSessionsResponseInfo));
+                        string status = myInnerObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameSession> sessions = myInnerObj.sessions;
+
+                            HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            gamesWebRequest.Method = "GET";
+                            gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                            {
+                                using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = gamesReader.ReadToEnd();
+                                    GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                    status = myGamesObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GameResponseInfo> games = myGamesObj.games;
+                                        DateTime currentDate = DateTime.Now;
+                                        string rawCurrentDate = currentDate.ToLongDateString();
+                                        List<GameSession> mySessions = sessions.Where<GameSession>((GameSession session) =>
+                                        {
+                                            DateTime sessionDate = session.date;
+                                            string rawSessionDate = sessionDate.ToLongDateString();
+                                            string reviewUserId = session.user;
+                                            bool isMe = currentUserId == reviewUserId;
+                                            bool isTodaySession = rawSessionDate == rawCurrentDate;
+                                            bool isAddSession = isMe && isTodaySession;
+                                            return isAddSession;
+                                        }).Distinct(new GameSessionComparer()).ToList<GameSession>();
+                                        int mySessionsCount = mySessions.Count;
+                                        bool isHaveSessions = mySessionsCount >= 1;
+                                        if (isHaveSessions)
+                                        {
+                                            gamesHistoryBox.Text = "";
+                                        }
+                                        foreach (GameSession mySession in mySessions)
+                                        {
+                                            string mySessionGameId = mySession.game;
+                                            string historyGameName = mySessionGameId;
+
+                                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                            {
+                                                string gameId = game._id;
+                                                bool isIdMatches = gameId == mySessionGameId;
+                                                return isIdMatches;
+                                            }).ToList<GameResponseInfo>();
+                                            int countResults = gameResults.Count;
+                                            bool isResultsFound = countResults >= 1;
+                                            if (isResultsFound)
+                                            {
+                                                GameResponseInfo gameResult = gameResults[0];
+                                                historyGameName = gameResult.name;
+                                            }
+                                            gamesHistoryBox.Text += historyGameName;
+                                            int sessionIndex = mySessions.IndexOf(mySession);
+                                            bool isNotLastSession = sessionIndex < mySessionsCount - 1;
+                                            if (isNotLastSession)
+                                            {
+                                                gamesHistoryBox.Text += Environment.NewLine;
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetIconsInfo ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            iconsUserNameLabel.Text = userName;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetEquipmentInfo ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            equipmentUserNameLabel.Text = userName;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -2324,180 +2608,6 @@ namespace GamaManager
                                         {
                                             string contentGameId = content.game;
                                             string id = content._id;
-                                            bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(mainCommunityScreenShotId);
-                                            return isFavoriteScreenShot;
-                                        }).ToList<ScreenShot>();
-                                        int totalScreenShotsCount = totalScreenShots.Count;
-                                        bool isHaveScreenShots = totalScreenShotsCount >= 1;
-                                        ItemCollection settingsSelectorItems = mainScreenShotSettingsSelector.Items;
-                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
-                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
-                                        if (isHaveScreenShots)
-                                        {
-                                            toggleFavoriteItem.Content = "Удалить из избранного";
-                                        }
-                                        else
-                                        {
-                                            toggleFavoriteItem.Content = "В избранное";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Net.WebException exception)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
-            }
-        }
-
-
-
-        public void InitCommunityContentSettings ()
-        {
-            object rawMainIllustrationId = mainIllustration.DataContext;
-            string mainIllustrationId = ((string)(rawMainIllustrationId));
-            try
-            {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            List<Illustration> totalIllustrations = myobj.illustrations;
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
-                            illustrationFavoriteRelationsWebRequest.Method = "GET";
-                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
-                            {
-                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
-                                {
-                                    js = new JavaScriptSerializer();
-                                    objText = illustrationFavoriteRelationsReader.ReadToEnd();
-                                    IllustrationFavoriteRelationsResponseInfo myIllustrationFavoriteRelationsObj = (IllustrationFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(IllustrationFavoriteRelationsResponseInfo));
-                                    status = myIllustrationFavoriteRelationsObj.status;
-                                    isOkStatus = status == "OK";
-                                    if (isOkStatus)
-                                    {
-                                        List<IllustrationFavoriteRelation> favoriteRelations = myIllustrationFavoriteRelationsObj.relations;
-                                        List<IllustrationFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
-                                        {
-                                            string relatioIllustrationId = relation.illustration;
-                                            string relationUserId = relation.user;
-                                            bool isCurrentUser = relationUserId == currentUserId;
-                                            return isCurrentUser;
-                                        }).ToList<IllustrationFavoriteRelation>();
-                                        List<string> myFavoriteRelationIds = new List<string>();
-                                        foreach (IllustrationFavoriteRelation myFavoriteRelation in myFavoriteRelations)
-                                        {
-                                            string myFavoriteRelationIllustrationId = myFavoriteRelation.illustration;
-                                            myFavoriteRelationIds.Add(myFavoriteRelationIllustrationId);
-                                        }
-                                        totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
-                                        {
-                                            /*string contentGameId = content.game;
-                                            string userId = content.user;
-                                            bool isMyContent = userId == currentUserId;*/
-                                            string id = content._id;
-                                            // bool isFavoriteIllustration = myFavoriteRelationIds.Contains(id);
-                                            bool isFavoriteIllustration = myFavoriteRelationIds.Contains(mainIllustrationId);
-                                            /*bool isAddIllustration = isMyContent;
-                                            return isAddIllustration && isFavoriteIllustration;*/
-                                            return isFavoriteIllustration;
-                                        }).ToList<Illustration>();
-                                        contentFavoriteIllustrations.Children.Clear();
-                                        int totalIllustrationsCount = totalIllustrations.Count;
-                                        bool isHaveIllustrations = totalIllustrationsCount >= 1;
-                                        ItemCollection settingsSelectorItems = mainIllustrationSettingsSelector.Items;
-                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
-                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
-                                        if (isHaveIllustrations)
-                                        {
-                                            toggleFavoriteItem.Content = "Удалить из избранного";
-                                        }
-                                        else
-                                        {
-                                            toggleFavoriteItem.Content = "В избранное";
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-            }
-            catch (System.Net.WebException exception)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
-            }
-            object rawMainCommunityScreenShotId = mainCommunityScreenShot.DataContext;
-            string mainCommunityScreenShotId = ((string)(rawMainCommunityScreenShotId));
-            try
-            {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            List<ScreenShot> totalScreenShots = myobj.screenShots;
-                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
-                            screenShotFavoriteRelationsWebRequest.Method = "GET";
-                            screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
-                            {
-                                using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
-                                {
-                                    js = new JavaScriptSerializer();
-                                    objText = screenShotFavoriteRelationsReader.ReadToEnd();
-                                    ScreenShotFavoriteRelationsResponseInfo myScreenShotFavoriteRelationsObj = (ScreenShotFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ScreenShotFavoriteRelationsResponseInfo));
-                                    status = myScreenShotFavoriteRelationsObj.status;
-                                    isOkStatus = status == "OK";
-                                    if (isOkStatus)
-                                    {
-
-                                        List<ScreenShotFavoriteRelation> favoriteRelations = myScreenShotFavoriteRelationsObj.relations;
-                                        List<ScreenShotFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ScreenShotFavoriteRelation>((ScreenShotFavoriteRelation relation) =>
-                                        {
-                                            string relatioScreenShotId = relation.screenShot;
-                                            string relationUserId = relation.user;
-                                            bool isCurrentUser = relationUserId == currentUserId;
-                                            return isCurrentUser;
-                                        }).ToList<ScreenShotFavoriteRelation>();
-                                        List<string> myFavoriteRelationIds = new List<string>();
-                                        foreach (ScreenShotFavoriteRelation myFavoriteRelation in myFavoriteRelations)
-                                        {
-                                            string myFavoriteRelationScreenShotId = myFavoriteRelation.screenShot;
-                                            myFavoriteRelationIds.Add(myFavoriteRelationScreenShotId);
-                                        }
-                                        totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
-                                        {
-                                            string contentGameId = content.game;
-                                            string id = content._id;
-                                            // bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(id);
                                             bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(mainCommunityScreenShotId);
                                             return isFavoriteScreenShot;
                                         }).ToList<ScreenShot>();
@@ -7318,6 +7428,12 @@ namespace GamaManager
             SelectGameRecommendationsItem();
         }
 
+        public void OpenGameSubs ()
+        {
+            OpenGameRecommendations();
+            gameRecommendationsControl.SelectedIndex = 3;
+        }
+
         public void SelectGameRecommendationsItem ()
         {
             int selectedIndex = gameRecommendationsControl.SelectedIndex;
@@ -9555,10 +9671,7 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-
-            // InitCommunityContentSettings();
             GetScreenShotCommunityContentSettings(id);
-
         }
 
 
@@ -11609,11 +11722,10 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-
-            // InitCommunityContentSettings();
             GetIllustrationCommunityContentSettings(illustrationId);
-
         }
+
+
 
         public void GetGroupRequests()
         {
@@ -16785,23 +16897,23 @@ namespace GamaManager
             }
         }
 
-        private void OpenAddFriendDialogHandler(object sender, RoutedEventArgs e)
+        private void OpenAddFriendDialogHandler (object sender, RoutedEventArgs e)
         {
             OpenAddFriendDialog();
         }
 
-        public void OpenAddFriendDialog()
+        public void OpenAddFriendDialog ()
         {
             mainControl.SelectedIndex = 16;
             friendsSettingsControl.SelectedIndex = 1;
         }
 
-        private void OpenFriendsDialogHandler(object sender, RoutedEventArgs e)
+        private void OpenFriendsDialogHandler (object sender, RoutedEventArgs e)
         {
             OpenFriendsDialog();
         }
 
-        public void OpenFriendsDialog()
+        public void OpenFriendsDialog ()
         {
             Dialogs.FriendsDialog dialog = new Dialogs.FriendsDialog(currentUserId, client, mainControl, this);
             dialog.Closed += JoinToGameHandler;
@@ -17789,7 +17901,7 @@ namespace GamaManager
             prizeCardsControl.SelectedIndex = index;
         }
 
-        private void ProfileItemSelected(int index)
+        private void ProfileItemSelected (int index)
         {
             if (isAppInit)
             {
@@ -22121,14 +22233,182 @@ namespace GamaManager
 
         }
 
-        private void OpenFriendProfilePopupHandler(object sender, RoutedEventArgs e)
+        private void OpenFriendProfilePopupHandler (object sender, RoutedEventArgs e)
         {
             OpenFriendProfilePopup();
         }
 
-        public void OpenFriendProfilePopup()
+        public void OpenFriendProfilePopup ()
         {
             friendProfilePopup.IsOpen = true;
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserSubsResponseInfo myobj = (UserSubsResponseInfo)js.Deserialize(objText, typeof(UserSubsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<UserSub> subs = myobj.subs;
+
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                    status = myobj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+
+                                        List<Friend> friends = myInnerObj.friends;
+
+                                        List<Friend> myFriends = friends.Where<Friend>((Friend friend) =>
+                                        {
+                                            return friend.user == currentUserId;
+                                        }).ToList<Friend>();
+
+                                        List<string> friendsIds = new List<string>();
+                                        foreach (Friend myFriend in myFriends)
+                                        {
+                                            string friendId = myFriend.friend;
+                                            friendsIds.Add(friendId);
+                                        }
+                                        bool isMyFriend = friendsIds.Contains(cachedUserProfileId);
+                                        if (isMyFriend)
+                                        {
+                                            friendProfilePopupBodyRemoveFriend.Visibility = visible;
+                                            friendProfilePopupBodyAddNick.Visibility = visible;
+                                            friendProfilePopupBodyTradeOffer.Visibility = visible;
+                                        }
+                                        else
+                                        {
+                                            friendProfilePopupBodyRemoveFriend.Visibility = invisible;
+                                            friendProfilePopupBodyAddNick.Visibility = invisible;
+                                            friendProfilePopupBodyTradeOffer.Visibility = invisible;
+                                        }
+
+                                        int countBetweenSubs = subs.Count<UserSub>((UserSub userSub) =>
+                                        {
+                                            string userSubUserId = userSub.user;
+                                            string userSubSubId = userSub.sub;
+                                            bool isCurrentUser = userSubUserId == currentUserId;
+                                            bool isCurrentSub = userSubSubId == cachedUserProfileId;
+                                            bool isBetween = isCurrentUser && isCurrentSub;
+                                            return isBetween;
+                                        });
+                                        bool isSubscribed = countBetweenSubs >= 1;
+                                        friendProfilePopupBodySubLabel.MouseLeftButtonUp -= SubscribeUserHandler;
+                                        friendProfilePopupBodySubLabel.MouseLeftButtonUp -= UnSubscribeUserHandler;
+                                        if (isSubscribed)
+                                        {
+                                            friendProfilePopupBodySubLabel.Text = "Отписаться";
+                                            friendProfilePopupBodySubLabel.MouseLeftButtonUp += UnSubscribeUserHandler;
+                                        }
+                                        else
+                                        {
+                                            friendProfilePopupBodySubLabel.Text = "Подписаться";
+                                            friendProfilePopupBodySubLabel.MouseLeftButtonUp += SubscribeUserHandler;
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+
+        }
+
+        public void SubscribeUserHandler (object sender, RoutedEventArgs e)
+        {
+            SubscribeUser();
+        }
+
+        public void SubscribeUser ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/add/?id=" + currentUserId + "&sub=" + cachedUserProfileId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            friendProfilePopup.IsOpen = false;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void UnSubscribeUserHandler (object sender, RoutedEventArgs e)
+        {
+            UnSubscribeUser();
+        }
+
+        public void UnSubscribeUser ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/remove/?user=" + currentUserId + "&sub=" + cachedUserProfileId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            friendProfilePopup.IsOpen = false;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         private void FriendsSettingsControlItemSelectedHandler(object sender, SelectionChangedEventArgs e)
@@ -22136,18 +22416,67 @@ namespace GamaManager
             FriendsSettingsControlItemSelected();
         }
 
-        public void FriendsSettingsControlItemSelected()
+        public void FriendsSettingsControlItemSelected ()
         {
             int selectedIndex = friendsSettingsControl.SelectedIndex;
+            bool isGameSubs = selectedIndex == 7;
             bool isGroups = selectedIndex == 10;
             bool isAddGroup = selectedIndex == 11;
-            if (isGroups)
+            if (isGameSubs)
             {
-                mainControl.SelectedIndex = 17;
+                OpenGameSubs();
             }
             else if (isAddGroup)
             {
                 mainControl.SelectedIndex = 18;
+            }
+            else if (isGroups)
+            {
+                mainControl.SelectedIndex = 17;
+            }
+        }
+
+        private void ToggleFriendSubsListManagementHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleFriendSubsListManagement();
+        }
+
+        public void ToggleFriendSubsListManagement ()
+        {
+            Visibility friendSubsListManagementVisibility = friendSubsListManagement.Visibility;
+            bool isVisible = friendSubsListManagementVisibility == visible;
+            if (isVisible)
+            {
+                friendSubsListManagement.Visibility = invisible;
+                foreach (StackPanel myUserSub in myUserSubs.Children)
+                {
+                    foreach (UIElement myUserSubElement in myUserSub.Children)
+                    {
+                        bool isCheckBox = myUserSubElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = myUserSubElement as CheckBox;
+                            checkBox.Visibility = invisible;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                friendSubsListManagement.Visibility = visible;
+                foreach (StackPanel myUserSub in myUserSubs.Children)
+                {
+                    foreach (UIElement myUserSubElement in myUserSub.Children)
+                    {
+                        bool isCheckBox = myUserSubElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = myUserSubElement as CheckBox;
+                            checkBox.Visibility = visible;
+                        }
+                    }
+                }
+
             }
         }
 
@@ -22218,7 +22547,17 @@ namespace GamaManager
             }
         }
 
-        private void RemoveFriendsHandler(object sender, RoutedEventArgs e)
+        public void UnsubscribeFriendsHandler (object sender, RoutedEventArgs e)
+        {
+            UnsubscribeFriends();
+        }
+
+        public void UnsubscribeFriends ()
+        {
+
+        }
+
+        private void RemoveFriendsHandler (object sender, RoutedEventArgs e)
         {
             RemoveFriends();
         }
@@ -22405,13 +22744,180 @@ namespace GamaManager
             GetFriendsSettings();
         }
 
-        private void SelectFriendsTypeHandler(object sender, MouseButtonEventArgs e)
+        public void OpenManualsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenManuals();
+        }
+
+        public void OpenManuals ()
+        {
+            try
+            {
+                string currentGameName = gameNameLabel.Text;
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
+                            {
+                                string localGameName = totalGamesItem.name;
+                                bool isNamesMatches = localGameName == currentGameName;
+                                return isNamesMatches;
+                            }).ToList<GameResponseInfo>();
+                            int countResults = gameResults.Count;
+                            bool isResultsFound = countResults >= 1;
+                            if (isResultsFound)
+                            {
+                                GameResponseInfo foundedGame = gameResults[0];
+                                string gameId = foundedGame._id;
+                                mainControl.SelectedIndex = 20;
+                                SelectCommunityGameAnnotation(gameId);
+                                communityControl.SelectedIndex = 7;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenWorkShopHandler (object sender, RoutedEventArgs e)
+        {
+            OpenWorkShop();
+        }
+
+        public void OpenWorkShop ()
+        {
+            try
+            {
+                string currentGameName = gameNameLabel.Text;
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
+                            {
+                                string localGameName = totalGamesItem.name;
+                                bool isNamesMatches = localGameName == currentGameName;
+                                return isNamesMatches;
+                            }).ToList<GameResponseInfo>();
+                            int countResults = gameResults.Count;
+                            bool isResultsFound = countResults >= 1;
+                            if (isResultsFound)
+                            {
+                                GameResponseInfo foundedGame = gameResults[0];
+                                string gameId = foundedGame._id;
+                                mainControl.SelectedIndex = 20;
+                                SelectCommunityGameAnnotation(gameId);
+                                communityControl.SelectedIndex = 5;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectFriendSubsTypeHandler (object sender, MouseButtonEventArgs e)
         {
             TextBlock typeLabel = ((TextBlock)(sender));
             object typeLabelData = typeLabel.DataContext;
             string type = typeLabelData.ToString();
-            SelectFriendsType(type);
+            SelectFriendSubsType(type);
         }
+
+        private void SelectFriendsTypeHandler (object sender, MouseButtonEventArgs e)
+        {
+            TextBlock typeLabel = ((TextBlock)(sender));
+            object typeLabelData = typeLabel.DataContext;
+            string type = typeLabelData.ToString();
+            SelectFriendSubsType(type);
+        }
+
+        public void SelectFriendSubsType(string type)
+        {
+            bool isAll = type == "All";
+            bool isNothing = type == "Nothing";
+            bool isInvert = type == "Invert";
+            if (isAll)
+            {
+                foreach (StackPanel myUserSub in myUserSubs.Children)
+                {
+                    foreach (UIElement myUserSubElement in myUserSub.Children)
+                    {
+                        bool isCheckBox = myUserSubElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = myUserSubElement as CheckBox;
+                            checkBox.IsChecked = true;
+                        }
+                    }
+                }
+            }
+            else if (isNothing)
+            {
+                foreach (StackPanel myUserSub in myUserSubs.Children)
+                {
+                    foreach (UIElement myUserSubElement in myUserSub.Children)
+                    {
+                        bool isCheckBox = myUserSubElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = myUserSubElement as CheckBox;
+                            checkBox.IsChecked = false;
+                        }
+                    }
+                }
+            }
+            else if (isInvert)
+            {
+                foreach (StackPanel myUserSub in myUserSubs.Children)
+                {
+                    foreach (UIElement myUserSubElement in myUserSubs.Children)
+                    {
+                        bool isCheckBox = myUserSubElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = myUserSubElement as CheckBox;
+                            object rawIsChecked = checkBox.IsChecked;
+                            bool isChecked = ((bool)(rawIsChecked));
+                            checkBox.IsChecked = !isChecked;
+                        }
+                    }
+                }
+            }
+        }
+
 
         public void SelectFriendsType(string type)
         {
@@ -22505,12 +23011,12 @@ namespace GamaManager
             }
         }
 
-        private void OpenDiscussionsHandler(object sender, MouseButtonEventArgs e)
+        private void OpenDiscussionsHandler (object sender, MouseButtonEventArgs e)
         {
             OpenDiscussions();
         }
 
-        public void OpenDiscussions()
+        public void OpenDiscussions ()
         {
             string currentGameName = gameNameLabel.Text;
             forumsKeywordsBox.Text = currentGameName;
@@ -23064,6 +23570,16 @@ namespace GamaManager
             OpenPointsStore();
         }
 
+        public void FindFriendsHandler (object sender, RoutedEventArgs e)
+        {
+            FindFriends();
+        }
+
+        public void FindFriends ()
+        {
+            OpenAddFriendDialog();
+        }
+
         public void OpenPointsStore ()
         {
             mainControl.SelectedIndex = 31;
@@ -23101,94 +23617,6 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
-        }
-
-        public void ShowStoreMenuHandler (object sender, MouseEventArgs e)
-        {
-            StackPanel panel = ((StackPanel)(sender));
-            ShowStoreMenu(panel);
-        }
-
-        public void ShowStoreMenu (StackPanel panel)
-        {
-            if (panel.IsMouseOver)
-            {
-                storeMenuPopup.IsOpen = true;
-            }
-            else
-            {
-                storeMenuPopup.IsOpen = false;
-            }
-        }
-
-        public void HideStoreMenuHandler (object sender, MouseEventArgs e)
-        {
-            HideStoreMenu();
-        }
-
-        public void HideStoreMenu ()
-        {
-            storeMenuPopup.IsOpen = false;
-        }
-
-        public void ShowNewMenuHandler(object sender, MouseEventArgs e)
-        {
-            StackPanel panel = ((StackPanel)(sender));
-            ShowNewMenu(panel);
-        }
-
-        public void ShowNewMenu(StackPanel panel)
-        {
-            if (panel.IsMouseOver)
-            {
-                newMenuPopup.IsOpen = true;
-            }
-            else
-            {
-                newMenuPopup.IsOpen = false;
-            }
-        }
-
-        public void HideNewMenuHandler(object sender, MouseEventArgs e)
-        {
-            StackPanel panel = ((StackPanel)(sender));
-            HideNewMenu(panel);
-        }
-
-        public void HideNewMenu (StackPanel panel)
-        {
-            if (!panel.IsMouseOver)
-            {
-                newMenuPopup.IsOpen = false;
-            }
-        }
-
-        public void ShowCategoriesMenuHandler(object sender, MouseEventArgs e)
-        {
-            StackPanel panel = ((StackPanel)(sender));
-            ShowCategoriesMenu(panel);
-        }
-
-        public void ShowCategoriesMenu (StackPanel panel)
-        {
-            if (panel.IsMouseOver)
-            {
-                categoriesMenuPopup.IsOpen = true;
-            }
-            else
-            {
-                categoriesMenuPopup.IsOpen = false;
-            }
-        }
-
-        public void HideCategoriesMenuHandler (object sender, MouseEventArgs e)
-        {
-            HideCategoriesMenu();
-        }
-
-        public void HideCategoriesMenu()
-        {
-            categoriesMenuPopup.IsOpen = false;
         }
 
         public void OpenStoreHandler (object sender, RoutedEventArgs e)
@@ -26397,7 +26825,7 @@ namespace GamaManager
         private void SearchGame (string boxContent)
         {
             int gameCursor = -1;
-            searchGameBoxPopupBody.Children.Clear();
+            // searchGameBoxPopupBody.Children.Clear();
             string keywords = boxContent.ToLower();
             int keywordsLength = keywords.Length;
             bool isFilterEnabled = keywordsLength >= 1;
@@ -26435,7 +26863,7 @@ namespace GamaManager
                                             separator.BorderBrush = System.Windows.Media.Brushes.Black;
                                             separator.BorderThickness = new Thickness(1);
                                             separator.Margin = new Thickness(25, 5, 25, 5);
-                                            searchGameBoxPopupBody.Children.Add(separator);
+                                            // searchGameBoxPopupBody.Children.Add(separator);
                                         }
                                         StackPanel searchedGame = new StackPanel();
                                         searchedGame.Margin = new Thickness(15);
@@ -26465,7 +26893,7 @@ namespace GamaManager
                                         someGamePriceLabel.Text = someGamePriceLabelContent;
                                         searchedGameAside.Children.Add(someGamePriceLabel);
                                         searchedGame.Children.Add(searchedGameAside);
-                                        searchGameBoxPopupBody.Children.Add(searchedGame);
+                                        // searchGameBoxPopupBody.Children.Add(searchedGame);
                                     }
                                 }
                             }
@@ -26478,7 +26906,7 @@ namespace GamaManager
                     this.Close();
                 }
             }
-            searchGameBoxPopup.IsOpen = isFilterEnabled;
+            // searchGameBoxPopup.IsOpen = isFilterEnabled;
         }
 
         private void SetWishListHandler (object sender, RoutedEventArgs e)
@@ -29265,6 +29693,19 @@ namespace GamaManager
         public string game;
         public string user;
         public DateTime date;
+    }
+
+    public class UserSubsResponseInfo
+    {
+        public string status;
+        public List<UserSub> subs;
+    }
+
+    public class UserSub
+    {
+        public string _id;
+        public string user;
+        public string sub;
     }
 
     public class ReviewCommentsResponseInfo

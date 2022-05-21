@@ -1130,6 +1130,16 @@
                                         Margin="15"
                                         MouseLeftButtonUp="OpenDiscussionsHandler"
                                     />
+                                    <TextBlock
+                                        Text="Руководства"
+                                        Margin="15"
+                                        MouseLeftButtonUp="OpenManualsHandler"
+                                    />
+                                    <TextBlock
+                                        Text="Мастерская"
+                                        Margin="15"
+                                        MouseLeftButtonUp="OpenWorkShopHandler"
+                                    />
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel
@@ -1562,7 +1572,7 @@
                                         >
                                             <Popup.Child>
                                                 <StackPanel
-                                                    Background="LightGray"    
+                                                    Background="SlateGray"    
                                                 >
                                                     <StackPanel
                                                         Margin="10"
@@ -1585,11 +1595,13 @@
                                                             Kind="Heart"    
                                                         />
                                                         <TextBlock
+                                                            x:Name="friendProfilePopupBodySubLabel"
                                                             Margin="15 0"
                                                             Text="Отписаться"    
                                                         />
                                                     </StackPanel>
                                                     <StackPanel
+                                                        x:Name="friendProfilePopupBodyAddNick"
                                                         Margin="10"
                                                         Orientation="Horizontal"
                                                     >
@@ -1602,6 +1614,7 @@
                                                         />
                                                     </StackPanel>
                                                     <StackPanel
+                                                        x:Name="friendProfilePopupBodyTradeOffer"
                                                         Margin="10"
                                                         Orientation="Horizontal"
                                                     >
@@ -1638,6 +1651,7 @@
                                                         />
                                                     </StackPanel>
                                                     <StackPanel
+                                                        x:Name="friendProfilePopupBodyRemoveFriend"
                                                         Margin="10"
                                                         Orientation="Horizontal"
                                                     >
@@ -2510,11 +2524,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <TextBlock
                                 x:Name="statsHeaderLabel"
@@ -2663,11 +2677,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <sparrow:SparrowChart
                                 Theme="Grayscale"
@@ -3418,11 +3432,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <DockPanel>
                                 <StackPanel>
@@ -3617,11 +3631,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <DockPanel>
                                 <StackPanel>
@@ -3648,6 +3662,7 @@
                                     
                                 >
                                     <StackPanel
+                                        Margin="5 10 0 0"
                                         Width="350"
                                         Background="DarkSlateGray"
                                         DockPanel.Dock="Right"    
@@ -3668,6 +3683,7 @@
                                         <StackPanel
                                             x:Name="addDiscussionDialog"
                                             Visibility="Collapsed"
+                                            Margin="0 10 0 0"
                                             Background="LightGray"    
                                         >
                                             <TextBlock
@@ -3814,11 +3830,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <DockPanel>
                                 <StackPanel>
@@ -3835,6 +3851,7 @@
                             >
                                 <DockPanel>
                                     <StackPanel
+                                        Margin="15 0"
                                         Width="350"
                                         Background="DarkSlateGray"
                                         DockPanel.Dock="Right"    
@@ -3877,30 +3894,7 @@
                                                     x:Name="forumTopicPages"
                                                     DataContext="1"
                                                     Orientation="Horizontal"    
-                                                >
-                                                    <!--
-                                                    <TextBlock
-                                                        Text="1"
-                                                        Margin="10 0"
-                                                    />
-                                                    <TextBlock
-                                                        Text="2"
-                                                        Margin="10 0"
-                                                    />
-                                                    <TextBlock
-                                                        Text="3"
-                                                        Margin="10 0"
-                                                    />
-                                                    <TextBlock
-                                                        Text="4"
-                                                        Margin="10 0"
-                                                    />
-                                                    <TextBlock
-                                                        Text="5"
-                                                        Margin="10 0"
-                                                    />
-                                                    -->
-                                                </StackPanel>
+                                                />
                                                 <materialDesign:PackIcon
                                                     x:Name="forumTopicNextPaginationBtn"
                                                     Kind="ArrowForward"
@@ -4028,11 +4022,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <DockPanel>
                                 <StackPanel
@@ -4100,11 +4094,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <DockPanel>
                                 <StackPanel
@@ -4316,11 +4310,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <Border
                                 Background="LightGray" 
@@ -4338,13 +4332,14 @@
                                             Height="50"    
                                             ImageFailed="SetDefautAvatarHandler"
                                         >
-                                                <Image.Source>
-                                                    <BitmapImage
-                                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                />
-                                                </Image.Source>
-                                            </Image>
+                                            <Image.Source>
+                                                <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                            </Image.Source>
+                                        </Image>
                                         <TextBlock 
+                                            x:Name="iconsUserNameLabel"
                                             VerticalAlignment="Center"
                                             Text="Пользователь" 
                                         />
@@ -4825,11 +4820,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
-                            Margin="175 0"
-                            Background="Blue"    
+                            Margin="0"
+                            Background="Gray"    
                         >
                             <DockPanel>
                                 <ScrollViewer
@@ -4837,8 +4832,8 @@
                                 >
                                     <StackPanel
                                         x:Name="newsAside"
-                                        Background="DarkCyan"
-                                        Width="250"
+                                        Background="SlateGray"
+                                        Width="350"
                                         DockPanel.Dock="Left"    
                                     >
                                         <materialDesign:PackIcon
@@ -5444,11 +5439,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <StackPanel>
                                 <StackPanel
@@ -5479,8 +5474,9 @@
                                 <DockPanel>
                                     <ScrollViewer>
                                         <StackPanel
-                                            Background="DarkCyan"
-                                            Width="250"
+                                            Margin="35 0"
+                                            Background="Transparent"
+                                            Width="285"
                                             DockPanel.Dock="Left"    
                                         >
                                             <TextBlock
@@ -5634,7 +5630,7 @@
                                                 <TextBlock
                                                     Margin="15 5"
                                                     FontSize="18"
-                                                    Text="Подписки на группы"    
+                                                    Text="Подписки на игры"    
                                                 />
                                             </StackPanel>
                                             <Separator />
@@ -5756,15 +5752,18 @@
                                                             Width="125"
                                                             Height="25"
                                                             Margin="10 0"
+                                                            Click="FindFriendsHandler"
                                                         >
                                                             <Button.Content>
                                                                 <StackPanel
                                                                     Orientation="Horizontal"    
                                                                 >
                                                                     <materialDesign:PackIcon
+                                                                        Margin="5 0"
                                                                         Kind="UserAddOutline"    
                                                                     />
                                                                     <TextBlock
+                                                                        Margin="5 0"
                                                                         Text="Найти друзей"
                                                                     />
                                                                 </StackPanel>
@@ -6401,7 +6400,9 @@
                                                         Foreground="White"
                                                         Text="Некоторые из игр в Office ware game manager запоминают пользователей, с которыми вы играли. Здесь показаны недавние сессии, найденные при помощи подбора&#10;игр Office ware game manager."
                                                     />
+                                                    
                                                     <TextBox
+                                                        x:Name="gamesHistoryBox"
                                                         Margin="25"
                                                         IsReadOnly="True"
                                                         Height="50"
@@ -6419,7 +6420,7 @@
                                                                         <TextBlock
                                                                             Height="50"
                                                                             Width="750"
-                                                                            Text="Ваша истоирия запуска игр на этот день пуста."
+                                                                            Text="Ваша история запуска игр на этот день пуста."
                                                                             Foreground="#959595"
                                                                             Background="White"
                                                                         />
@@ -6522,7 +6523,124 @@
                                             Visibility="Collapsed"        
                                         >
                                             <StackPanel>
-
+                                                <StackPanel
+                                                    Margin="0 15"
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <TextBlock
+                                                        FontSize="16"
+                                                        Text="Подписки"    
+                                                        VerticalAlignment="Center"
+                                                    />
+                                                    <StackPanel
+                                                        Orientation="Horizontal" 
+                                                        Margin="275 0"
+                                                    >
+                                                        <TextBox
+                                                            x:Name="userSubsBox"
+                                                            Height="25"
+                                                            Width="250"
+                                                            TextChanged="GetMyUserSubsHandler"
+                                                        >
+                                                            <TextBox.Resources>
+                                                                <VisualBrush
+                                                                x:Key="hinttext"
+                                                                AlignmentX="Left"
+                                                                Stretch="None"
+                                                                TileMode="None"
+                                                            >
+                                                                    <VisualBrush.Visual>
+                                                                        <DockPanel>
+                                                                            <TextBlock
+                                                                                Height="25"
+                                                                                Width="275"
+                                                                                Text="Поиск по подпискам"
+                                                                                Foreground="#959595"
+                                                                                Background="White"
+                                                                            />
+                                                                        </DockPanel>
+                                                                    </VisualBrush.Visual>
+                                                                </VisualBrush>
+                                                            </TextBox.Resources>
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                    <Setter Property="FontSize" Value="12" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Setter Property="Width" Value="Auto" />
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                        <Button
+                                                            Content="Управление подписками"
+                                                            Width="275"
+                                                            Height="25"
+                                                            Margin="10 0"
+                                                            Click="ToggleFriendSubsListManagementHandler"
+                                                        />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel
+                                                    x:Name="friendSubsListManagement"    
+                                                    Visibility="Collapsed"
+                                                >
+                                                    <StackPanel
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Выберите пользователей для одного из следующих действий."    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Выбрать:"    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="All"
+                                                            Text="ВСЕХ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendSubsTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Nothing"
+                                                            Text="НИКОГО"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendSubsTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Invert"
+                                                            Text="ИНВЕРТИРОВАТЬ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectFriendSubsTypeHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="0 10"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <Button
+                                                            Margin="10 0"
+                                                            Width="125"
+                                                            Height="25"
+                                                            Content="Отписаться"
+                                                            Click="UnsubscribeFriendsHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Text="Выбрано: 0"    
+                                                    />
+                                                </StackPanel>
+                                                <WrapPanel
+                                                    x:Name="myUserSubs"    
+                                                />
                                             </StackPanel>
                                         </TabItem>
                                         <TabItem
@@ -6690,11 +6808,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <TextBlock
                                 Text="Найти группы"    
@@ -6720,11 +6838,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <TextBlock
                                 Text="Создание группы"    
@@ -10057,1145 +10175,16 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <StackPanel>
-                                <StackPanel
-                                    Height="35"
-                                    Orientation="Horizontal" 
-                                    Background="SkyBlue"
-                                >
-                                    <StackPanel
-                                        x:Name="storeMenuPanel"
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"
-                                        MouseMove="ShowStoreMenuHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Ваш магазин"
-                                        />
-                                    </StackPanel>
-                                    <Popup
-                                        x:Name="storeMenuPopup"
-                                        StaysOpen="False"
-                                        IsOpen="False"
-                                        Placement="Mouse"
-                                        Width="250"
-                                        Height="575"
-                                    >
-                                        <Popup.Child>
-                                            <StackPanel
-                                                Background="LightGray"
-                                            >
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Главная страница"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Отслеживаемые товары"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                    DataContext="3"
-                                                    MouseLeftButtonUp="SelectAccountSettingsItemHandler"
-                                                >
-                                                    <TextBlock
-                                                        Text="Настройки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Foreground="SkyBlue"
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Рекомендации"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Ваш список рекомендаций"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Очередь новинок"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Рекомендации сообщества"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Интерактивный советник"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Популярно у друзей"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Кураторы Office ware game manager"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Foreground="SkyBlue"
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Потому что вам нравится"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Геройский шутер"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Баскетбол"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Гонки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Зомби"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Больше меток для вас"    
-                                                    />
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Popup.Child>
-                                    </Popup>
-                                    <StackPanel
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"    
-                                        MouseMove="ShowNewMenuHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Новое и примечательное"    
-                                        />
-                                    </StackPanel>
-                                    <Popup
-                                        x:Name="newMenuPopup"
-                                        StaysOpen="False"
-                                        IsOpen="False"
-                                        Placement="Mouse"
-                                        Width="225"
-                                        Height="185"
-                                    >
-                                        <Popup.Child>
-                                            <StackPanel
-                                                Background="LightGray"    
-                                            >
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Лидеры продаж"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Популярные новинки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Текущие предложения"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Недавно обновленные"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Популярные будущие проекты"    
-                                                    />
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Popup.Child>
-                                    </Popup>
-                                    <StackPanel
-                                        x:Name="categoriesMenuPanel"
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"
-                                        MouseMove="ShowCategoriesMenuHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Категории"    
-                                        />
-                                    </StackPanel>
-                                    <Popup
-                                        x:Name="categoriesMenuPopup"
-                                        StaysOpen="False"
-                                        IsOpen="False"
-                                        Placement="Left"
-                                        PlacementTarget="{ Binding ElementName=categoriesMenuPanel }"
-                                        Width="725"
-                                        Height="650"
-                                    >
-                                        <Popup.Child>
-                                            <Grid
-                                                Background="LightGray"
-                                            >
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                    <RowDefinition
-                                                        Height="35"    
-                                                    />
-                                                </Grid.RowDefinitions>
-                                                <StackPanel
-                                                    Grid.Row="0"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Foreground="SkyBlue"
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Особые разделы"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Бесплатно"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="2"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Демоверсии"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="3"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Ранний доступ"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="4"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="С поддержкой контроллеров"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="5"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Remote play"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="6"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Программы"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="7"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Саундтреки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="8"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Продукты для VR"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="9"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="VR устройства"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="10"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="macOS"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="11"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Linux"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="12"
-                                                    Grid.Column="0"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Для интернет-кафе"    
-                                                    />
-                                                </StackPanel>
-
-                                                <StackPanel
-                                                    Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Foreground="SkyBlue"
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Жанры"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Экшен"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="2"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Beat 'Em up"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="3"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Аркада и ритм-игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="4"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Платформер и раннер"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="5"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Файтинги и боевые искусства"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="6"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Шутер от первого лица"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="7"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Шутер от третьего лица"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="8"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Экшен-рогалик"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="9"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Приключенческая казуальная игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="10"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Визуальная новелла"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="11"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Глубокий сюжет"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="12"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Головоломка"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="13"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Казуальная игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="14"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Метроидвания"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="15"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Приключенческая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="16"
-                                                    Grid.Column="1"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Приключенческая ролевая игра"    
-                                                    />
-                                                </StackPanel>
-
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Ролевые игры"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="2"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Групповая ролевая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="3"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Пошаговая ролевая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="4"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Приключенческая ролевая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="5"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Рогалик"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="6"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Ролевой экшен"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="7"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Стратегическая ролевая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="8"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Японская ролевая игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="9"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Симулятор"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="10"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Жизнь и иммерсивные игры"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="11"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Космос и полеты"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="12"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Песочницы и физика"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="13"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Свидания"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="14"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Строительство и автоматизация"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="15"
-                                                    Grid.Column="2"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Фермерство"    
-                                                    />
-                                                </StackPanel>
-
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Стратегия"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="2"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Башенная защита"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="3"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Военная"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="4"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Глобальная стратегия и 4X-игры"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="5"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Города и колонизация"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="6"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Карточная и настольная игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="7"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Пошаговая стратегия"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="8"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Стратегия в реальном времени"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="9"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Спорт и гонки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="10"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Гонки"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="11"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Индивидуаальный спорт"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="12"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Командный спорт"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="13"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Охота и рыбалка"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="14"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Симулятор гонок"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="15"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Спортивные игры"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="16"
-                                                    Grid.Column="3"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Спортивные симуляторы"    
-                                                    />
-                                                </StackPanel>
-
-                                                <StackPanel
-                                                    Grid.Row="0"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Foreground="SkyBlue"
-                                                        FontWeight="ExtraBlack"
-                                                        Text="Темы"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="1"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Going rogue"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="2"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Аниме"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="3"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Выживание"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="4"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Космос"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="5"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Научная фантастика и киберпанк"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="6"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Открытый мир"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="7"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Тайны и детективы"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="8"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Только для взрослых"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="9"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Хоррор"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="10"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        FontWeight="ExtraBlack"
-                                                        Foreground="SkyBlue"
-                                                        Text="Число игроков"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="11"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Игра по локальной сети"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="12"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Кооперативы"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="13"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Локальная игра для вечеринок"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="14"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Массовый мультиплеер"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="15"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Многопользовательская игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="16"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Одиночная игра"    
-                                                    />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Grid.Row="17"
-                                                    Grid.Column="4"
-                                                    Margin="15 10"    
-                                                >
-                                                    <TextBlock
-                                                        Text="Сетевая"    
-                                                    />
-                                                </StackPanel>
-
-                                            </Grid>
-                                        </Popup.Child>
-                                    </Popup>
-                                    <StackPanel
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"    
-                                        MouseLeftButtonUp="OpenPointsStoreHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Магазин очков"    
-                                        />
-                                    </StackPanel>
-                                    <StackPanel
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"
-                                        MouseLeftButtonUp="OpenNewsHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Новости"    
-                                        />
-                                    </StackPanel>
-                                    <StackPanel
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"    
-                                        MouseLeftButtonUp="OpenLabsHandler"
-                                    >
-                                        <TextBlock
-                                            Text="Лаборатории"    
-                                        />
-                                    </StackPanel>
-                                    <StackPanel
-                                        Orientation="Horizontal"
-                                        Margin="15 0"
-                                        VerticalAlignment="Center"    
-                                        MouseLeftButtonUp="OpenLabsHandler"
-                                    >
-                                        <TextBox
-                                            x:Name="searchGameBox"
-                                            Width="350"
-                                            Height="25"
-                                            TextChanged="SearchGameHandler"
-                                        >
-                                            <TextBox.Resources>
-                                                <VisualBrush
-                                                    x:Key="hinttext"
-                                                    AlignmentX="Left"
-                                                    Stretch="None"
-                                                    TileMode="None"
-                                                >
-                                                    <VisualBrush.Visual>
-                                                        <DockPanel>
-                                                            <TextBlock
-                                                                Height="25"
-                                                                Width="350"
-                                                                Text="Поиск"
-                                                                Foreground="#959595"
-                                                                Background="White"
-                                                            />
-                                                        </DockPanel>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </TextBox.Resources>
-                                            <TextBox.Style>
-                                                <Style TargetType="TextBox">
-                                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                                    <Setter Property="FontSize" Value="12" />
-                                                    <Setter Property="Width" Value="Auto" />
-                                                    <Setter Property="Width" Value="Auto" />
-                                                    <Style.Triggers>
-                                                        <Trigger Property="Text" Value="">
-                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                        </Trigger>
-                                                        <Trigger Property="Text" Value="{x:Null}">
-                                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBox.Style>
-                                        </TextBox>
-                                        <Button
-                                            Width="25"
-                                            Height="25"
-                                        >
-                                            <Button.Content>
-                                                <materialDesign:PackIcon
-                                                    Kind="Search"    
-                                                />
-                                            </Button.Content>
-                                        </Button>
-                                    </StackPanel>
-                                    <Popup
-                                        x:Name="searchGameBoxPopup"
-                                        StaysOpen="False" 
-                                        Width="350"
-                                        Height="200"
-                                        Placement="Bottom"
-                                        PlacementTarget="{ Binding ElementName=searchGameBox }"
-                                    >
-                                        <Popup.Child>
-                                            <StackPanel
-                                                x:Name="searchGameBoxPopupBody"
-                                                Background="LightSlateGray"
-                                            />
-                                        </Popup.Child>
-                                    </Popup>
-                                </StackPanel>
+                                <local:HeaderControl
+                                    DataContext="{ Binding ElementName=mainWindow }"    
+                                /> 
                                 <TextBlock
                                     FontSize="24"
                                     Margin="15"
@@ -11350,11 +10339,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="100 0"
-                            Background="Blue"
+                            Background="SlateGray"
                             Orientation="Horizontal"
                         >
                             <StackPanel
@@ -11424,10 +10413,6 @@
                                 <local:HeaderControl
                                     DataContext="{ Binding ElementName=mainWindow}"    
                                 />
-                                <!--
-                                    <local:CarousalUC />
-                                />
-                                -->
                                 <TextBlock
                                     Margin="15"
                                     FontSize="18"
@@ -11661,11 +10646,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <Button
                                 Content="Список желаемого"
@@ -11991,7 +10976,7 @@
                     >
                         <DockPanel
                             DockPanel.Dock="Top"
-                            Background="Yellow"
+                            Background="SlateGray"
                             Height="50"
                         >
                             <TextBlock
@@ -12028,7 +11013,7 @@
                         >
                             <StackPanel
                                 Width="275"
-                                Background="Blue"    
+                                Background="SlateGray"    
                             >
                                 <StackPanel
                                     Orientation="Horizontal"    
@@ -12273,7 +11258,7 @@
                             </StackPanel>
                         </ScrollViewer>
                         <StackPanel
-                            Background="Red"    
+                            Background="Gray"    
                         >
                             <Popup
                                 x:Name="pointsStorePopup"
@@ -12376,18 +11361,20 @@
                                 </Popup.Child>
                             </Popup>
                             <TabControl
-                                x:Name="pointsStoreControl"    
+                                x:Name="pointsStoreControl"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
                             >
                                 <TabItem
                                     Visibility="Collapsed"    
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12637,11 +11624,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <materialDesign:PackIcon
                                                     Width="75"
@@ -12677,11 +11664,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12706,11 +11693,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12735,11 +11722,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12764,11 +11751,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12788,11 +11775,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12812,11 +11799,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <StackPanel
                                                     Orientation="Horizontal"    
@@ -12851,11 +11838,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12880,11 +11867,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12925,11 +11912,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -12981,11 +11968,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -13025,11 +12012,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -13069,11 +12056,11 @@
                                 >
                                     <ScrollViewer>
                                         <DockPanel
-                                            Background="Green"    
+                                            Background="Gray"    
                                         >
                                             <StackPanel
                                                 Margin="175 0"
-                                                Background="Blue"
+                                                Background="Gray"
                                             >
                                                 <TextBlock
                                                     FontSize="24"
@@ -13118,11 +12105,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TextBlock
                                 Margin="15"
@@ -15948,11 +14935,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <TextBlock
                                 Text="Назад"    
@@ -16916,11 +15903,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                             по меткам
@@ -17232,11 +16219,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                             активность друзей
@@ -17359,11 +16346,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                             Кураторы
@@ -17409,11 +16396,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                             РЕКОМЕНДАЦИИ ВАШИХ ДРУЗЕЙ
@@ -17479,11 +16466,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                             Ваши игры
@@ -17721,11 +16708,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <!--
                                 Кураторы
@@ -18358,11 +17345,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <StackPanel
                                 Orientation="Horizontal"    
@@ -18381,6 +17368,7 @@ E. Что произойдет, если положение Пункта 11 бу
                                     </Image.Source>
                                 </Image>
                                 <TextBlock
+                                    x:Name="equipmentUserNameLabel"
                                     Margin="15"
                                     FontSize="20"
                                     Text="Имя пользователя"
@@ -18856,11 +17844,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="SlateGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="SlateGray"    
                         >
                             <local:HeaderControl
                                 DataContext="{ Binding ElementName=mainWindow }"    

@@ -8,10 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel
-                                    Height="35"
-                                    Orientation="Horizontal" 
-                                    Background="SkyBlue"
-                                >
+        Height="35"
+        Orientation="Horizontal" 
+        Background="SkyBlue"
+    >
         <StackPanel
                                         x:Name="storeMenuPanel"
                                         Margin="15 0"

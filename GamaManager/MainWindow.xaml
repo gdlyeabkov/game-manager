@@ -2792,204 +2792,285 @@
                                         FontSize="24"
                                         Text="Имя пользователя"    
                                     />
-                                    <TextBlock
-                                        Margin="15"
-                                        FontSize="14"
-                                        Text="Фильтровать по игре"    
-                                    />
+                                    <StackPanel
+                                        Orientation="Horizontal"    
+                                    >
+                                        <TextBlock
+                                            Margin="15"
+                                            FontSize="14"
+                                            Text="Фильтровать по игре" 
+                                            VerticalAlignment="Center"
+                                        />
+                                        <ComboBox
+                                            x:Name="screenShotsFilter"
+                                            Margin="25"
+                                            HorizontalAlignment="Right"
+                                            Width="175"
+                                            Height="25"
+                                            VerticalAlignment="Center"
+                                            SelectedIndex="0"
+                                            SelectionChanged="SelectScreenShotsFilterHandler"
+                                        >
+                                            <ComboBoxItem
+                                                Visibility="Collapsed"
+                                                Content="Выбрать игру"
+                                                DataContext="all games"
+                                            />
+                                            <ComboBoxItem
+                                                Content="Все игры"
+                                                DataContext="all games"
+                                            />
+                                        </ComboBox>
+                                        <RadioButton
+                                            x:Name="mySelfContentRadioBtn"
+                                            VerticalAlignment="Center"
+                                            Margin="15 0"
+                                            Content="Создано"  
+                                            IsChecked="True"
+                                            Checked="ToggleContentModeHandler"
+                                        />
+                                        <RadioButton
+                                            x:Name="favoriteContentRadioBtn"
+                                            VerticalAlignment="Center"
+                                            Margin="15 0"
+                                            Content="Избранное"    
+                                            Checked="ToggleContentModeHandler"
+                                        />
+                                    </StackPanel>
+
                                 </StackPanel>
-                                <ComboBox
-                                    x:Name="screenShotsFilter"
-                                    Margin="25"
-                                    HorizontalAlignment="Right"
-                                    Width="175"
-                                    Height="35"
-                                    SelectedIndex="0"
-                                    SelectionChanged="SelectScreenShotsFilterHandler"
-                                >
-                                    <ComboBoxItem
-                                        Visibility="Collapsed"
-                                        Content="Выбрать игру"
-                                        DataContext="all games"
-                                    />
-                                    <ComboBoxItem
-                                        Content="Все игры"
-                                        DataContext="all games"
-                                    />
-                                </ComboBox>
                             </DockPanel>
                             <TabControl
-                                x:Name="contentControl"    
+                                x:Name="contentControl"
+                                SelectionChanged="ToggleContentControlTabHandler"
                             >
                                 <TabItem
                                     Header="Скриншоты"    
                                 >
+                                    
                                     <StackPanel
                                         x:Name="screenShotsContainer"    
                                     >
-                                        <StackPanel
-                                            x:Name="screenShotsManagement"
-                                            Visibility="Collapsed"
-                                            Background="LightGray"    
-                                        >
-                                            <TextBlock
-                                                Margin="15"
-                                                Text="Выберите скриншоты, над которыми вы хотите произвести действие."    
-                                            />
-                                            <DockPanel
-                                                Margin="0 15"
-                                            >
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="175"
-                                                    Height="30"
-                                                    Content="Показывать всем"    
-                                                />
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="175"
-                                                    Height="30"
-                                                    Content="Показывать только друзьям"    
-                                                />
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="175"
-                                                    Height="30"
-                                                    Content="Показывать только себе"    
-                                                />
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="75"
-                                                    Height="30"
-                                                    Content="Скрыть"    
-                                                />
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="75"
-                                                    Height="30"
-                                                    Content="Удалить"    
-                                                />
-                                                <Button
-                                                    HorizontalAlignment="Right"
-                                                    Margin="15 0"
-                                                    Width="75"
-                                                    Height="30"
-                                                    Content="Готово"
-                                                    Click="ToggleScreenShotsManagementHandler"
-                                                />
-                                            </DockPanel>
-                                        </StackPanel>
-                                        <DockPanel
-                                            Margin="0 15"
-                                        >
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Text="Отображаются"    
-                                                Margin="15 0"
-                                            />
-                                            <ComboBox
-                                                Width="125"
-                                                Height="25"
-                                                VerticalAlignment="Center"
-                                                SelectedIndex="0"  
-                                                SelectionChanged="ToggleScreenShotsDisplayHandler"
-                                            >
-                                                <ComboBoxItem
-                                                    Content="Стеной"    
-                                                    DataContext="wall"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Сеткой"    
-                                                    DataContext="grid"    
-                                                />
-                                            </ComboBox>
-                                            <ComboBox
-                                                x:Name="screenShotsSortBox"
-                                                Margin="15 0"
-                                                Width="175"
-                                                Height="25"
-                                                VerticalAlignment="Center"
-                                                SelectedIndex="1"
-                                                SelectionChanged="ToggleScreenShotsSortHandler"
-                                            >
-                                                <ComboBoxItem
-                                                    Content="Самые популярные"    
-                                                    DataContext="wall"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Сначала новые"    
-                                                    DataContext="grid"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Сначала старые"    
-                                                    DataContext="grid"    
-                                                />
-                                            </ComboBox>
-                                            <ComboBox
-                                                Margin="15 0"
-                                                Width="215"
-                                                Height="25"
-                                                VerticalAlignment="Center"
-                                                SelectedIndex="0"    
-                                            >
-                                                <ComboBoxItem
-                                                    Content="Все ваши скриншоты"    
-                                                    DataContext="wall"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Ваши публичные скриншоты"    
-                                                    DataContext="grid"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Только для друзей"    
-                                                    DataContext="grid"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Ваши личные скриншоты"    
-                                                    DataContext="grid"    
-                                                />
-                                                <ComboBoxItem
-                                                    Content="Ваши скрытые скриншоты"    
-                                                    DataContext="grid"    
-                                                />
-                                            </ComboBox>
-                                            <StackPanel
-                                                HorizontalAlignment="Right"
-                                                Orientation="Horizontal"    
-                                            >
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="125"
-                                                    Height="35"
-                                                    Content="Загрузить скриншоты"    
-                                                    Click="ShowScreenShotUploadersDialogHandler"
-                                                />
-                                                <Button
-                                                    Margin="15 0"
-                                                    Width="175"
-                                                    Height="35"
-                                                    Content="Управление скриншотами"    
-                                                    Click="ToggleScreenShotsManagementHandler"
-                                                />
-                                            </StackPanel>
-                                        </DockPanel>
+                                        <!--
                                         <StackPanel
                                             x:Name="screenShots"
                                             Margin="25"
                                         />
+                                        -->
+                                        <TabControl
+                                            x:Name="contentScreenShotsControl"
+                                            SelectedIndex="0"
+                                            MinWidth="650"
+                                        >
+                                            <TabItem
+                                                Visibility="Collapsed"    
+                                                MinWidth="650"
+                                            >
+                                                <StackPanel>
+                                                    <StackPanel
+                                                        x:Name="screenShotsManagement"
+                                                        Visibility="Collapsed"
+                                                        Background="LightGray"    
+                                                    >
+                                                        <TextBlock
+                                                            Margin="15"
+                                                            Text="Выберите скриншоты, над которыми вы хотите произвести действие."    
+                                                        />
+                                                        <DockPanel
+                                                            Margin="0 15"
+                                                        >
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="175"
+                                                                Height="30"
+                                                                Content="Показывать всем"    
+                                                                DataContext="Показывать всем"
+                                                                Click="ToggleScreenShotVisibilityHandler"
+                                                            />
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="175"
+                                                                Height="30"
+                                                                Content="Показывать только друзьям"        
+                                                                DataContext="Показывать только друзьям"
+                                                                Click="ToggleScreenShotVisibilityHandler"
+                                                            />
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="175"
+                                                                Height="30"
+                                                                Content="Показывать только себе"    
+                                                                DataContext="Показывать только себе"
+                                                                Click="ToggleScreenShotVisibilityHandler"
+                                                            />
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="75"
+                                                                Height="30"
+                                                                Content="Скрыть"    
+                                                                DataContext="Скрытый"
+                                                                Click="ToggleScreenShotVisibilityHandler"
+                                                            />
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="75"
+                                                                Height="30"
+                                                                Content="Удалить"    
+                                                                Click="RemoveScreenShotsHandler"
+                                                            />
+                                                            <Button
+                                                                HorizontalAlignment="Right"
+                                                                Margin="15 0"
+                                                                Width="75"
+                                                                Height="30"
+                                                                Content="Готово"
+                                                                Click="ToggleScreenShotsManagementHandler"
+                                                            />
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                    <DockPanel
+                                                        Margin="0 15"
+                                                    >
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Text="Отображаются"    
+                                                            Margin="15 0"
+                                                        />
+                                                        <ComboBox
+                                                            Width="125"
+                                                            Height="25"
+                                                            VerticalAlignment="Center"
+                                                            SelectedIndex="0"  
+                                                            SelectionChanged="ToggleScreenShotsDisplayHandler"
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Стеной"    
+                                                                DataContext="wall"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Сеткой"    
+                                                                DataContext="grid"    
+                                                            />
+                                                        </ComboBox>
+                                                        <ComboBox
+                                                            x:Name="screenShotsSortBox"
+                                                            Margin="15 0"
+                                                            Width="175"
+                                                            Height="25"
+                                                            VerticalAlignment="Center"
+                                                            SelectedIndex="1"
+                                                            SelectionChanged="ToggleScreenShotsSortHandler"
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Самые популярные"    
+                                                                DataContext="wall"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Сначала новые"    
+                                                                DataContext="grid"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Сначала старые"    
+                                                                DataContext="grid"    
+                                                            />
+                                                        </ComboBox>
+                                                        <ComboBox
+                                                            Margin="15 0"
+                                                            Width="215"
+                                                            Height="25"
+                                                            VerticalAlignment="Center"
+                                                            SelectedIndex="0"    
+                                                        >
+                                                            <ComboBoxItem
+                                                                Content="Все ваши скриншоты"    
+                                                                DataContext="wall"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Ваши публичные скриншоты"    
+                                                                DataContext="grid"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Только для друзей"    
+                                                                DataContext="grid"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Ваши личные скриншоты"    
+                                                                DataContext="grid"    
+                                                            />
+                                                            <ComboBoxItem
+                                                                Content="Ваши скрытые скриншоты"    
+                                                                DataContext="grid"    
+                                                            />
+                                                        </ComboBox>
+                                                        <StackPanel
+                                                            HorizontalAlignment="Right"
+                                                            Orientation="Horizontal"    
+                                                        >
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="125"
+                                                                Height="35"
+                                                                Content="Загрузить скриншоты"    
+                                                                Click="ShowScreenShotUploadersDialogHandler"
+                                                            />
+                                                            <Button
+                                                                Margin="15 0"
+                                                                Width="175"
+                                                                Height="35"
+                                                                Content="Управление скриншотами"    
+                                                                Click="ToggleScreenShotsManagementHandler"
+                                                            />
+                                                        </StackPanel>
+                                                    </DockPanel>
+                                                    <StackPanel
+                                                        x:Name="screenShots"
+                                                        Margin="25"
+                                                    />
+                                                </StackPanel>
+                                            </TabItem>
+                                            <TabItem    
+                                                Visibility="Collapsed"    
+                                            >
+                                                <StackPanel
+                                                    x:Name="contentFavoriteScreenShots"
+                                                    Margin="25"
+                                                />
+                                            </TabItem>
+                                        </TabControl>
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem
                                     Header="Иллюстрации"    
                                 >
                                     <DockPanel
-                                        Background="Gray"
                                         Margin="25"
                                     >
-                                        <StackPanel
-                                            x:Name="contentIllustrations"
-                                            Margin="25"
-                                        />
+                                        <TabControl
+                                            x:Name="contentIllustrationsControl"
+                                            SelectedIndex="0"
+                                            MinWidth="650"
+                                            Background="Gray"
+                                            BorderBrush="Transparent"
+                                            BorderThickness="0"
+                                        >
+                                            <TabItem
+                                                Visibility="Collapsed"    
+                                            >
+                                                    <StackPanel
+                                                        x:Name="contentIllustrations"
+                                                        Margin="25"
+                                                    />
+                                                
+                                            </TabItem>
+                                            <TabItem    
+                                                Visibility="Collapsed"    
+                                            >
+                                                <StackPanel
+                                                    x:Name="contentFavoriteIllustrations"
+                                                    Margin="25"
+                                                />
+                                            </TabItem>
+                                        </TabControl>
                                     </DockPanel>
                                 </TabItem>
                                 <TabItem
@@ -4539,11 +4620,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="LightGray"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="LightGray"    
+                            Background="Gray"    
                         >
                             <DockPanel>
                                 <local:FriendActivityAsideControl
@@ -7339,11 +7420,11 @@
                     ScrollChanged="DetectMainCommunityScrollHandler"    
                 >
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <StackPanel>
                                 <Popup
@@ -7944,11 +8025,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <TextBlock
                                 Text="Игра >> Написание нового руководства"    
@@ -8291,11 +8372,11 @@
                     x:Name="mainManualScroll"
                 >
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <DockPanel
                                 HorizontalAlignment="Center"
@@ -8701,11 +8782,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <TextBlock
                                 Text="Загрузите вашу иллюстрацию"    
@@ -8870,11 +8951,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <DockPanel
                                 HorizontalAlignment="Center"
@@ -9027,27 +9108,42 @@
                                                         </Button.Content>
                                                     </Button>
                                                 </StackPanel>
-                                                <Button
+                                                <ComboBox
+                                                    x:Name="mainIllustrationSettingsSelector"
                                                     HorizontalAlignment="Right"
                                                     Width="65"
                                                     Height="25"
                                                     Margin="15 0"
+                                                    SelectedIndex="0"
+                                                    SelectionChanged="ToggleMainIllustrationSettingsHandler"
                                                 >
-                                                    <Button.Content>
-                                                        <StackPanel
-                                                            Orientation="Horizontal"
-                                                        >
-                                                            <materialDesign:PackIcon
-                                                                Margin="5 0"
-                                                                Kind="Settings"    
-                                                            />
-                                                            <materialDesign:PackIcon
-                                                                Margin="5 0"
-                                                                Kind="ArrowDropDown"    
-                                                            />
-                                                        </StackPanel>
-                                                    </Button.Content>
-                                                </Button>
+                                                    <ComboBoxItem
+                                                        Visibility="Collapsed"    
+                                                    >
+                                                        <ComboBoxItem.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Settings"    
+                                                                />
+                                                            </StackPanel>
+                                                        </ComboBoxItem.Content>
+                                                    </ComboBoxItem>
+                                                    <ComboBoxItem
+                                                        Content="Поделиться"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="В избранное"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="Подписаться"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="Пожаловаться"    
+                                                    />
+                                                </ComboBox>
                                             </DockPanel>
 
                                             <Separator
@@ -9163,11 +9259,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <DockPanel
                                 HorizontalAlignment="Center"
@@ -9322,27 +9418,42 @@
                                                         </Button.Content>
                                                     </Button>
                                                 </StackPanel>
-                                                <Button
+                                                <ComboBox
+                                                    x:Name="mainScreenShotSettingsSelector"
                                                     HorizontalAlignment="Right"
                                                     Width="65"
                                                     Height="25"
                                                     Margin="15 0"
+                                                    SelectedIndex="0"
+                                                    SelectionChanged="ToggleMainScreenShotSettingsHandler"
                                                 >
-                                                    <Button.Content>
-                                                        <StackPanel
-                                                            Orientation="Horizontal"
-                                                        >
-                                                            <materialDesign:PackIcon
-                                                                Margin="5 0"
-                                                                Kind="Settings"    
-                                                            />
-                                                            <materialDesign:PackIcon
-                                                                Margin="5 0"
-                                                                Kind="ArrowDropDown"    
-                                                            />
-                                                        </StackPanel>
-                                                    </Button.Content>
-                                                </Button>
+                                                    <ComboBoxItem
+                                                        Visibility="Collapsed"    
+                                                    >
+                                                        <ComboBoxItem.Content>
+                                                            <StackPanel
+                                                                Orientation="Horizontal"
+                                                            >
+                                                                <materialDesign:PackIcon
+                                                                    Margin="5 0"
+                                                                    Kind="Settings"    
+                                                                />
+                                                            </StackPanel>
+                                                        </ComboBoxItem.Content>
+                                                    </ComboBoxItem>
+                                                    <ComboBoxItem
+                                                        Content="Поделиться"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="В избранное"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="Подписаться"    
+                                                    />
+                                                    <ComboBoxItem
+                                                        Content="Пожаловаться"    
+                                                    />
+                                                </ComboBox>
                                             </DockPanel>
 
                                             <Separator
@@ -17747,11 +17858,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <DockPanel>
                                 <local:FriendActivityAsideControl

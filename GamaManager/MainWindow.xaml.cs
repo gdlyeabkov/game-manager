@@ -172,6 +172,219 @@ namespace GamaManager
             GetOfflineFriends();
         }
 
+        public void RemoveScreenShotsHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveScreenShots();
+        }
+
+        public void RemoveScreenShots ()
+        {
+            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+            UIElement container = screenShotsContainerChildren[2];
+            bool isWall = container is StackPanel;
+            if (isWall)
+            {
+                StackPanel wallContainer = ((StackPanel)(container));
+                UIElementCollection wallContainerChildren = wallContainer.Children;
+                foreach (UIElement wallContainerChild in wallContainerChildren)
+                {
+                    Canvas screenShot = ((Canvas)(wallContainerChild));
+                    UIElementCollection screenShotChildren = screenShot.Children;
+                    UIElement rawCheckBox = screenShotChildren[0];
+                    CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                    object rawIsChecked = checkBox.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawPath = screenShotData["path"];
+                        string path = ((string)(rawPath));
+                        screenShot.Background = null;
+                        Stream myStream;
+                        try
+                        {
+                            Thread.Sleep(1);
+                            File.Delete(path);
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("Не удается удалить скриншот", "Ошибка");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                WrapPanel rowContainer = ((WrapPanel)(container));
+                UIElementCollection rowContainerChildren = rowContainer.Children;
+                foreach (UIElement rowContainerChild in rowContainerChildren)
+                {
+                    Canvas screenShot = ((Canvas)(rowContainerChild));
+                    UIElementCollection screenShotChildren = screenShot.Children;
+                    UIElement rawCheckBox = screenShotChildren[0];
+                    CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                    object rawIsChecked = checkBox.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawPath = screenShotData["path"];
+                        string path = ((string)(rawPath));
+                        screenShot.Background = null;
+                        Stream myStream;
+                        try
+                        {
+                            Thread.Sleep(1);
+                            File.Delete(path);
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("Не удается удалить скриншот", "Ошибка");
+                        }
+                    }
+                }
+            }
+            GetScreenShots("", false);
+        }
+
+        public void ToggleContentModeHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleContentMode();
+        }
+
+        public void ToggleContentMode ()
+        {
+            if (isAppInit)
+            {
+                int contentTypeIndex = contentControl.SelectedIndex;
+                bool isScreenShots = contentTypeIndex == 0;
+                bool isIllustrations = contentTypeIndex == 1;
+                bool isVideos = contentTypeIndex == 2;
+                bool isWorkShop = contentTypeIndex == 3;
+                bool isStore = contentTypeIndex == 4;
+                bool isCollections = contentTypeIndex == 5;
+                bool isManuals = contentTypeIndex == 6;
+                if (isScreenShots)
+                {
+                    // GetScreenShots("", false);
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        contentScreenShotsControl.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        contentScreenShotsControl.SelectedIndex = 1;
+                    }
+                }
+                else if (isIllustrations)
+                {
+                    // GetIllustrationsContent();
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        contentIllustrationsControl.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        contentIllustrationsControl.SelectedIndex = 1;
+                    }
+                }
+                else if (isVideos)
+                {
+
+                }
+                else if (isWorkShop)
+                {
+
+                }
+                else if (isStore)
+                {
+
+                }
+                else if (isCollections)
+                {
+
+                }
+                else if (isManuals)
+                {
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        SelectManualsContentItem(0);
+                    }
+                    else
+                    {
+                        SelectManualsContentItem(1);
+                    }
+                }
+            }
+        }
+
+        public void ToggleScreenShotVisibilityHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleScreenShotVisibility();
+        }
+
+        public void ToggleScreenShotVisibility ()
+        {
+            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+            UIElement container = screenShotsContainerChildren[2];
+            bool isWall = container is StackPanel;
+            if (isWall)
+            {
+                StackPanel wallContainer = ((StackPanel)(container));
+                UIElementCollection wallContainerChildren = wallContainer.Children;
+                foreach (UIElement wallContainerChild in wallContainerChildren)
+                {
+                    Canvas screenShot = ((Canvas)(wallContainerChild));
+                    UIElementCollection screenShotChildren = screenShot.Children;
+                    UIElement rawCheckBox = screenShotChildren[0];
+                    CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                    object rawIsChecked = checkBox.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawId = screenShotData["id"];
+                        string id = ((string)(rawId));
+
+                    }
+                }
+            }
+            else
+            {
+                WrapPanel rowContainer = ((WrapPanel)(container));
+                UIElementCollection rowContainerChildren = rowContainer.Children;
+                foreach (UIElement rowContainerChild in rowContainerChildren)
+                {
+                    Canvas screenShot = ((Canvas)(rowContainerChild));
+                    UIElementCollection screenShotChildren = screenShot.Children;
+                    UIElement rawCheckBox = screenShotChildren[0];
+                    CheckBox checkBox = ((CheckBox)(rawCheckBox));
+                    object rawIsChecked = checkBox.IsChecked;
+                    bool isChecked = ((bool)(rawIsChecked));
+                    if (isChecked)
+                    {
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawId = screenShotData["id"];
+                        string id = ((string)(rawId));
+                        
+                        
+                    }
+                }
+            }
+            GetScreenShots("", false);
+        }
+
+
         public void GetOnlineFriendsCount()
         {
             int countOnlineFriends = 0;
@@ -1972,7 +2185,346 @@ namespace GamaManager
                 GetMyActivities();
                 GetEquipmentGames();
                 GetGameSections();
-                InitAddGameSection();/**/
+                InitAddGameSection();
+                // InitCommunityContentSettings();/**/
+            }
+        }
+
+        public void GetIllustrationCommunityContentSettings (string mainIllustrationId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    IllustrationFavoriteRelationsResponseInfo myIllustrationFavoriteRelationsObj = (IllustrationFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(IllustrationFavoriteRelationsResponseInfo));
+                                    status = myIllustrationFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<IllustrationFavoriteRelation> favoriteRelations = myIllustrationFavoriteRelationsObj.relations;
+                                        List<IllustrationFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
+                                        {
+                                            string relatioIllustrationId = relation.illustration;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<IllustrationFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (IllustrationFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationIllustrationId = myFavoriteRelation.illustration;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationIllustrationId);
+                                        }
+                                        totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
+                                        {
+                                            string id = content._id;
+                                            bool isFavoriteIllustration = myFavoriteRelationIds.Contains(mainIllustrationId);
+                                            return isFavoriteIllustration;
+                                        }).ToList<Illustration>();
+                                        contentFavoriteIllustrations.Children.Clear();
+                                        int totalIllustrationsCount = totalIllustrations.Count;
+                                        bool isHaveIllustrations = totalIllustrationsCount >= 1;
+                                        ItemCollection settingsSelectorItems = mainIllustrationSettingsSelector.Items;
+                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
+                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
+                                        if (isHaveIllustrations)
+                                        {
+                                            toggleFavoriteItem.Content = "Удалить из избранного";
+                                        }
+                                        else
+                                        {
+                                            toggleFavoriteItem.Content = "В избранное";
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetScreenShotCommunityContentSettings (string mainCommunityScreenShotId)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShot> totalScreenShots = myobj.screenShots;
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                            screenShotFavoriteRelationsWebRequest.Method = "GET";
+                            screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = screenShotFavoriteRelationsReader.ReadToEnd();
+                                    ScreenShotFavoriteRelationsResponseInfo myScreenShotFavoriteRelationsObj = (ScreenShotFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ScreenShotFavoriteRelationsResponseInfo));
+                                    status = myScreenShotFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<ScreenShotFavoriteRelation> favoriteRelations = myScreenShotFavoriteRelationsObj.relations;
+                                        List<ScreenShotFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ScreenShotFavoriteRelation>((ScreenShotFavoriteRelation relation) =>
+                                        {
+                                            string relatioScreenShotId = relation.screenShot;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<ScreenShotFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (ScreenShotFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationScreenShotId = myFavoriteRelation.screenShot;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationScreenShotId);
+                                        }
+                                        totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            string id = content._id;
+                                            bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(mainCommunityScreenShotId);
+                                            return isFavoriteScreenShot;
+                                        }).ToList<ScreenShot>();
+                                        int totalScreenShotsCount = totalScreenShots.Count;
+                                        bool isHaveScreenShots = totalScreenShotsCount >= 1;
+                                        ItemCollection settingsSelectorItems = mainScreenShotSettingsSelector.Items;
+                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
+                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
+                                        if (isHaveScreenShots)
+                                        {
+                                            toggleFavoriteItem.Content = "Удалить из избранного";
+                                        }
+                                        else
+                                        {
+                                            toggleFavoriteItem.Content = "В избранное";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+
+
+        public void InitCommunityContentSettings ()
+        {
+            object rawMainIllustrationId = mainIllustration.DataContext;
+            string mainIllustrationId = ((string)(rawMainIllustrationId));
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    IllustrationFavoriteRelationsResponseInfo myIllustrationFavoriteRelationsObj = (IllustrationFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(IllustrationFavoriteRelationsResponseInfo));
+                                    status = myIllustrationFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<IllustrationFavoriteRelation> favoriteRelations = myIllustrationFavoriteRelationsObj.relations;
+                                        List<IllustrationFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
+                                        {
+                                            string relatioIllustrationId = relation.illustration;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<IllustrationFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (IllustrationFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationIllustrationId = myFavoriteRelation.illustration;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationIllustrationId);
+                                        }
+                                        totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
+                                        {
+                                            /*string contentGameId = content.game;
+                                            string userId = content.user;
+                                            bool isMyContent = userId == currentUserId;*/
+                                            string id = content._id;
+                                            // bool isFavoriteIllustration = myFavoriteRelationIds.Contains(id);
+                                            bool isFavoriteIllustration = myFavoriteRelationIds.Contains(mainIllustrationId);
+                                            /*bool isAddIllustration = isMyContent;
+                                            return isAddIllustration && isFavoriteIllustration;*/
+                                            return isFavoriteIllustration;
+                                        }).ToList<Illustration>();
+                                        contentFavoriteIllustrations.Children.Clear();
+                                        int totalIllustrationsCount = totalIllustrations.Count;
+                                        bool isHaveIllustrations = totalIllustrationsCount >= 1;
+                                        ItemCollection settingsSelectorItems = mainIllustrationSettingsSelector.Items;
+                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
+                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
+                                        if (isHaveIllustrations)
+                                        {
+                                            toggleFavoriteItem.Content = "Удалить из избранного";
+                                        }
+                                        else
+                                        {
+                                            toggleFavoriteItem.Content = "В избранное";
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+            object rawMainCommunityScreenShotId = mainCommunityScreenShot.DataContext;
+            string mainCommunityScreenShotId = ((string)(rawMainCommunityScreenShotId));
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShot> totalScreenShots = myobj.screenShots;
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                            screenShotFavoriteRelationsWebRequest.Method = "GET";
+                            screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = screenShotFavoriteRelationsReader.ReadToEnd();
+                                    ScreenShotFavoriteRelationsResponseInfo myScreenShotFavoriteRelationsObj = (ScreenShotFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ScreenShotFavoriteRelationsResponseInfo));
+                                    status = myScreenShotFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+
+                                        List<ScreenShotFavoriteRelation> favoriteRelations = myScreenShotFavoriteRelationsObj.relations;
+                                        List<ScreenShotFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ScreenShotFavoriteRelation>((ScreenShotFavoriteRelation relation) =>
+                                        {
+                                            string relatioScreenShotId = relation.screenShot;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<ScreenShotFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (ScreenShotFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationScreenShotId = myFavoriteRelation.screenShot;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationScreenShotId);
+                                        }
+                                        totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            string id = content._id;
+                                            // bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(id);
+                                            bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(mainCommunityScreenShotId);
+                                            return isFavoriteScreenShot;
+                                        }).ToList<ScreenShot>();
+                                        int totalScreenShotsCount = totalScreenShots.Count;
+                                        bool isHaveScreenShots = totalScreenShotsCount >= 1;
+                                        ItemCollection settingsSelectorItems = mainScreenShotSettingsSelector.Items;
+                                        object rawToggleFavoriteItem = settingsSelectorItems[2];
+                                        ComboBoxItem toggleFavoriteItem = ((ComboBoxItem)(rawToggleFavoriteItem));
+                                        if (isHaveScreenShots)
+                                        {
+                                            toggleFavoriteItem.Content = "Удалить из избранного";
+                                        }
+                                        else
+                                        {
+                                            toggleFavoriteItem.Content = "В избранное";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -7060,7 +7612,9 @@ namespace GamaManager
         public void GetContent ()
         {
             GetScreenShots("", true);
+            GetFavoriteScreenShotsContent();
             GetIllustrationsContent();
+            GetFavoriteIllustrationsContent();
             GetVideoContent();
             GetStoreContent();
             GetCollectionsContent();
@@ -7196,6 +7750,283 @@ namespace GamaManager
 
         }
 
+        public void GetFavoriteScreenShotsContent ()
+        {
+
+            int selectedIndex = screenShotsFilter.SelectedIndex;
+            object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
+            ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
+            object rawFilter = selectedItem.DataContext;
+            string filter = rawFilter.ToString();
+            bool isFilterDisabled = filter == @"all games";
+
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShot> totalScreenShots = myobj.screenShots;
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                            screenShotFavoriteRelationsWebRequest.Method = "GET";
+                            screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = screenShotFavoriteRelationsReader.ReadToEnd();
+                                    ScreenShotFavoriteRelationsResponseInfo myScreenShotFavoriteRelationsObj = (ScreenShotFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ScreenShotFavoriteRelationsResponseInfo));
+                                    status = myScreenShotFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<ScreenShotFavoriteRelation> favoriteRelations = myScreenShotFavoriteRelationsObj.relations;
+                                        List<ScreenShotFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ScreenShotFavoriteRelation>((ScreenShotFavoriteRelation relation) =>
+                                        {
+                                            string relatioIllustrationId = relation.screenShot;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<ScreenShotFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (ScreenShotFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationScreenShotId = myFavoriteRelation.screenShot;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationScreenShotId);
+                                        }
+
+                                        totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            string id = content._id;
+
+                                            bool isFilterMatch = filter == contentGameId;
+                                            bool isAddScreenShot = isFilterMatch || isFilterDisabled;
+
+                                            bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(id);
+                                            // return isFavoriteScreenShot;
+                                            return isFavoriteScreenShot && isAddScreenShot;
+                                        }).ToList<ScreenShot>();
+                                        contentFavoriteScreenShots.Children.Clear();
+                                        int totalScreenShotsCount = totalScreenShots.Count;
+                                        bool isHaveScreenShots = totalScreenShotsCount >= 1;
+                                        if (isHaveScreenShots)
+                                        {
+                                            contentFavoriteScreenShots.HorizontalAlignment = HorizontalAlignment.Left;
+                                            foreach (ScreenShot totalScreenShotsItem in totalScreenShots)
+                                            {
+                                                string id = totalScreenShotsItem._id;
+                                                string userId = totalScreenShotsItem.user;
+                                                string desc = totalScreenShotsItem.desc;
+                                                StackPanel screenShot = new StackPanel();
+                                                screenShot.Width = 500;
+                                                screenShot.Margin = new Thickness(15);
+                                                screenShot.Background = System.Windows.Media.Brushes.LightGray;
+                                                Image screenShotPhoto = new Image();
+                                                screenShotPhoto.Margin = new Thickness(15);
+                                                screenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                screenShotPhoto.Width = 50;
+                                                screenShotPhoto.Height = 50;
+                                                screenShotPhoto.BeginInit();
+                                                screenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                screenShotPhoto.EndInit();
+                                                screenShot.Children.Add(screenShotPhoto);
+                                                TextBlock screenShotDescLabel = new TextBlock();
+                                                screenShotDescLabel.Margin = new Thickness(15);
+                                                screenShotDescLabel.Text = desc;
+                                                screenShot.Children.Add(screenShotDescLabel);
+                                                contentFavoriteScreenShots.Children.Add(screenShot);
+                                                screenShot.DataContext = id;
+                                                screenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            StackPanel notFound = new StackPanel();
+                                            notFound.Margin = new Thickness(0, 15, 0, 15);
+                                            TextBlock notFoundLabel = new TextBlock();
+                                            notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                            notFoundLabel.TextAlignment = TextAlignment.Center;
+                                            notFoundLabel.FontSize = 18;
+                                            string newLine = Environment.NewLine;
+                                            notFoundLabel.Text = "Вы не добавили в избранное ни одного скриншота.";
+                                            notFound.Children.Add(notFoundLabel);
+                                            contentFavoriteScreenShots.HorizontalAlignment = HorizontalAlignment.Center;
+                                            contentFavoriteScreenShots.Children.Add(notFound);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetFavoriteIllustrationsContent ()
+        {
+
+            int selectedIndex = screenShotsFilter.SelectedIndex;
+            object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
+            ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
+            object rawFilter = selectedItem.DataContext;
+            string filter = rawFilter.ToString();
+            bool isFilterDisabled = filter == @"all games";
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        IllustrationsResponseInfo myobj = (IllustrationsResponseInfo)js.Deserialize(objText, typeof(IllustrationsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Illustration> totalIllustrations = myobj.illustrations;
+
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    IllustrationFavoriteRelationsResponseInfo myIllustrationFavoriteRelationsObj = (IllustrationFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(IllustrationFavoriteRelationsResponseInfo));
+                                    status = myIllustrationFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+
+                                        List<IllustrationFavoriteRelation> favoriteRelations = myIllustrationFavoriteRelationsObj.relations;
+                                        List<IllustrationFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
+                                        {
+                                            string relatioIllustrationId = relation.illustration;
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<IllustrationFavoriteRelation>();
+                                        List<string> myFavoriteRelationIds = new List<string>();
+                                        foreach (IllustrationFavoriteRelation myFavoriteRelation in myFavoriteRelations)
+                                        {
+                                            string myFavoriteRelationIllustrationId = myFavoriteRelation.illustration;
+                                            myFavoriteRelationIds.Add(myFavoriteRelationIllustrationId);
+                                        }
+
+                                        totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            /*string userId = content.user;
+                                            bool isMyContent = userId == currentUserId;*/
+                                            bool isFilterMatch = filter == contentGameId;
+
+                                            bool isAddIllustration = isFilterMatch || isFilterDisabled;
+
+                                            string id = content._id;
+                                            bool isFavoriteIllustration = myFavoriteRelationIds.Contains(id);
+                                            // bool isAddIllustration = isMyContent && (isFilterMatch || isFilterDisabled);
+                                            return isAddIllustration && isFavoriteIllustration;
+                                            // return isFavoriteIllustration;
+                                        }).ToList<Illustration>();
+                                        contentFavoriteIllustrations.Children.Clear();
+                                        int totalIllustrationsCount = totalIllustrations.Count;
+                                        bool isHaveIllustrations = totalIllustrationsCount >= 1;
+                                        if (isHaveIllustrations)
+                                        {
+                                            contentFavoriteIllustrations.HorizontalAlignment = HorizontalAlignment.Left;
+                                            foreach (Illustration totalIllustrationsItem in totalIllustrations)
+                                            {
+                                                string id = totalIllustrationsItem._id;
+                                                string title = totalIllustrationsItem.title;
+                                                string desc = totalIllustrationsItem.desc;
+                                                StackPanel illustration = new StackPanel();
+                                                illustration.Width = 500;
+                                                illustration.Margin = new Thickness(15);
+                                                illustration.Background = System.Windows.Media.Brushes.LightGray;
+                                                TextBlock illustrationTitleLabel = new TextBlock();
+                                                illustrationTitleLabel.FontSize = 16;
+                                                illustrationTitleLabel.Margin = new Thickness(15);
+                                                illustrationTitleLabel.Text = title;
+                                                illustration.Children.Add(illustrationTitleLabel);
+                                                Image illustrationPhoto = new Image();
+                                                illustrationPhoto.Margin = new Thickness(15);
+                                                illustrationPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                illustrationPhoto.Width = 50;
+                                                illustrationPhoto.Height = 50;
+                                                illustrationPhoto.BeginInit();
+                                                illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                illustrationPhoto.EndInit();
+                                                illustration.Children.Add(illustrationPhoto);
+                                                TextBlock illustrationDescLabel = new TextBlock();
+                                                illustrationDescLabel.Margin = new Thickness(15);
+                                                illustrationDescLabel.Text = desc;
+                                                illustration.Children.Add(illustrationDescLabel);
+                                                contentFavoriteIllustrations.Children.Add(illustration);
+                                                illustration.DataContext = id;
+                                                illustration.MouseLeftButtonUp += SelectIllustrationHandler;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            StackPanel notFound = new StackPanel();
+                                            notFound.Margin = new Thickness(0, 15, 0, 15);
+                                            TextBlock notFoundLabel = new TextBlock();
+                                            notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                            notFoundLabel.TextAlignment = TextAlignment.Center;
+                                            notFoundLabel.FontSize = 18;
+                                            string newLine = Environment.NewLine;
+                                            notFoundLabel.Text = "У вас нет избранных иллюстраций.";
+                                            notFound.Children.Add(notFoundLabel);
+                                            Button uploadBtn = new Button();
+                                            uploadBtn.Width = 175;
+                                            uploadBtn.Height = 25;
+                                            uploadBtn.Margin = new Thickness(15);
+                                            uploadBtn.Content = "Загрузить иллюстрацию";
+                                            notFound.Children.Add(uploadBtn);
+                                            contentFavoriteIllustrations.HorizontalAlignment = HorizontalAlignment.Center;
+                                            contentFavoriteIllustrations.Children.Add(notFound);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void GetFavoriteManualsContent ()
         {
             int selectedIndex = screenShotsFilter.SelectedIndex;
@@ -7258,10 +8089,8 @@ namespace GamaManager
                                             string contentGameId = content.game;
                                             bool isFilterMatch = filter == contentGameId;
                                             bool isAddManual = isFilterMatch || isFilterDisabled;
-
                                             string id = content._id;
                                             bool isFavoriteManual = myFavoriteRelationIds.Contains(id);
-
                                             return isAddManual && isFavoriteManual;
                                         }).ToList<Manual>();
                                         contentFavoriteManuals.Children.Clear();
@@ -7280,7 +8109,7 @@ namespace GamaManager
                                                 if (isFavoriteManual)
                                                 {
                                                 */
-                                                string title = totalManualsItem.title;
+                                                    string title = totalManualsItem.title;
                                                     string desc = totalManualsItem.desc;
                                                     StackPanel manual = new StackPanel();
                                                     manual.Width = 500;
@@ -7337,8 +8166,11 @@ namespace GamaManager
             }
         }
 
-        public void GetManualsContent()
+        public void GetManualsContent ()
         {
+
+            object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+            bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
 
             int selectedIndex = screenShotsFilter.SelectedIndex;
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
@@ -7364,69 +8196,129 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Manual> totalManuals = myobj.manuals;
-                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
+
+                            /*HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                             {
-                                string contentGameId = content.game;
-                                string userId = content.user;
-                                bool isMyContent = userId == currentUserId;
-                                bool isFilterMatch = filter == contentGameId;
-                                bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
-                                return isAddManual;
-                            }).ToList<Manual>();
-                            contentManuals.Children.Clear();
-                            int totalManualsCount = totalManuals.Count;
-                            bool isHaveManuals = totalManualsCount >= 1;
-                            if (isHaveManuals)
-                            {
-                                contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
-                                foreach (Manual totalManualsItem in totalManuals)
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
                                 {
-                                    string id = totalManualsItem._id;
-                                    string userId = totalManualsItem.user;
-                                    bool isMyContent = userId == currentUserId;
-                                    if (isMyContent)
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    ManualFavoriteRelationsResponseInfo myInnerObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
                                     {
-                                        string title = totalManualsItem.title;
-                                        string desc = totalManualsItem.desc;
-                                        StackPanel manual = new StackPanel();
-                                        manual.Width = 500;
-                                        manual.Margin = new Thickness(15);
-                                        manual.Background = System.Windows.Media.Brushes.LightGray;
-                                        TextBlock manualTitleLabel = new TextBlock();
-                                        manualTitleLabel.FontSize = 16;
-                                        manualTitleLabel.Margin = new Thickness(15);
-                                        manualTitleLabel.Text = title;
-                                        manual.Children.Add(manualTitleLabel);
-                                        Image manualPhoto = new Image();
-                                        manualPhoto.Margin = new Thickness(15);
-                                        manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                        manualPhoto.Width = 50;
-                                        manualPhoto.Height = 50;
-                                        manualPhoto.BeginInit();
-                                        manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
-                                        manualPhoto.EndInit();
-                                        manual.Children.Add(manualPhoto);
-                                        TextBlock manualDescLabel = new TextBlock();
-                                        manualDescLabel.Margin = new Thickness(15);
-                                        manualDescLabel.Text = desc;
-                                        manual.Children.Add(manualDescLabel);
-                                        contentManuals.Children.Add(manual);
-                                        manual.DataContext = id;
-                                        manual.MouseLeftButtonUp += SelectManualHandler;
-                                    }
+
+                                        List<ManualFavoriteRelation> relations = myInnerObj.relations;*/
+
+                                        totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                                        {
+                                            string contentGameId = content.game;
+                                            string userId = content.user;
+                                            bool isMyContent = userId == currentUserId;
+                                            bool isFilterMatch = filter == contentGameId;
+                                            bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
+                                            return isAddManual;
+                                        }).ToList<Manual>();
+                                        /*if (mySelfContentRadioBtnIsChecked)
+                                        {*/
+                                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                                            {
+                                                string contentGameId = content.game;
+                                                string userId = content.user;
+                                                bool isMyContent = userId == currentUserId;
+                                                bool isFilterMatch = filter == contentGameId;
+                                                bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
+                                                return isAddManual;
+                                            }).ToList<Manual>();
+                                        /*}
+                                        else
+                                        {
+                                            List<ManualFavoriteRelation> myRelations = relations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
+                                            {
+                                                string relationUserId = relation.user;
+                                                bool isMyRelation = relationUserId == currentUserId;
+                                                return isMyRelation;
+                                            }).ToList<ManualFavoriteRelation>();
+                                            List<string> myFavoriteManualIds = new List<string>();
+                                            foreach (ManualFavoriteRelation relation in myRelations)
+                                            {
+                                                string myFavoriteManualId = relation.manual;
+                                                myFavoriteManualIds.Add(myFavoriteManualId);
+                                            }
+                                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                                            {
+                                                string contentManualId = content._id;
+                                                string contentGameId = content.game;
+                                                bool isMyFavoriteContent = myFavoriteManualIds.Contains(contentManualId);
+                                                bool isFilterMatch = filter == contentGameId;
+                                                bool isAddManual = isMyFavoriteContent && (isFilterMatch || isFilterDisabled);
+                                                return isAddManual;
+                                            }).ToList<Manual>();
+                                        }*/
+
+                                        contentManuals.Children.Clear();
+                                        int totalManualsCount = totalManuals.Count;
+                                        bool isHaveManuals = totalManualsCount >= 1;
+                                        if (isHaveManuals)
+                                        {
+                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                            foreach (Manual totalManualsItem in totalManuals)
+                                            {
+                                                string id = totalManualsItem._id;
+                                                string userId = totalManualsItem.user;
+                                                bool isMyContent = userId == currentUserId;
+                                                if (isMyContent)
+                                                {
+                                                    string title = totalManualsItem.title;
+                                                    string desc = totalManualsItem.desc;
+                                                    StackPanel manual = new StackPanel();
+                                                    manual.Width = 500;
+                                                    manual.Margin = new Thickness(15);
+                                                    manual.Background = System.Windows.Media.Brushes.LightGray;
+                                                    TextBlock manualTitleLabel = new TextBlock();
+                                                    manualTitleLabel.FontSize = 16;
+                                                    manualTitleLabel.Margin = new Thickness(15);
+                                                    manualTitleLabel.Text = title;
+                                                    manual.Children.Add(manualTitleLabel);
+                                                    Image manualPhoto = new Image();
+                                                    manualPhoto.Margin = new Thickness(15);
+                                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                    manualPhoto.Width = 50;
+                                                    manualPhoto.Height = 50;
+                                                    manualPhoto.BeginInit();
+                                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                    manualPhoto.EndInit();
+                                                    manual.Children.Add(manualPhoto);
+                                                    TextBlock manualDescLabel = new TextBlock();
+                                                    manualDescLabel.Margin = new Thickness(15);
+                                                    manualDescLabel.Text = desc;
+                                                    manual.Children.Add(manualDescLabel);
+                                                    contentManuals.Children.Add(manual);
+                                                    manual.DataContext = id;
+                                                    manual.MouseLeftButtonUp += SelectManualHandler;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            TextBlock notFoundLabel = new TextBlock();
+                                            notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                            notFoundLabel.TextAlignment = TextAlignment.Center;
+                                            notFoundLabel.FontSize = 18;
+                                            notFoundLabel.Margin = new Thickness(15);
+                                            notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
+                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                            contentManuals.Children.Add(notFoundLabel);
+                                        }
+
+                                    /*}
                                 }
-                            }
-                            else
-                            {
-                                TextBlock notFoundLabel = new TextBlock();
-                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                notFoundLabel.TextAlignment = TextAlignment.Center;
-                                notFoundLabel.FontSize = 18;
-                                notFoundLabel.Margin = new Thickness(15);
-                                notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
-                                contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
-                                contentManuals.Children.Add(notFoundLabel);
-                            }
+                            }*/
+
                         }
                     }
                 }
@@ -8663,6 +9555,10 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            // InitCommunityContentSettings();
+            GetScreenShotCommunityContentSettings(id);
+
         }
 
 
@@ -10713,6 +11609,10 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
+            // InitCommunityContentSettings();
+            GetIllustrationCommunityContentSettings(illustrationId);
+
         }
 
         public void GetGroupRequests()
@@ -19812,10 +20712,7 @@ namespace GamaManager
 
         public void GetScreenShots (string filter, bool isInit)
         {
-            
-            // List<Image> unSortedScreenShots = new List<Image>();
             List<Canvas> unSortedScreenShots = new List<Canvas>();
-
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
             string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
             string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
@@ -19866,7 +20763,6 @@ namespace GamaManager
                             }
                         }
                     }
-
                 }
                 string[] files = Directory.GetFileSystemEntries(game);
                 foreach (string file in files)
@@ -19875,15 +20771,13 @@ namespace GamaManager
                     bool isScreenShot = ext == ".jpg";
                     if (isScreenShot)
                     {
-                        // Image screenShot = new Image();
+                        // Stream myStream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
                         Canvas screenShot = new Canvas();
                         screenShot.Margin = new Thickness(15);
                         screenShot.Width = 250;
                         screenShot.Height = 250;
                         screenShot.BeginInit();
                         Uri screenShotUri = new Uri(file);
-
-                        // screenShot.Source = new BitmapImage(screenShotUri);
                         VisualBrush screenShotBrush = new VisualBrush();
                         Image screenShotBrushVisual = new Image();
                         screenShotBrushVisual.Margin = new Thickness(15);
@@ -19899,8 +20793,6 @@ namespace GamaManager
                         screenShot.Children.Add(screenShotCheckBox);
                         Canvas.SetTop(screenShotCheckBox, 25);
                         Canvas.SetLeft(screenShotCheckBox, 25);
-
-                        // screenShot.EndInit();
                         string insensitiveCaseFilter = filter.ToLower();
                         string insensitiveCaseGameName = gameName.ToLower();
                         int filterLength = filter.Length;
@@ -19909,49 +20801,27 @@ namespace GamaManager
                         bool isFilterMatches = isWordsMatches || isNotFilter;
                         if (isFilterMatches)
                         {
-                            /*                          
-                            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
-                            UIElement container = screenShotsContainerChildren[2];
-                            bool isWall = container is StackPanel;
-                            if (isWall)
-                            {
-                                StackPanel wallContainer = ((StackPanel)(container));
-                                wallContainer.Children.Add(screenShot);
-                            }
-                            else
-                            {
-                                WrapPanel gridContainer = ((WrapPanel)(container));
-                                gridContainer.Children.Add(screenShot);
-                            }
-                            */
                             Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
                             FileInfo info = new FileInfo(file);
                             DateTime date = info.CreationTime;
                             screenShotData.Add("date", date);
+
+                            screenShotData.Add("path", file);
+                            // screenShotData.Add("id", id);
+
                             screenShot.DataContext = screenShotData;
                             unSortedScreenShots.Add(screenShot);
                         }
                     }
                 }
             }
-
-            // List<Image> sortedScreenShots = new List<Image>();
             List<Canvas> sortedScreenShots = new List<Canvas>();
-            
             sortedScreenShots = unSortedScreenShots;
             int sortIndex = screenShotsSortBox.SelectedIndex;
             bool isAsc = sortIndex == 1;
             bool isDesc = sortIndex == 2;
             if (isAsc)
             {
-                /*sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
-                {
-                    object data = screenShot.DataContext;
-                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
-                    object rawDate = screenShotData["date"];
-                    DateTime date = ((DateTime)(rawDate));
-                    return date;
-                }).ToList<Image>();*/
                 sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
                 {
                     object data = screenShot.DataContext;
@@ -19963,14 +20833,6 @@ namespace GamaManager
             }
             else if (isDesc)
             {
-                /*sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
-                {
-                    object data = screenShot.DataContext;
-                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
-                    object rawDate = screenShotData["date"];
-                    DateTime date = ((DateTime)(rawDate));
-                    return date;
-                }).ToList<Image>();*/
                 sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
                 {
                     object data = screenShot.DataContext;
@@ -19981,8 +20843,35 @@ namespace GamaManager
                 }).ToList<Canvas>();
             }
             UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
-            UIElement container = screenShotsContainerChildren[2];
+            
+            // UIElement container = screenShotsContainerChildren[2];
+            // UIElement rawScreenShotsControl = screenShotsContainerChildren[2];
+            UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
+            TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
+            // int screenShotsControlSelectedIndex = screenShotsControl.SelectedIndex;
+            int screenShotsControlSelectedIndex = 0;
+            ItemCollection screenShotsControlItems = screenShotsControl.Items;
+            object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
+            TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
+            object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
+            // UIElement container = ((UIElement)(rawScreenShotsControlSelectedItemContent));
+            StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
+            UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
+            UIElement container = screenShotsControlSelectedItemContentChildren[2];
+
             bool isWall = container is StackPanel;
+            
+            if (isWall)
+            {
+                StackPanel wallContainer = ((StackPanel)(container));
+                wallContainer.Children.Clear();
+            }
+            else
+            {
+                WrapPanel gridContainer = ((WrapPanel)(container));
+                gridContainer.Children.Clear();
+            }
+
             foreach (UIElement screenShot in sortedScreenShots)
             {
                 if (isWall)
@@ -19996,7 +20885,6 @@ namespace GamaManager
                     gridContainer.Children.Add(screenShot);
                 }
             }
-
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
@@ -20051,8 +20939,11 @@ namespace GamaManager
                     string filter = rawFilter.ToString();
                     GetScreenShots(filter, false);
                 }
+                GetFavoriteScreenShotsContent();
                 GetIllustrationsContent();
+                GetFavoriteIllustrationsContent();
                 GetManualsContent();
+                GetFavoriteManualsContent();
             }
         }
 
@@ -24096,18 +24987,42 @@ namespace GamaManager
             {
                 int selectedIndex = selector.SelectedIndex;
                 bool isWall = selectedIndex == 0;
-                screenShotsContainer.Children.RemoveAt(2);
+
+                // screenShotsContainer.Children.RemoveAt(2);
+                UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+                // UIElement rawScreenShotsControl = screenShotsContainerChildren[2];
+                UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
+                TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
+                // int screenShotsControlSelectedIndex = screenShotsControl.SelectedIndex;
+                int screenShotsControlSelectedIndex = 0;
+                ItemCollection screenShotsControlItems = screenShotsControl.Items;
+                object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
+                TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
+                // screenShotsControlSelectedItem.Content = null;
+                object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
+                StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
+                UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
+                screenShotsControlSelectedItemContent.Children.RemoveAt(2);
+                // UIElement container = ((UIElement)(rawScreenShotsControlSelectedItemContent));
+
                 if (isWall)
                 {
                     StackPanel container = new StackPanel();
                     container.Margin = new Thickness(25);
-                    screenShotsContainer.Children.Add(container);
+
+                    // screenShotsContainer.Children.Add(container);
+                    // screenShotsControlSelectedItem.Content = container;
+                    screenShotsControlSelectedItemContent.Children.Add(container);
                 }
                 else
                 {
                     WrapPanel container = new WrapPanel();
                     container.Margin = new Thickness(25);
-                    screenShotsContainer.Children.Add(container);
+
+                    // screenShotsContainer.Children.Add(container);
+                    // screenShotsControlSelectedItem.Content = container;
+                    screenShotsControlSelectedItemContent.Children.Add(container);
+
                 }
                 GetScreenShots("", false);
             }
@@ -24117,7 +25032,21 @@ namespace GamaManager
         {
 
             UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
-            UIElement container = screenShotsContainerChildren[2];
+            // UIElement container = screenShotsContainerChildren[2];
+            // UIElement rawScreenShotsControl = screenShotsContainerChildren[2];
+            UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
+            TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
+            // int screenShotsControlSelectedIndex = screenShotsControl.SelectedIndex;
+            int screenShotsControlSelectedIndex = 0;
+            ItemCollection screenShotsControlItems = screenShotsControl.Items;
+            object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
+            TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
+            object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
+            // UIElement container = ((UIElement)(rawScreenShotsControlSelectedItemContent));
+            StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
+            UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
+            UIElement container = screenShotsControlSelectedItemContentChildren[2];
+
             bool isWall = container is StackPanel;
             
             Visibility screenShotsManagementVisibility = screenShotsManagement.Visibility;
@@ -26293,10 +27222,16 @@ namespace GamaManager
             if (isFavorite)
             {
                 favoriteManualsListContentItem.Background = System.Windows.Media.Brushes.LightSlateGray;
+
+                favoriteContentRadioBtn.IsChecked = true;
+                
             }
             else
             {
                 manualsListContentItem.Background = System.Windows.Media.Brushes.LightSlateGray;
+
+                mySelfContentRadioBtn.IsChecked = true;
+
             }
             contentManualsControl.SelectedIndex = index;
         }
@@ -27288,6 +28223,257 @@ namespace GamaManager
 
         }
 
+        private void ToggleMainIllustrationSettingsHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            ToggleMainIllustrationSettings(selector);
+        }
+
+        public void ToggleMainIllustrationSettings (ComboBox selector)
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = selector.SelectedIndex;
+                bool isItemSelected = selectedIndex != 0;
+                if (isItemSelected)
+                {
+                    object illustrationIdData = mainIllustration.DataContext;
+                    string illustrationId = ((string)(illustrationIdData));
+                    ItemCollection selectorItems = selector.Items;
+                    object rawSelectorSelectedItem = selectorItems[selectedIndex];
+                    ComboBoxItem selectorSelectedItem = ((ComboBoxItem)(rawSelectorSelectedItem));
+                    object rawSelectorSelectedItemContent = selectorSelectedItem.Content;
+                    string selectorSelectedItemContent = ((string)(rawSelectorSelectedItemContent));
+                    bool isAddToFavorite = selectorSelectedItemContent == "В избранное";
+                    bool isRemoveFromFavorite = selectorSelectedItemContent == "Удалить из избранного";
+                    bool isShare = selectorSelectedItemContent == "Поделиться";
+                    if (isAddToFavorite)
+                    {
+                        try
+                        {
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/add/?id=" + illustrationId + "&user=" + currentUserId);
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    JavaScriptSerializer js = new JavaScriptSerializer();
+                                    string objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    UserResponseInfo myIllustrationFavoriteRelationsObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    string status = myIllustrationFavoriteRelationsObj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        selectorSelectedItem.Content = "Удалить из избранного";
+                                        selector.SelectedIndex = 0;
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Net.WebException)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            this.Close();
+                        }
+                    }
+                    else if (isRemoveFromFavorite)
+                    {
+                        try
+                        {
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/remove/?illustration=" + illustrationId + "&user=" + currentUserId);
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    JavaScriptSerializer js = new JavaScriptSerializer();
+                                    string objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    UserResponseInfo myIllustrationFavoriteRelationsObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    string status = myIllustrationFavoriteRelationsObj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        selectorSelectedItem.Content = "В избранное";
+                                        selector.SelectedIndex = 0;
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Net.WebException)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            this.Close();
+                        }
+                    }
+                    else if (isShare)
+                    {
+                        Dialogs.ActivityShareDialog dialog = new Dialogs.ActivityShareDialog(currentUserId, "illustrations", illustrationId);
+                        dialog.Closed += GetMyActivitiesHandler;
+                        dialog.Show();
+                        selector.SelectedIndex = 0;
+                    }
+                }
+            }
+        }
+
+        public void GetMyActivitiesHandler (object sender, EventArgs e)
+        {
+            GetMyActivities();
+        }
+
+        private void ToggleMainScreenShotSettingsHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            ToggleMainScreenShotSettings(selector);
+        }
+
+        public void ToggleMainScreenShotSettings (ComboBox selector)
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = selector.SelectedIndex;
+                bool isItemSelected = selectedIndex != 0;
+                if (isItemSelected)
+                {
+                    object mainCommunityScreenShotIdData = mainCommunityScreenShot.DataContext;
+                    string communityScreenShotId = ((string)(mainCommunityScreenShotIdData));
+                    ItemCollection selectorItems = selector.Items;
+                    object rawSelectorSelectedItem = selectorItems[selectedIndex];
+                    ComboBoxItem selectorSelectedItem = ((ComboBoxItem)(rawSelectorSelectedItem));
+                    object rawSelectorSelectedItemContent = selectorSelectedItem.Content;
+                    string selectorSelectedItemContent = ((string)(rawSelectorSelectedItemContent));
+                    bool isAddToFavorite = selectorSelectedItemContent == "В избранное";
+                    bool isRemoveFromFavorite = selectorSelectedItemContent == "Удалить из избранного";
+                    bool isShare = selectorSelectedItemContent == "Поделиться";
+                    if (isAddToFavorite)
+                    {
+                        try
+                        {
+                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/add/?id=" + communityScreenShotId + "&user=" + currentUserId);
+                            manualFavoriteRelationsWebRequest.Method = "GET";
+                            manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var manualFavoriteRelationsReader = new StreamReader(manualFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    JavaScriptSerializer js = new JavaScriptSerializer();
+                                    string objText = manualFavoriteRelationsReader.ReadToEnd();
+                                    ManualFavoriteRelationsResponseInfo myManualFavoriteRelationsObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
+                                    string status = myManualFavoriteRelationsObj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        selectorSelectedItem.Content = "Удалить из избранного";
+                                        selector.SelectedIndex = 0;
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Net.WebException)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            this.Close();
+                        }
+                    }
+                    else if (isRemoveFromFavorite)
+                    {
+                        try
+                        {
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/remove/?screenshot=" + communityScreenShotId + "&user=" + currentUserId);
+                            screenShotFavoriteRelationsWebRequest.Method = "GET";
+                            screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    JavaScriptSerializer js = new JavaScriptSerializer();
+                                    string objText = screenShotFavoriteRelationsReader.ReadToEnd();
+                                    UserResponseInfo myScreenShotFavoriteRelationsObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    string status = myScreenShotFavoriteRelationsObj.status;
+                                    bool isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        selectorSelectedItem.Content = "В избранное";
+                                        selector.SelectedIndex = 0;
+                                    }
+                                }
+                            }
+                        }
+                        catch (System.Net.WebException)
+                        {
+                            MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                            this.Close();
+                        }
+                    }
+                    else if (isShare)
+                    {
+                        Dialogs.ActivityShareDialog dialog = new Dialogs.ActivityShareDialog(currentUserId, "screenShots", communityScreenShotId);
+                        dialog.Closed += GetMyActivitiesHandler;
+                        dialog.Show();
+                        selector.SelectedIndex = 0;
+                    }
+                }
+            }
+        }
+
+        private void ToggleContentControlTabHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ToggleContentControlTab();
+        }
+
+
+        public void ToggleContentControlTab ()
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = contentControl.SelectedIndex;
+                bool isScreenShots = selectedIndex == 0;
+                bool isIllustrations = selectedIndex == 1;
+                bool isManuals = selectedIndex == 6;
+                if (isScreenShots)
+                {
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        contentScreenShotsControl.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        contentScreenShotsControl.SelectedIndex = 1;
+                    }
+                }
+                else if (isIllustrations)
+                {
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        contentIllustrationsControl.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        contentIllustrationsControl.SelectedIndex = 1;
+                    }
+                }
+                else if (isManuals)
+                {
+                    object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
+                    bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
+                    if (mySelfContentRadioBtnIsChecked)
+                    {
+                        SelectManualsContentItem(0);
+                    }
+                    else
+                    {
+                        SelectManualsContentItem(1);
+                    }
+                }
+            }
+        }
+
     }
 
     class SavedContent
@@ -28178,6 +29364,30 @@ namespace GamaManager
     {
         public string user;
         public string manual;
+    }
+
+    public class IllustrationFavoriteRelationsResponseInfo
+    {
+        public List<IllustrationFavoriteRelation> relations;
+        public string status;
+    }
+
+    public class IllustrationFavoriteRelation
+    {
+        public string user;
+        public string illustration;
+    }
+
+    public class ScreenShotFavoriteRelationsResponseInfo
+    {
+        public List<ScreenShotFavoriteRelation> relations;
+        public string status;
+    }
+
+    public class ScreenShotFavoriteRelation
+    {
+        public string user;
+        public string screenShot;
     }
 
     public class ReviewAdviceComparer : IComparer<Review>

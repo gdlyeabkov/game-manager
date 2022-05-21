@@ -278,6 +278,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ActivityShareDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddCollectiionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -433,6 +437,9 @@
     </Compile>
     <Compile Include="Dialogs\ActivationGameDialog.xaml.cs">
       <DependentUpon>ActivationGameDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ActivityShareDialog.xaml.cs">
+      <DependentUpon>ActivityShareDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\AddCollectiionDialog.xaml.cs">
       <DependentUpon>AddCollectiionDialog.xaml</DependentUpon>

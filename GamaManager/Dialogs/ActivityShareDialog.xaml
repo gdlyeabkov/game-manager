@@ -1,0 +1,185 @@
+﻿<Window x:Class="GamaManager.Dialogs.ActivityShareDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:GamaManager.Dialogs"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    Title="Поделиться"
+    Height="450"
+    Width="800"
+>
+    <StackPanel>
+        <TextBlock
+            Text="ПОДЕЛИТЬСЯ"    
+            FontSize="24"
+            Margin="25"
+        />
+        <TabControl
+            x:Name="mainControl"    
+        >
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <DockPanel>
+                        <Button
+                            Margin="15 0"
+                            Width="225"
+                            Height="35"
+                            Content="Поделиться в своей ленте активности"
+                            Click="OpenShareAreaHandler"
+                        />
+                        <StackPanel
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                        >
+                            <Button
+                                Width="50"
+                                Height="30"
+                                Margin="15 0"
+                            >
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Kind="Facebook"    
+                                    />
+                                </Button.Content>
+                            </Button>
+                            <Button
+                                Width="50"
+                                Height="30"
+                                Margin="15 0"
+                            >
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Kind="Twitter"    
+                                    />
+                                </Button.Content>
+                            </Button>
+                            <Button
+                                Width="50"
+                                Height="30"
+                                Margin="15 0"
+                            >
+                                <Button.Content>
+                                    <materialDesign:PackIcon
+                                        Kind="Reddit"    
+                                    />
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                    <Separator />
+                    <StackPanel
+                        Orientation="Horizontal"    
+                        Margin="15"
+                    >
+                        <TextBlock
+                            Margin="25"
+                            Text="URL:"    
+                        />
+                        <TextBox
+                            x:Name="linkBox"
+                            Width="650"
+                            Height="25"
+                            IsReadOnly="True"
+                            Text="Ссылка до привязки коментария"
+                        />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <StackPanel>
+                    <TextBlock
+                        Text="Отправьте этот статус в ленту активности друзей. Steam опубликует сообщение и&#10;виджет, показанные ниже."    
+                        Margin="15"
+                    />
+                    <StackPanel
+                        Orientation="Horizontal"    
+                    >
+                        <Image
+                            x:Name="userAvatar"
+                            Margin="15"
+                            Width="40"    
+                            Height="40"
+                            VerticalAlignment="Top"
+                            ImageFailed="SetDefaultAvatarHandler"    
+                        >
+                            <Image.Source>
+                                <BitmapImage
+                                    UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                />
+                            </Image.Source>
+                        </Image>
+                        <TextBox
+                            x:Name="msgBox"
+                            VerticalAlignment="Top"
+                            Width="650"
+                            Height="85"
+                        >
+                            <TextBox.Resources>
+                                <VisualBrush
+                                    x:Key="hinttext"
+                                    AlignmentX="Left"
+                                    Stretch="None"
+                                    TileMode="None"
+                                >
+                                    <VisualBrush.Visual>
+                                        <DockPanel>
+                                            <TextBlock
+                                                Margin="5"
+                                                Height="35"
+                                                Width="750"
+                                                Text="Расскажите об этом друзьям."
+                                                Foreground="#959595"
+                                                Background="White"
+                                            />
+                                        </DockPanel>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </TextBox.Resources>
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontSize" Value="12" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel
+                        Margin="0 15"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"    
+                    >
+                        <Button
+                            Margin="15 0"
+                            Width="225"
+                            Height="30"
+                            Content="Справка по форматированию"        
+                        />
+                        <Button
+                            Margin="15 0"
+                            Width="175"
+                            Height="30"
+                            Content="Опубликовать"        
+                            Click="PublishHandler"
+                        />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+</Window>

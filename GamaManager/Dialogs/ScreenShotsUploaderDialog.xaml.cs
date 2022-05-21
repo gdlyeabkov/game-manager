@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
@@ -307,6 +309,23 @@ namespace GamaManager.Dialogs
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
+                                        FileInfo fileInfo = new FileInfo(path);
+                                        string dirPath = fileInfo.DirectoryName;
+                                        Debugger.Log(0, "debug", Environment.NewLine + "dirPath: " + dirPath + ", screenShotId: " + screenShotId + Environment.NewLine);
+                                        try
+                                        {
+
+                                            var stream = new FileInfo(path).OpenWrite();
+                                            stream.Dispose();
+                                            fileInfo.Refresh();
+
+                                            Thread.Sleep(1);
+                                            File.Move(path, dirPath + @"\" + screenShotId + ext);
+                                        }
+                                        catch (IOException)
+                                        {
+
+                                        }
                                         this.Close();
                                     }
                                 }

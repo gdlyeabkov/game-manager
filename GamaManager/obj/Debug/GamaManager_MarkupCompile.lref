@@ -34,9 +34,10 @@ FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\TalkDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\TalkNotificationsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\TalkSettingsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\UpdateNickDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\FriendActivityAsideControl.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GamePage.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GameWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\HeaderControl.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\FriendActivityAsideControl.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ActivityShareDialog.xaml;;
 

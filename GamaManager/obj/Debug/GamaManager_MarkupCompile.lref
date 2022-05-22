@@ -1,9 +1,10 @@
-﻿
+﻿C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\GeneratedInternalTypeHelper.g.cs
 
 FC:\wpf_projects\LastGameManager\GamaManager\CarousalUC.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AboutManagerDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AcceptExitDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ActivationGameDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ActivityShareDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddCollectiionDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddExternalGameDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddFriendDialog.xaml;;
@@ -39,5 +40,4 @@ FC:\wpf_projects\LastGameManager\GamaManager\GamePage.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GameWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\HeaderControl.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ActivityShareDialog.xaml;;
 

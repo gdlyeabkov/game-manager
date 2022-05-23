@@ -630,7 +630,7 @@ of the running game.</value>
     <value>Sub agreement</value>
   </data>
   <data name="helpMenuItemSubSupportServiceLabelContent" xml:space="preserve">
-    <value>Sub support service</value>
+    <value>Support service</value>
   </data>
   <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
     <value>About system</value>

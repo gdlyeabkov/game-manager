@@ -630,7 +630,7 @@ E. Что произойдет, если положение Пункта 11 бу
     <value>Соглашение подписчика</value>
   </data>
   <data name="helpMenuItemSubSupportServiceLabelContent" xml:space="preserve">
-    <value>Служба поддержки подписчика</value>
+    <value>Служба поддержки</value>
   </data>
   <data name="helpMenuItemSystemInfoLabelContent" xml:space="preserve">
     <value>О системе</value>

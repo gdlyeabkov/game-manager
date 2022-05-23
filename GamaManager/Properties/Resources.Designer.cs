@@ -644,7 +644,7 @@ namespace GamaManager.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Sub support service.
+        ///   Ищет локализованную строку, похожую на Support service.
         /// </summary>
         public static string helpMenuItemSubSupportServiceLabelContent {
             get {

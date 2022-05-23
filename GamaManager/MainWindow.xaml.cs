@@ -102,6 +102,130 @@ namespace GamaManager
 
         }
 
+        public void OpenPurchasesHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPurchases();
+        }
+
+        public void OpenPurchases ()
+        {
+            mainControl.SelectedIndex = 66;
+            GetPurchases();
+        }
+
+        public void GetPurchases ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/purchases/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PurchasesResponseInfo myobj = (PurchasesResponseInfo)js.Deserialize(objText, typeof(PurchasesResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Purchase> totalPurchases = myobj.purchases;
+                            List<Purchase> myPurchases = totalPurchases.Where<Purchase>((Purchase purchase) =>
+                            {
+                                string purchaseUserId = purchase.user;
+                                bool isMyPurchase = purchaseUserId == currentUserId;
+                                return isMyPurchase;
+                            }).ToList<Purchase>();
+                            RowDefinitionCollection purchaseRows = purchases.RowDefinitions;
+                            int purchaseRowsCount = purchaseRows.Count;
+                            bool isHaveOldPurchases = purchaseRowsCount >= 3;
+                            if (isHaveOldPurchases)
+                            {
+                                UIElementCollection purchasesChildren = purchases.Children;
+                                int purchasesChildrenCount = purchasesChildren.Count;
+                                int countRemovedChildren = purchasesChildrenCount - 7;
+                                purchases.Children.RemoveRange(7, countRemovedChildren);
+                                int countRemovedRows = purchaseRowsCount - 2;
+                                purchases.RowDefinitions.RemoveRange(2, countRemovedRows);
+                            }
+                            foreach (Purchase myPurchase in myPurchases)
+                            {
+                                DateTime myPurchaseDate = myPurchase.date;
+                                string myPurchaseMsg = myPurchase.msg;
+                                string myPurchaseType = myPurchase.type;
+                                int myPurchasePrice = myPurchase.price;
+                                int myPurchaseBalance = myPurchase.balance;
+                                // string rawMyPurchaseDate = myPurchaseDate.ToString();
+                                string rawMyPurchaseDate = myPurchaseDate.ToLongDateString();
+                                string rawMyPurchasePrice = myPurchasePrice.ToString();
+                                string rawMyPurchaseBalance = myPurchaseBalance.ToString();
+                                RowDefinition row = new RowDefinition();
+                                row.MinHeight = 50;
+                                purchases.RowDefinitions.Add(row);
+                                RowDefinitionCollection rows = purchases.RowDefinitions;
+                                int rowsCount = rows.Count;
+                                int lastRowIndex = rowsCount - 1;
+                                TextBlock label = new TextBlock();
+                                label.Text = rawMyPurchaseDate;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label);
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 0);
+                                label = new TextBlock();
+                                label.Text = myPurchaseMsg;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label); 
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 1);
+                                label = new TextBlock();
+                                string labelContent = "";
+                                bool isIncreaseAmount = myPurchaseType == "Прямое пополнение";
+                                if (isIncreaseAmount)
+                                {
+                                    labelContent = "Покупка" + Environment.NewLine + "Прямое пополнение";
+                                }
+                                label.Text = labelContent;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label); 
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 2);
+                                label = new TextBlock();
+                                labelContent = rawMyPurchasePrice + " руб.";
+                                label.Text = labelContent;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label);
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 3);
+                                label = new TextBlock();
+                                // label.Text = rawMyPurchasePrice;
+                                labelContent = rawMyPurchasePrice + " руб.";
+                                label.Text = labelContent;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label);
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 4);
+                                label = new TextBlock();
+                                labelContent = rawMyPurchaseBalance + " руб.";
+                                // label.Text = rawMyPurchaseBalance;
+                                label.Text = labelContent;
+                                label.Margin = new Thickness(15);
+                                purchases.Children.Add(label);
+                                Grid.SetRow(label, lastRowIndex);
+                                Grid.SetColumn(label, 5);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void OpenGameActionsPopupHandler (object sender, RoutedEventArgs e)
         {
             OpenGameActionsPopup();
@@ -185,6 +309,25 @@ namespace GamaManager
         {
             GetConnectedFriends();
             GetOfflineFriends();
+        }
+
+        public void ToggleHelpFeedBackHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleHelpFeedBack();
+        }
+
+        public void ToggleHelpFeedBack ()
+        {
+            Visibility helpFeedBackVisibility = helpFeedBack.Visibility;
+            bool isVisible = helpFeedBackVisibility == visible;
+            if (isVisible)
+            {
+                helpFeedBack.Visibility = invisible;
+            }
+            else
+            {
+                helpFeedBack.Visibility = visible;
+            }
         }
 
         public void RemoveScreenShotsHandler (object sender, RoutedEventArgs e)
@@ -2205,7 +2348,8 @@ namespace GamaManager
                 GetIconsInfo();
                 GetGamesHistory();
                 GetMyUserSubs();
-                GetHelpInfo();/**/
+                GetHelpInfo();
+                GetPossibleFriendScammers();/**/
             }
         }
 
@@ -2289,10 +2433,15 @@ namespace GamaManager
                                                             GameResponseInfo result = gameResults[0];
                                                             string resultName = result.name;
                                                             DockPanel game = new DockPanel();
+                                                            game.Margin = new Thickness(15);
+                                                            game.Background = System.Windows.Media.Brushes.LightGray;
                                                             StackPanel gameAside = new StackPanel();
+                                                            gameAside.Margin = new Thickness(15);
                                                             gameAside.Orientation = Orientation.Horizontal;
+                                                            gameAside.DataContext = mySessionGameId;
                                                             game.Children.Add(gameAside);
                                                             Image gameAsideThumbnail = new Image();
+                                                            gameAsideThumbnail.VerticalAlignment = VerticalAlignment.Center;
                                                             gameAsideThumbnail.Width = 35;
                                                             gameAsideThumbnail.Height = 35;
                                                             gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
@@ -2301,14 +2450,19 @@ namespace GamaManager
                                                             gameAsideThumbnail.EndInit();
                                                             gameAside.Children.Add(gameAsideThumbnail);
                                                             TextBlock gameAsideNameLabel = new TextBlock();
+                                                            gameAsideNameLabel.VerticalAlignment = VerticalAlignment.Center;
                                                             gameAsideNameLabel.Text = resultName;
                                                             gameAsideNameLabel.Margin = new Thickness(15, 0, 15, 0);
                                                             gameAside.Children.Add(gameAsideNameLabel);
                                                             PackIcon gameIcon = new PackIcon();
+                                                            gameIcon.VerticalAlignment = VerticalAlignment.Center;
+                                                            gameIcon.Margin = new Thickness(15, 0, 15, 0);
                                                             gameIcon.HorizontalAlignment = HorizontalAlignment.Right;
                                                             gameIcon.Kind = PackIconKind.ChevronRight;
                                                             game.Children.Add(gameIcon);
                                                             helpRecentActivity.Children.Add(game);
+                                                            game.DataContext = "41";
+                                                            game.MouseLeftButtonUp += ToggleHelpControlHandler;
                                                         }
                                                     }
                                                 }
@@ -2328,18 +2482,244 @@ namespace GamaManager
             }
         }
 
+        public void SendDisapearAmountHelpHandler (object sender, RoutedEventArgs e)
+        {
+            SendDisapearAmountHelp();
+        }
+
+        public void SendDisapearAmountHelp ()
+        {
+
+        }
+
+        public void ToggleHelpControlFromBtnHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string rawIndex = btnData.ToString();
+            int index = Int32.Parse(rawIndex);
+            ToggleHelpControlFromBtn(index);
+        }
+
+        public void ToggleHelpControlFromBtn (int index)
+        {
+            helpControl.SelectedIndex = index;
+        }
+
+
         public void ToggleHelpControlHandler (object sender, RoutedEventArgs e)
         {
             DockPanel item = ((DockPanel)(sender));
             object itemData = item.DataContext;
             string rawItemData = itemData.ToString();
             int index = Int32.Parse(rawItemData);
-            ToggleHelpControl(index);
+            ToggleHelpControl(index, item);
         }
 
-        public void ToggleHelpControl (int index)
+        public void ToggleHelpControl (int index, DockPanel item)
         {
+            helpFeedBack.Visibility = invisible;
+            bool isGameBreadcrumb = index == 41;
+            bool isScammerBreadcrumb = index == 44;
+            // bool isIncreaseAmount = index == 13;
+            if (isGameBreadcrumb)
+            {
+                UIElement rawGameItem = item.Children[0];
+                StackPanel gameItem = ((StackPanel)(rawGameItem));
+                object gameItemData = gameItem.DataContext;
+                string gameId = ((string)(gameItemData));
+                try
+                {
+                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    gamesWebRequest.Method = "GET";
+                    gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                    {
+                        using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string objText = gamesReader.ReadToEnd();
+                            GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myGamesObj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                List<GameResponseInfo> games = myGamesObj.games;
+                                List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                {
+                                    string localGameId = game._id;
+                                    bool isIdMatches = gameId == localGameId;
+                                    return isIdMatches;
+                                }).ToList<GameResponseInfo>();
+                                int countResults = gameResults.Count;
+                                bool isResultsFound = countResults >= 1;
+                                if (isResultsFound)
+                                {
+                                    GameResponseInfo gameResult = gameResults[0];
+                                    string gameResultName = gameResult.name;
+                                    string helpGamesAndShotwareBreadcrumbLabelContent = @"Главная > Игры и программное обеспечение > " + gameResultName;
+                                    helpGamesAndShotwareBreadcrumbLabel.Text = helpGamesAndShotwareBreadcrumbLabelContent;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException exception)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            else if (isScammerBreadcrumb)
+            {
+                UIElement rawScammerItem = item.Children[0];
+                StackPanel scammerItem = ((StackPanel)(rawScammerItem));
+                object scammerItemData = scammerItem.DataContext;
+                string userId = ((string)(scammerItemData));
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        FriendsResponseInfo myInnerObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            bool isMyFriend = false;
+                                            List<Friend> friendRecords = myInnerObj.friends.Where<Friend>((Friend joint) =>
+                                            {
+                                                string ownerId = joint.user;
+                                                isMyFriend = ownerId == currentUserId;
+                                                return isMyFriend;
+                                            }).ToList<Friend>();
+                                            List<string> friendsIds = new List<string>();
+                                            foreach (Friend friendRecord in friendRecords)
+                                            {
+                                                string localFriendId = friendRecord.friend;
+                                                friendsIds.Add(localFriendId);
+                                            }
+                                            User user = myobj.user;
+                                            string userName = user.name;
+                                            string helpNotifyScammerBreadcrumbLabelContent = "Главная > Сообщить о мошеннике > " + userName;
+                                            helpNotifyScammerBreadcrumbLabel.Text = helpNotifyScammerBreadcrumbLabelContent;
+                                            scammerNameLabel.Text = userName;
+                                            scammerAvatar.BeginInit();
+                                            scammerAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                            scammerAvatar.EndInit();
+                                            isMyFriend = friendsIds.Contains(userId);
+                                            if (isMyFriend)
+                                            {
+                                                scammerInfoLabel.Text = "В друзьях";
+                                            }
+                                            else
+                                            {
+                                                scammerInfoLabel.Text = "";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Net.WebException exception)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+            /*else if (isIncreaseAmount)
+            {
+                helpFeedBack.Visibility = visible;
+            }*/
             helpControl.SelectedIndex = index;
+        }
+
+        public void ToggleEquipmentOffersControlHandler (object sender, RoutedEventArgs e)
+        {
+            TextBlock label = ((TextBlock)(sender));
+            object labelData = label.DataContext;
+            string rawIndex = labelData.ToString();
+            int index = Int32.Parse(rawIndex);
+            ToggleEquipmentOffersControl(index);
+        }
+
+        public void ToggleEquipmentOffersControlFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            DockPanel item = ((DockPanel)(sender));
+            object itemData = item.DataContext;
+            string rawIndex = itemData.ToString();
+            int index = Int32.Parse(rawIndex);
+            ToggleEquipmentOffersControlFromHelp(index);
+        }
+
+        public void ToggleEquipmentOffersControlFromHelp (int index)
+        {
+            OpenTradeOffers();
+            ToggleEquipmentOffersControl(index);
+        }
+
+        public void ToggleEquipmentOffersControl (int index)
+        {
+            equipmentOffersControl.SelectedIndex = index;
+        }
+
+        public void DoComplaintHandler (object sender, RoutedEventArgs e)
+        {
+            DoComplaint();
+        }
+
+        public void DoComplaint ()
+        {
+            string complaintBoxContent = complaintBox.Text;
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/complaints/add/?id=" + currentUserId + @"&scammer=" + currentUserId + @"&content=" + complaintBoxContent);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        PurchasesResponseInfo myobj = (PurchasesResponseInfo)js.Deserialize(objText, typeof(PurchasesResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            complaintBox.Text = "";
+                            helpControl.SelectedIndex = 0;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetMyUserSubs ()
@@ -13729,6 +14109,16 @@ namespace GamaManager
             SelectForum(forumId);
         }
 
+        public void OpenFamilyLibrarySharingManagementFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFamilyLibrarySharingManagementFromHelp();
+        }
+
+        public void OpenFamilyLibrarySharingManagementFromHelp ()
+        {
+            mainControl.SelectedIndex = 70;
+        }
+
         public void SelectForum(string id)
         {
             addDiscussionDialog.Visibility = invisible;
@@ -15779,9 +16169,14 @@ namespace GamaManager
             }
         }
 
-        public void OpenFamilyViewManagement()
+        public void OpenFamilyViewManagement ()
         {
             mainControl.SelectedIndex = 44;
+        }
+
+        public void OpenFamilyViewManagementHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFamilyViewManagement();
         }
 
         async public void RunGame (string gameName, string joinedGameName = "")
@@ -18141,8 +18536,7 @@ namespace GamaManager
             }
             else if (isAboutAccount)
             {
-                GetAccountSettings();
-                mainControl.SelectedIndex = 15;
+                OpenAccountSettings();
             }
             else if (isExit)
             {
@@ -18157,6 +18551,32 @@ namespace GamaManager
                 OpenIncreaseAmount();
             }
             ResetMenu();
+        }
+
+        public void ToggleSupportControlHandler (object sender, RoutedEventArgs e)
+        {
+            DockPanel item = ((DockPanel)(sender));
+            object itemData = item.DataContext;
+            string rawIndex = itemData.ToString();
+            int index = Int32.Parse(rawIndex);
+            ToggleSupportControl(index);
+        }
+
+        public void ToggleSupportControl (int index)
+        {
+            mainControl.SelectedIndex = 67;
+            supportControl.SelectedIndex = index;
+        }
+
+        public void OpenAccountSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAccountSettings();
+        }
+
+        public void OpenAccountSettings ()
+        {
+            GetAccountSettings();
+            mainControl.SelectedIndex = 15;
         }
 
         public void GetIcons ()
@@ -19811,6 +20231,35 @@ namespace GamaManager
             ResetMenu();
         }
 
+        public void OpenDiscussionsFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            OpenDiscussionsFromHelp();
+        }
+
+        public void OpenDiscussionsFromHelp ()
+        {
+            mainControl.SelectedIndex = 6;
+        }
+
+        public void ToggleHelpCompaintBlockHandler ()
+        {
+            ToggleHelpCompaintBlock();
+        }
+
+        public void ToggleHelpCompaintBlock ()
+        {
+            Visibility helpCompaintBlockVisibility = helpCompaintBlock.Visibility;
+            bool isVisible = helpCompaintBlockVisibility == visible;
+            if (isVisible)
+            {
+                helpCompaintBlock.Visibility = invisible;
+            }
+            else
+            {
+                helpCompaintBlock.Visibility = visible;
+            }
+        }
+
         private void StoreItemSelectedHandler(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = ((ComboBox)(sender));
@@ -20293,10 +20742,20 @@ namespace GamaManager
             OpenEditProfile();
         }
 
-        public void OpenEditProfile()
+        public void OpenEditProfile ()
         {
             mainControl.SelectedIndex = 2;
             AddHistoryRecord();
+        }
+
+        private void OpenPrivacyInfoHandler(object sender, RoutedEventArgs e)
+        {
+            OpenPrivacyInfo();
+        }
+
+        public void OpenPrivacyInfo()
+        {
+            mainControl.SelectedIndex = 41;
         }
 
         private void SaveUserInfoHandler(object sender, RoutedEventArgs e)
@@ -22410,16 +22869,16 @@ namespace GamaManager
             }
         }
 
-        private void SetEditProfileTabHandler(object sender, MouseButtonEventArgs e)
+        private void SetEditProfileTabHandler (object sender, MouseButtonEventArgs e)
         {
             StackPanel tab = ((StackPanel)(sender));
             object tabData = tab.DataContext;
             string tabIndex = tabData.ToString();
             int parsedTabIndex = Int32.Parse(tabIndex);
-            SetEditProfileTabHandler(parsedTabIndex);
+            SetEditProfileTab(parsedTabIndex);
         }
 
-        public void SetEditProfileTabHandler(int index)
+        public void SetEditProfileTab (int index)
         {
             editProfileTabControl.SelectedIndex = index;
         }
@@ -24414,7 +24873,7 @@ namespace GamaManager
             }
         }
 
-        private void OpenDiscussionsHandler (object sender, MouseButtonEventArgs e)
+        private void OpenDiscussionsHandler (object sender, RoutedEventArgs e)
         {
             OpenDiscussions();
         }
@@ -25127,6 +25586,11 @@ namespace GamaManager
         public void OpenPointsHistory ()
         {
             mainControl.SelectedIndex = 35;
+        }
+
+        public void OpenPointsHistoryFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPointsHistory();
         }
 
         public void OpenGameInPointsStoreHandler (object sender, RoutedEventArgs e)
@@ -26037,6 +26501,17 @@ namespace GamaManager
             {
                 MessageBox.Show("Произошла ошибка при отправке письма", "Ошибка");
             }
+        }
+
+        public void OpenPointsStoreFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPointsStoreFromHelp();
+        }
+
+        public void OpenPointsStoreFromHelp ()
+        {
+            mainControl.SelectedIndex = 34;
+            OpenPointsHelp();
         }
 
         public void OpenPointsStoreItemHandler (object sender, RoutedEventArgs e)
@@ -27014,22 +27489,29 @@ namespace GamaManager
             OpenSupportService();
         }
 
-        public void OpenSupportService()
+        public void OpenSupportService ()
         {
+            helpFeedBack.Visibility = invisible;
+            helpControl.SelectedIndex = 0;
             mainControl.SelectedIndex = 40;
         }
 
-        private void OpenPrivacyInfoHandler (object sender, RoutedEventArgs e)
+        private void SetEditProfileTabFromHelpHandler (object sender, RoutedEventArgs e)
         {
-            OpenPrivacyInfo();
+            DockPanel item = ((DockPanel)(sender));
+            object itemData = item.DataContext;
+            string rawIndex = itemData.ToString();
+            int index = Int32.Parse(rawIndex);
+            SetEditProfileTabFromHelp(index);
         }
 
-        public void OpenPrivacyInfo ()
+        public void SetEditProfileTabFromHelp (int index)
         {
-            mainControl.SelectedIndex = 41;
+            mainControl.SelectedIndex = 2;
+            SetEditProfileTab(index);
         }
 
-        private void OpenLawInfoHandler(object sender, RoutedEventArgs e)
+        private void OpenLawInfoHandler (object sender, RoutedEventArgs e)
         {
             OpenLawInfo();
         }
@@ -27528,7 +28010,58 @@ namespace GamaManager
             GetFamilyViewGames();
         }
 
-        private void OpenUpdatePhoneHandler (object sender, MouseButtonEventArgs e)
+        public void OpenAccountDataHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAccountData();
+        }
+
+        public void OpenAccountData ()
+        {
+            mainControl.SelectedIndex = 68;
+        }
+
+        public void OpenTradeHistoryHandler (object sender, RoutedEventArgs e)
+        {
+            OpenTradeHistory();
+        }
+
+        public void OpenTradeHistory ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            User user = myobj.user;
+                            string userName = user.name;
+                            tradeHistoryUserNameLabel.Text = userName;
+                            tradeHistoryUserAvatar.BeginInit();
+                            tradeHistoryUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            tradeHistoryUserAvatar.EndInit();
+                            mainControl.SelectedIndex = 69;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void OpenUpdatePhoneHandler (object sender, RoutedEventArgs e)
         {
             OpenUpdatePhone();
         }
@@ -30695,6 +31228,516 @@ namespace GamaManager
             }
         }
 
+        public void GetHelpGameAndSoftWareSearchHandler (object sender, TextChangedEventArgs e)
+        {
+            TextBox box = ((TextBox)(sender));
+            GetHelpGameAndSoftWareSearch(box);
+        }
+
+        public void SendCommonFeedBackHandler (object sender, RoutedEventArgs e)
+        {
+            SendCommonFeedBack();
+        }
+
+
+        public void SendCommonFeedBack ()
+        {
+            string feedBackTitle = "";
+            int selectedIndex = helpControl.SelectedIndex;
+            bool isFamilyLibrarySharing = selectedIndex == 28;
+            bool isFamilyView = selectedIndex == 29;
+            bool isGuard = selectedIndex == 38;
+            bool isMobileAuth = selectedIndex == 40;
+            bool isPoints = selectedIndex == 24;
+            bool isCommunityFunction = selectedIndex == 37;
+            bool isStreams = selectedIndex == 36;
+            bool isDiscussions = selectedIndex == 35;
+            bool isChats = selectedIndex == 34;
+            bool isProfiles = selectedIndex == 33;
+            bool isGroups = selectedIndex == 32;
+            bool isClientCrashed = selectedIndex == 25;
+            bool isClientLogin = selectedIndex == 26;
+            bool isBigPicture = selectedIndex == 27;
+            bool isStandAlone = selectedIndex == 30;
+            bool isCloud = selectedIndex == 31;
+            if (isFamilyLibrarySharing)
+            {
+                feedBackTitle = "Я испытываю проблемы с Family Library Sharing";
+            }
+            else if (isFamilyView)
+            {
+                feedBackTitle = "Я испытываю проблемы с семейным просмотром";
+            }
+            else if (isGuard)
+            {
+                feedBackTitle = "Я испытываю проблемы с Guard";
+            }
+            else if (isMobileAuth)
+            {
+                feedBackTitle = "Проблемы с мобильным аутентификатором";
+            }
+            else if (isPoints)
+            {
+                feedBackTitle = "Очки Steam";
+            }
+            else if (isCommunityFunction)
+            {
+                feedBackTitle = "Мне всё ещё нужна помощь с функцией сообщества";
+            }
+            else if (isStreams)
+            {
+                feedBackTitle = "Я испытываю проблемы с трансляцией";
+            }
+            else if (isDiscussions)
+            {
+                feedBackTitle = "У меня есть вопрос об обсуждениях";
+            }
+            else if (isChats)
+            {
+                feedBackTitle = "У меня есть вопрос о чате";
+            }
+            else if (isProfiles)
+            {
+                feedBackTitle = "У меня есть вопрос о профилях в сообществе";
+            }
+            else if (isGroups)
+            {
+                feedBackTitle = "У меня есть вопрос о группах сообществ";
+            }
+            else if (isClientCrashed)
+            {
+                feedBackTitle = "Клиент вылетает";
+            }
+            else if (isClientLogin)
+            {
+                feedBackTitle = "Я не могу войти в клиент";
+            }
+            else if (isBigPicture)
+            {
+                feedBackTitle = "Проблемы с режимом Big Picture";
+            }
+            else if (isStandAlone)
+            {
+                feedBackTitle = "Я испытываю проблемы с автономным режимом";
+            }
+            else if (isCloud)
+            {
+                feedBackTitle = "У меня возникли проблемы с Cloud";
+            }
+            else if (isCloud)
+            {
+                feedBackTitle = "У меня возникли проблемы с Cloud";
+            }
+            string helpCommonFeedBackBoxContent = helpCommonFeedBackBox.Text;
+            try
+            {
+                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + feedBackTitle + "&content=" + helpCommonFeedBackBoxContent + @"&ext=" + manualAttachmentExt;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = manualAttachment;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                helpControl.SelectedIndex = 0;
+                helpFeedBack.Visibility = invisible;
+                helpCommonFeedBackBox.Text = "";
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SendIncreaseAmountFeedBackHandler (object sender, RoutedEventArgs e)
+        {
+            SendIncreaseAmountFeedBack();
+        }
+
+        public void SendIncreaseAmountFeedBack ()
+        {
+            string helpIncreaseAmountBoxContent = helpIncreaseAmountBox.Text;
+            try
+            {
+                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=Проблемы с пополнением кошелька&content=" + helpIncreaseAmountBoxContent + @"&ext=" + manualAttachmentExt;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = manualAttachment;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                helpControl.SelectedIndex = 0;
+                helpIncreaseAmountBox.Text = "";
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetHelpGameAndSoftWareSearch (TextBox box)
+        {
+            helpGameAndSoftWareSearchResults.Children.Clear();
+            string boxContent = box.Text;
+            string insensitiveCaseBoxContent = boxContent.ToLower();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            totalGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameName = someGame.name;
+                                string insensitiveCaseSomeGameName = someGameName.ToLower();
+                                bool isFilterMatch = insensitiveCaseSomeGameName.Contains(insensitiveCaseBoxContent);
+                                return isFilterMatch;
+                            }).ToList<GameResponseInfo>();
+                            int totalGamesCount = totalGames.Count;
+                            bool isHaveResults = totalGamesCount >= 1;
+                            string infoLabelContent = "Извините! Поиск не дал никаких результатов.";
+                            if (isHaveResults)
+                            {
+                                infoLabelContent = "Товары";
+                            }
+                            TextBlock infoLabel = new TextBlock();
+                            infoLabel.Text = infoLabelContent;
+                            infoLabel.Margin = new Thickness(15);
+                            infoLabel.FontSize = 18;
+                            helpGameAndSoftWareSearchResults.Children.Add(infoLabel);
+                            foreach (GameResponseInfo totalGamesItem in totalGames)
+                            {
+                                string totalGamesItemId = totalGamesItem._id;
+                                string totalGamesItemName = totalGamesItem.name;
+                                DockPanel game = new DockPanel();
+                                game.Margin = new Thickness(15);
+                                game.Background = System.Windows.Media.Brushes.LightGray;
+                                StackPanel gameAside = new StackPanel();
+                                gameAside.Margin = new Thickness(15);
+                                gameAside.Orientation = Orientation.Horizontal;
+                                gameAside.DataContext = totalGamesItemId;
+                                game.Children.Add(gameAside);
+                                Image gameAsideThumbnail = new Image();
+                                gameAsideThumbnail.VerticalAlignment = VerticalAlignment.Center;
+                                gameAsideThumbnail.Width = 35;
+                                gameAsideThumbnail.Height = 35;
+                                gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
+                                gameAsideThumbnail.BeginInit();
+                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                gameAsideThumbnail.EndInit();
+                                gameAside.Children.Add(gameAsideThumbnail);
+                                TextBlock gameAsideNameLabel = new TextBlock();
+                                gameAsideNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                gameAsideNameLabel.Text = totalGamesItemName;
+                                gameAsideNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                gameAside.Children.Add(gameAsideNameLabel);
+                                PackIcon gameIcon = new PackIcon();
+                                gameIcon.VerticalAlignment = VerticalAlignment.Center;
+                                gameIcon.Margin = new Thickness(15, 0, 15, 0);
+                                gameIcon.HorizontalAlignment = HorizontalAlignment.Right;
+                                gameIcon.Kind = PackIconKind.ChevronRight;
+                                game.Children.Add(gameIcon);
+                                game.DataContext = "41";
+                                game.MouseLeftButtonUp += ToggleHelpControlHandler;
+                                helpGameAndSoftWareSearchResults.Children.Add(game);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void GetHelpSearchHandler (object sender, TextChangedEventArgs e)
+        {
+            TextBox box = ((TextBox)(sender));
+            GetHelpSearch(box);
+        }
+
+        public void GetHelpSearch (TextBox box)
+        {
+            helpSearchResults.Children.Clear();
+            string boxContent = box.Text;
+            string insensitiveCaseBoxContent = boxContent.ToLower();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            totalGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameName = someGame.name;
+                                string insensitiveCaseSomeGameName = someGameName.ToLower();
+                                bool isFilterMatch = insensitiveCaseSomeGameName.Contains(insensitiveCaseBoxContent);
+                                return isFilterMatch;
+                            }).ToList<GameResponseInfo>();
+                            int totalGamesCount = totalGames.Count;
+                            bool isHaveResults = totalGamesCount >= 1;
+                            string infoLabelContent = "Извините! Поиск не дал никаких результатов.";
+                            if (isHaveResults)
+                            {
+                                infoLabelContent = "Товары";
+                            }
+                            TextBlock infoLabel = new TextBlock();
+                            infoLabel.Text = infoLabelContent;
+                            infoLabel.Margin = new Thickness(15);
+                            infoLabel.FontSize = 18;
+                            helpSearchResults.Children.Add(infoLabel);
+                            foreach (GameResponseInfo totalGamesItem in totalGames)
+                            {
+                                string totalGamesItemId = totalGamesItem._id;
+                                string totalGamesItemName = totalGamesItem.name;
+                                DockPanel game = new DockPanel();
+                                game.Margin = new Thickness(15);
+                                game.Background = System.Windows.Media.Brushes.LightGray;
+                                StackPanel gameAside = new StackPanel();
+                                gameAside.Margin = new Thickness(15);
+                                gameAside.Orientation = Orientation.Horizontal;
+                                gameAside.DataContext = totalGamesItemId;
+                                game.Children.Add(gameAside);
+                                Image gameAsideThumbnail = new Image();
+                                gameAsideThumbnail.VerticalAlignment = VerticalAlignment.Center;
+                                gameAsideThumbnail.Width = 35;
+                                gameAsideThumbnail.Height = 35;
+                                gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
+                                gameAsideThumbnail.BeginInit();
+                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                gameAsideThumbnail.EndInit();
+                                gameAside.Children.Add(gameAsideThumbnail);
+                                TextBlock gameAsideNameLabel = new TextBlock();
+                                gameAsideNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                gameAsideNameLabel.Text = totalGamesItemName;
+                                gameAsideNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                gameAside.Children.Add(gameAsideNameLabel);
+                                PackIcon gameIcon = new PackIcon();
+                                gameIcon.VerticalAlignment = VerticalAlignment.Center;
+                                gameIcon.Margin = new Thickness(15, 0, 15, 0);
+                                gameIcon.HorizontalAlignment = HorizontalAlignment.Right;
+                                gameIcon.Kind = PackIconKind.ChevronRight;
+                                game.Children.Add(gameIcon);
+                                game.DataContext = "41";
+                                game.MouseLeftButtonUp += ToggleHelpControlHandler;
+                                helpSearchResults.Children.Add(game);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void GetPossibleFriendScammers ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        FriendsResponseInfo myObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> receivedFriends = myObj.friends;
+                            List<Friend> myFriends = receivedFriends.Where<Friend>((Friend friend) =>
+                            {
+                                return friend.user == currentUserId;
+                            }).ToList<Friend>();
+                            int countFriends = myFriends.Count;
+                            List<string> friendsIds = new List<string>();
+                            foreach (Friend friendInfo in myFriends)
+                            {
+                                string friendId = friendInfo.friend;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User user = myInnerObj.user;
+                                            string userId = user._id;
+                                            string userName = user.name;
+                                            DockPanel possibleScammer = new DockPanel();
+                                            possibleScammer.Margin = new Thickness(15);
+                                            possibleScammer.Background = System.Windows.Media.Brushes.LightGray;
+                                            StackPanel possibleScammerAside = new StackPanel();
+                                            possibleScammerAside.DataContext = userId;
+                                            possibleScammerAside.Margin = new Thickness(15);
+                                            possibleScammerAside.Orientation = Orientation.Horizontal;
+                                            possibleScammer.Children.Add(possibleScammerAside);
+                                            Image possibleScammerAsideThumbnail = new Image();
+                                            possibleScammerAsideThumbnail.VerticalAlignment = VerticalAlignment.Center;
+                                            possibleScammerAsideThumbnail.Width = 35;
+                                            possibleScammerAsideThumbnail.Height = 35;
+                                            possibleScammerAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
+                                            possibleScammerAsideThumbnail.BeginInit();
+                                            possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?name=" + friendId));
+                                            possibleScammerAsideThumbnail.EndInit();
+                                            possibleScammerAside.Children.Add(possibleScammerAsideThumbnail);
+                                            TextBlock possibleScammerAsideNameLabel = new TextBlock();
+                                            possibleScammerAsideNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                            possibleScammerAsideNameLabel.Text = userName;
+                                            possibleScammerAsideNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                            possibleScammerAside.Children.Add(possibleScammerAsideNameLabel);
+                                            PackIcon possibleScammerIcon = new PackIcon();
+                                            possibleScammerIcon.VerticalAlignment = VerticalAlignment.Center;
+                                            possibleScammerIcon.Margin = new Thickness(15, 0, 15, 0);
+                                            possibleScammerIcon.HorizontalAlignment = HorizontalAlignment.Right;
+                                            possibleScammerIcon.Kind = PackIconKind.ChevronRight;
+                                            possibleScammer.Children.Add(possibleScammerIcon);
+                                            possibleScammer.DataContext = "44";
+                                            possibleScammer.MouseLeftButtonUp += ToggleHelpControlHandler;
+                                            possibleFriendScammers.Children.Add(possibleScammer);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        private void GetPossibleScammersHandler (object sender, TextChangedEventArgs e)
+        {
+            GetPossibleScammers();
+        }
+
+        public void GetPossibleScammers ()
+        {
+            possibleScammers.Children.Clear();
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UsersResponseInfo myobj = (UsersResponseInfo)js.Deserialize(objText, typeof(UsersResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<string> usersIds = new List<string>();
+                            List<User> localUsers = myobj.users;
+                            foreach (User user in localUsers)
+                            {
+                                string userId = user._id;
+                                bool isMe = userId == currentUserId;
+                                bool isNotMe = !isMe;
+                                if (isNotMe)
+                                {
+                                    string userName = user.name;
+                                    string possibleScammersBoxContent = possibleScammersBox.Text;
+                                    int possibleScammersBoxContentLength = possibleScammersBoxContent.Length;
+                                    bool isFilterEnabled = possibleScammersBoxContentLength >= 1;
+                                    string insensitiveCasePossibleScammersBoxContent = possibleScammersBoxContent.ToLower();
+                                    bool isKeywordsMatch = userName.Contains(insensitiveCasePossibleScammersBoxContent);
+                                    bool isUserMatch = isKeywordsMatch && isFilterEnabled;
+                                    if (isUserMatch)
+                                    {
+                                        DockPanel possibleScammer = new DockPanel();
+                                        possibleScammer.Margin = new Thickness(15);
+                                        possibleScammer.Background = System.Windows.Media.Brushes.LightGray;
+                                        StackPanel possibleScammerAside = new StackPanel();
+                                        possibleScammerAside.DataContext = userId;
+                                        possibleScammerAside.Margin = new Thickness(15);
+                                        possibleScammerAside.Orientation = Orientation.Horizontal;
+                                        possibleScammer.Children.Add(possibleScammerAside);
+                                        Image possibleScammerAsideThumbnail = new Image();
+                                        possibleScammerAsideThumbnail.VerticalAlignment = VerticalAlignment.Center;
+                                        possibleScammerAsideThumbnail.Width = 35;
+                                        possibleScammerAsideThumbnail.Height = 35;
+                                        possibleScammerAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
+                                        possibleScammerAsideThumbnail.BeginInit();
+                                        possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?name=" + userId));
+                                        possibleScammerAsideThumbnail.EndInit();
+                                        possibleScammerAside.Children.Add(possibleScammerAsideThumbnail);
+                                        TextBlock possibleScammerAsideNameLabel = new TextBlock();
+                                        possibleScammerAsideNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                        possibleScammerAsideNameLabel.Text = userName;
+                                        possibleScammerAsideNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                        possibleScammerAside.Children.Add(possibleScammerAsideNameLabel);
+                                        PackIcon possibleScammerIcon = new PackIcon();
+                                        possibleScammerIcon.VerticalAlignment = VerticalAlignment.Center;
+                                        possibleScammerIcon.Margin = new Thickness(15, 0, 15, 0);
+                                        possibleScammerIcon.HorizontalAlignment = HorizontalAlignment.Right;
+                                        possibleScammerIcon.Kind = PackIconKind.ChevronRight;
+                                        possibleScammer.Children.Add(possibleScammerIcon);
+                                        possibleScammer.DataContext = "44";
+                                        possibleScammer.MouseLeftButtonUp += ToggleHelpControlHandler;
+                                        possibleScammers.Children.Add(possibleScammer);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
     }
 
     class SavedContent
@@ -31897,6 +32940,23 @@ namespace GamaManager
     {
         public string status;
         public string id;
+    }
+
+    public class PurchasesResponseInfo
+    {
+        public List<Purchase> purchases;
+        public string status;
+    }
+
+    public class Purchase
+    {
+        public string _id;
+        public string user;
+        public int price;
+        public int balance;
+        public string type;
+        public string msg;
+        public DateTime date;
     }
 
 }

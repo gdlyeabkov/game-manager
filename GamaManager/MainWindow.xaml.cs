@@ -2489,7 +2489,67 @@ namespace GamaManager
 
         public void SendDisapearAmountHelp ()
         {
+            string disapearAmountNameBoxContent = disapearAmountNameBox.Text;
+            string disapearAmountPhoneBoxContent = disapearAmountPhoneBox.Text;
+            int disapearAmountDayDateSelectorSelectedIndex = disapearAmountDayDateSelector.SelectedIndex;
+            ItemCollection disapearAmountDayDateSelectorItems = disapearAmountDayDateSelector.Items;
+            object rawDisapearAmountDayDateSelectorSelectedItem = disapearAmountDayDateSelectorItems[disapearAmountDayDateSelectorSelectedIndex];
+            ComboBoxItem disapearAmountDayDateSelectorSelectedItem = ((ComboBoxItem)(rawDisapearAmountDayDateSelectorSelectedItem));
+            object rawDisapearAmountDayDateSelectorSelectedItemContent = disapearAmountDayDateSelectorSelectedItem.Content;
+            string disapearAmountDayDateSelectorSelectedItemContent = rawDisapearAmountDayDateSelectorSelectedItemContent.ToString();
+            int disapearAmountMonthDateSelectorSelectedIndex = disapearAmountMonthDateSelector.SelectedIndex;
+            ItemCollection disapearAmountMonthDateSelectorItems = disapearAmountMonthDateSelector.Items;
+            object rawDisapearAmountMonthDateSelectorSelectedItem = disapearAmountMonthDateSelectorItems[disapearAmountMonthDateSelectorSelectedIndex];
+            ComboBoxItem disapearAmountMonthDateSelectorSelectedItem = ((ComboBoxItem)(rawDisapearAmountMonthDateSelectorSelectedItem));
+            object rawDisapearAmountMonthDateSelectorSelectedItemContent = disapearAmountMonthDateSelectorSelectedItem.Content;
+            string disapearAmountMonthDateSelectorSelectedItemContent = rawDisapearAmountMonthDateSelectorSelectedItemContent.ToString();
 
+            int disapearAmountYearDateSelectorSelectedIndex = disapearAmountYearDateSelector.SelectedIndex;
+            ItemCollection disapearAmountYearDateSelectorItems = disapearAmountYearDateSelector.Items;
+            object rawDisapearAmountYearDateSelectorSelectedItem = disapearAmountYearDateSelectorItems[disapearAmountYearDateSelectorSelectedIndex];
+            ComboBoxItem disapearAmountYearDateSelectorSelectedItem = ((ComboBoxItem)(rawDisapearAmountYearDateSelectorSelectedItem));
+            object rawDisapearAmountYearDateSelectorSelectedItemContent = disapearAmountYearDateSelectorSelectedItem.Content;
+            string disapearAmountYearDateSelectorSelectedItemContent = rawDisapearAmountYearDateSelectorSelectedItemContent.ToString();
+
+            string date = disapearAmountDayDateSelectorSelectedItemContent + "/" + disapearAmountMonthDateSelectorSelectedItemContent + "/" + disapearAmountYearDateSelectorSelectedItemContent;
+
+            int disapearAmountPaymentMethodSelectorSelectedIndex = disapearAmountPaymentMethodSelector.SelectedIndex;
+            ItemCollection disapearAmountPaymentMethodSelectorItems = disapearAmountPaymentMethodSelector.Items;
+            object rawDisapearAmountPaymentMethodSelectorSelectedItem = disapearAmountPaymentMethodSelectorItems[disapearAmountPaymentMethodSelectorSelectedIndex];
+            ComboBoxItem disapearAmountPaymentMethodSelectorSelectedItem = ((ComboBoxItem)(rawDisapearAmountPaymentMethodSelectorSelectedItem));
+            object rawDisapearAmountPaymentMethodSelectorSelectedItemContent = disapearAmountPaymentMethodSelectorSelectedItem.Content;
+            string disapearAmountPaymentMethodSelectorSelectedItemContent = rawDisapearAmountPaymentMethodSelectorSelectedItemContent.ToString();
+
+            string disapearAmountCVVBoxContent = disapearAmountCVVBox.Text;
+            string disapearAmountPriceBoxContent = disapearAmountPriceBox.Text;
+            string disapearAmountAuxBoxContent = disapearAmountAuxBox.Text;
+            try
+            {
+                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + "Снятие средства за неизвестные мне покупки" + "&content=" + disapearAmountAuxBoxContent + @"&ext=" + manualAttachmentExt + @"&name=" + disapearAmountNameBoxContent + "&phone=" + disapearAmountPhoneBoxContent + "&date=" + date + "&method=" + disapearAmountPaymentMethodSelectorSelectedItemContent + "&cvv=" + disapearAmountCVVBoxContent + "&price=" + disapearAmountPriceBoxContent;
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                byte[] imagebytearraystring = manualAttachment;
+                form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
+                HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
+                httpClient.Dispose();
+                helpControl.SelectedIndex = 0;
+                helpFeedBack.Visibility = invisible;
+                disapearAmountNameBox.Text = "";
+                disapearAmountPhoneBox.Text = "";
+                disapearAmountDayDateSelector.SelectedIndex = 0;
+                disapearAmountMonthDateSelector.SelectedIndex = 0;
+                disapearAmountYearDateSelector.SelectedIndex = 0;
+                disapearAmountPaymentMethodSelector.SelectedIndex = 0;
+                disapearAmountCVVBox.Text = "";
+                disapearAmountPriceBox.Text = "";
+                disapearAmountAuxBox.Text = "";
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void ToggleHelpControlFromBtnHandler (object sender, RoutedEventArgs e)
@@ -20241,22 +20301,71 @@ namespace GamaManager
             mainControl.SelectedIndex = 6;
         }
 
-        public void ToggleHelpCompaintBlockHandler ()
+        public void ToggleHelpComplaintBlockHandler (object sender, RoutedEventArgs e)
         {
-            ToggleHelpCompaintBlock();
+            ToggleHelpComplaintBlock();
         }
 
-        public void ToggleHelpCompaintBlock ()
+        public void ToggleHelpComplaintBlock ()
         {
-            Visibility helpCompaintBlockVisibility = helpCompaintBlock.Visibility;
-            bool isVisible = helpCompaintBlockVisibility == visible;
+            Visibility helpComplaintBlockVisibility = helpComplaintBlock.Visibility;
+            bool isVisible = helpComplaintBlockVisibility == visible;
             if (isVisible)
             {
-                helpCompaintBlock.Visibility = invisible;
+                helpComplaintBlock.Visibility = invisible;
             }
             else
             {
-                helpCompaintBlock.Visibility = visible;
+                helpComplaintBlock.Visibility = visible;
+            }
+        }
+
+        public void OpenGuideManualsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGuideManuals();
+        }
+
+        public void OpenGuideManuals ()
+        {
+            mainControl.SelectedIndex = 72;
+        }
+
+        public void OpenGuideCuratorsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGuideCurators();
+        }
+
+        public void OpenGuideCurators()
+        {
+            mainControl.SelectedIndex = 73;
+        }
+
+        public void OpenChatsGuideHandler (object sender, RoutedEventArgs e)
+        {
+            OpenChatsGuide();
+        }
+
+        public void OpenChatsGuide ()
+        {
+            mainControl.SelectedIndex = 71;
+        }
+
+        public void CommunityFunctionToggleHelpComplaintBlockHandler (object sender, RoutedEventArgs e)
+        {
+            CommunityFunctionToggleHelpComplaintBlock();
+        }
+
+        public void CommunityFunctionToggleHelpComplaintBlock ()
+        {
+            Visibility communityFunctionHelpComplaintBlockVisibility = communityFunctionHelpComplaintBlock.Visibility;
+            bool isVisible = communityFunctionHelpComplaintBlockVisibility == visible;
+            if (isVisible)
+            {
+                communityFunctionHelpComplaintBlock.Visibility = invisible;
+            }
+            else
+            {
+                communityFunctionHelpComplaintBlock.Visibility = visible;
             }
         }
 
@@ -30028,6 +30137,30 @@ namespace GamaManager
             countNewRequestsLabel.Text = @"Новых подарков: 0";
         }
 
+        private void ToggleDocumentationAsideHandler (object sender, MouseButtonEventArgs e)
+        {
+            PackIcon icon = ((PackIcon)(sender));
+            ToggleDocumentationAside(icon);
+        }
+
+        public void ToggleDocumentationAside (PackIcon icon)
+        {
+            Visibility documentationAsideScrollVisibility = documentationAsideScroll.Visibility;
+            bool isVisible = documentationAsideScrollVisibility == visible;
+            if (isVisible)
+            {
+                documentationAsideScroll.Visibility = invisible;
+                documentationAside.Width = 50;
+                icon.Kind = PackIconKind.ChevronRight;
+            }
+            else
+            {
+                documentationAsideScroll.Visibility = visible;
+                documentationAside.Width = 350;
+                icon.Kind = PackIconKind.ChevronLeft;
+            }
+        }
+
         private void ToggleNewsAsideHandler (object sender, MouseButtonEventArgs e)
         {
             PackIcon icon = ((PackIcon)(sender));
@@ -31331,7 +31464,7 @@ namespace GamaManager
             string helpCommonFeedBackBoxContent = helpCommonFeedBackBox.Text;
             try
             {
-                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + feedBackTitle + "&content=" + helpCommonFeedBackBoxContent + @"&ext=" + manualAttachmentExt;
+                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + feedBackTitle + "&content=" + helpCommonFeedBackBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -31360,7 +31493,7 @@ namespace GamaManager
             string helpIncreaseAmountBoxContent = helpIncreaseAmountBox.Text;
             try
             {
-                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=Проблемы с пополнением кошелька&content=" + helpIncreaseAmountBoxContent + @"&ext=" + manualAttachmentExt;
+                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=Проблемы с пополнением кошелька&content=" + helpIncreaseAmountBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();

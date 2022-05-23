@@ -13403,7 +13403,9 @@
                             <TabControl
                                 x:Name="helpControl"    
                             >
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             x:Name="helpLabel"
@@ -13581,7 +13583,9 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -13629,7 +13633,9 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -13706,7 +13712,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -13845,7 +13853,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -13939,7 +13949,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14081,7 +14093,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14176,7 +14190,7 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            MouseLeftButtonUp="ToggleHelpCompaintBlockHandler"
+                                            MouseLeftButtonUp="ToggleHelpComplaintBlockHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -14256,7 +14270,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14286,7 +14302,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14348,7 +14366,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14378,7 +14398,9 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14408,7 +14430,9 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14438,7 +14462,9 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14516,7 +14542,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14582,7 +14610,9 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14664,7 +14694,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14714,7 +14746,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14781,7 +14815,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14847,7 +14883,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14893,7 +14931,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -14920,6 +14960,7 @@
                                                         Text="Имя, указанное в выписке"    
                                                     />
                                                     <TextBox
+                                                        x:Name="disapearAmountNameBox"
                                                         HorizontalAlignment="Left"
                                                         Height="25"
                                                         Width="250"
@@ -14929,6 +14970,7 @@
                                                         Text="Телефонный номер"    
                                                     />
                                                     <TextBox
+                                                        x:Name="disapearAmountPhoneBox"
                                                         HorizontalAlignment="Left"
                                                         Height="25"
                                                         Width="250"
@@ -14939,13 +14981,14 @@
                                                     />
                                                     <TextBlock
                                                         Margin="15 5"
-                                                        Text="Имя, указанное в выписке"    
+                                                        Text="Точная дата покупки"    
                                                     />
                                                     <StackPanel
                                                         Orientation="Horizontal"    
                                                         Margin="0 10"
                                                     >
                                                         <ComboBox
+                                                            x:Name="disapearAmountDayDateSelector"
                                                             Width="125"
                                                             Height="25"
                                                             Margin="15 0"
@@ -15046,6 +15089,7 @@
                                                             />
                                                         </ComboBox>
                                                         <ComboBox
+                                                            x:Name="disapearAmountMonthDateSelector"
                                                             Width="125"
                                                             Height="25"
                                                             Margin="15 0"
@@ -15089,6 +15133,7 @@
                                                             />
                                                         </ComboBox>
                                                         <ComboBox
+                                                            x:Name="disapearAmountYearDateSelector"
                                                             Width="125"
                                                             Height="25"
                                                             Margin="15 0"
@@ -15117,9 +15162,10 @@
                                                 >
                                                     <TextBlock
                                                         Margin="15 5"
-                                                        Text="Точная сумма копии"    
+                                                        Text="Способ оплаты"    
                                                     />
                                                     <ComboBox
+                                                        x:Name="disapearAmountPaymentMethodSelector"
                                                         Height="25"
                                                         Width="250"
                                                         SelectedIndex="0"
@@ -15145,6 +15191,7 @@
                                                         Text="Visa - 4 последние цифры номера"    
                                                     />
                                                     <TextBox
+                                                        x:Name="disapearAmountCVVBox"
                                                         Height="25"
                                                         Width="250"
                                                     />
@@ -15157,6 +15204,7 @@
                                                         Text="Точная сумма копии"    
                                                     />
                                                     <TextBox
+                                                        x:Name="disapearAmountPriceBox"
                                                         Height="25"
                                                         Width="250"
                                                     />
@@ -15171,6 +15219,7 @@
                                                 Text="Желаете ли вы сообщить нам еще что-нибудь?"    
                                             />
                                             <TextBox
+                                                x:Name="disapearAmountAuxBox"
                                                 HorizontalAlignment="Left"
                                                 Width="650"
                                                 Height="75"
@@ -15209,7 +15258,9 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15295,7 +15346,9 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15357,7 +15410,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15498,7 +15553,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15512,7 +15569,9 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15607,7 +15666,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15684,7 +15745,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15751,7 +15814,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15811,7 +15876,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15888,7 +15955,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -15969,7 +16038,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16028,7 +16099,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16090,7 +16163,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16136,12 +16211,11 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            MouseLeftButtonUp="OpenGuideCuratorsHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
-                                                Text="Вопросы о кураторах Steam"    
+                                                Text="Вопросы о кураторах"    
                                             />
                                             <materialDesign:PackIcon
                                                 Margin="15"
@@ -16182,7 +16256,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16257,7 +16333,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16298,8 +16376,7 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            MouseLeftButtonUp="OpenChatsGuideHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -16344,7 +16421,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16419,7 +16498,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16480,7 +16561,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16527,7 +16610,7 @@
                                             Margin="15"
                                             Background="LightGray"
                                             DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            MouseLeftButtonUp="CommunityFunctionToggleHelpComplaintBlockHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -16539,6 +16622,40 @@
                                                 HorizontalAlignment="Right"
                                             />
                                         </DockPanel>
+                                        <StackPanel
+                                            x:Name="communityFunctionHelpComplaintBlock"    
+                                            Visibility="Collapsed"
+                                        >
+                                            <TextBlock
+                                                FontSize="16"
+                                                Margin="15"
+                                                Text="Пожаловаться на неподобающее поведение пользователя"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Если пользователь Steam оскорбляет вас или ведёт себя неподобающе, вы можете отправить жалобу&#10;поддержке"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="1. Перейдите на страницу пользователя в сообществе. Вы можете найти её, воспользовавшись&#10;поиском."    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="2. Нажмите на кнопку «Ещё…» в правом верхнем углу страницы"    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="3. Нажмите «Пожаловаться», затем выберите категорию и кратко опишите, в чём заключается жалоба."    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Служба поддержки Steam рассматривает жалобы и принимает меры в отношении нарушителей. Пожалуйста,&#10;воспользуйтесь формой для подачи жалобы. Обращаться в поддержку Steam не нужно."    
+                                            />
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Пожалуйста, прочтите наши рекомендации, чтобы узнать, как можно предотвратить угрозы и оскорбления."    
+                                            />
+                                        </StackPanel>
                                         <Separator />
                                         <TextBlock
                                             Margin="15"
@@ -16563,8 +16680,7 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            MouseLeftButtonUp="OpenGuideManualsHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -16595,8 +16711,8 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            DataContext="23"
+                                            MouseLeftButtonUp="ToggleSupportControlHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -16612,8 +16728,8 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            DataContext="24"
+                                            MouseLeftButtonUp="ToggleSupportControlHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
@@ -16629,12 +16745,11 @@
                                         <DockPanel
                                             Margin="15"
                                             Background="LightGray"
-                                            DataContext="1"
-                                            MouseLeftButtonUp="ToggleHelpControlHandler"
+                                            MouseLeftButtonUp="ToggleHelpFeedBackHandler"
                                         >
                                             <TextBlock
                                                 Margin="15"
-                                                Text="Открыть чат"    
+                                                Text="Связаться с поддержкой Steam"    
                                             />
                                             <materialDesign:PackIcon
                                                 Margin="15"
@@ -16644,7 +16759,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16736,7 +16853,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16789,7 +16908,9 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -16849,7 +16970,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             x:Name="helpGamesAndShotwareBreadcrumbLabel"
@@ -16962,7 +17085,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -17000,7 +17125,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             Margin="15"
@@ -17124,7 +17251,9 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
                                     <StackPanel>
                                         <TextBlock
                                             x:Name="helpNotifyScammerBreadcrumbLabel"
@@ -17343,11 +17472,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TextBlock
                                 Text="Главная"    
@@ -17566,11 +17695,11 @@ CCPA предоставляет жителям Калифорнии опреде
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TextBlock
                                 FontSize="24"
@@ -17641,11 +17770,11 @@ CCPA предоставляет жителям Калифорнии опреде
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TextBlock
                                 Text="Главная"    
@@ -17653,7 +17782,7 @@ CCPA предоставляет жителям Калифорнии опреде
                             />
                             <TextBlock
                                 FontSize="24"
-                                Text="Соглашение подписчика Steam"    
+                                Text="Соглашение подписчика"    
                                 Margin="15"
                             />
                             <StackPanel
@@ -21694,6 +21823,35 @@ E. Что произойдет, если положение Пункта 11 бу
                                     />
                                 </ComboBox>
                             </StackPanel>
+                            <StackPanel
+                                Orientation="Horizontal"  
+                                Margin="0 15"
+                            >
+                                <StackPanel
+                                    Orientation="Horizontal"  
+                                    Background="SlateGray"
+                                    Margin="15"
+                                >
+                                    <Image
+                                        Margin="15"
+                                        Width="50"    
+                                        Height="50"    
+                                        ImageFailed="SetDefautAvatarHandler"
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <TextBlock
+                                        Margin="15"
+                                        FontSize="14"
+                                        Text="Office ware game manager (0)"    
+                                        VerticalAlignment="Center"
+                                    />
+                                </StackPanel>
+                            </StackPanel>
                             <TabControl
                                 x:Name="equipmentControl"
                                 MinHeight="350"    
@@ -21713,11 +21871,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <StackPanel
                                 Orientation="Horizontal"    
@@ -21763,7 +21921,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                 <TabControl
                                     x:Name="equipmentOffersControl"    
                                 >
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -21793,7 +21953,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                             </StackPanel>
                                         </StackPanel>
                                     </TabItem>
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -21823,7 +21985,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                             </StackPanel>
                                         </StackPanel>
                                     </TabItem>
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -21835,25 +21999,21 @@ E. Что произойдет, если положение Пункта 11 бу
                                                 <TextBlock
                                                     TextAlignment="Center"
                                                     Margin="15"
-                                                    Text="Нет входящих предложений обмена."    
+                                                    Text="Нет отправленных предложений обмена."    
                                                     FontSize="24"
                                                 />
                                                 <TextBlock
                                                     TextAlignment="Center"
                                                     Margin="15"
-                                                    Text="Друзья могут отправлять вам предложения обмена,&#10;которые можно принять или отклонить — либо&#10;отправить контрпредложение."    
-                                                    FontSize="20"
-                                                />
-                                                <TextBlock
-                                                    TextAlignment="Center"
-                                                    Margin="15"
-                                                    Text="Узнать больше о предложениях обмена в Steam."    
+                                                    Text="Чтобы отправить другу предложение обмена, нажмите&#10;«Новое предложение обмена…» выше или в его&#10;инвентаре."    
                                                     FontSize="20"
                                                 />
                                             </StackPanel>
                                         </StackPanel>
                                     </TabItem>
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -21865,25 +22025,21 @@ E. Что произойдет, если положение Пункта 11 бу
                                                 <TextBlock
                                                     TextAlignment="Center"
                                                     Margin="15"
-                                                    Text="Нет входящих предложений обмена."    
+                                                    Text="Нет отправленных предложений обмена."    
                                                     FontSize="24"
                                                 />
                                                 <TextBlock
                                                     TextAlignment="Center"
                                                     Margin="15"
-                                                    Text="Друзья могут отправлять вам предложения обмена,&#10;которые можно принять или отклонить — либо&#10;отправить контрпредложение."    
-                                                    FontSize="20"
-                                                />
-                                                <TextBlock
-                                                    TextAlignment="Center"
-                                                    Margin="15"
-                                                    Text="Узнать больше о предложениях обмена в Steam."    
+                                                    Text="Чтобы отправить другу предложение обмена, нажмите&#10;«Новое предложение обмена…» выше или в его&#10;инвентаре."    
                                                     FontSize="20"
                                                 />
                                             </StackPanel>
                                         </StackPanel>
                                     </TabItem>
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -21997,7 +22153,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                             </StackPanel>
                                         </StackPanel>
                                     </TabItem>
-                                    <TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
                                         <StackPanel
                                             Width="750"
                                         >
@@ -23553,6 +23711,28 @@ E. Что произойдет, если положение Пункта 11 бу
                                         />
                                     </StackPanel>
                                 </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Text="Имена профилей и аватары в сообществе"
+                                            Margin="15"
+                                            FontSize="24"
+                                        />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <StackPanel>
+                                        <TextBlock
+                                            Text="Аккаунты с ограниченными правами"
+                                            Margin="15"
+                                            FontSize="24"
+                                        />
+                                    </StackPanel>
+                                </TabItem>
                             </TabControl>
                         </StackPanel>
                         <StackPanel
@@ -23852,6 +24032,340 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Text="Видео, программы и бесплатные игры исключены из семейной библиотеки. Не все игры поддерживают Family Library Sharing. Показать исключённые игры"    
                             />
                         </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <DockPanel>
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="14"
+                                        Margin="15"
+                                        Text="АБСОЛЮТНО НОВЫЙ"    
+                                    />
+                                    <TextBlock
+                                        FontSize="18"
+                                        Margin="15"
+                                        Text="ЧАТ"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="ОБНОВЛЁННЫЕ СПИСКИ ДРУЗЕЙ, ТЕКСТОВЫЕ И&#10;ГОЛОСОВЫЕ ЧАТЫ"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="НОВЫЕ ВОЗМОЖНОСТИ ОБЩЕНИЯ&#10;РАСШИРЕННОЕ УПРАВЛЕНИЕ СПИСКОМ ДРУЗЕЙ&#10;ИГРАТЬ С ДРУЗЬЯМИ СТАЛО ЕЩЁ ПРОЩЕ И ВЕСЕЛЕЕ"    
+                                    />
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="ЭТИ ВОЗМОЖНОСТИ УЖЕ ДОСТУПНЫ"    
+                                    />
+                                    <StackPanel
+                                        Margin="0 15"    
+                                        Orientation="Horizontal"
+                                    >
+                                        <Button
+                                            Margin="15 0"
+                                            Width="125"
+                                            Height="30"
+                                            Content="В Клиенте"    
+                                        />
+                                        <Button
+                                            Margin="15 0"
+                                            Width="125"
+                                            Height="30"
+                                            Content="В БРАУЗЕРЕ"    
+                                        />
+                                    </StackPanel>
+                                </StackPanel>
+                                <Image
+                                    HorizontalAlignment="Right"
+                                    Margin="15"
+                                    Width="200"    
+                                    Height="200"    
+                                    ImageFailed="SetDefautAvatarHandler"
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="28"
+                                    Margin="15"
+                                    Text="Руководства"    
+                                />
+                                <TextBlock
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Руководства и советы от игроков"    
+                                />
+                                <TextBlock
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Что такое руководства?"    
+                                />
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Руководства — советы и инструкции для игр и программ, написанные игроками из сообщества. Если&#10;вы застряли на какой-то головоломке или не можете найти все секреты на уровне, то наверняка есть и&#10;руководство, которое вам поможет. Если же вы такового не нашли, то почему бы не помочь другим и не написать&#10;свое?"    
+                                />
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <DockPanel
+                            DockPanel.Dock="Top"    
+                            Background="Red"
+                            Height="50"
+                        >
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <ComboBox
+                                    Margin="15 0"
+                                    Height="30"
+                                    Width="175"
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"
+                                        Content="Документация"
+                                    />
+                                    <ComboBoxItem
+                                        Content="English"
+                                    />
+                                </ComboBox>
+                                <ComboBox
+                                    Margin="15 0"
+                                    Height="30"
+                                    Width="175"
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"
+                                        Content="Материалы"
+                                    />
+                                    <ComboBoxItem
+                                        Content="English"
+                                    />
+                                </ComboBox>
+                                <ComboBox
+                                    Margin="15 0"
+                                    Height="30"
+                                    Width="175"
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"
+                                        Content="Новости и обновления "
+                                    />
+                                    <ComboBoxItem
+                                        Content="English"
+                                    />
+                                </ComboBox>
+                                <TextBlock
+                                    Margin="15 0"    
+                                    Text="Поддержка"
+                                    VerticalAlignment="Center"
+                                />
+
+                            </StackPanel>
+                            <StackPanel
+                                Orientation="Horizontal"    
+                                HorizontalAlignment="Right"
+                            >
+                                <ComboBox
+                                    Margin="15 0"
+                                    Height="30"
+                                    Width="175"
+                                    SelectedIndex="0"
+                                >
+                                    <ComboBoxItem
+                                        Visibility="Collapsed"
+                                        Content="Язык"
+                                    />
+                                    <ComboBoxItem
+                                        Content="Русский"
+                                    />
+                                    <ComboBoxItem
+                                        Content="English"
+                                    />
+                                </ComboBox>
+                                <Button
+                                    Margin="15 0"
+                                    Width="125"
+                                    Height="30"
+                                    Content="Войти"    
+                                />
+                            </StackPanel>
+                        </DockPanel>
+                        <DockPanel
+                            DockPanel.Dock="Top"    
+                            Background="Green"
+                            Height="50"
+                        >
+                            <TextBlock
+                                Margin="15 0"
+                                FontSize="16"
+                                Text="Документация"
+                                VerticalAlignment="Center"
+                            />
+                            <TextBox
+                                Margin="15 0"
+                                Width="250"
+                                Height="30"
+                                HorizontalAlignment="Right"
+                            >
+                                <TextBox.Resources>
+                                    <VisualBrush
+                                            x:Key="hinttext"
+                                            AlignmentX="Left"
+                                            Stretch="None"
+                                            TileMode="None"
+                                        >
+                                        <VisualBrush.Visual>
+                                            <DockPanel>
+                                                <TextBlock
+                                                    Margin="5"
+                                                    Height="35"
+                                                    Width="750"
+                                                    Text="Поиск по документации"
+                                                    Foreground="#959595"
+                                                    Background="White"
+                                                />
+                                            </DockPanel>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Resources>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="{x:Null}">
+                                                <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </DockPanel>
+                        <StackPanel
+                            x:Name="documentationAside"
+                            DockPanel.Dock="Left"    
+                            Background="Blue"
+                            Width="350"
+                            Orientation="Horizontal"
+                        >
+                            <ScrollViewer
+                                x:Name="documentationAsideScroll"    
+                            >
+                                <StackPanel
+                                    Width="315"    
+                                >
+                                    <TreeView
+                                        Background="Transparent"    
+                                    >
+                                        <TreeViewItem>
+                                            <TreeViewItem.Header>
+                                                <StackPanel
+                                                    Orientation="Horizontal"    
+                                                >
+                                                    <materialDesign:PackIcon
+                                                        Kind="ChevronDoubleRight"    
+                                                    />
+                                                    <TextBlock
+                                                        Text="Продажи и маркетинг"    
+                                                    />
+                                                    
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                            <TreeView
+                                                Background="Transparent"    
+                                            >
+                                                <TreeViewItem>
+                                                    <TreeViewItem.Header>
+                                                        <StackPanel
+                                                            Orientation="Horizontal"    
+                                                        >
+                                                            <materialDesign:PackIcon
+                                                                Kind="ChevronDoubleRight"    
+                                                            />
+                                                            <TextBlock
+                                                                Text="Кураторы и программа связи с ними"    
+                                                            />
+                                                        </StackPanel>
+                                                    </TreeViewItem.Header>
+                                                    <TextBlock
+                                                        Text="Введение"    
+                                                    />
+                                                </TreeViewItem>
+                                            </TreeView>
+                                        </TreeViewItem>
+                                    </TreeView>
+                                </StackPanel>
+                            </ScrollViewer>
+                            <materialDesign:PackIcon
+                                VerticalAlignment="Center"
+                                Kind="ChevronLeft" 
+                                MouseLeftButtonUp="ToggleDocumentationAsideHandler"
+                            />
+                        </StackPanel>
+                        <TabControl
+                            Background="LightGray"    
+                        >
+                            <TabItem>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="Кураторы и программа связи с ними"
+                                        FontSize="18"
+                                    />
+                                </StackPanel>
+                            </TabItem>
+                        </TabControl>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>

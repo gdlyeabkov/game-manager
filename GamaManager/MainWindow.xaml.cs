@@ -227,6 +227,178 @@ namespace GamaManager
             }
         }
 
+        public void OpenMsgLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenMsgLogs();
+        }
+
+        public void OpenMsgLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        MsgsResponseInfo myObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Msg> msgs = myObj.msgs;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    TalkRelationsResponseInfo myInnerObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<TalkRelation> talkRelations = myInnerObj.relations;
+                                        List<TalkRelation> myTalkRelations = talkRelations.Where<TalkRelation>((TalkRelation relation) =>
+                                        {
+                                            string relationUser = relation.user;
+                                            bool isCurrentUser = relationUser == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<TalkRelation>();
+                                        List<string> myTalks = new List<string>();
+                                        foreach (TalkRelation myTalkRelation in myTalkRelations)
+                                        {
+                                            string myTalkId = myTalkRelation.talk;
+                                            myTalks.Add(myTalkId);
+                                        }
+                                        msgs = msgs.Where<Msg>((Msg msg) =>
+                                        {
+                                            string msgType = msg.type;
+                                            string msgSender = msg.user;
+                                            string msgRecepient = msg.friend;
+                                            bool isChatForMe = msgSender == currentUserId || msgRecepient == currentUserId;
+                                            bool isTalkForMe = myTalks.Contains(msgRecepient);
+                                            bool isMsgForMe = isChatForMe || isTalkForMe;
+                                            bool isTextMsg = msgType == "text";
+                                            bool isSimpleMsg = isMsgForMe && isTextMsg;
+                                            return isSimpleMsg;
+                                        }).ToList<Msg>();
+                                        RowDefinitionCollection rows = msgLogs.RowDefinitions;
+                                        int rowsCount = rows.Count;
+                                        bool isHavePreviousData = rowsCount >= 2;
+                                        if (isHavePreviousData)
+                                        {
+                                            int countRemovedRows = rowsCount - 1;
+                                            msgLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                                        }
+                                        UIElementCollection msgLogsChildren = msgLogs.Children;
+                                        int msgLogsChildrenCount = msgLogsChildren.Count;
+                                        isHavePreviousData = msgLogsChildrenCount >= 5;
+                                        if (isHavePreviousData)
+                                        {
+                                            int countRemovedChildren = msgLogsChildrenCount - 4;
+                                            msgLogs.Children.RemoveRange(1, countRemovedChildren);
+                                        }
+                                        foreach (Msg msg in msgs)
+                                        {
+                                            string msgSenderId = msg.user;
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + msgSenderId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User sender = myNestedObj.user;              
+                                                        string msgRecepientId = msg.friend;
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + msgRecepientId);
+                                                        innerNestedWebRequest.Method = "GET";
+                                                        innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                        using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                        {
+                                                            using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                            {
+                                                                js = new JavaScriptSerializer();
+                                                                objText = innerNestedReader.ReadToEnd();
+                                                                UserResponseInfo myInnerNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                status = myInnerNestedObj.status;
+                                                                isOkStatus = status == "OK";
+                                                                if (isOkStatus)
+                                                                {
+                                                                    User recepient = myInnerNestedObj.user;
+                                                                    string senderName = sender.name;
+                                                                    string recepientName = recepient.name;
+                                                                    DateTime msgDate = msg.date;
+                                                                    string rawMsgDate = msgDate.ToLongDateString();
+                                                                    string rawMsgTime = msgDate.ToLongTimeString();
+                                                                    string rawMsgDateTime = rawMsgDate + " " + rawMsgTime;
+                                                                    string msgContent = msg.content;
+                                                                    RowDefinition row = new RowDefinition();
+                                                                    row.Height = new GridLength(50);
+                                                                    msgLogs.RowDefinitions.Add(row);
+                                                                    rows = msgLogs.RowDefinitions;
+                                                                    rowsCount = rows.Count;
+                                                                    int lastRowIndex = rowsCount - 1;
+                                                                    TextBlock msgLogSenderLabel = new TextBlock();
+                                                                    msgLogSenderLabel.Text = senderName;
+                                                                    msgLogSenderLabel.Margin = new Thickness(15);
+                                                                    msgLogs.Children.Add(msgLogSenderLabel);
+                                                                    Grid.SetRow(msgLogSenderLabel, lastRowIndex);
+                                                                    Grid.SetColumn(msgLogSenderLabel, 0);
+                                                                    TextBlock msgLogRecepientLabel = new TextBlock();
+                                                                    msgLogRecepientLabel.Text = recepientName;
+                                                                    msgLogRecepientLabel.Margin = new Thickness(15);
+                                                                    msgLogs.Children.Add(msgLogRecepientLabel);
+                                                                    Grid.SetRow(msgLogRecepientLabel, lastRowIndex);
+                                                                    Grid.SetColumn(msgLogRecepientLabel, 1);
+                                                                    TextBlock msgLogDateLabel = new TextBlock();
+                                                                    msgLogDateLabel.Text = rawMsgDateTime;
+                                                                    msgLogDateLabel.Margin = new Thickness(15);
+                                                                    msgLogs.Children.Add(msgLogDateLabel);
+                                                                    Grid.SetRow(msgLogDateLabel, lastRowIndex);
+                                                                    Grid.SetColumn(msgLogDateLabel, 2);
+                                                                    TextBlock msgLogContentLabel = new TextBlock();
+                                                                    msgLogContentLabel.Text = msgContent;
+                                                                    msgLogContentLabel.Margin = new Thickness(15);
+                                                                    msgLogs.Children.Add(msgLogContentLabel);
+                                                                    Grid.SetRow(msgLogContentLabel, lastRowIndex);
+                                                                    Grid.SetColumn(msgLogContentLabel, 3);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        mainControl.SelectedIndex = 74;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void OpenGameActionsPopupHandler (object sender, RoutedEventArgs e)
         {
             OpenGameActionsPopup();
@@ -2312,7 +2484,7 @@ namespace GamaManager
                 GetGamesStats();
                 GetGamesList("");
                 GetFriendRequests();
-                GetGamesInfo();
+                // GetGamesInfo();
                 GetUserInfo(currentUserId, true);
                 GetEditInfo();
                 CheckFriendsCache();
@@ -15289,69 +15461,69 @@ namespace GamaManager
 
         }
 
-        public void GetGamesInfo()
+        public void GetGamesInfo ()
         {
-
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-            List<Game> myGames = loadedContent.games;
             gamesInfo.Children.Clear();
-            foreach (Game myGame in myGames)
+            bool isLocalUser = currentUserId == cachedUserProfileId;
+            if (isLocalUser)
             {
-                string myGameName = myGame.name;
-                string myGameHours = myGame.hours;
-                string myGameLastLaunchDate = myGame.date;
-                DockPanel gameStats = new DockPanel();
-                gameStats.Margin = new Thickness(0, 25, 0, 25);
-                gameStats.Height = 150;
-                gameStats.Background = System.Windows.Media.Brushes.DarkGray;
-                Image gameStatsImg = new Image();
-                gameStatsImg.Width = 125;
-                gameStatsImg.Height = 125;
-                gameStatsImg.Margin = new Thickness(10);
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+                string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+                List<Game> myGames = loadedContent.games;
+                foreach (Game myGame in myGames)
+                {
+                    string myGameName = myGame.name;
+                    string myGameHours = myGame.hours;
+                    string myGameLastLaunchDate = myGame.date;
+                    DockPanel gameStats = new DockPanel();
+                    gameStats.Margin = new Thickness(0, 25, 0, 25);
+                    gameStats.Height = 150;
+                    gameStats.Background = System.Windows.Media.Brushes.DarkGray;
+                    Image gameStatsImg = new Image();
+                    gameStatsImg.Width = 125;
+                    gameStatsImg.Height = 125;
+                    gameStatsImg.Margin = new Thickness(10);
 
-                gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
-                // gameStatsImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/game/thumbnail/?name=" + myGameName));
+                    // gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                    gameStatsImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/game/thumbnail/?name=" + myGameName));
 
-                gameStats.Children.Add(gameStatsImg);
-                TextBlock gameStatsNameLabel = new TextBlock();
-                gameStatsNameLabel.Margin = new Thickness(10);
-                gameStatsNameLabel.FontSize = 18;
-                gameStatsNameLabel.Text = myGameName;
-                gameStats.Children.Add(gameStatsNameLabel);
-                StackPanel gameStatsInfo = new StackPanel();
-                gameStatsInfo.Margin = new Thickness(10);
-                gameStatsInfo.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-                gameStatsInfo.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-                TextBlock gameStatsInfoHoursLabel = new TextBlock();
-                gameStatsInfoHoursLabel.Margin = new Thickness(0, 5, 0, 5);
-                string totalHoursLabelContent = Properties.Resources.totalHoursLabelContent;
-                string gameStatsInfoHoursLabelContent = myGameHours + " " + totalHoursLabelContent;
-                gameStatsInfoHoursLabel.Text = gameStatsInfoHoursLabelContent;
-                gameStatsInfo.Children.Add(gameStatsInfoHoursLabel);
-                TextBlock gameStatsInfoLastLaunchLabel = new TextBlock();
-                gameStatsInfoLastLaunchLabel.Margin = new Thickness(0, 5, 0, 5);
-                string lastLaunchLabelContent = Properties.Resources.lastLaunchLabelContent;
-                string gameStatsInfoLastLaunchLabelContent = lastLaunchLabelContent + " " + myGameLastLaunchDate;
-                gameStatsInfoLastLaunchLabel.Text = gameStatsInfoLastLaunchLabelContent;
-                gameStatsInfo.Children.Add(gameStatsInfoLastLaunchLabel);
-                gameStats.Children.Add(gameStatsInfo);
-                gamesInfo.Children.Add(gameStats);
+                    gameStats.Children.Add(gameStatsImg);
+                    TextBlock gameStatsNameLabel = new TextBlock();
+                    gameStatsNameLabel.Margin = new Thickness(10);
+                    gameStatsNameLabel.FontSize = 18;
+                    gameStatsNameLabel.Text = myGameName;
+                    gameStats.Children.Add(gameStatsNameLabel);
+                    StackPanel gameStatsInfo = new StackPanel();
+                    gameStatsInfo.Margin = new Thickness(10);
+                    gameStatsInfo.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+                    gameStatsInfo.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+                    TextBlock gameStatsInfoHoursLabel = new TextBlock();
+                    gameStatsInfoHoursLabel.Margin = new Thickness(0, 5, 0, 5);
+                    string totalHoursLabelContent = Properties.Resources.totalHoursLabelContent;
+                    string gameStatsInfoHoursLabelContent = myGameHours + " " + totalHoursLabelContent;
+                    gameStatsInfoHoursLabel.Text = gameStatsInfoHoursLabelContent;
+                    gameStatsInfo.Children.Add(gameStatsInfoHoursLabel);
+                    TextBlock gameStatsInfoLastLaunchLabel = new TextBlock();
+                    gameStatsInfoLastLaunchLabel.Margin = new Thickness(0, 5, 0, 5);
+                    string lastLaunchLabelContent = Properties.Resources.lastLaunchLabelContent;
+                    string gameStatsInfoLastLaunchLabelContent = lastLaunchLabelContent + " " + myGameLastLaunchDate;
+                    gameStatsInfoLastLaunchLabel.Text = gameStatsInfoLastLaunchLabelContent;
+                    gameStatsInfo.Children.Add(gameStatsInfoLastLaunchLabel);
+                    gameStats.Children.Add(gameStatsInfo);
+                    gamesInfo.Children.Add(gameStats);
+                }
             }
         }
 
         public void GetUserInfo(string id, bool isLocalUser)
         {
-            
             userProfileStatusDateLabel.Visibility = invisible;
-
             string gamesSettings = "public";
             string friendsSettings = "public";
-
             JavaScriptSerializer js = new JavaScriptSerializer();
             if (isLocalUser)
             {
@@ -15361,7 +15533,6 @@ namespace GamaManager
                 string saveDataFileContent = File.ReadAllText(saveDataFilePath);
                 SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
                 List<Game> myGames = loadedContent.games;
-
                 Settings mySettings = loadedContent.settings;
                 string profileTheme = mySettings.profileTheme;
                 bool isDefaultTheme = profileTheme == "Default";
@@ -15370,6 +15541,8 @@ namespace GamaManager
                 bool isSteelTheme = profileTheme == "Steel";
                 bool isSpaceTheme = profileTheme == "Space";
                 bool isDarkTheme = profileTheme == "Dark";
+                /*bool isNotMe = !isLocalUser;
+                bool isApplyDefaultTheme = (isDefaultTheme && isLocalUser) || isNotMe;*/
                 if (isDefaultTheme)
                 {
                     profileThemeAside.Color = System.Windows.Media.Brushes.LightGray.Color;
@@ -15394,11 +15567,13 @@ namespace GamaManager
                 {
                     profileThemeAside.Color = System.Windows.Media.Brushes.Black.Color;
                 }
-
                 int countGames = myGames.Count;
                 string rawCountGames = countGames.ToString();
                 countGamesLabel.Text = rawCountGames;
-
+            }
+            else
+            {
+                profileThemeAside.Color = System.Windows.Media.Brushes.LightGray.Color;
             }
             try
             {
@@ -15774,14 +15949,11 @@ namespace GamaManager
                 friendsVisibility = Visibility.Collapsed;
             }
             userProfileDetailsFriends.Visibility = friendsVisibility;
-
             object currentUserProfileId = mainControl.DataContext;
             cachedUserProfileId = ((string)(currentUserProfileId));
-
             mainControl.DataContext = currentUserId;
-
             GetComments(cachedUserProfileId);
-
+            GetGamesInfo();
         }
 
         public void GetFriendRequests()
@@ -16936,7 +17108,7 @@ namespace GamaManager
             ComputeGameHours();
         }
 
-        public void ComputeGameHours()
+        public void ComputeGameHours ()
         {
             timer.Stop();
             Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
@@ -20445,7 +20617,7 @@ namespace GamaManager
             OpenContent(currentUserId);
         }
 
-        public void OpenFriendsSettingsHandler(object sender, RoutedEventArgs e)
+        public void OpenFriendsSettingsHandler (object sender, RoutedEventArgs e)
         {
             OpenFriendsSettings();
         }
@@ -21439,12 +21611,12 @@ namespace GamaManager
             AddHistoryRecord();
         }
 
-        private void OpenPrivacyInfoHandler(object sender, RoutedEventArgs e)
+        private void OpenPrivacyInfoHandler (object sender, RoutedEventArgs e)
         {
             OpenPrivacyInfo();
         }
 
-        public void OpenPrivacyInfo()
+        public void OpenPrivacyInfo ()
         {
             mainControl.SelectedIndex = 41;
         }
@@ -23339,52 +23511,51 @@ namespace GamaManager
                 string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
                 string[] games = Directory.GetDirectories(appPath);
                 // screenShots.Children.Clear();
+                
+                if (screenShotsFilter.Items.Count >= 3)
+                {
+                    for (int i = screenShotsFilter.Items.Count - 1; i >= 2; i--)
+                    {
+                        screenShotsFilter.Items.RemoveAt(i);
+                    }
+                }
+                
                 foreach (string game in games)
                 {
                     DirectoryInfo gameInfo = new DirectoryInfo(game);
                     string gameName = gameInfo.Name;
-                    if (isInit || true)
+                    ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+                    screenShotsFilterItem.Content = gameName;
+                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    innerWebRequest.Method = "GET";
+                    innerWebRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                     {
-                        if (screenShotsFilter.Items.Count >= 3)
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
                         {
-                            for (int i = screenShotsFilter.Items.Count - 1; i >= 2; i--)
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                            string status = myobj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
                             {
-                                screenShotsFilter.Items.RemoveAt(i);
-                            }
-                        }
-                        ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
-                        screenShotsFilterItem.Content = gameName;
-                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
-                        innerWebRequest.Method = "GET";
-                        innerWebRequest.UserAgent = ".NET Framework Test Client";
-                        using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
-                        {
-                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                            {
-                                JavaScriptSerializer js = new JavaScriptSerializer();
-                                var objText = reader.ReadToEnd();
-                                GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
-                                string status = myobj.status;
-                                bool isOkStatus = status == "OK";
-                                if (isOkStatus)
+                                List<GameResponseInfo> totalGames = myobj.games;
+                                List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
                                 {
-                                    List<GameResponseInfo> totalGames = myobj.games;
-                                    List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
-                                    {
-                                        string localGameName = totalGamesItem.name;
-                                        bool isNamesMatches = localGameName == gameName;
-                                        return isNamesMatches;
-                                    }).ToList<GameResponseInfo>();
-                                    int countResults = gameResults.Count;
-                                    bool isResultsFound = countResults >= 1;
-                                    if (isResultsFound)
-                                    {
-                                        GameResponseInfo foundedGame = gameResults[0];
-                                        string gameId = foundedGame._id;
-                                        screenShotsFilterItem.DataContext = gameId;
-                                    }
-                                    screenShotsFilter.Items.Add(screenShotsFilterItem);
+                                    string localGameName = totalGamesItem.name;
+                                    bool isNamesMatches = localGameName == gameName;
+                                    return isNamesMatches;
+                                }).ToList<GameResponseInfo>();
+                                int countResults = gameResults.Count;
+                                bool isResultsFound = countResults >= 1;
+                                if (isResultsFound)
+                                {
+                                    GameResponseInfo foundedGame = gameResults[0];
+                                    string gameId = foundedGame._id;
+                                    screenShotsFilterItem.DataContext = gameId;
                                 }
+                                screenShotsFilter.Items.Add(screenShotsFilterItem);
                             }
                         }
                     }
@@ -23510,7 +23681,7 @@ namespace GamaManager
                         screenShotsFilter.Items.RemoveAt(i);
                     }
                 }
-
+                List<GameResponseInfo> totalGames = new List<GameResponseInfo>();
                 try
                 {
 
@@ -23553,8 +23724,8 @@ namespace GamaManager
                                             isOkStatus = status == "OK";
                                             if (isOkStatus)
                                             {
-                                                List<GameResponseInfo> games = myGamesObj.games;
-                                                List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                totalGames = myGamesObj.games;
+                                                List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo game) =>
                                                 {
                                                     string localGameId = game._id;
                                                     bool isIdMatches = userGameRelationId == localGameId;
@@ -23593,23 +23764,31 @@ namespace GamaManager
                                             List<ScreenShot> totalScreenShots = myobj.screenShots;
                                             totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
                                             {
-                                    
                                                 string localContentUserId = content.user;
                                                 bool isCurrentUser = contentUserId == localContentUserId;
-
                                                 string contentGameId = content.game;
-                                                string id = content._id;
-                                                bool isFilterMatch = filter == contentGameId;
-                                                // bool isAddScreenShot = isFilterMatch || isFilterDisabled;
-
-
+                                                List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                {
+                                                    string gameId = game._id;
+                                                    bool isIdMatches = gameId == contentGameId;
+                                                    return isIdMatches;
+                                                }).ToList<GameResponseInfo>();
+                                                int countResults = gameResults.Count;
+                                                bool isResultsFound = countResults >= 1;
+                                                bool isFilterMatch = true;
+                                                if (isResultsFound)
+                                                {
+                                                    GameResponseInfo gameResult = gameResults[0];
+                                                    string gameResultName = gameResult.name;
+                                                    string insensitiveCaseGameName = gameResultName.ToLower();
+                                                    string insensitiveCaseFilter = filter.ToLower();
+                                                    isFilterMatch = insensitiveCaseFilter.Contains(insensitiveCaseGameName);
+                                                }
                                                 int filterLength = filter.Length;
                                                 bool isNotFilter = filterLength <= 0;
-                                    
                                                 bool isAddScreenShot = (isFilterMatch || isNotFilter) && isCurrentUser;
                                                 return isAddScreenShot;
                                             }).ToList<ScreenShot>();
-                                            // screenShots.Children.Clear();
                                             int totalScreenShotsCount = totalScreenShots.Count;
                                             bool isHaveScreenShots = totalScreenShotsCount >= 1;
                                             if (isHaveScreenShots)
@@ -23621,29 +23800,6 @@ namespace GamaManager
                                                     string userId = totalScreenShotsItem.user;
                                                     string desc = totalScreenShotsItem.desc;
                                                     DateTime date = totalScreenShotsItem.date;
-                                                    /*
-                                                    StackPanel screenShot = new StackPanel();
-                                                    screenShot.Width = 500;
-                                                    screenShot.Margin = new Thickness(15);
-                                                    screenShot.Background = System.Windows.Media.Brushes.LightGray;
-                                                    Image screenShotPhoto = new Image();
-                                                    screenShotPhoto.Margin = new Thickness(15);
-                                                    screenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                                    screenShotPhoto.Width = 50;
-                                                    screenShotPhoto.Height = 50;
-                                                    screenShotPhoto.BeginInit();
-                                                    screenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
-                                                    screenShotPhoto.EndInit();
-                                                    screenShot.Children.Add(screenShotPhoto);
-                                                    TextBlock screenShotDescLabel = new TextBlock();
-                                                    screenShotDescLabel.Margin = new Thickness(15);
-                                                    screenShotDescLabel.Text = desc;
-                                                    screenShot.Children.Add(screenShotDescLabel);
-                                                    screenShots.Children.Add(screenShot);
-                                                    screenShot.DataContext = id;
-                                                    screenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
-                                                    */
-
                                                     Canvas screenShot = new Canvas();
                                                     screenShot.Margin = new Thickness(15);
                                                     screenShot.Width = 250;
@@ -28289,13 +28445,32 @@ namespace GamaManager
             OpenStoreSettings();
         }
 
-        public void OpenStoreSettings()
+        public void OpenStoreSettings ()
         {
-
             mainControl.SelectedIndex = 15;
-            
-            // accountSettingsControl.SelectedIndex = 1;
             SelectAccountSettingsItem(1);
+        }
+
+        public void OpenAccountInfoHandler (object sender, RoutedEventArgs e)
+        {
+            OpenAccountInfo();
+        }
+
+        public void OpenAccountInfo ()
+        {
+            mainControl.SelectedIndex = 15;
+            SelectAccountSettingsItem(0);
+        }
+
+        public void OpenLangSettingsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenLangSettings();
+        }
+
+        public void OpenLangSettings ()
+        {
+            mainControl.SelectedIndex = 15;
+            SelectAccountSettingsItem(2);
         }
 
         private void ToggleScreenShotsManagementHandler (object sender, RoutedEventArgs e)

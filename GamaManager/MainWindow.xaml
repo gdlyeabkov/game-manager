@@ -23911,6 +23911,22 @@ E. Что произойдет, если положение Пункта 11 бу
                             Margin="175 0"
                             Background="LightGray"    
                         >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Поддержка ПО"    
+                                />
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Данные моего аккаунта"    
+                                />
+                            </StackPanel>
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
@@ -23919,6 +23935,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
+                                MouseLeftButtonUp="OpenAccountInfoHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -23926,6 +23943,518 @@ E. Что произойдет, если положение Пункта 11 бу
                                     Text="Основные сведения об аккаунте"    
                                 />
                             </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPurchasesHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История покупок"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPurchasesHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История корзины"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPurchasesHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Лицензии"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenUpdatePhoneHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Номер телефона, привязанный к аккаунту"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenUpdatePhoneHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Подписки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenStoreSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки языка"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки уведомлений на мобильном устройстве"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Видеоустройства"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Видеозакладки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Лицензии на контент зашифрованного видео"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLangSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Использовано внешних средств"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyLibrarySharingManagementFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Family Library Sharing"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyLibrarySharingManagementFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Платёжная информация для мастерской"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Семейный просмотр"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Недавние обращения в службу поддержки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Недавние входы в аккаунт на сторонних сайтах"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История недавних входов"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки разработчика"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Зарегистрированные устройства"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Зарегистрированные турниры"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Использовавшиеся компьютеры"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Сторонние маркетинговые ссылки (отслеживание UTM)"    
+                                />
+                            </DockPanel>
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Сообщество"
+                            />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="ReturnToProfileHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мой профиль"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenEditProfileHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Редактировать профиль"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="3"
+                                MouseLeftButtonUp="SetEditProfileTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки приватности"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Друзья"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGroupsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Группы"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Комментарии и сообщения в обсуждениях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Уведомления о комментариях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Уведомления о комментариях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Данные обсуждений и подписок на них"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои жалобы на профили"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Блокировки в сообществе, чате и обсуждениях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Уведомления в сообществе"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои объявления в группах"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои события в группах"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenMyActivityHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Моя активность"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsActivityHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Активность друзей"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Аккаунты игровых серверов"    
+                                />
+                            </DockPanel>
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Инвентарь и предметы"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Игровая статистика"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Опубликованный контент"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Магазин"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="События в магазине и сообществе"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Трансляции"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Remote Play"
+                            />
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Чат"
+                            />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenMsgLogsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Сообщения в чатах с друзьями"    
+                                />
+                            </DockPanel>
+                            <Separator />
+                            <TextBlock
+                                FontSize="18"
+                                Margin="15"
+                                Text="Есть вопрос о данных аккаунта или их удалении?"
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -24466,6 +24995,75 @@ E. Что произойдет, если положение Пункта 11 бу
                                 </StackPanel>
                             </TabItem>
                         </TabControl>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Сообщения в чатах с друзьями"    
+                                />
+                            </StackPanel>
+                            <Grid
+                                x:Name="msgLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Отправитель"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Получатель"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Время отправки"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Текст сообщения"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenMsgLogsHandler"
+                            />
+                        </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>

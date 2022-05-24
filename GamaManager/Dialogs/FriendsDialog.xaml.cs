@@ -1926,11 +1926,7 @@ namespace GamaManager.Dialogs
                                                 if (isMyTalk)
                                                 {
                                                     StackPanel totalTalksItem = new StackPanel();
-                                                    
-
                                                     totalTalksItem.Height = 35;
-                                                    
-                                                    
                                                     totalTalksItem.Orientation = Orientation.Horizontal;
                                                     PackIcon totalTalksItemIcon = new PackIcon();
                                                     totalTalksItemIcon.VerticalAlignment = VerticalAlignment.Center;

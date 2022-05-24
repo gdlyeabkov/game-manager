@@ -74,6 +74,7 @@ namespace GamaManager
         public List<string> chats = new List<string>();
         public DispatcherTimer carouselTimer;
         public bool isYearlyDiscount = false;
+        public string lastContentUserId = "";
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -404,7 +405,8 @@ namespace GamaManager
                     }
                 }
             }
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, currentUserId);
         }
 
         public void ToggleContentModeHandler (object sender, RoutedEventArgs e)
@@ -539,7 +541,8 @@ namespace GamaManager
                     }
                 }
             }
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, currentUserId);
         }
 
 
@@ -2316,7 +2319,8 @@ namespace GamaManager
                 LoadStartWindow();
                 GetOnlineFriends();
                 GetDownloads();
-                GetContent();
+                // GetContent();
+                // GetContent(currentUserId);
                 GetForums("");
                 GetGameCollections();
                 GetFriendsSettings();
@@ -2341,16 +2345,144 @@ namespace GamaManager
                 GetFriendActivitySettings();
                 GetFriendActivities();
                 GetMyActivities();
-                GetEquipmentGames();
                 GetGameSections();
                 InitAddGameSection();
-                GetEquipmentInfo();
                 GetIconsInfo();
                 GetGamesHistory();
                 GetMyUserSubs();
                 GetHelpInfo();
-                GetPossibleFriendScammers();/**/
+                GetPossibleFriendScammers();
             }
+        }
+
+        public void GetEquipmentGameTabs (string id)
+        {
+            try
+            {
+                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                gameRelationWebRequest.Method = "GET";
+                gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
+                {
+                    using (var gameRelationReader = new StreamReader(gameRelationWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = gameRelationReader.ReadToEnd();
+                        GameRelationsResponseInfo myGameRelationObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                        string status = myGameRelationObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+
+                            SelectEquipmentTab(0);
+                            List<GameRelation> relations = myGameRelationObj.relations;
+                            List<GameRelation> currentUserRelations = relations.Where<GameRelation>((GameRelation relation) => {
+                                string relationUserId = relation.user;
+                                bool isCurrentUser = relationUserId == id;
+                                return isCurrentUser;
+                            }).ToList<GameRelation>();
+                            UIElementCollection equipmentGameTabsChildren = equipmentGameTabs.Children;
+                            UIElement rawOfficeWareGameManagerEquipment = equipmentGameTabsChildren[0];
+                            StackPanel officeWareGameManagerEquipment = ((StackPanel)(rawOfficeWareGameManagerEquipment));
+                            officeWareGameManagerEquipment.Background = System.Windows.Media.Brushes.DarkGray;
+                            int countTabs = equipmentGameTabsChildren.Count;
+                            bool isHaveLocalTabs = countTabs >= 2;
+                            if (isHaveLocalTabs)
+                            {
+                                int countRemovedTabs = countTabs - 1;
+                                equipmentGameTabs.Children.RemoveRange(1, countRemovedTabs);
+                            }
+                            int currentGameIndex = 0;
+                            foreach (GameRelation currentUserRelation in currentUserRelations)
+                            {
+                                currentGameIndex++;
+                                string currentGameId = currentUserRelation.game;
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                gamesWebRequest.Method = "GET";
+                                gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                                {
+                                    using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = gamesReader.ReadToEnd();
+                                        GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                        status = myGamesObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameResponseInfo> games = myGamesObj.games;
+                                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                            {
+                                                string localGameId = game._id;
+                                                bool isIdMatches = currentGameId == localGameId;
+                                                return isIdMatches;
+                                            }).ToList<GameResponseInfo>();
+                                            int countResults = gameResults.Count;
+                                            bool isResultsFound = countResults >= 1;
+                                            if (isResultsFound)
+                                            {
+                                                GameResponseInfo currentGame = gameResults[0];
+                                                string currentGameName = currentGame.name;
+                                                StackPanel equipmentGameTab = new StackPanel();
+                                                equipmentGameTab.Orientation = Orientation.Horizontal;
+                                                equipmentGameTab.Background = System.Windows.Media.Brushes.SlateGray;
+                                                equipmentGameTab.Margin = new Thickness(15);
+                                                Image equipmentGameTabThumbnail = new Image();
+                                                equipmentGameTabThumbnail.Width = 50;
+                                                equipmentGameTabThumbnail.Height = 50;
+                                                equipmentGameTabThumbnail.Margin = new Thickness(15);
+                                                equipmentGameTabThumbnail.BeginInit();
+                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName)); ;
+                                                equipmentGameTabThumbnail.EndInit();
+                                                equipmentGameTabThumbnail.ImageFailed += SetDefaultThumbnailHandler;
+                                                equipmentGameTab.Children.Add(equipmentGameTabThumbnail);
+                                                TextBlock equipmentGameTabGameNameLabel = new TextBlock();
+                                                equipmentGameTabGameNameLabel.FontSize = 14;
+                                                equipmentGameTabGameNameLabel.Margin = new Thickness(15);
+                                                equipmentGameTabGameNameLabel.Text = currentGameName;
+                                                equipmentGameTabGameNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                equipmentGameTab.Children.Add(equipmentGameTabGameNameLabel);
+                                                equipmentGameTabs.Children.Add(equipmentGameTab);
+                                                string rawIndex = currentGameIndex.ToString();
+                                                equipmentGameTab.DataContext = rawIndex;
+                                                equipmentGameTab.MouseLeftButtonUp += SelectEquipmentTabHandler;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void SelectEquipmentTabHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel tab = ((StackPanel)(sender));
+            object tabData = tab.DataContext;
+            string rawIndex = tabData.ToString();
+            int index = Int32.Parse(rawIndex);
+            SelectEquipmentTab(index);
+        }
+
+        public void SelectEquipmentTab (int index)
+        {
+            UIElementCollection equipmentGameTabsChildren = equipmentGameTabs.Children;
+            foreach (StackPanel equipmentGameTab in equipmentGameTabsChildren)
+            {
+                equipmentGameTab.Background = System.Windows.Media.Brushes.SlateGray;
+            }
+            UIElement rawActiveEquipmentGameTab = equipmentGameTabsChildren[index];
+            StackPanel activeEquipmentGameTab = ((StackPanel)(rawActiveEquipmentGameTab));
+            activeEquipmentGameTab.Background = System.Windows.Media.Brushes.DarkGray;
+            equipmentControl.SelectedIndex = index;
         }
 
         public void GetHelpInfo ()
@@ -3026,11 +3158,11 @@ namespace GamaManager
             }
         }
 
-        public void GetEquipmentInfo ()
+        public void GetEquipmentInfo (string id)
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3047,6 +3179,15 @@ namespace GamaManager
                             User user = myobj.user;
                             string userName = user.name;
                             equipmentUserNameLabel.Text = userName;
+                            bool isLocalUser = id == currentUserId;
+                            if (isLocalUser)
+                            {
+                                equipmentTradeOffers.Visibility = visible;
+                            }
+                            else
+                            {
+                                equipmentTradeOffers.Visibility = invisible;
+                            }
                         }
                     }
                 }
@@ -5632,21 +5773,165 @@ namespace GamaManager
 
         }
 
-        public void GetEquipmentGames ()
+        public void GetEquipmentGames (string id)
         {
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
-            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
-            List<Game> currentGames = loadedContent.games;
-            foreach (Game currentGame in currentGames)
+            try
             {
-                string currentGameName = currentGame.name;
-                TabItem equipmentControlItem = new TabItem();
-                equipmentControlItem.Header = currentGameName;
-                equipmentControl.Items.Add(equipmentControlItem);
+                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                gameRelationWebRequest.Method = "GET";
+                gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
+                {
+                    using (var gameRelationReader = new StreamReader(gameRelationWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = gameRelationReader.ReadToEnd();
+                        GameRelationsResponseInfo myGameRelationObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                        string status = myGameRelationObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameRelation> relations = myGameRelationObj.relations;
+                            List<GameRelation> currentUserRelations = relations.Where<GameRelation>((GameRelation relation) => {
+                                string relationUserId = relation.user;
+                                bool isCurrentUser = relationUserId == id;
+                                return isCurrentUser;
+                            }).ToList<GameRelation>();
+                            ItemCollection equipmentControlItems = equipmentControl.Items;
+                            int countTabs = equipmentControlItems.Count;
+                            bool isHaveLocalTabs = countTabs >= 2;
+                            if (isHaveLocalTabs)
+                            {
+                                int countRemovedTabs = countTabs - 1;
+                                // for(int i = countRemovedTabs - 1; i > 1; i--)
+                                for(int i = countTabs - 1; i >= 1; i--)
+                                {
+                                    equipmentControl.Items.RemoveAt(i);
+                                }
+                            }
+                            int currentGameIndex = 0;
+                            foreach (GameRelation currentUserRelation in currentUserRelations)
+                            {
+                                string currentGameId = currentUserRelation.game;
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                gamesWebRequest.Method = "GET";
+                                gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                                {
+                                    using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = gamesReader.ReadToEnd();
+                                        GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                        status = myGamesObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameResponseInfo> games = myGamesObj.games;
+                                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                            {
+                                                string localGameId = game._id;
+                                                bool isIdMatches = currentGameId == localGameId;
+                                                return isIdMatches;
+                                            }).ToList<GameResponseInfo>();
+                                            int countResults = gameResults.Count;
+                                            bool isResultsFound = countResults >= 1;
+                                            if (isResultsFound)
+                                            {
+                                                GameResponseInfo currentGame = gameResults[0];
+                                                string currentGameName = currentGame.name;
+                                                TabItem equipmentControlItem = new TabItem();
+                                                equipmentControlItem.Header = currentGameName;
+                                                equipmentControl.Items.Add(equipmentControlItem);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // перенес игровые вкладки начало
+                            SelectEquipmentTab(0);
+                            UIElementCollection equipmentGameTabsChildren = equipmentGameTabs.Children;
+                            UIElement rawOfficeWareGameManagerEquipment = equipmentGameTabsChildren[0];
+                            StackPanel officeWareGameManagerEquipment = ((StackPanel)(rawOfficeWareGameManagerEquipment));
+                            officeWareGameManagerEquipment.Background = System.Windows.Media.Brushes.DarkGray;
+                            countTabs = equipmentGameTabsChildren.Count;
+                            isHaveLocalTabs = countTabs >= 2;
+                            if (isHaveLocalTabs)
+                            {
+                                int countRemovedTabs = countTabs - 1;
+                                equipmentGameTabs.Children.RemoveRange(1, countRemovedTabs);
+                            }
+                            currentGameIndex = 0;
+                            foreach (GameRelation currentUserRelation in currentUserRelations)
+                            {
+                                currentGameIndex++;
+                                string currentGameId = currentUserRelation.game;
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                gamesWebRequest.Method = "GET";
+                                gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                                {
+                                    using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = gamesReader.ReadToEnd();
+                                        GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                        status = myGamesObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameResponseInfo> games = myGamesObj.games;
+                                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                            {
+                                                string localGameId = game._id;
+                                                bool isIdMatches = currentGameId == localGameId;
+                                                return isIdMatches;
+                                            }).ToList<GameResponseInfo>();
+                                            int countResults = gameResults.Count;
+                                            bool isResultsFound = countResults >= 1;
+                                            if (isResultsFound)
+                                            {
+                                                GameResponseInfo currentGame = gameResults[0];
+                                                string currentGameName = currentGame.name;
+                                                StackPanel equipmentGameTab = new StackPanel();
+                                                equipmentGameTab.Orientation = Orientation.Horizontal;
+                                                equipmentGameTab.Background = System.Windows.Media.Brushes.SlateGray;
+                                                equipmentGameTab.Margin = new Thickness(15);
+                                                Image equipmentGameTabThumbnail = new Image();
+                                                equipmentGameTabThumbnail.Width = 50;
+                                                equipmentGameTabThumbnail.Height = 50;
+                                                equipmentGameTabThumbnail.Margin = new Thickness(15);
+                                                equipmentGameTabThumbnail.BeginInit();
+                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName)); ;
+                                                equipmentGameTabThumbnail.EndInit();
+                                                equipmentGameTabThumbnail.ImageFailed += SetDefaultThumbnailHandler;
+                                                equipmentGameTab.Children.Add(equipmentGameTabThumbnail);
+                                                TextBlock equipmentGameTabGameNameLabel = new TextBlock();
+                                                equipmentGameTabGameNameLabel.FontSize = 14;
+                                                equipmentGameTabGameNameLabel.Margin = new Thickness(15);
+                                                equipmentGameTabGameNameLabel.Text = currentGameName;
+                                                equipmentGameTabGameNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                equipmentGameTab.Children.Add(equipmentGameTabGameNameLabel);
+                                                equipmentGameTabs.Children.Add(equipmentGameTab);
+                                                string rawIndex = currentGameIndex.ToString();
+                                                equipmentGameTab.DataContext = rawIndex;
+                                                equipmentGameTab.MouseLeftButtonUp += SelectEquipmentTabHandler;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // игровые вкладки конец
+
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -8309,23 +8594,35 @@ namespace GamaManager
             }
         }
 
-        public void GetContent ()
+        // public void GetContent ()
+        public void GetContent (string id)
         {
-            GetScreenShots("", true);
-            GetFavoriteScreenShotsContent();
-            GetIllustrationsContent();
-            GetFavoriteIllustrationsContent();
+            // GetScreenShots("", true);
+            GetScreenShots("", true, id);
+            // GetFavoriteScreenShotsContent();
+            GetFavoriteScreenShotsContent(id);
+            // GetIllustrationsContent();
+            GetIllustrationsContent(id);
+            // GetFavoriteIllustrationsContent();
+            GetFavoriteIllustrationsContent(id);
             GetVideoContent();
             GetStoreContent();
             GetCollectionsContent();
-            GetManualsContent();
-            GetFavoriteManualsContent();
+            // GetManualsContent();
+            GetManualsContent(id);
+            // GetFavoriteManualsContent();
+            GetFavoriteManualsContent(id);
         }
 
-        public void GetIllustrationsContent ()
+        // public void GetIllustrationsContent ()
+        public void GetIllustrationsContent (string contentUserId)
         {
 
             int selectedIndex = screenShotsFilter.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
             ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
             object rawFilter = selectedItem.DataContext;
@@ -8352,7 +8649,8 @@ namespace GamaManager
                             {
                                 string contentGameId = content.game;
                                 string userId = content.user;
-                                bool isMyContent = userId == currentUserId;
+                                // bool isMyContent = userId == currentUserId;
+                                bool isMyContent = userId == contentUserId;
                                 bool isFilterMatch = filter == contentGameId;
                                 bool isAddIllustration = isMyContent && (isFilterMatch || isFilterDisabled);
                                 return isAddIllustration;
@@ -8367,7 +8665,8 @@ namespace GamaManager
                                 {
                                     string id = totalIllustrationsItem._id;
                                     string userId = totalIllustrationsItem.user;
-                                    bool isMyContent = userId == currentUserId;
+                                    // bool isMyContent = userId == currentUserId;
+                                    bool isMyContent = userId == contentUserId;
                                     if (isMyContent)
                                     {
                                         string title = totalIllustrationsItem.title;
@@ -8450,16 +8749,20 @@ namespace GamaManager
 
         }
 
-        public void GetFavoriteScreenShotsContent ()
+        // public void GetFavoriteScreenShotsContent ()
+        public void GetFavoriteScreenShotsContent (string contentUserId)
         {
 
             int selectedIndex = screenShotsFilter.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
             ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
             object rawFilter = selectedItem.DataContext;
             string filter = rawFilter.ToString();
             bool isFilterDisabled = filter == @"all games";
-
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
@@ -8496,7 +8799,8 @@ namespace GamaManager
                                         {
                                             string relatioIllustrationId = relation.screenShot;
                                             string relationUserId = relation.user;
-                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            // bool isCurrentUser = relationUserId == currentUserId;
+                                            bool isCurrentUser = relationUserId == contentUserId;
                                             return isCurrentUser;
                                         }).ToList<ScreenShotFavoriteRelation>();
                                         List<string> myFavoriteRelationIds = new List<string>();
@@ -8510,12 +8814,9 @@ namespace GamaManager
                                         {
                                             string contentGameId = content.game;
                                             string id = content._id;
-
                                             bool isFilterMatch = filter == contentGameId;
                                             bool isAddScreenShot = isFilterMatch || isFilterDisabled;
-
                                             bool isFavoriteScreenShot = myFavoriteRelationIds.Contains(id);
-                                            // return isFavoriteScreenShot;
                                             return isFavoriteScreenShot && isAddScreenShot;
                                         }).ToList<ScreenShot>();
                                         contentFavoriteScreenShots.Children.Clear();
@@ -8581,10 +8882,15 @@ namespace GamaManager
             }
         }
 
-        public void GetFavoriteIllustrationsContent ()
+        // public void GetFavoriteIllustrationsContent ()
+        public void GetFavoriteIllustrationsContent (string contentUserId)
         {
 
             int selectedIndex = screenShotsFilter.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
             ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
             object rawFilter = selectedItem.DataContext;
@@ -8607,7 +8913,6 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Illustration> totalIllustrations = myobj.illustrations;
-
                             HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
@@ -8622,13 +8927,13 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-
                                         List<IllustrationFavoriteRelation> favoriteRelations = myIllustrationFavoriteRelationsObj.relations;
                                         List<IllustrationFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
                                         {
                                             string relatioIllustrationId = relation.illustration;
                                             string relationUserId = relation.user;
-                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            // bool isCurrentUser = relationUserId == currentUserId;
+                                            bool isCurrentUser = relationUserId == contentUserId;
                                             return isCurrentUser;
                                         }).ToList<IllustrationFavoriteRelation>();
                                         List<string> myFavoriteRelationIds = new List<string>();
@@ -8637,21 +8942,14 @@ namespace GamaManager
                                             string myFavoriteRelationIllustrationId = myFavoriteRelation.illustration;
                                             myFavoriteRelationIds.Add(myFavoriteRelationIllustrationId);
                                         }
-
                                         totalIllustrations = totalIllustrations.Where<Illustration>((Illustration content) =>
                                         {
                                             string contentGameId = content.game;
-                                            /*string userId = content.user;
-                                            bool isMyContent = userId == currentUserId;*/
                                             bool isFilterMatch = filter == contentGameId;
-
                                             bool isAddIllustration = isFilterMatch || isFilterDisabled;
-
                                             string id = content._id;
                                             bool isFavoriteIllustration = myFavoriteRelationIds.Contains(id);
-                                            // bool isAddIllustration = isMyContent && (isFilterMatch || isFilterDisabled);
                                             return isAddIllustration && isFavoriteIllustration;
-                                            // return isFavoriteIllustration;
                                         }).ToList<Illustration>();
                                         contentFavoriteIllustrations.Children.Clear();
                                         int totalIllustrationsCount = totalIllustrations.Count;
@@ -8727,15 +9025,19 @@ namespace GamaManager
             }
         }
 
-        public void GetFavoriteManualsContent ()
+        // public void GetFavoriteManualsContent ()
+        public void GetFavoriteManualsContent (string contentUserId)
         {
             int selectedIndex = screenShotsFilter.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
             ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
             object rawFilter = selectedItem.DataContext;
             string filter = rawFilter.ToString();
             bool isFilterDisabled = filter == @"all games";
-
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
@@ -8752,7 +9054,6 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-
                             HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
                             manualFavoriteRelationsWebRequest.Method = "GET";
                             manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
@@ -8767,13 +9068,13 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-
                                         List<ManualFavoriteRelation> favoriteRelations = myManualFavoriteRelationsObj.relations;
                                         List<ManualFavoriteRelation> myFavoriteRelations = favoriteRelations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
                                         {
                                             string relationManualId = relation.manual;
                                             string relationUserId = relation.user;
-                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            // bool isCurrentUser = relationUserId == currentUserId;
+                                            bool isCurrentUser = relationUserId == contentUserId;
                                             return isCurrentUser;
                                         }).ToList<ManualFavoriteRelation>();
                                         List<string> myFavoriteRelationIds = new List<string>();
@@ -8782,7 +9083,6 @@ namespace GamaManager
                                             string myFavoriteRelationManualId = myFavoriteRelation.manual;
                                             myFavoriteRelationIds.Add(myFavoriteRelationManualId);
                                         }
-
                                         List<Manual> totalManuals = myobj.manuals;
                                         totalManuals = totalManuals.Where<Manual>((Manual content) =>
                                         {
@@ -8802,41 +9102,33 @@ namespace GamaManager
                                             foreach (Manual totalManualsItem in totalManuals)
                                             {
                                                 string id = totalManualsItem._id;
-                                                /*
-                                                string userId = totalManualsItem.user;
-                                                bool isMyContent = userId == currentUserId;
-                                                bool isFavoriteManual = myFavoriteRelationIds.Contains(id);
-                                                if (isFavoriteManual)
-                                                {
-                                                */
-                                                    string title = totalManualsItem.title;
-                                                    string desc = totalManualsItem.desc;
-                                                    StackPanel manual = new StackPanel();
-                                                    manual.Width = 500;
-                                                    manual.Margin = new Thickness(15);
-                                                    manual.Background = System.Windows.Media.Brushes.LightGray;
-                                                    TextBlock manualTitleLabel = new TextBlock();
-                                                    manualTitleLabel.FontSize = 16;
-                                                    manualTitleLabel.Margin = new Thickness(15);
-                                                    manualTitleLabel.Text = title;
-                                                    manual.Children.Add(manualTitleLabel);
-                                                    Image manualPhoto = new Image();
-                                                    manualPhoto.Margin = new Thickness(15);
-                                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                                    manualPhoto.Width = 50;
-                                                    manualPhoto.Height = 50;
-                                                    manualPhoto.BeginInit();
-                                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
-                                                    manualPhoto.EndInit();
-                                                    manual.Children.Add(manualPhoto);
-                                                    TextBlock manualDescLabel = new TextBlock();
-                                                    manualDescLabel.Margin = new Thickness(15);
-                                                    manualDescLabel.Text = desc;
-                                                    manual.Children.Add(manualDescLabel);
-                                                    contentFavoriteManuals.Children.Add(manual);
-                                                    manual.DataContext = id;
-                                                    manual.MouseLeftButtonUp += SelectManualHandler;
-                                                // }
+                                                string title = totalManualsItem.title;
+                                                string desc = totalManualsItem.desc;
+                                                StackPanel manual = new StackPanel();
+                                                manual.Width = 500;
+                                                manual.Margin = new Thickness(15);
+                                                manual.Background = System.Windows.Media.Brushes.LightGray;
+                                                TextBlock manualTitleLabel = new TextBlock();
+                                                manualTitleLabel.FontSize = 16;
+                                                manualTitleLabel.Margin = new Thickness(15);
+                                                manualTitleLabel.Text = title;
+                                                manual.Children.Add(manualTitleLabel);
+                                                Image manualPhoto = new Image();
+                                                manualPhoto.Margin = new Thickness(15);
+                                                manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                manualPhoto.Width = 50;
+                                                manualPhoto.Height = 50;
+                                                manualPhoto.BeginInit();
+                                                manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                manualPhoto.EndInit();
+                                                manual.Children.Add(manualPhoto);
+                                                TextBlock manualDescLabel = new TextBlock();
+                                                manualDescLabel.Margin = new Thickness(15);
+                                                manualDescLabel.Text = desc;
+                                                manual.Children.Add(manualDescLabel);
+                                                contentFavoriteManuals.Children.Add(manual);
+                                                manual.DataContext = id;
+                                                manual.MouseLeftButtonUp += SelectManualHandler;
                                             }
                                         }
                                         else
@@ -8850,11 +9142,9 @@ namespace GamaManager
                                             contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
                                             contentFavoriteManuals.Children.Add(notFoundLabel);
                                         }
-
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -8866,13 +9156,18 @@ namespace GamaManager
             }
         }
 
-        public void GetManualsContent ()
+        // public void GetManualsContent ()
+        public void GetManualsContent (string contentUserId)
         {
 
             object rawMySelfContentRadioBtnIsChecked = mySelfContentRadioBtn.IsChecked;
             bool mySelfContentRadioBtnIsChecked = ((bool)(rawMySelfContentRadioBtnIsChecked));
 
             int selectedIndex = screenShotsFilter.SelectedIndex;
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
             object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
             ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
             object rawFilter = selectedItem.DataContext;
@@ -8896,129 +9191,81 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Manual> totalManuals = myobj.manuals;
-
-                            /*HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
-                            innerWebRequest.Method = "GET";
-                            innerWebRequest.UserAgent = ".NET Framework Test Client";
-                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
                             {
-                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                string contentGameId = content.game;
+                                string userId = content.user;
+                                // bool isMyContent = userId == currentUserId;
+                                bool isMyContent = userId == contentUserId;
+                                bool isFilterMatch = filter == contentGameId;
+                                bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
+                                return isAddManual;
+                            }).ToList<Manual>();
+                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
+                            {
+                                string contentGameId = content.game;
+                                string userId = content.user;
+                                // bool isMyContent = userId == currentUserId;
+                                bool isMyContent = userId == contentUserId;
+                                bool isFilterMatch = filter == contentGameId;
+                                bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
+                                return isAddManual;
+                            }).ToList<Manual>();
+                            contentManuals.Children.Clear();
+                            int totalManualsCount = totalManuals.Count;
+                            bool isHaveManuals = totalManualsCount >= 1;
+                            if (isHaveManuals)
+                            {
+                                contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
+                                foreach (Manual totalManualsItem in totalManuals)
                                 {
-                                    js = new JavaScriptSerializer();
-                                    objText = innerReader.ReadToEnd();
-                                    ManualFavoriteRelationsResponseInfo myInnerObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
-                                    status = myInnerObj.status;
-                                    isOkStatus = status == "OK";
-                                    if (isOkStatus)
+                                    string id = totalManualsItem._id;
+                                    string userId = totalManualsItem.user;
+                                    // bool isMyContent = userId == currentUserId;
+                                    bool isMyContent = userId == contentUserId;
+                                    if (isMyContent)
                                     {
-
-                                        List<ManualFavoriteRelation> relations = myInnerObj.relations;*/
-
-                                        totalManuals = totalManuals.Where<Manual>((Manual content) =>
-                                        {
-                                            string contentGameId = content.game;
-                                            string userId = content.user;
-                                            bool isMyContent = userId == currentUserId;
-                                            bool isFilterMatch = filter == contentGameId;
-                                            bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
-                                            return isAddManual;
-                                        }).ToList<Manual>();
-                                        /*if (mySelfContentRadioBtnIsChecked)
-                                        {*/
-                                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
-                                            {
-                                                string contentGameId = content.game;
-                                                string userId = content.user;
-                                                bool isMyContent = userId == currentUserId;
-                                                bool isFilterMatch = filter == contentGameId;
-                                                bool isAddManual = isMyContent && (isFilterMatch || isFilterDisabled);
-                                                return isAddManual;
-                                            }).ToList<Manual>();
-                                        /*}
-                                        else
-                                        {
-                                            List<ManualFavoriteRelation> myRelations = relations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
-                                            {
-                                                string relationUserId = relation.user;
-                                                bool isMyRelation = relationUserId == currentUserId;
-                                                return isMyRelation;
-                                            }).ToList<ManualFavoriteRelation>();
-                                            List<string> myFavoriteManualIds = new List<string>();
-                                            foreach (ManualFavoriteRelation relation in myRelations)
-                                            {
-                                                string myFavoriteManualId = relation.manual;
-                                                myFavoriteManualIds.Add(myFavoriteManualId);
-                                            }
-                                            totalManuals = totalManuals.Where<Manual>((Manual content) =>
-                                            {
-                                                string contentManualId = content._id;
-                                                string contentGameId = content.game;
-                                                bool isMyFavoriteContent = myFavoriteManualIds.Contains(contentManualId);
-                                                bool isFilterMatch = filter == contentGameId;
-                                                bool isAddManual = isMyFavoriteContent && (isFilterMatch || isFilterDisabled);
-                                                return isAddManual;
-                                            }).ToList<Manual>();
-                                        }*/
-
-                                        contentManuals.Children.Clear();
-                                        int totalManualsCount = totalManuals.Count;
-                                        bool isHaveManuals = totalManualsCount >= 1;
-                                        if (isHaveManuals)
-                                        {
-                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Left;
-                                            foreach (Manual totalManualsItem in totalManuals)
-                                            {
-                                                string id = totalManualsItem._id;
-                                                string userId = totalManualsItem.user;
-                                                bool isMyContent = userId == currentUserId;
-                                                if (isMyContent)
-                                                {
-                                                    string title = totalManualsItem.title;
-                                                    string desc = totalManualsItem.desc;
-                                                    StackPanel manual = new StackPanel();
-                                                    manual.Width = 500;
-                                                    manual.Margin = new Thickness(15);
-                                                    manual.Background = System.Windows.Media.Brushes.LightGray;
-                                                    TextBlock manualTitleLabel = new TextBlock();
-                                                    manualTitleLabel.FontSize = 16;
-                                                    manualTitleLabel.Margin = new Thickness(15);
-                                                    manualTitleLabel.Text = title;
-                                                    manual.Children.Add(manualTitleLabel);
-                                                    Image manualPhoto = new Image();
-                                                    manualPhoto.Margin = new Thickness(15);
-                                                    manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
-                                                    manualPhoto.Width = 50;
-                                                    manualPhoto.Height = 50;
-                                                    manualPhoto.BeginInit();
-                                                    manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
-                                                    manualPhoto.EndInit();
-                                                    manual.Children.Add(manualPhoto);
-                                                    TextBlock manualDescLabel = new TextBlock();
-                                                    manualDescLabel.Margin = new Thickness(15);
-                                                    manualDescLabel.Text = desc;
-                                                    manual.Children.Add(manualDescLabel);
-                                                    contentManuals.Children.Add(manual);
-                                                    manual.DataContext = id;
-                                                    manual.MouseLeftButtonUp += SelectManualHandler;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            TextBlock notFoundLabel = new TextBlock();
-                                            notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
-                                            notFoundLabel.TextAlignment = TextAlignment.Center;
-                                            notFoundLabel.FontSize = 18;
-                                            notFoundLabel.Margin = new Thickness(15);
-                                            notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
-                                            contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
-                                            contentManuals.Children.Add(notFoundLabel);
-                                        }
-
-                                    /*}
+                                        string title = totalManualsItem.title;
+                                        string desc = totalManualsItem.desc;
+                                        StackPanel manual = new StackPanel();
+                                        manual.Width = 500;
+                                        manual.Margin = new Thickness(15);
+                                        manual.Background = System.Windows.Media.Brushes.LightGray;
+                                        TextBlock manualTitleLabel = new TextBlock();
+                                        manualTitleLabel.FontSize = 16;
+                                        manualTitleLabel.Margin = new Thickness(15);
+                                        manualTitleLabel.Text = title;
+                                        manual.Children.Add(manualTitleLabel);
+                                        Image manualPhoto = new Image();
+                                        manualPhoto.Margin = new Thickness(15);
+                                        manualPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                        manualPhoto.Width = 50;
+                                        manualPhoto.Height = 50;
+                                        manualPhoto.BeginInit();
+                                        manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                        manualPhoto.EndInit();
+                                        manual.Children.Add(manualPhoto);
+                                        TextBlock manualDescLabel = new TextBlock();
+                                        manualDescLabel.Margin = new Thickness(15);
+                                        manualDescLabel.Text = desc;
+                                        manual.Children.Add(manualDescLabel);
+                                        contentManuals.Children.Add(manual);
+                                        manual.DataContext = id;
+                                        manual.MouseLeftButtonUp += SelectManualHandler;
+                                    }
                                 }
-                            }*/
-
+                            }
+                            else
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                notFoundLabel.FontSize = 18;
+                                notFoundLabel.Margin = new Thickness(15);
+                                notFoundLabel.Text = "Не найдено файлов, удовлетворяющих критериям запроса пользователя.";
+                                contentManuals.HorizontalAlignment = HorizontalAlignment.Center;
+                                contentManuals.Children.Add(notFoundLabel);
+                            }
                         }
                     }
                 }
@@ -15099,6 +15346,8 @@ namespace GamaManager
 
         public void GetUserInfo(string id, bool isLocalUser)
         {
+            
+            userProfileStatusDateLabel.Visibility = invisible;
 
             string gamesSettings = "public";
             string friendsSettings = "public";
@@ -15123,7 +15372,7 @@ namespace GamaManager
                 bool isDarkTheme = profileTheme == "Dark";
                 if (isDefaultTheme)
                 {
-                    profileThemeAside.Color = System.Windows.Media.Brushes.Blue.Color;
+                    profileThemeAside.Color = System.Windows.Media.Brushes.LightGray.Color;
                 }
                 else if (isSummerTheme)
                 {
@@ -15149,6 +15398,7 @@ namespace GamaManager
                 int countGames = myGames.Count;
                 string rawCountGames = countGames.ToString();
                 countGamesLabel.Text = rawCountGames;
+
             }
             try
             {
@@ -15181,46 +15431,286 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-                                        List<Friend> friendsIds = myInnerObj.friends.Where<Friend>((Friend joint) =>
+
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                                        nestedWebRequest.Method = "GET";
+                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
                                         {
-                                            string userId = joint.user;
-                                            bool isMyFriend = userId == id;
-                                            return isMyFriend;
-                                        }).ToList<Friend>();
-                                        int countFriends = friendsIds.Count;
-                                        string rawCountFriends = countFriends.ToString();
-                                        countFriendsLabel.Text = rawCountFriends;
-                                        string currentUserName = user.name;
-                                        userProfileNameLabel.Text = currentUserName;
-                                        string currentUserAbout = user.about;
-                                        userProfileAboutLabel.Text = currentUserAbout;
+                                            using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = nestedReader.ReadToEnd();
+                                                ScreenShotsResponseInfo myNestedObj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                                                status = myNestedObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<ScreenShot> totalCommunityScreenShots = myNestedObj.screenShots;
 
-                                        userProfileAvatar.BeginInit();
-                                        Uri avatar = new Uri(@"http://localhost:4000/api/user/avatar/?id=" + id);
-                                        userProfileAvatar.Source = new BitmapImage(avatar);
-                                        userProfileAvatar.EndInit();
+                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                                                    innerNestedWebRequest.Method = "GET";
+                                                    innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                    using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                    {
+                                                        using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                        {
+                                                            js = new JavaScriptSerializer();
+                                                            objText = innerNestedReader.ReadToEnd();
+                                                            IconRelationsResponseInfo myInnerNestedObj = (IconRelationsResponseInfo)js.Deserialize(objText, typeof(IconRelationsResponseInfo));
+                                                            status = myInnerNestedObj.status;
+                                                            isOkStatus = status == "OK";
+                                                            if (isOkStatus)
+                                                            {
+                                                                List<IconRelation> iconRelations = myInnerNestedObj.relations;
 
+                                                                HttpWebRequest iconWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all");
+                                                                iconWebRequest.Method = "GET";
+                                                                iconWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                using (HttpWebResponse iconWebResponse = (HttpWebResponse)iconWebRequest.GetResponse())
+                                                                {
+                                                                    using (var iconReader = new StreamReader(iconWebResponse.GetResponseStream()))
+                                                                    {
+                                                                        js = new JavaScriptSerializer();
+                                                                        objText = iconReader.ReadToEnd();
+                                                                        IconsResponseInfo myIconObj = (IconsResponseInfo)js.Deserialize(objText, typeof(IconsResponseInfo));
+                                                                        status = myIconObj.status;
+                                                                        isOkStatus = status == "OK";
+                                                                        if (isOkStatus)
+                                                                        {
+                                                                            List<Icon> icons = myIconObj.icons;
 
-                                        gamesSettings = user.gamesSettings;
-                                        friendsSettings = user.friendsListSettings;
+                                                                            List<Friend> friendsIds = myInnerObj.friends.Where<Friend>((Friend joint) =>
+                                                                            {
+                                                                                string userId = joint.user;
+                                                                                bool isMyFriend = userId == id;
+                                                                                return isMyFriend;
+                                                                            }).ToList<Friend>();
 
-                                        string onlineStatus = Properties.Resources.onlineLabelContent;
-                                        string offlineStatus = Properties.Resources.offlineLabelContent;
-                                        string userStatus = user.status;
-                                        bool isOnline = userStatus == "online";
-                                        bool isPlayed = userStatus == "played";
-                                        bool isConnected = isOnline || isPlayed;
-                                        if (isConnected)
-                                        {
-                                            userProfileStatusLabel.Text = onlineStatus;
-                                            userProfileStatusLabel.Foreground = System.Windows.Media.Brushes.Cyan;
+                                                                            int countFriends = friendsIds.Count;
+                                                                            string rawCountFriends = countFriends.ToString();
+                                                                            countFriendsLabel.Text = rawCountFriends;
+                                                                            string currentUserName = user.name;
+                                                                            userProfileNameLabel.Text = currentUserName;
+                                                                            string currentUserAbout = user.about;
+                                                                            userProfileAboutLabel.Text = currentUserAbout;
+                                                                            userProfileAvatar.BeginInit();
+                                                                            Uri avatar = new Uri(@"http://localhost:4000/api/user/avatar/?id=" + id);
+                                                                            userProfileAvatar.Source = new BitmapImage(avatar);
+                                                                            userProfileAvatar.EndInit();
+                                                                            gamesSettings = user.gamesSettings;
+                                                                            friendsSettings = user.friendsListSettings;
+                                                                            string onlineStatus = Properties.Resources.onlineLabelContent;
+                                                                            string offlineStatus = Properties.Resources.offlineLabelContent;
+                                                                            string userStatus = user.status;
+                                                                            bool isOnline = userStatus == "online";
+                                                                            bool isPlayed = userStatus == "played";
+                                                                            bool isConnected = isOnline || isPlayed;
+                                                                            if (isConnected)
+                                                                            {
+                                                                                userProfileStatusLabel.Text = onlineStatus;
+                                                                                userProfileStatusLabel.Foreground = System.Windows.Media.Brushes.Cyan;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                userProfileStatusLabel.Text = offlineStatus;
+                                                                                userProfileStatusLabel.Foreground = System.Windows.Media.Brushes.Gray;
+                                                                                DateTime statusDate = user.statusDate;
+                                                                                string rawStatusDate = statusDate.ToLongDateString() + " " + statusDate.ToLongTimeString();
+                                                                                string userProfileStatusDateLabelContent = "Был в сети " + rawStatusDate;
+                                                                                userProfileStatusDateLabel.Text = userProfileStatusDateLabelContent;
+                                                                                userProfileStatusDateLabel.Visibility = visible;
+                                                                            }
+                                                                            int countScreenShots = totalCommunityScreenShots.Count<ScreenShot>((ScreenShot item) =>
+                                                                            {
+                                                                                string itemUserId = item.user;
+                                                                                return itemUserId == cachedUserProfileId;
+                                                                            });
+                                                                            string rawCountScreenShots = countScreenShots.ToString();
+                                                                            countScreenShotsLabel.Text = rawCountScreenShots;
+
+                                                                            List<string> currentUserFriendIds = new List<string>();
+                                                                            foreach (Friend friendsIdsItem in friendsIds)
+                                                                            {
+                                                                                string currentUserFriendId = friendsIdsItem.friend;
+                                                                                currentUserFriendIds.Add(currentUserFriendId);
+                                                                            }
+                                                                            List<Friend> myFriends = myInnerObj.friends.Where<Friend>((Friend joint) =>
+                                                                            {
+                                                                                string userId = joint.user;
+                                                                                bool isMyFriend = userId == currentUserId;
+                                                                                return isMyFriend;
+                                                                            }).ToList<Friend>();
+                                                                            List<string> myFriendIds = new List<string>();
+                                                                            int countCommonFriends = 0;
+                                                                            foreach (Friend myFriend in myFriends)
+                                                                            {
+                                                                                string myFriendId = myFriend.friend;
+                                                                                myFriendIds.Add(myFriendId);
+                                                                                bool isCommonFriend = currentUserFriendIds.Contains(myFriendId);
+                                                                                if (isCommonFriend)
+                                                                                {
+                                                                                    countCommonFriends++;
+                                                                                }
+                                                                            }
+                                                                            string rawCountCommonFriends = countCommonFriends.ToString();
+                                                                            countCommonFriendsLabel.Text = rawCountCommonFriends;
+
+                                                                            List<IconRelation> userIconRelations = iconRelations.Where<IconRelation>((IconRelation icon) =>
+                                                                            {
+                                                                                string iconOwnerId = icon.user;
+                                                                                bool isUserRelation = iconOwnerId == cachedUserProfileId;
+                                                                                return isUserRelation;
+                                                                            }).ToList<IconRelation>();
+                                                                            int countIcons = userIconRelations.Count;
+                                                                            string rawCountIcons = countIcons.ToString();
+                                                                            countIconsLabel.Text = rawCountIcons;
+
+                                                                            int level = user.level;
+                                                                            string rawLevel = level.ToString();
+                                                                            string userProfileLevelLabelContent = "Уровень " + rawLevel;
+                                                                            userProfileLevelLabel.Text = userProfileLevelLabelContent;
+
+                                                                            userProfileFriends.Children.Clear();
+                                                                            foreach (Friend friendsIdsItem in friendsIds)
+                                                                            {
+                                                                                string currentUserFriendId = friendsIdsItem.friend;
+                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserFriendId);
+                                                                                userWebRequest.Method = "GET";
+                                                                                userWebRequest.UserAgent = ".NET Framework Test Client";
+                                                                                using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
+                                                                                {
+                                                                                    using (var userReader = new StreamReader(userWebResponse.GetResponseStream()))
+                                                                                    {
+                                                                                        js = new JavaScriptSerializer();
+                                                                                        objText = userReader.ReadToEnd();
+                                                                                        UserResponseInfo myUserObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                                                        status = myUserObj.status;
+                                                                                        isOkStatus = status == "OK";
+                                                                                        if (isOkStatus)
+                                                                                        {
+                                                                                            User userFriend = myUserObj.user;
+                                                                                            string userFriendName = userFriend.name;
+                                                                                            string userFriendStatus = userFriend.status;
+                                                                                            int userFriendLevel = userFriend.level;
+                                                                                            string rawUserFriendLevel = userFriendLevel.ToString();
+                                                                                            DockPanel userProfileFriend = new DockPanel();
+                                                                                            userProfileFriend.Margin = new Thickness(15);
+                                                                                            StackPanel userProfileFriendAside = new StackPanel();
+                                                                                            userProfileFriendAside.Orientation = Orientation.Horizontal;
+                                                                                            Image userProfileFriendAsideAvatar = new Image();
+                                                                                            userProfileFriendAsideAvatar.Width = 40;
+                                                                                            userProfileFriendAsideAvatar.Width = 40;
+                                                                                            userProfileFriendAsideAvatar.Margin = new Thickness(15);
+                                                                                            userProfileFriendAsideAvatar.BeginInit();
+                                                                                            userProfileFriendAsideAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserFriendId));
+                                                                                            userProfileFriendAsideAvatar.EndInit();
+                                                                                            userProfileFriendAside.Children.Add(userProfileFriendAsideAvatar);
+                                                                                            StackPanel userProfileFriendAsideInfo = new StackPanel();
+                                                                                            TextBlock userProfileFriendAsideInfoUserNameLabel = new TextBlock();
+                                                                                            userProfileFriendAsideInfoUserNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                                            userProfileFriendAsideInfoUserNameLabel.Text = userFriendName;
+                                                                                            userProfileFriendAsideInfo.Children.Add(userProfileFriendAsideInfoUserNameLabel);
+                                                                                            TextBlock userProfileFriendAsideInfoUserStatusLabel = new TextBlock();
+                                                                                            userProfileFriendAsideInfoUserStatusLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                                            string userProfileFriendAsideInfoUserStatusLabelContent = "";
+                                                                                            bool isOnlineStatus = userFriendStatus == "online";
+                                                                                            bool isPlayedStatus = userFriendStatus == "played";
+                                                                                            bool isOfflineStatus = userFriendStatus == "offline";
+                                                                                            if (isOnlineStatus)
+                                                                                            {
+                                                                                                userProfileFriendAsideInfoUserStatusLabelContent = Properties.Resources.onlineLabelContent;
+                                                                                            }
+                                                                                            else if (isPlayedStatus)
+                                                                                            {
+                                                                                                userProfileFriendAsideInfoUserStatusLabelContent = "Играет";
+                                                                                            }
+                                                                                            else if (isOfflineStatus)
+                                                                                            {
+                                                                                                userProfileFriendAsideInfoUserStatusLabelContent = Properties.Resources.offlineLabelContent;
+                                                                                            }
+                                                                                            userProfileFriendAsideInfoUserStatusLabel.Text = userProfileFriendAsideInfoUserStatusLabelContent;
+                                                                                            userProfileFriendAsideInfo.Children.Add(userProfileFriendAsideInfoUserStatusLabel);
+                                                                                            userProfileFriendAside.Children.Add(userProfileFriendAsideInfo);
+                                                                                            userProfileFriend.Children.Add(userProfileFriendAside);
+                                                                                            StackPanel userProfileFriendArticle = new StackPanel();
+                                                                                            userProfileFriendArticle.HorizontalAlignment = HorizontalAlignment.Right;
+                                                                                            userProfileFriendArticle.Orientation = Orientation.Horizontal;
+                                                                                            PackIcon userProfileFriendArticleFriendIcon = new PackIcon();
+                                                                                            userProfileFriendArticleFriendIcon.Kind = PackIconKind.User;
+                                                                                            userProfileFriendArticleFriendIcon.Margin = new Thickness(15);
+                                                                                            bool isMe = currentUserId == currentUserFriendId;
+                                                                                            if (isMe)
+                                                                                            {
+                                                                                                userProfileFriendArticleFriendIcon.Visibility = invisible;
+                                                                                            }
+                                                                                            userProfileFriendArticle.Children.Add(userProfileFriendArticleFriendIcon);
+                                                                                            Border userProfileFriendArticleLevel = new Border();
+                                                                                            userProfileFriendArticleLevel.VerticalAlignment = VerticalAlignment.Center;
+                                                                                            bool isBeginner = userFriendLevel <= 10;
+                                                                                            if (isBeginner)
+                                                                                            {
+                                                                                                userProfileFriendArticleLevel.BorderBrush = System.Windows.Media.Brushes.Gray;
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                userProfileFriendArticleLevel.BorderBrush = System.Windows.Media.Brushes.Red;
+                                                                                            }
+                                                                                            userProfileFriendArticleLevel.BorderThickness = new Thickness(2);
+                                                                                            userProfileFriendArticleLevel.CornerRadius = new CornerRadius(100);
+                                                                                            userProfileFriendArticleLevel.Height = 30;
+                                                                                            userProfileFriendArticleLevel.Width = 30;
+                                                                                            TextBlock userProfileFriendArticleLevelChild = new TextBlock();
+                                                                                            userProfileFriendArticleLevelChild.VerticalAlignment = VerticalAlignment.Center;
+                                                                                            userProfileFriendArticleLevelChild.HorizontalAlignment = HorizontalAlignment.Center;
+                                                                                            userProfileFriendArticleLevelChild.TextAlignment = TextAlignment.Center;
+                                                                                            userProfileFriendArticleLevelChild.Text = rawUserFriendLevel;
+                                                                                            // userProfileFriendArticleLevelChild.Margin = new Thickness(15);
+                                                                                            userProfileFriendArticleLevel.Child = userProfileFriendArticleLevelChild;
+                                                                                            userProfileFriendArticle.Children.Add(userProfileFriendArticleLevel);
+                                                                                            userProfileFriend.Children.Add(userProfileFriendArticle);
+                                                                                            userProfileFriends.Children.Add(userProfileFriend);
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            userProfileIcons.Children.Clear();
+                                                                            foreach (IconRelation userIconRelation in userIconRelations)
+                                                                            {
+                                                                                string userIconRelationId = userIconRelation.icon;
+                                                                                List<Icon> iconResults = icons.Where<Icon>((Icon someIcon) =>
+                                                                                {
+                                                                                    string someIconId = someIcon._id;
+                                                                                    bool isLocalIconFound = someIconId == userIconRelationId;
+                                                                                    return isLocalIconFound;
+                                                                                }).ToList<Icon>();
+                                                                                int countIconResults = iconResults.Count;
+                                                                                bool isIconFound = countIconResults >= 1;
+                                                                                if (isIconFound)
+                                                                                {
+                                                                                    Icon localIcon = iconResults[0];
+                                                                                    string localIconTitle = localIcon.title;
+                                                                                    PackIcon userProfileIcon = new PackIcon();
+                                                                                    userProfileIcon.Margin = new Thickness(15, 0, 15, 0);
+                                                                                    userProfileIcon.Kind = PackIconKind.Circle;
+                                                                                    userProfileIcon.Width = 40;
+                                                                                    userProfileIcon.Height = 40;
+                                                                                    userProfileIcon.ToolTip = localIconTitle;
+                                                                                    userProfileIcons.Children.Add(userProfileIcon);
+                                                                                }
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            }
                                         }
-                                        else
-                                        {
-                                            userProfileStatusLabel.Text = offlineStatus;
-                                            userProfileStatusLabel.Foreground = System.Windows.Media.Brushes.LightGray;
-                                        }
-
                                     }
                                 }
                             }
@@ -16186,6 +16676,56 @@ namespace GamaManager
             dialog.Show();
         }
 
+        public void AddFriendNickHandler (object sender, RoutedEventArgs e)
+        {
+            AddFriendNick();
+        }
+
+        public void AddFriendNick ()
+        {
+            try
+            {
+                HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                friendRelationsWebRequest.Method = "GET";
+                friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse friendRelationsWebResponse = (HttpWebResponse)friendRelationsWebRequest.GetResponse())
+                {
+                    using (var friendRelationsReader = new StreamReader(friendRelationsWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = friendRelationsReader.ReadToEnd();
+                        FriendsResponseInfo myFriendRelationsObj = (FriendsResponseInfo)js.Deserialize(objText, typeof(FriendsResponseInfo));
+                        string status = myFriendRelationsObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Friend> friends = myFriendRelationsObj.friends;
+                            int foundedIndex = friends.FindIndex((Friend localFriend) =>
+                            {
+                                bool isLocalMyFriend = localFriend.user == currentUserId;
+                                bool isCurrentFriend = localFriend.friend == cachedUserProfileId;
+                                bool isCurrentFriendRelation = isLocalMyFriend && isCurrentFriend;
+                                return isCurrentFriendRelation;
+                            });
+                            bool isFriendFound = foundedIndex >= 0;
+                            if (isFriendFound)
+                            {
+                                Friend currentFriend = friends[foundedIndex];
+                                string currentFriendRelation = currentFriend._id;
+                                Dialogs.AddNickDialog dialog = new AddNickDialog(currentFriendRelation);
+                                dialog.Show();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void OpenSettingsHandler(object sender, RoutedEventArgs e)
         {
             OpenSettings();
@@ -16483,7 +17023,8 @@ namespace GamaManager
 
             client.EmitAsync("user_is_toggle_status", "online");
 
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, currentUserId);
 
         }
 
@@ -16622,7 +17163,8 @@ namespace GamaManager
             startInfo.Arguments = "/D=" + cachePath + " /VERYSILENT";
             Process.Start(startInfo);*/
 
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, currentUserId);
 
             GetGamesList("");
 
@@ -19761,7 +20303,8 @@ namespace GamaManager
                 }
                 else if (isContent)
                 {
-                    OpenContent();
+                    // OpenContent();
+                    OpenContent(currentUserId);
                 }
                 else if (isIcons)
                 {
@@ -19770,21 +20313,44 @@ namespace GamaManager
                 }
                 else if (isEquipment)
                 {
-                    OpenEquipment();
+                    OpenEquipment(currentUserId);
                 }
                 ResetMenu();
             }
         }
 
-        public void OpenEquipment ()
+        public void OpenEquipment (string id)
         {
             mainControl.SelectedIndex = 60;
+            GetEquipmentInfo(id);
+            GetEquipmentGames(id);
+            // GetEquipmentGameTabs(id);
             AddHistoryRecord();
+        }
+
+        public void OpenScreenShotsContentFromProfileHandler (object sender, RoutedEventArgs e)
+        {
+            OpenScreenShotsContentFromProfile();
+        }
+
+        public void OpenScreenShotsContentFromProfile ()
+        {
+            OpenContent(cachedUserProfileId);
+        }
+
+        public void OpenEquipmentFromProfileHandler (object sender, RoutedEventArgs e)
+        {
+            OpenEquipmentFromProfile();
+        }
+
+        public void OpenEquipmentFromProfile ()
+        {
+            OpenEquipment(cachedUserProfileId);
         }
 
         public void OpenEquipmentHandler (object sender, RoutedEventArgs e)
         {
-            OpenEquipment();
+            OpenEquipment(currentUserId);            
         }
 
         public void OpenStoreSearchHandler (object sender, RoutedEventArgs e)
@@ -19837,8 +20403,23 @@ namespace GamaManager
             AddHistoryRecord();
         }
 
-        public void OpenContent ()
+        // public void OpenContent ()
+        public void OpenContent (string id)
         {
+
+            bool isHideManagement = id != currentUserId;
+            if (isHideManagement)
+            {
+                screenShotsManagementWrap.Visibility = invisible;
+            }
+            else
+            {
+                screenShotsManagementWrap.Visibility = visible;
+            }
+            lastContentUserId = id;
+            // GetManualsContent(id);
+            GetContent(id);
+
             mainControl.SelectedIndex = 5;
             AddHistoryRecord();
         }
@@ -19860,7 +20441,8 @@ namespace GamaManager
         public void OpenContentTab (int index)
         {
             contentControl.SelectedIndex = index;
-            OpenContent();
+            // OpenContent();
+            OpenContent(currentUserId);
         }
 
         public void OpenFriendsSettingsHandler(object sender, RoutedEventArgs e)
@@ -22738,187 +23320,455 @@ namespace GamaManager
 
         public void ToggleScreenShotsSort ()
         {
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, lastContentUserId);
         }
 
-        public void GetScreenShots (string filter, bool isInit)
+        // public void GetScreenShots (string filter, bool isInit)
+        public void GetScreenShots (string filter, bool isInit, string contentUserId)
         {
-            List<Canvas> unSortedScreenShots = new List<Canvas>();
-            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
-            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
-            string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
-            string[] games = Directory.GetDirectories(appPath);
             screenShots.Children.Clear();
-            foreach (string game in games)
+            List<Canvas> unSortedScreenShots = new List<Canvas>();
+            List<Canvas> sortedScreenShots = new List<Canvas>();
+            bool isLocalUser = contentUserId == currentUserId;
+            if (isLocalUser)
             {
-                DirectoryInfo gameInfo = new DirectoryInfo(game);
-                string gameName = gameInfo.Name;
-                if (isInit)
+                // List<Canvas> unSortedScreenShots = new List<Canvas>();
+                Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+                string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+                string appPath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\screenshots\";
+                string[] games = Directory.GetDirectories(appPath);
+                // screenShots.Children.Clear();
+                foreach (string game in games)
                 {
-                    ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
-                    screenShotsFilterItem.Content = gameName;
-
-                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
-                    innerWebRequest.Method = "GET";
-                    innerWebRequest.UserAgent = ".NET Framework Test Client";
-                    using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                    DirectoryInfo gameInfo = new DirectoryInfo(game);
+                    string gameName = gameInfo.Name;
+                    if (isInit || true)
                     {
-                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        if (screenShotsFilter.Items.Count >= 3)
                         {
-                            JavaScriptSerializer js = new JavaScriptSerializer();
-                            var objText = reader.ReadToEnd();
-
-                            GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
-
-                            string status = myobj.status;
-                            bool isOkStatus = status == "OK";
-                            if (isOkStatus)
+                            for (int i = screenShotsFilter.Items.Count - 1; i >= 2; i--)
                             {
-                                List<GameResponseInfo> totalGames = myobj.games;
-                                List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
+                                screenShotsFilter.Items.RemoveAt(i);
+                            }
+                        }
+                        ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+                        screenShotsFilterItem.Content = gameName;
+                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                        innerWebRequest.Method = "GET";
+                        innerWebRequest.UserAgent = ".NET Framework Test Client";
+                        using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                        {
+                            using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                            {
+                                JavaScriptSerializer js = new JavaScriptSerializer();
+                                var objText = reader.ReadToEnd();
+                                GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                string status = myobj.status;
+                                bool isOkStatus = status == "OK";
+                                if (isOkStatus)
                                 {
-                                    string localGameName = totalGamesItem.name;
-                                    bool isNamesMatches = localGameName == gameName;
-                                    return isNamesMatches;
-                                }).ToList<GameResponseInfo>();
-                                int countResults = gameResults.Count;
-                                bool isResultsFound = countResults >= 1;
-                                if (isResultsFound)
-                                {
-                                    GameResponseInfo foundedGame = gameResults[0];
-                                    string gameId = foundedGame._id;
-                                    screenShotsFilterItem.DataContext = gameId;
+                                    List<GameResponseInfo> totalGames = myobj.games;
+                                    List<GameResponseInfo> gameResults = totalGames.Where<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
+                                    {
+                                        string localGameName = totalGamesItem.name;
+                                        bool isNamesMatches = localGameName == gameName;
+                                        return isNamesMatches;
+                                    }).ToList<GameResponseInfo>();
+                                    int countResults = gameResults.Count;
+                                    bool isResultsFound = countResults >= 1;
+                                    if (isResultsFound)
+                                    {
+                                        GameResponseInfo foundedGame = gameResults[0];
+                                        string gameId = foundedGame._id;
+                                        screenShotsFilterItem.DataContext = gameId;
+                                    }
+                                    screenShotsFilter.Items.Add(screenShotsFilterItem);
                                 }
-
-                                screenShotsFilter.Items.Add(screenShotsFilterItem);
+                            }
+                        }
+                    }
+                    string[] files = Directory.GetFileSystemEntries(game);
+                    foreach (string file in files)
+                    {
+                        string ext = System.IO.Path.GetExtension(file);
+                        bool isScreenShot = ext == ".jpg";
+                        if (isScreenShot)
+                        {
+                            // Stream myStream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                            Canvas screenShot = new Canvas();
+                            screenShot.Margin = new Thickness(15);
+                            screenShot.Width = 250;
+                            screenShot.Height = 250;
+                            screenShot.BeginInit();
+                            Uri screenShotUri = new Uri(file);
+                            VisualBrush screenShotBrush = new VisualBrush();
+                            Image screenShotBrushVisual = new Image();
+                            screenShotBrushVisual.Margin = new Thickness(15);
+                            screenShotBrushVisual.Width = 250;
+                            screenShotBrushVisual.Height = 250;
+                            screenShotBrushVisual.BeginInit();
+                            screenShotBrushVisual.Source = new BitmapImage(screenShotUri);
+                            screenShotBrushVisual.EndInit();
+                            screenShotBrush.Visual = screenShotBrushVisual;
+                            screenShot.Background = screenShotBrush;
+                            CheckBox screenShotCheckBox = new CheckBox();
+                            screenShotCheckBox.Visibility = invisible;
+                            screenShot.Children.Add(screenShotCheckBox);
+                            Canvas.SetTop(screenShotCheckBox, 25);
+                            Canvas.SetLeft(screenShotCheckBox, 25);
+                            string insensitiveCaseFilter = filter.ToLower();
+                            string insensitiveCaseGameName = gameName.ToLower();
+                            int filterLength = filter.Length;
+                            bool isNotFilter = filterLength <= 0;
+                            bool isWordsMatches = insensitiveCaseGameName.Contains(insensitiveCaseFilter);
+                            bool isFilterMatches = isWordsMatches || isNotFilter;
+                            if (isFilterMatches)
+                            {
+                                Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
+                                FileInfo info = new FileInfo(file);
+                                DateTime date = info.CreationTime;
+                                screenShotData.Add("date", date);
+                                screenShotData.Add("path", file);
+                                // screenShotData.Add("id", id);
+                                screenShot.DataContext = screenShotData;
+                                unSortedScreenShots.Add(screenShot);
                             }
                         }
                     }
                 }
-                string[] files = Directory.GetFileSystemEntries(game);
-                foreach (string file in files)
+                // List<Canvas> sortedScreenShots = new List<Canvas>();
+                sortedScreenShots = unSortedScreenShots;
+                int sortIndex = screenShotsSortBox.SelectedIndex;
+                bool isAsc = sortIndex == 1;
+                bool isDesc = sortIndex == 2;
+                if (isAsc)
                 {
-                    string ext = System.IO.Path.GetExtension(file);
-                    bool isScreenShot = ext == ".jpg";
-                    if (isScreenShot)
+                    sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
                     {
-                        // Stream myStream = File.Open(file, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                        Canvas screenShot = new Canvas();
-                        screenShot.Margin = new Thickness(15);
-                        screenShot.Width = 250;
-                        screenShot.Height = 250;
-                        screenShot.BeginInit();
-                        Uri screenShotUri = new Uri(file);
-                        VisualBrush screenShotBrush = new VisualBrush();
-                        Image screenShotBrushVisual = new Image();
-                        screenShotBrushVisual.Margin = new Thickness(15);
-                        screenShotBrushVisual.Width = 250;
-                        screenShotBrushVisual.Height = 250;
-                        screenShotBrushVisual.BeginInit();
-                        screenShotBrushVisual.Source = new BitmapImage(screenShotUri);
-                        screenShotBrushVisual.EndInit();
-                        screenShotBrush.Visual = screenShotBrushVisual;
-                        screenShot.Background = screenShotBrush;
-                        CheckBox screenShotCheckBox = new CheckBox();
-                        screenShotCheckBox.Visibility = invisible;
-                        screenShot.Children.Add(screenShotCheckBox);
-                        Canvas.SetTop(screenShotCheckBox, 25);
-                        Canvas.SetLeft(screenShotCheckBox, 25);
-                        string insensitiveCaseFilter = filter.ToLower();
-                        string insensitiveCaseGameName = gameName.ToLower();
-                        int filterLength = filter.Length;
-                        bool isNotFilter = filterLength <= 0;
-                        bool isWordsMatches = insensitiveCaseGameName.Contains(insensitiveCaseFilter);
-                        bool isFilterMatches = isWordsMatches || isNotFilter;
-                        if (isFilterMatches)
-                        {
-                            Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
-                            FileInfo info = new FileInfo(file);
-                            DateTime date = info.CreationTime;
-                            screenShotData.Add("date", date);
-
-                            screenShotData.Add("path", file);
-                            // screenShotData.Add("id", id);
-
-                            screenShot.DataContext = screenShotData;
-                            unSortedScreenShots.Add(screenShot);
-                        }
-                    }
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawDate = screenShotData["date"];
+                        DateTime date = ((DateTime)(rawDate));
+                        return date;
+                    }).ToList<Canvas>();
                 }
-            }
-            List<Canvas> sortedScreenShots = new List<Canvas>();
-            sortedScreenShots = unSortedScreenShots;
-            int sortIndex = screenShotsSortBox.SelectedIndex;
-            bool isAsc = sortIndex == 1;
-            bool isDesc = sortIndex == 2;
-            if (isAsc)
-            {
-                sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
+                else if (isDesc)
                 {
-                    object data = screenShot.DataContext;
-                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
-                    object rawDate = screenShotData["date"];
-                    DateTime date = ((DateTime)(rawDate));
-                    return date;
-                }).ToList<Canvas>();
-            }
-            else if (isDesc)
-            {
-                sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
-                {
-                    object data = screenShot.DataContext;
-                    Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
-                    object rawDate = screenShotData["date"];
-                    DateTime date = ((DateTime)(rawDate));
-                    return date;
-                }).ToList<Canvas>();
-            }
-            UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
-            
-            // UIElement container = screenShotsContainerChildren[2];
-            // UIElement rawScreenShotsControl = screenShotsContainerChildren[2];
-            UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
-            TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
-            // int screenShotsControlSelectedIndex = screenShotsControl.SelectedIndex;
-            int screenShotsControlSelectedIndex = 0;
-            ItemCollection screenShotsControlItems = screenShotsControl.Items;
-            object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
-            TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
-            object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
-            // UIElement container = ((UIElement)(rawScreenShotsControlSelectedItemContent));
-            StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
-            UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
-            UIElement container = screenShotsControlSelectedItemContentChildren[2];
-
-            bool isWall = container is StackPanel;
-            
-            if (isWall)
-            {
-                StackPanel wallContainer = ((StackPanel)(container));
-                wallContainer.Children.Clear();
-            }
-            else
-            {
-                WrapPanel gridContainer = ((WrapPanel)(container));
-                gridContainer.Children.Clear();
-            }
-
-            foreach (UIElement screenShot in sortedScreenShots)
-            {
+                    sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
+                    {
+                        object data = screenShot.DataContext;
+                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                        object rawDate = screenShotData["date"];
+                        DateTime date = ((DateTime)(rawDate));
+                        return date;
+                    }).ToList<Canvas>();
+                }
+                UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+                UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
+                TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
+                int screenShotsControlSelectedIndex = 0;
+                ItemCollection screenShotsControlItems = screenShotsControl.Items;
+                object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
+                TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
+                object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
+                StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
+                UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
+                UIElement container = screenShotsControlSelectedItemContentChildren[2];
+                bool isWall = container is StackPanel;
                 if (isWall)
                 {
                     StackPanel wallContainer = ((StackPanel)(container));
-                    wallContainer.Children.Add(screenShot);
+                    wallContainer.Children.Clear();
                 }
                 else
                 {
                     WrapPanel gridContainer = ((WrapPanel)(container));
-                    gridContainer.Children.Add(screenShot);
+                    gridContainer.Children.Clear();
+                }
+                foreach (UIElement screenShot in sortedScreenShots)
+                {
+                    if (isWall)
+                    {
+                        StackPanel wallContainer = ((StackPanel)(container));
+                        wallContainer.Children.Add(screenShot);
+                    }
+                    else
+                    {
+                        WrapPanel gridContainer = ((WrapPanel)(container));
+                        gridContainer.Children.Add(screenShot);
+                    }
                 }
             }
+            else
+            {
+
+                if (screenShotsFilter.Items.Count >= 3)
+                {
+                    for (int i = screenShotsFilter.Items.Count - 1; i >= 2; i--)
+                    {
+                        screenShotsFilter.Items.RemoveAt(i);
+                    }
+                }
+
+                try
+                {
+
+                    HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                    gameRelationWebRequest.Method = "GET";
+                    gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
+                    {
+                        using (var gameRelationReader = new StreamReader(gameRelationWebResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            string objText = gameRelationReader.ReadToEnd();
+                            GameRelationsResponseInfo myGameRelationObj = (GameRelationsResponseInfo)js.Deserialize(objText, typeof(GameRelationsResponseInfo));
+                            string status = myGameRelationObj.status;
+                            bool isOkStatus = status == "OK";
+                            if (isOkStatus)
+                            {
+
+                                List<GameRelation> relations = myGameRelationObj.relations;
+                                List<GameRelation> userGameRelations = relations.Where<GameRelation>((GameRelation relation) =>
+                                {
+                                    string relationUserId = relation.user;
+                                    bool isCurrentUser = relationUserId == contentUserId;
+                                    return isCurrentUser;
+                                }).ToList<GameRelation>();
+                                foreach (GameRelation userGameRelation in userGameRelations)
+                                {
+                                    string userGameRelationId = userGameRelation.game;
+                                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                    gamesWebRequest.Method = "GET";
+                                    gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                                    using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                                    {
+                                        using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                        {
+                                            js = new JavaScriptSerializer();
+                                            objText = gamesReader.ReadToEnd();
+                                            GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                            status = myGamesObj.status;
+                                            isOkStatus = status == "OK";
+                                            if (isOkStatus)
+                                            {
+                                                List<GameResponseInfo> games = myGamesObj.games;
+                                                List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                                {
+                                                    string localGameId = game._id;
+                                                    bool isIdMatches = userGameRelationId == localGameId;
+                                                    return isIdMatches;
+                                                }).ToList<GameResponseInfo>();
+                                                int countResults = gameResults.Count;
+                                                bool isResultsFound = countResults >= 1;
+                                                if (isResultsFound)
+                                                {
+                                                    GameResponseInfo gameResult = gameResults[0];
+                                                    string gameResultName = gameResult.name;
+                                                    ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
+                                                    screenShotsFilterItem.Content = gameResultName;
+                                                    screenShotsFilterItem.DataContext = userGameRelationId;
+                                                    screenShotsFilter.Items.Add(screenShotsFilterItem);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = reader.ReadToEnd();
+                                        ScreenShotsResponseInfo myobj = (ScreenShotsResponseInfo)js.Deserialize(objText, typeof(ScreenShotsResponseInfo));
+                                        status = myobj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<ScreenShot> totalScreenShots = myobj.screenShots;
+                                            totalScreenShots = totalScreenShots.Where<ScreenShot>((ScreenShot content) =>
+                                            {
+                                    
+                                                string localContentUserId = content.user;
+                                                bool isCurrentUser = contentUserId == localContentUserId;
+
+                                                string contentGameId = content.game;
+                                                string id = content._id;
+                                                bool isFilterMatch = filter == contentGameId;
+                                                // bool isAddScreenShot = isFilterMatch || isFilterDisabled;
+
+
+                                                int filterLength = filter.Length;
+                                                bool isNotFilter = filterLength <= 0;
+                                    
+                                                bool isAddScreenShot = (isFilterMatch || isNotFilter) && isCurrentUser;
+                                                return isAddScreenShot;
+                                            }).ToList<ScreenShot>();
+                                            // screenShots.Children.Clear();
+                                            int totalScreenShotsCount = totalScreenShots.Count;
+                                            bool isHaveScreenShots = totalScreenShotsCount >= 1;
+                                            if (isHaveScreenShots)
+                                            {
+                                                contentFavoriteScreenShots.HorizontalAlignment = HorizontalAlignment.Left;
+                                                foreach (ScreenShot totalScreenShotsItem in totalScreenShots)
+                                                {
+                                                    string id = totalScreenShotsItem._id;
+                                                    string userId = totalScreenShotsItem.user;
+                                                    string desc = totalScreenShotsItem.desc;
+                                                    DateTime date = totalScreenShotsItem.date;
+                                                    /*
+                                                    StackPanel screenShot = new StackPanel();
+                                                    screenShot.Width = 500;
+                                                    screenShot.Margin = new Thickness(15);
+                                                    screenShot.Background = System.Windows.Media.Brushes.LightGray;
+                                                    Image screenShotPhoto = new Image();
+                                                    screenShotPhoto.Margin = new Thickness(15);
+                                                    screenShotPhoto.HorizontalAlignment = HorizontalAlignment.Left;
+                                                    screenShotPhoto.Width = 50;
+                                                    screenShotPhoto.Height = 50;
+                                                    screenShotPhoto.BeginInit();
+                                                    screenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                    screenShotPhoto.EndInit();
+                                                    screenShot.Children.Add(screenShotPhoto);
+                                                    TextBlock screenShotDescLabel = new TextBlock();
+                                                    screenShotDescLabel.Margin = new Thickness(15);
+                                                    screenShotDescLabel.Text = desc;
+                                                    screenShot.Children.Add(screenShotDescLabel);
+                                                    screenShots.Children.Add(screenShot);
+                                                    screenShot.DataContext = id;
+                                                    screenShot.MouseLeftButtonUp += SelectCommunityScreenShotHandler;
+                                                    */
+
+                                                    Canvas screenShot = new Canvas();
+                                                    screenShot.Margin = new Thickness(15);
+                                                    screenShot.Width = 250;
+                                                    screenShot.Height = 250;
+                                                    screenShot.BeginInit();
+                                                    Uri screenShotUri = new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id);
+                                                    VisualBrush screenShotBrush = new VisualBrush();
+                                                    Image screenShotBrushVisual = new Image();
+                                                    screenShotBrushVisual.Margin = new Thickness(15);
+                                                    screenShotBrushVisual.Width = 250;
+                                                    screenShotBrushVisual.Height = 250;
+                                                    screenShotBrushVisual.BeginInit();
+                                                    screenShotBrushVisual.Source = new BitmapImage(screenShotUri);
+                                                    screenShotBrushVisual.EndInit();
+                                                    screenShotBrush.Visual = screenShotBrushVisual;
+                                                    screenShot.Background = screenShotBrush;
+                                                    CheckBox screenShotCheckBox = new CheckBox();
+                                                    screenShotCheckBox.Visibility = invisible;
+                                                    screenShot.Children.Add(screenShotCheckBox);
+                                                    Canvas.SetTop(screenShotCheckBox, 25);
+                                                    Canvas.SetLeft(screenShotCheckBox, 25);
+                                                    unSortedScreenShots.Add(screenShot);
+                                                    Dictionary<String, Object> screenShotData = new Dictionary<String, Object>();
+                                                    screenShotData.Add("date", date);
+                                                    // screenShotData.Add("path", file);
+                                                    screenShot.DataContext = screenShotData;
+                                                }
+
+                                                sortedScreenShots = unSortedScreenShots;
+                                                int sortIndex = screenShotsSortBox.SelectedIndex;
+                                                bool isAsc = sortIndex == 1;
+                                                bool isDesc = sortIndex == 2;
+                                                if (isAsc)
+                                                {
+                                                    sortedScreenShots = unSortedScreenShots.OrderBy(screenShot =>
+                                                    {
+                                                        object data = screenShot.DataContext;
+                                                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                                                        object rawDate = screenShotData["date"];
+                                                        DateTime date = ((DateTime)(rawDate));
+                                                        return date;
+                                                    }).ToList<Canvas>();
+                                                }
+                                                else if (isDesc)
+                                                {
+                                                    sortedScreenShots = unSortedScreenShots.OrderByDescending(screenShot =>
+                                                    {
+                                                        object data = screenShot.DataContext;
+                                                        Dictionary<String, Object> screenShotData = ((Dictionary<String, Object>)(data));
+                                                        object rawDate = screenShotData["date"];
+                                                        DateTime date = ((DateTime)(rawDate));
+                                                        return date;
+                                                    }).ToList<Canvas>();
+                                                }
+                                                UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
+                                                UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
+                                                TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
+                                                int screenShotsControlSelectedIndex = 0;
+                                                ItemCollection screenShotsControlItems = screenShotsControl.Items;
+                                                object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
+                                                TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
+                                                object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
+                                                StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
+                                                UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
+                                                UIElement container = screenShotsControlSelectedItemContentChildren[2];
+                                                bool isWall = container is StackPanel;
+                                                if (isWall)
+                                                {
+                                                    StackPanel wallContainer = ((StackPanel)(container));
+                                                    wallContainer.Children.Clear();
+                                                }
+                                                else
+                                                {
+                                                    WrapPanel gridContainer = ((WrapPanel)(container));
+                                                    gridContainer.Children.Clear();
+                                                }
+                                                foreach (UIElement screenShot in sortedScreenShots)
+                                                {
+                                                    if (isWall)
+                                                    {
+                                                        StackPanel wallContainer = ((StackPanel)(container));
+                                                        wallContainer.Children.Add(screenShot);
+                                                    }
+                                                    else
+                                                    {
+                                                        WrapPanel gridContainer = ((WrapPanel)(container));
+                                                        gridContainer.Children.Add(screenShot);
+                                                    }
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                StackPanel notFound = new StackPanel();
+                                                notFound.Margin = new Thickness(0, 15, 0, 15);
+                                                TextBlock notFoundLabel = new TextBlock();
+                                                notFoundLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                                                notFoundLabel.TextAlignment = TextAlignment.Center;
+                                                notFoundLabel.FontSize = 18;
+                                                string newLine = Environment.NewLine;
+                                                notFoundLabel.Text = "Вы не добавили ни одного скриншота.";
+                                                notFound.Children.Add(notFoundLabel);
+                                                screenShots.HorizontalAlignment = HorizontalAlignment.Center;
+                                                screenShots.Children.Add(notFound);
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+                catch (System.Net.WebException exception)
+                {
+                    MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                    this.Close();
+                }
+            }
+
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + contentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22944,15 +23794,16 @@ namespace GamaManager
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
             }
+
         }
 
-        private void SelectScreenShotsFilterHandler(object sender, SelectionChangedEventArgs e)
+        private void SelectScreenShotsFilterHandler (object sender, SelectionChangedEventArgs e)
         {
             int selectedIndex = screenShotsFilter.SelectedIndex;
             SelectScreenShotsFilter(selectedIndex);
         }
 
-        public void SelectScreenShotsFilter(int selectedIndex)
+        public void SelectScreenShotsFilter (int selectedIndex)
         {
             if (isAppInit)
             {
@@ -22960,21 +23811,28 @@ namespace GamaManager
                 if (isSecondItem)
                 {
                     screenShotsFilter.SelectedIndex = 0;
-                    GetScreenShots("", false);
+                    // GetScreenShots("", false);
+                    GetScreenShots("", false, lastContentUserId);
                 }
-                else
+                else if (selectedIndex >= 0)
                 {
                     object rawSelectedItem = screenShotsFilter.Items[selectedIndex];
                     ComboBoxItem selectedItem = ((ComboBoxItem)(rawSelectedItem));
                     object rawFilter = selectedItem.Content;
                     string filter = rawFilter.ToString();
-                    GetScreenShots(filter, false);
+                    // GetScreenShots(filter, false);
+                    GetScreenShots(filter, false, lastContentUserId);
+                    // GetFavoriteScreenShotsContent();
+                    GetFavoriteScreenShotsContent(lastContentUserId);
+                    // GetIllustrationsContent();
+                    GetIllustrationsContent(lastContentUserId);
+                    // GetFavoriteIllustrationsContent();
+                    GetFavoriteIllustrationsContent(lastContentUserId);
+                    // GetManualsContent();
+                    GetManualsContent(lastContentUserId);
+                    // GetFavoriteManualsContent();
+                    GetFavoriteManualsContent(lastContentUserId);
                 }
-                GetFavoriteScreenShotsContent();
-                GetIllustrationsContent();
-                GetFavoriteIllustrationsContent();
-                GetManualsContent();
-                GetFavoriteManualsContent();
             }
         }
 
@@ -23895,7 +24753,8 @@ namespace GamaManager
         {
             GetGamesList("");
             GetDownloads();
-            GetScreenShots("", false);
+            // GetScreenShots("", false);
+            GetScreenShots("", false, currentUserId);
 
         }
 
@@ -27456,44 +28315,31 @@ namespace GamaManager
             {
                 int selectedIndex = selector.SelectedIndex;
                 bool isWall = selectedIndex == 0;
-
-                // screenShotsContainer.Children.RemoveAt(2);
                 UIElementCollection screenShotsContainerChildren = screenShotsContainer.Children;
-                // UIElement rawScreenShotsControl = screenShotsContainerChildren[2];
                 UIElement rawScreenShotsControl = screenShotsContainerChildren[0];
                 TabControl screenShotsControl = ((TabControl)(rawScreenShotsControl));
-                // int screenShotsControlSelectedIndex = screenShotsControl.SelectedIndex;
                 int screenShotsControlSelectedIndex = 0;
                 ItemCollection screenShotsControlItems = screenShotsControl.Items;
                 object rawScreenShotsControlSelectedItem = screenShotsControlItems[screenShotsControlSelectedIndex];
                 TabItem screenShotsControlSelectedItem = ((TabItem)(rawScreenShotsControlSelectedItem));
-                // screenShotsControlSelectedItem.Content = null;
                 object rawScreenShotsControlSelectedItemContent = screenShotsControlSelectedItem.Content;
                 StackPanel screenShotsControlSelectedItemContent = ((StackPanel)(rawScreenShotsControlSelectedItemContent));
                 UIElementCollection screenShotsControlSelectedItemContentChildren = screenShotsControlSelectedItemContent.Children;
                 screenShotsControlSelectedItemContent.Children.RemoveAt(2);
-                // UIElement container = ((UIElement)(rawScreenShotsControlSelectedItemContent));
-
                 if (isWall)
                 {
                     StackPanel container = new StackPanel();
                     container.Margin = new Thickness(25);
-
-                    // screenShotsContainer.Children.Add(container);
-                    // screenShotsControlSelectedItem.Content = container;
                     screenShotsControlSelectedItemContent.Children.Add(container);
                 }
                 else
                 {
                     WrapPanel container = new WrapPanel();
                     container.Margin = new Thickness(25);
-
-                    // screenShotsContainer.Children.Add(container);
-                    // screenShotsControlSelectedItem.Content = container;
                     screenShotsControlSelectedItemContent.Children.Add(container);
-
                 }
-                GetScreenShots("", false);
+                // GetScreenShots("", false);
+                GetScreenShots("", false, lastContentUserId);
             }
         }
 
@@ -29603,7 +30449,8 @@ namespace GamaManager
                             mainManualFavoriteBtnContentIcon.Kind = PackIconKind.Star;
                             mainManualFavoriteBtnContentLabel.Text = "В избранное";
                             SelectManual(manualId);
-                            GetFavoriteManualsContent();
+                            // GetFavoriteManualsContent();
+                            GetFavoriteManualsContent(lastContentUserId);
                         }
                     }
                 }
@@ -29657,8 +30504,8 @@ namespace GamaManager
                                     {
 
                                         SelectManual(manualId);
-                                        GetFavoriteManualsContent();
-
+                                        // GetFavoriteManualsContent();
+                                        GetFavoriteManualsContent(lastContentUserId);
                                     }
                                 }
                             }
@@ -31977,7 +32824,9 @@ namespace GamaManager
         public int points;
         public int amount;
         public bool isEmailConfirmed;
+        public DateTime statusDate;
         public string lastGame;
+        public int level;
     }
 
     class FriendRequestsResponseInfo

@@ -81,7 +81,8 @@ namespace GamaManager
         {
             object rawMainControl = this.DataContext;
             MainWindow mainWindow = ((MainWindow)(rawMainControl));
-            mainWindow.OpenEquipment();
+            string currentUserId = mainWindow.currentUserId;
+            mainWindow.OpenEquipment(currentUserId);
         }
 
         public void OpenFriendsSettingsHandler(object sender, RoutedEventArgs e)

@@ -616,6 +616,8 @@ namespace GamaManager.Dialogs
             List<string> currentCategories = loadedContent.categories;
             List<string> currentRecentChats = loadedContent.recentChats;
             Recommendations currentReccomendations = loadedContent.recommendations;
+            string currentLogoutDate = loadedContent.logoutDate;
+            List<string> currentSections = loadedContent.sections;
             object rawIsChecked = addNickAfterFriendNameBtn.IsChecked;
             bool isChecked = ((bool)(rawIsChecked));
             updatedSettings.isAddNickAfterFriendNames = isChecked;
@@ -692,7 +694,9 @@ namespace GamaManager.Dialogs
                 notifications = currentNotifications,
                 categories = currentCategories,
                 recentChats = currentRecentChats,
-                recommendations = currentReccomendations
+                recommendations = currentReccomendations,
+                logoutDate = currentLogoutDate,
+                sections = currentSections,
             });
             File.WriteAllText(saveDataFilePath, savedContent);
         }

@@ -39,6 +39,8 @@ using System.Collections.Specialized;
 using Sparrow.Chart;
 using ImapX;
 using System.Net.Mail;
+using System.Device.Location;
+using System.Serv;
 
 namespace GamaManager
 {
@@ -75,6 +77,7 @@ namespace GamaManager
         public DispatcherTimer carouselTimer;
         public bool isYearlyDiscount = false;
         public string lastContentUserId = "";
+        public GeoCoordinateWatcher watcher;
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -200,7 +203,6 @@ namespace GamaManager
                                 Grid.SetRow(label, lastRowIndex);
                                 Grid.SetColumn(label, 3);
                                 label = new TextBlock();
-                                // label.Text = rawMyPurchasePrice;
                                 labelContent = rawMyPurchasePrice + " руб.";
                                 label.Text = labelContent;
                                 label.Margin = new Thickness(15);
@@ -209,13 +211,201 @@ namespace GamaManager
                                 Grid.SetColumn(label, 4);
                                 label = new TextBlock();
                                 labelContent = rawMyPurchaseBalance + " руб.";
-                                // label.Text = rawMyPurchaseBalance;
                                 label.Text = labelContent;
                                 label.Margin = new Thickness(15);
                                 purchases.Children.Add(label);
                                 Grid.SetRow(label, lastRowIndex);
                                 Grid.SetColumn(label, 5);
                             }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenRecentLoginHistoryLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenRecentLoginHistoryLogs();
+        }
+
+        public void OpenRecentLoginHistoryLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/logins/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        RecentLoginHistoryResponseInfo myObj = (RecentLoginHistoryResponseInfo)js.Deserialize(objText, typeof(RecentLoginHistoryResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<RecentLogin> totalRecentLoginHistory = myObj.logins;
+                            List<RecentLogin> myRecentLoginHistory = totalRecentLoginHistory.Where<RecentLogin>((RecentLogin device) =>
+                            {
+                                string deviceUser = device.user;
+                                bool isMyLogin = deviceUser == currentUserId;
+                                return isMyLogin;
+                            }).ToList<RecentLogin>();
+                            RowDefinitionCollection rows = recentLoginHistoryLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                recentLoginHistoryLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection recentLoginHistoryLogsChildren = recentLoginHistoryLogs.Children;
+                            int recentLoginHistoryLogsChildrenCount = recentLoginHistoryLogsChildren.Count;
+                            isHavePreviousData = recentLoginHistoryLogsChildrenCount >= 7;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = recentLoginHistoryLogsChildrenCount - 6;
+                                recentLoginHistoryLogs.Children.RemoveRange(6, countRemovedChildren);
+                            }
+                            foreach (RecentLogin login in myRecentLoginHistory)
+                            {
+                                string startDate = login.start;
+                                string endDate = login.end;
+                                string os = login.os;
+                                string country = login.country;
+                                string city = login.city;
+                                string state = login.state;
+                                RowDefinition row = new RowDefinition();
+                                row.Height = new GridLength(50);
+                                deviceLogs.RowDefinitions.Add(row);
+                                rows = deviceLogs.RowDefinitions;
+                                rowsCount = rows.Count;
+                                int lastRowIndex = rowsCount - 1;
+                                TextBlock recentLoginStartLabel = new TextBlock();
+                                recentLoginStartLabel.Text = "Начало";
+                                recentLoginStartLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginStartLabel);
+                                Grid.SetRow(recentLoginStartLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginStartLabel, 0);
+                                TextBlock recentLoginEndLabel = new TextBlock();
+                                recentLoginEndLabel.Text = "Конец";
+                                recentLoginEndLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginEndLabel);
+                                Grid.SetRow(recentLoginEndLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginEndLabel, 1);
+                                TextBlock recentLoginOsLabel = new TextBlock();
+                                recentLoginOsLabel.Text = "ос";
+                                recentLoginOsLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginOsLabel);
+                                Grid.SetRow(recentLoginOsLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginOsLabel, 2);
+                                TextBlock recentLoginCountryLabel = new TextBlock();
+                                recentLoginCountryLabel.Text = "Страна";
+                                recentLoginCountryLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginCountryLabel);
+                                Grid.SetRow(recentLoginCountryLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginCountryLabel, 3);
+                                TextBlock recentLoginCityLabel = new TextBlock();
+                                recentLoginCityLabel.Text = "Город";
+                                recentLoginCityLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginCityLabel);
+                                Grid.SetRow(recentLoginCityLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginCityLabel, 4);
+                                TextBlock recentLoginStateLabel = new TextBlock();
+                                recentLoginStateLabel.Text = "Область";
+                                recentLoginStateLabel.Margin = new Thickness(15);
+                                recentLoginHistoryLogs.Children.Add(recentLoginStateLabel);
+                                Grid.SetRow(recentLoginStateLabel, lastRowIndex);
+                                Grid.SetColumn(recentLoginStateLabel, 5);
+                            }
+                            mainControl.SelectedIndex = 76;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenUsedDeviceLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenUsedDeviceLogs();
+        }
+
+        public void OpenUsedDeviceLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/devices/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        DevicesResponseInfo myObj = (DevicesResponseInfo)js.Deserialize(objText, typeof(DevicesResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Device> totalDevices = myObj.devices;
+                            List<Device> myDevices = totalDevices.Where<Device>((Device device) =>
+                            {
+                                string deviceUser = device.user;
+                                bool isMyDevice = deviceUser == currentUserId;
+                                return isMyDevice;
+                            }).ToList<Device>();
+                            RowDefinitionCollection rows = deviceLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                deviceLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection deviceLogsChildren = deviceLogs.Children;
+                            int deviceLogsChildrenCount = deviceLogsChildren.Count;
+                            isHavePreviousData = deviceLogsChildrenCount >= 3;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = deviceLogsChildrenCount - 2;
+                                deviceLogs.Children.RemoveRange(2, countRemovedChildren);
+                            }
+                            foreach (Device myDevice in myDevices)
+                            {
+                                string deviceName = myDevice.device;
+                                RowDefinition row = new RowDefinition();
+                                row.Height = new GridLength(50);
+                                deviceLogs.RowDefinitions.Add(row);
+                                rows = deviceLogs.RowDefinitions;
+                                rowsCount = rows.Count;
+                                int lastRowIndex = rowsCount - 1;
+                                TextBlock deviceLogUserNameLabel = new TextBlock();
+                                deviceLogUserNameLabel.Text = deviceName;
+                                deviceLogUserNameLabel.Margin = new Thickness(15);
+                                deviceLogs.Children.Add(deviceLogUserNameLabel);
+                                Grid.SetRow(deviceLogUserNameLabel, lastRowIndex);
+                                Grid.SetColumn(deviceLogUserNameLabel, 0);
+                                TextBlock deviceLogSystemNameLabel = new TextBlock();
+                                deviceLogSystemNameLabel.Text = deviceName;
+                                deviceLogSystemNameLabel.Margin = new Thickness(15);
+                                deviceLogs.Children.Add(deviceLogSystemNameLabel);
+                                Grid.SetRow(deviceLogSystemNameLabel, lastRowIndex);
+                                Grid.SetColumn(deviceLogSystemNameLabel, 1);
+                            }
+                            mainControl.SelectedIndex = 75;
                         }
                     }
                 }
@@ -304,7 +494,7 @@ namespace GamaManager
                                         if (isHavePreviousData)
                                         {
                                             int countRemovedChildren = msgLogsChildrenCount - 4;
-                                            msgLogs.Children.RemoveRange(1, countRemovedChildren);
+                                            msgLogs.Children.RemoveRange(4, countRemovedChildren);
                                         }
                                         foreach (Msg msg in msgs)
                                         {
@@ -2524,7 +2714,26 @@ namespace GamaManager
                 GetMyUserSubs();
                 GetHelpInfo();
                 GetPossibleFriendScammers();
+                GetLocationEvent();
             }
+        }
+
+        public void GetLocationEvent ()
+        {
+            this.watcher = new GeoCoordinateWatcher();
+            this.watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
+            bool started = this.watcher.TryStart(false, TimeSpan.FromMilliseconds(20000));
+
+        }
+        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            GeoPosition<GeoCoordinate> currentPosition = e.Position;
+            GeoCoordinate currentLocation = currentPosition.Location;
+            double latitude = currentLocation.Latitude;
+            double longitude = currentLocation.Longitude;
+            string rawLatitude = latitude.ToString();
+            string rawLongitude = longitude.ToString();
+            Debugger.Log(0, "debug", Environment.NewLine + "latitude" + rawLatitude + ", longitude" + rawLongitude + Environment.NewLine);
         }
 
         public void GetEquipmentGameTabs (string id)
@@ -20978,7 +21187,9 @@ namespace GamaManager
 
         public void IncreaseUserToStats()
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase");
+            string deviceName = Environment.MachineName;
+            // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase/");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase/?id=" + currentUserId + @"&device=" + deviceName);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22726,10 +22937,20 @@ namespace GamaManager
             }
         }
 
-        public void DecreaseUserToStats()
+        public void DecreaseUserToStats ()
         {
-            try {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
+            DateTime currentDateTime = DateTime.Now;
+            string rawCurrentDate = currentDateTime.ToLongDateString();
+            string rawCurrentTime = currentDateTime.ToLongTimeString();
+            string rawCurrentDateTime = rawCurrentDate + " в " + rawCurrentTime;
+            OperatingSystem os = Environment.OSVersion;
+            Version osVersion = os.Version;
+            int osMajorVersion = osVersion.Major;
+            string rawOsMajorVersion = osMajorVersion.ToString();
+            try
+            {
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease/?id=" + currentUserId + @"&start=" + "" + @"&end=" + rawCurrentDateTime + @"&os=" + rawOsMajorVersion + @"&country=" + "" + @"&city=" + "" + @"&state=" + "");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22738,9 +22959,7 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         RegisterResponseInfo myobj = (RegisterResponseInfo)js.Deserialize(objText, typeof(RegisterResponseInfo));
-
                         string status = myobj.status;
                         bool isErrorStatus = status == "Error";
                         if (isErrorStatus)
@@ -34114,6 +34333,35 @@ namespace GamaManager
         public string type;
         public string msg;
         public DateTime date;
+    }
+
+    public class DevicesResponseInfo
+    {
+        public string status;
+        public List<Device> devices;
+    }
+
+    public class Device
+    {
+        public string device;
+        public string user;
+    }
+
+    public class RecentLoginHistoryResponseInfo
+    {
+        public string status;
+        public List<RecentLogin> logins;
+    }
+
+    public class RecentLogin
+    {
+        public string user;
+        public string start;
+        public string end;
+        public string os;
+        public string country;
+        public string city;
+        public string state;
     }
 
 }

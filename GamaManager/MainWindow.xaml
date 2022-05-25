@@ -24177,7 +24177,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                                MouseLeftButtonUp="OpenUsedDeviceLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -25062,6 +25062,149 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Загрузить еще"    
                                 MouseLeftButtonUp="OpenMsgLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Использовавшиеся компьютеры"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                FontSize="16"
+                                Text="Использовавшиеся компьютеры"    
+                                Margin="15"
+                            />
+                            <Grid
+                                x:Name="deviceLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Пользовательское имя компьютера"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Системное имя компьютера"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenUsedDeviceLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="История недавних входов"    
+                                />
+                            </StackPanel>
+                            <Grid
+                                x:Name="recentLoginHistoryLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Время входа"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Время выхода"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="ОС"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Страна"    
+                                />
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Город"    
+                                />
+                                <TextBlock
+                                    Grid.Column="5"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Штат/область"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenRecentLoginHistoryLogsHandler"
                             />
                         </StackPanel>
                     </DockPanel>

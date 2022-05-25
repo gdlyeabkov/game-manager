@@ -1715,7 +1715,8 @@ namespace GamaManager.Dialogs
                                                                                 newMsgData.Add("talk", newMsgContent);
                                                                                 newMsgData.Add("label", newMsgLabel);
                                                                                 newMsg.DataContext = newMsgData;
-                                                                                newMsg.MouseLeftButtonUp += OpenLinkHandler;
+                                                                                // newMsg.MouseLeftButtonUp += OpenLinkHandler;
+                                                                                newMsg.GotMouseCapture += OpenLinkHandler;
                                                                             }
                                                                             else
                                                                             {
@@ -1913,18 +1914,20 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void OpenLinkHandler(object sender, RoutedEventArgs e)
+        public void OpenLinkHandler (object sender, RoutedEventArgs e)
         {
             StackPanel msg = ((StackPanel)(sender));
             object rawMsgData = msg.DataContext;
             Dictionary<String, Object> msgData = ((Dictionary<String, Object>)(rawMsgData));
             string msgId = ((string)(msgData["msg"]));
             string talkId = ((string)(msgData["talk"]));
-            TextBlock label = ((TextBlock)(msgData["label"]));
+            // TextBlock label = ((TextBlock)(msgData["label"]));
+            TextBox label = ((TextBox)(msgData["label"]));
             OpenLink(talkId, msg, msgId, label);
         }
 
-        public void OpenLink(string talkId, StackPanel msg, string msgId, TextBlock msgLabel)
+        // public void OpenLink(string talkId, StackPanel msg, string msgId, TextBlock msgLabel)
+        public void OpenLink(string talkId, StackPanel msg, string msgId, TextBox msgLabel)
         {
             try
             {
@@ -1937,7 +1940,8 @@ namespace GamaManager.Dialogs
                     {
                         msgLabel.Foreground = System.Windows.Media.Brushes.LightGray;
                         msgLabel.TextDecorations = null;
-                        msg.MouseLeftButtonUp -= OpenLinkHandler;
+                        // msg.MouseLeftButtonUp -= OpenLinkHandler;
+                        msg.GotMouseCapture -= OpenLinkHandler;
                         // закрываем окно чтобы в случае если было несколько приглашений в 1 беседу обновить сообщения при следующем открытии окна и заблокировать такие ссылки
                         this.Close();
                     }

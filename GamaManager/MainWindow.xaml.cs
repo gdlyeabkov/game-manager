@@ -40,7 +40,6 @@ using Sparrow.Chart;
 using ImapX;
 using System.Net.Mail;
 using System.Device.Location;
-using System.Serv;
 
 namespace GamaManager
 {
@@ -78,6 +77,10 @@ namespace GamaManager
         public bool isYearlyDiscount = false;
         public string lastContentUserId = "";
         public GeoCoordinateWatcher watcher;
+        string cachedReverseGeoCodeCountry = "";
+        string cachedReverseGeoCodeCity = "";
+        string cachedReverseGeoCodeState = "";
+        public DateTime loginDateTime;
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -252,10 +255,10 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<RecentLogin> totalRecentLoginHistory = myObj.logins;
-                            List<RecentLogin> myRecentLoginHistory = totalRecentLoginHistory.Where<RecentLogin>((RecentLogin device) =>
+                            List<RecentLogin> myRecentLoginHistory = totalRecentLoginHistory.Where<RecentLogin>((RecentLogin login) =>
                             {
-                                string deviceUser = device.user;
-                                bool isMyLogin = deviceUser == currentUserId;
+                                string loginUser = login.user;
+                                bool isMyLogin = loginUser == currentUserId;
                                 return isMyLogin;
                             }).ToList<RecentLogin>();
                             RowDefinitionCollection rows = recentLoginHistoryLogs.RowDefinitions;
@@ -284,18 +287,20 @@ namespace GamaManager
                                 string state = login.state;
                                 RowDefinition row = new RowDefinition();
                                 row.Height = new GridLength(50);
-                                deviceLogs.RowDefinitions.Add(row);
-                                rows = deviceLogs.RowDefinitions;
+                                recentLoginHistoryLogs.RowDefinitions.Add(row);
+                                rows = recentLoginHistoryLogs.RowDefinitions;
                                 rowsCount = rows.Count;
                                 int lastRowIndex = rowsCount - 1;
                                 TextBlock recentLoginStartLabel = new TextBlock();
-                                recentLoginStartLabel.Text = "Начало";
+                                // recentLoginStartLabel.Text = "Начало";
+                                recentLoginStartLabel.Text = startDate;
                                 recentLoginStartLabel.Margin = new Thickness(15);
                                 recentLoginHistoryLogs.Children.Add(recentLoginStartLabel);
                                 Grid.SetRow(recentLoginStartLabel, lastRowIndex);
                                 Grid.SetColumn(recentLoginStartLabel, 0);
                                 TextBlock recentLoginEndLabel = new TextBlock();
-                                recentLoginEndLabel.Text = "Конец";
+                                // recentLoginEndLabel.Text = "Конец";
+                                recentLoginEndLabel.Text = endDate;
                                 recentLoginEndLabel.Margin = new Thickness(15);
                                 recentLoginHistoryLogs.Children.Add(recentLoginEndLabel);
                                 Grid.SetRow(recentLoginEndLabel, lastRowIndex);
@@ -307,19 +312,22 @@ namespace GamaManager
                                 Grid.SetRow(recentLoginOsLabel, lastRowIndex);
                                 Grid.SetColumn(recentLoginOsLabel, 2);
                                 TextBlock recentLoginCountryLabel = new TextBlock();
-                                recentLoginCountryLabel.Text = "Страна";
+                                // recentLoginCountryLabel.Text = "Страна";
+                                recentLoginCountryLabel.Text = country;
                                 recentLoginCountryLabel.Margin = new Thickness(15);
                                 recentLoginHistoryLogs.Children.Add(recentLoginCountryLabel);
                                 Grid.SetRow(recentLoginCountryLabel, lastRowIndex);
                                 Grid.SetColumn(recentLoginCountryLabel, 3);
                                 TextBlock recentLoginCityLabel = new TextBlock();
-                                recentLoginCityLabel.Text = "Город";
+                                // recentLoginCityLabel.Text = "Город";
+                                recentLoginCityLabel.Text = city;
                                 recentLoginCityLabel.Margin = new Thickness(15);
                                 recentLoginHistoryLogs.Children.Add(recentLoginCityLabel);
                                 Grid.SetRow(recentLoginCityLabel, lastRowIndex);
                                 Grid.SetColumn(recentLoginCityLabel, 4);
                                 TextBlock recentLoginStateLabel = new TextBlock();
-                                recentLoginStateLabel.Text = "Область";
+                                // recentLoginStateLabel.Text = "Область";
+                                recentLoginStateLabel.Text = state;
                                 recentLoginStateLabel.Margin = new Thickness(15);
                                 recentLoginHistoryLogs.Children.Add(recentLoginStateLabel);
                                 Grid.SetRow(recentLoginStateLabel, lastRowIndex);
@@ -1003,7 +1011,7 @@ namespace GamaManager
             }
 
             string rawCountOnlineFriends = countOnlineFriends.ToString();
-            string yourCountFriendsLabelContent = "Ваши друзья" + rawCountOnlineFriends + "/";
+            string yourCountFriendsLabelContent = "Ваши друзья " + rawCountOnlineFriends + "/";
             yourCountOnlineFriendsLabel.Text = yourCountFriendsLabelContent;
 
         }
@@ -1433,6 +1441,111 @@ namespace GamaManager
 
             GetSearchedGroups();
 
+            GetModerators();
+
+        }
+
+        public void GetModerators ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        ModeratorsResponseInfo myobj = (ModeratorsResponseInfo)js.Deserialize(objText, typeof(ModeratorsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Moderator> totalModerators = myobj.moderators;
+                            List<Moderator> myModerators = totalModerators.Where<Moderator>((Moderator moderator) =>
+                            {
+                                string userId = moderator.user;
+                                bool isMyModerator = userId == currentUserId;
+                                return isMyModerator;
+                            }).ToList<Moderator>();
+                            moderatorList.Children.Clear();
+                            foreach (Moderator myModerator in myModerators)
+                            {
+                                string moderatorId = myModerator.moderator;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + moderatorId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User myFriend = myInnerObj.user;
+                                            string name = myFriend.name;
+                                            string userStatus = myFriend.status;
+                                            StackPanel friend = new StackPanel();
+                                            friend.Margin = new Thickness(15);
+                                            friend.Width = 250;
+                                            friend.Height = 50;
+                                            friend.Orientation = Orientation.Horizontal;
+                                            friend.Background = System.Windows.Media.Brushes.DarkCyan;
+                                            Image friendIcon = new Image();
+                                            friendIcon.Width = 50;
+                                            friendIcon.Height = 50;
+                                            friendIcon.BeginInit();
+                                            friendIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                            friendIcon.EndInit();
+                                            friendIcon.ImageFailed += SetDefautAvatarHandler;
+                                            friend.Children.Add(friendIcon);
+                                            Separator friendStatus = new Separator();
+                                            friendStatus.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
+                                            friendStatus.LayoutTransform = new RotateTransform(90);
+                                            friend.Children.Add(friendStatus);
+                                            TextBlock friendNameLabel = new TextBlock();
+                                            friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                            friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                            friendNameLabel.Width = 75;
+                                            friendNameLabel.Text = name;
+                                            friend.Children.Add(friendNameLabel);
+                                            CheckBox friendCheckBox = new CheckBox();
+                                            Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
+                                            bool isVisible = friendsListManagementVisibility == visible;
+                                            if (isVisible)
+                                            {
+                                                friendCheckBox.Visibility = visible;
+                                            }
+                                            else
+                                            {
+                                                friendCheckBox.Visibility = invisible;
+                                            }
+                                            friendCheckBox.Margin = new Thickness(5, 15, 5, 15);
+                                            friend.Children.Add(friendCheckBox);
+                                            moderatorList.Children.Add(friend);
+                                            friend.DataContext = moderatorId;
+                                            friend.MouseMove += ShowFriendInfoHandler;
+                                            mainControl.DataContext = moderatorId;
+                                            friend.MouseLeftButtonUp += ReturnToProfileHandler;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetAddFriendInfo()
@@ -2723,17 +2836,58 @@ namespace GamaManager
             this.watcher = new GeoCoordinateWatcher();
             this.watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
             bool started = this.watcher.TryStart(false, TimeSpan.FromMilliseconds(20000));
-
+            loginDateTime = DateTime.Now;
         }
-        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        void watcher_PositionChanged (object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             GeoPosition<GeoCoordinate> currentPosition = e.Position;
             GeoCoordinate currentLocation = currentPosition.Location;
             double latitude = currentLocation.Latitude;
             double longitude = currentLocation.Longitude;
             string rawLatitude = latitude.ToString();
+            string[] rawLatitudeParts = rawLatitude.Split(new Char[] { ',' });
+            string rawLatitudeRealPart = rawLatitudeParts[0];
+            string rawLatitudeImaginaryPart = rawLatitudeParts[1];
+            rawLatitude = rawLatitudeRealPart + "." + rawLatitudeImaginaryPart;
             string rawLongitude = longitude.ToString();
-            Debugger.Log(0, "debug", Environment.NewLine + "latitude" + rawLatitude + ", longitude" + rawLongitude + Environment.NewLine);
+            string[] rawLongitudeParts = rawLongitude.Split(new Char[] { ',' });
+            string rawLongitudeRealPart = rawLongitudeParts[0];
+            string rawLongitudeImaginaryPart = rawLongitudeParts[1];
+            rawLongitude = rawLongitudeRealPart + "." + rawLongitudeImaginaryPart;
+            Debugger.Log(0, "debug", Environment.NewLine + "latitude: " + rawLatitude + ", longitude: " + rawLongitude + Environment.NewLine);
+            bool isSendRequest = false;
+            if (isSendRequest)
+            {
+                string url = "https://us1.locationiq.com/v1/reverse.php?key=pk.1f1ea005fb2fcbc6f4a13aa3fb6d1458&lat=" + rawLatitude + "&lon=" + rawLongitude + "&format=json";
+                try
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+                    webRequest.Method = "GET";
+                    webRequest.UserAgent = ".NET Framework Test Client";
+                    using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                    {
+                        using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                        {
+                            JavaScriptSerializer js = new JavaScriptSerializer();
+                            var objText = reader.ReadToEnd();
+                            ReverseGeoCodeResponseInfo myObj = (ReverseGeoCodeResponseInfo)js.Deserialize(objText, typeof(ReverseGeoCodeResponseInfo));
+                            ReverseGeoCodeAddress address = myObj.address;
+                            string country = address.country;
+                            string city = address.city;
+                            string state = address.state;
+                            cachedReverseGeoCodeCountry = country;
+                            cachedReverseGeoCodeCity = city;
+                            cachedReverseGeoCodeState = state;
+                            Debugger.Log(0, "debug", Environment.NewLine + "country: " + country + ", city: " + city + ", state: " + state + Environment.NewLine);
+                        }
+                    }
+                }
+                catch (System.Net.WebException exception)
+                {
+                
+                }
+            }
+            this.watcher.PositionChanged -= watcher_PositionChanged;
         }
 
         public void GetEquipmentGameTabs (string id)
@@ -2855,6 +3009,10 @@ namespace GamaManager
 
         public void SelectEquipmentTab (int index)
         {
+
+            equipmentControl.Visibility = visible;
+            equipmentresentsHistory.Visibility = invisible;
+
             UIElementCollection equipmentGameTabsChildren = equipmentGameTabs.Children;
             foreach (StackPanel equipmentGameTab in equipmentGameTabsChildren)
             {
@@ -8259,6 +8417,95 @@ namespace GamaManager
             }
         }
 
+        public void OpenRecentRunRecommendationGamesHandler (object sender, RoutedEventArgs e)
+        {
+            OpenRecentRunRecommendationGames();
+        }
+
+        public void OpenRecentRunRecommendationGames ()
+        {
+            OpenGameRecommendations();
+            gameRecommendationsControl.SelectedIndex = 0;
+        }
+
+        public void OpenGameReviewsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGameReviews();
+        }
+
+        public void OpenGameReviews ()
+        {
+            OpenGameRecommendations();
+            gameRecommendationsControl.SelectedIndex = 5;
+        }
+
+        public void OpenLeaderBoardHandler (object sender, RoutedEventArgs e)
+        {
+            OpenLeaderBoard();
+        }
+
+        public void OpenLeaderBoard ()
+        {
+            Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
+            string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
+            string saveDataFilePath = localApplicationDataFolderPath + @"\OfficeWare\GameManager\" + currentUserId + @"\save-data.txt";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string saveDataFileContent = File.ReadAllText(saveDataFilePath);
+            SavedContent loadedContent = js.Deserialize<SavedContent>(saveDataFileContent);
+            List<Game> currentGames = loadedContent.games;
+            RowDefinitionCollection rows = leaderBoardLogs.RowDefinitions;
+            int rowsCount = rows.Count;
+            bool isHavePreviousData = rowsCount >= 2;
+            if (isHavePreviousData)
+            {
+                int countRemovedRows = rowsCount - 1;
+                leaderBoardLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+            }
+            UIElementCollection leaderBoardLogsChildren = leaderBoardLogs.Children;
+            int leaderBoardLogsChildrenCount = leaderBoardLogsChildren.Count;
+            isHavePreviousData = leaderBoardLogsChildrenCount >= 3;
+            if (isHavePreviousData)
+            {
+                int countRemovedChildren = leaderBoardLogsChildrenCount - 2;
+                leaderBoardLogs.Children.RemoveRange(2, countRemovedChildren);
+            }
+            foreach (Game currentGame in currentGames)
+            {
+                string appName = currentGame.name;
+                RowDefinition row = new RowDefinition();
+                row.Height = new GridLength(50);
+                leaderBoardLogs.RowDefinitions.Add(row);
+                rows = leaderBoardLogs.RowDefinitions;
+                rowsCount = rows.Count;
+                int lastRowIndex = rowsCount - 1;
+                TextBlock appNameLabel = new TextBlock();
+                appNameLabel.Text = appName;
+                appNameLabel.Margin = new Thickness(15);
+                leaderBoardLogs.Children.Add(appNameLabel);
+                Grid.SetRow(appNameLabel, lastRowIndex);
+                Grid.SetColumn(appNameLabel, 0);
+                TextBlock leaderNameLabel = new TextBlock();
+                leaderNameLabel.Text = "-";
+                leaderNameLabel.Margin = new Thickness(15);
+                leaderBoardLogs.Children.Add(leaderNameLabel);
+                Grid.SetRow(leaderNameLabel, lastRowIndex);
+                Grid.SetColumn(leaderNameLabel, 1);
+                TextBlock recordLabel = new TextBlock();
+                recordLabel.Text = "0";
+                recordLabel.Margin = new Thickness(15);
+                leaderBoardLogs.Children.Add(recordLabel);
+                Grid.SetRow(recordLabel, lastRowIndex);
+                Grid.SetColumn(recordLabel, 2);
+                TextBlock gameDataLabel = new TextBlock();
+                gameDataLabel.Text = "Нет";
+                gameDataLabel.Margin = new Thickness(15);
+                leaderBoardLogs.Children.Add(gameDataLabel);
+                Grid.SetRow(gameDataLabel, lastRowIndex);
+                Grid.SetColumn(gameDataLabel, 3);
+            }
+            mainControl.SelectedIndex = 77;
+        }
+
         public void SelectReviewFromRecommendationsHandler (object sender, RoutedEventArgs e)
         {
             TextBlock descLabel = ((TextBlock)(sender));
@@ -8267,7 +8514,7 @@ namespace GamaManager
             SelectReview(id);
         }
 
-        public void GetGameRecommendationsInfo()
+        public void GetGameRecommendationsInfo ()
         {
             try
             {
@@ -8375,6 +8622,7 @@ namespace GamaManager
             }).ToList<Game>();
             foreach (Game recentGame in recentGames)
             {
+                string recentRunGameId = recentGame.id;
                 string recentRunGameName = recentGame.name;
                 string recentRunGameHours = recentGame.hours;
                 StackPanel recentRunGame = new StackPanel();
@@ -8439,6 +8687,11 @@ namespace GamaManager
                 recentRunGameAsideFooterLinksItem.Content = "Прочитать последние новости";
                 recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
                 recentRunGameAsideFooterLinks.SelectedIndex = 0;
+                // recentRunGameAsideFooterLinks.DataContext = recentRunGameId;
+                Dictionary<String, Object> recentRunGameAsideFooterLinksData = new Dictionary<String, Object>();
+                recentRunGameAsideFooterLinksData.Add("id", recentRunGameId);
+                recentRunGameAsideFooterLinksData.Add("name", recentRunGameName);
+                recentRunGameAsideFooterLinks.DataContext = recentRunGameAsideFooterLinksData;
                 recentRunGameAsideFooterLinks.SelectionChanged += GameRecommendationsFooterLinksItemSelectedHandler;
 
                 recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterLinks);
@@ -8546,6 +8799,7 @@ namespace GamaManager
             }
             foreach (Game recentGame in currentGames)
             {
+                string recentRunGameId = recentGame.id;
                 string recentRunGameName = recentGame.name;
                 string insensitiveCaseRecentRunGameName = recentRunGameName;
                 bool isKeywordsMatch = insensitiveCaseRecentRunGameName.Contains(insensitiveCaseAllRecommendationGamesBoxContent);
@@ -8615,6 +8869,11 @@ namespace GamaManager
                     recentRunGameAsideFooterLinksItem.Content = "Прочитать последние новости";
                     recentRunGameAsideFooterLinks.Items.Add(recentRunGameAsideFooterLinksItem);
                     recentRunGameAsideFooterLinks.SelectedIndex = 0;
+                    // recentRunGameAsideFooterLinks.DataContext = recentRunGameId;
+                    Dictionary<String, Object> recentRunGameAsideFooterLinksData = new Dictionary<String, Object>();
+                    recentRunGameAsideFooterLinksData.Add("id", recentRunGameId);
+                    recentRunGameAsideFooterLinksData.Add("name", recentRunGameName);
+                    recentRunGameAsideFooterLinks.DataContext = recentRunGameAsideFooterLinksData;
                     recentRunGameAsideFooterLinks.SelectionChanged += GameRecommendationsFooterLinksItemSelectedHandler;
 
                     recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterLinks);
@@ -8672,6 +8931,16 @@ namespace GamaManager
             }
         }
 
+        public void OpenGameStatsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenGameStats();
+        }
+
+        public void OpenGameStats ()
+        {
+            OpenGameRecommendations();
+            gameRecommendationsControl.SelectedIndex = 1;
+        }
 
         public void SelectGameRecommendationsItemHandler (object sender, SelectionChangedEventArgs e)
         {
@@ -8720,7 +8989,7 @@ namespace GamaManager
             selector.SelectedIndex = 0;
         }
 
-        private void GameRecommendationsFooterLinksItemSelectedHandler(object sender, SelectionChangedEventArgs e)
+        private void GameRecommendationsFooterLinksItemSelectedHandler (object sender, SelectionChangedEventArgs e)
         {
             if (isAppInit)
             {
@@ -8729,9 +8998,23 @@ namespace GamaManager
             }
         }
 
-        public void GameRecommendationsFooterLinksItemSelected(ComboBox selector)
+        public void GameRecommendationsFooterLinksItemSelected (ComboBox selector)
         {
             int selectedIndex = selector.SelectedIndex;
+
+            /*
+            ItemCollection selectorItems = selector.Items;
+            object rawSelectedSelectorItem = selectorItems[selectedIndex];
+            ComboBoxItem selectedSelectorItem = ((ComboBoxItem)(rawSelectedSelectorItem));
+            object rawGameId = selectedSelectorItem.DataContext;
+            string gameId = ((string)(rawGameId));
+            */
+            object selectorData = selector.DataContext;
+            // string gameId = ((string)(selectorData));
+            Dictionary<String, Object> gameData = ((Dictionary<String, Object>)(selectorData));
+            string gameId = ((string)(gameData["id"]));
+            string gameName = ((string)(gameData["name"]));
+
             bool isVisitStorePage = selectedIndex == 1;
             bool isVisitForums = selectedIndex == 2;
             bool isFindCommunityGroups = selectedIndex == 3;
@@ -8744,10 +9027,19 @@ namespace GamaManager
             else if (isVisitForums)
             {
 
+                /*
+                Для посещения сообщества по игре
+                mainControl.SelectedIndex = 20;
+                SelectCommunityGameAnnotation(gameId);
+                */
+
+
+                OpenDiscussions(gameName);
+
             }
             else if (isFindCommunityGroups)
             {
-
+                SearchGroups();
             }
             else if (isVisitOfficialSite)
             {
@@ -8755,7 +9047,7 @@ namespace GamaManager
             }
             else if (isReadLastNews)
             {
-
+                OpenNews();
             }
             selector.SelectedIndex = 0;
         }
@@ -16371,7 +16663,7 @@ namespace GamaManager
             visible = Visibility.Visible;
             invisible = Visibility.Collapsed;
             friendRequestBackground = System.Windows.Media.Brushes.AliceBlue;
-            disabledColor = System.Windows.Media.Brushes.LightGray;
+            disabledColor = System.Windows.Media.Brushes.Gray;
             enabledColor = System.Windows.Media.Brushes.Black;
             history = new List<int>();
         }
@@ -20689,8 +20981,7 @@ namespace GamaManager
                 }
                 else if (isIcons)
                 {
-                    mainControl.SelectedIndex = 12;
-                    AddHistoryRecord();
+                    OpenIcons();
                 }
                 else if (isEquipment)
                 {
@@ -20700,8 +20991,23 @@ namespace GamaManager
             }
         }
 
+        public void OpenIconsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenIcons();
+        }
+
+        public void OpenIcons ()
+        {
+            mainControl.SelectedIndex = 12;
+            AddHistoryRecord();
+        }
+
         public void OpenEquipment (string id)
         {
+            
+            equipmentControl.Visibility = visible;
+            equipmentresentsHistory.Visibility = invisible;
+
             mainControl.SelectedIndex = 60;
             GetEquipmentInfo(id);
             GetEquipmentGames(id);
@@ -20808,6 +21114,790 @@ namespace GamaManager
         public void OpenGroupsSettingsHandler (object sender, RoutedEventArgs e)
         {
             OpenGroupsSettings();
+        }
+
+        public void OpenComplaintLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenComplaintLogs();
+        }
+
+        public void OpenComplaintLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/complaints/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        ComplaintsResponseInfo myObj = (ComplaintsResponseInfo)js.Deserialize(objText, typeof(ComplaintsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Complaint> totalComplaints = myObj.complaints;
+                            List<Complaint> myComplaints = totalComplaints.Where<Complaint>((Complaint complaint) =>
+                            {
+                                string complaintUser = complaint.user;
+                                bool isMyComplaint = complaintUser == currentUserId;
+                                return isMyComplaint;
+                            }).ToList<Complaint>();
+                            RowDefinitionCollection rows = complaintLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                complaintLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection complaintLogsChildren = complaintLogs.Children;
+                            int complaintLogsChildrenCount = complaintLogsChildren.Count;
+                            isHavePreviousData = complaintLogsChildrenCount >= 4;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = complaintLogsChildrenCount - 3;
+                                complaintLogs.Children.RemoveRange(3, countRemovedChildren);
+                            }
+                            foreach (Complaint myComplaint in myComplaints)
+                            {
+                                string complaintScammerId = myComplaint.scammer;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + complaintScammerId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            User scammer = myInnerObj.user;
+                                            string complaintLogContent = myComplaint.content;
+                                            DateTime complaintLogDate = myComplaint.date;
+                                            string rawComplaintLogDate = complaintLogDate.ToLongDateString();
+                                            string scammerName = scammer.name;
+                                            RowDefinition row = new RowDefinition();
+                                            row.Height = new GridLength(50);
+                                            complaintLogs.RowDefinitions.Add(row);
+                                            rows = complaintLogs.RowDefinitions;
+                                            rowsCount = rows.Count;
+                                            int lastRowIndex = rowsCount - 1;
+                                            TextBlock complaintLogDateLabel = new TextBlock();
+                                            complaintLogDateLabel.Text = rawComplaintLogDate;
+                                            complaintLogDateLabel.Margin = new Thickness(15);
+                                            complaintLogs.Children.Add(complaintLogDateLabel);
+                                            Grid.SetRow(complaintLogDateLabel, lastRowIndex);
+                                            Grid.SetColumn(complaintLogDateLabel, 0);
+                                            TextBlock complaintLogTypeLabel = new TextBlock();
+                                            string complaintLogTypeContent = scammerName + " жульничает.";
+                                            complaintLogTypeLabel.Text = complaintLogTypeContent;
+                                            complaintLogTypeLabel.Margin = new Thickness(15);
+                                            complaintLogs.Children.Add(complaintLogTypeLabel);
+                                            Grid.SetRow(complaintLogTypeLabel, lastRowIndex);
+                                            Grid.SetColumn(complaintLogTypeLabel, 1);
+                                            TextBlock complaintLogContentLabel = new TextBlock();
+                                            complaintLogContentLabel.Text = complaintLogContent;
+                                            complaintLogContentLabel.Margin = new Thickness(15);
+                                            complaintLogs.Children.Add(complaintLogContentLabel);
+                                            Grid.SetRow(complaintLogContentLabel, lastRowIndex);
+                                            Grid.SetColumn(complaintLogContentLabel, 2);
+                                        }
+                                    }
+                                }
+                            }
+                            mainControl.SelectedIndex = 81;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void UpgradeFriendToStreamModeratorHandler (object sender, RoutedEventArgs e)
+        {
+            UpgradeFriendToStreamModerator();
+        }
+
+        public void UpgradeFriendToStreamModerator ()
+        {
+            foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
+            {
+                foreach (UIElement onlineFriendsListItemElement in onlineFriendsListItem.Children)
+                {
+                    bool isCheckBox = onlineFriendsListItemElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = onlineFriendsListItemElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object friendData = onlineFriendsListItem.DataContext;
+                            string friendId = ((string)(friendData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                                          
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается добавить модератора", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (StackPanel offlineFriendsListItem in offlineFriendsList.Children)
+            {
+                foreach (UIElement offlineFriendsListItemElement in offlineFriendsListItem.Children)
+                {
+                    bool isCheckBox = offlineFriendsListItemElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = offlineFriendsListItemElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object friendData = offlineFriendsListItem.DataContext;
+                            string friendId = ((string)(friendData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается добавить модератора", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            GetFriendsSettings();
+        }
+
+        public void OpenSubLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSubLogs();
+        }
+
+        public void OpenSubLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserSubsResponseInfo myobj = (UserSubsResponseInfo)js.Deserialize(objText, typeof(UserSubsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<UserSub> subs = myobj.subs;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User user = myInnerObj.user;
+                                        string userName = user.name;
+                                        string subLogsTitleLabelContent = "Подписки " + userName;
+                                        subLogsTitleLabel.Text = subLogsTitleLabelContent;
+                                        subLogs.Children.Clear();
+                                        List<UserSub> mySubs = subs.Where<UserSub>((UserSub sub) =>
+                                        {
+                                            string subUserId = sub.user;
+                                            bool isCurrentUserId = subUserId == currentUserId;
+                                            return isCurrentUserId;
+                                        }).ToList<UserSub>();
+                                        foreach (UserSub myBlock in mySubs)
+                                        {
+                                            string subUserId = myBlock.sub;
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + subUserId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    UserResponseInfo myNestedObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        User subUser = myNestedObj.user;
+                                                        string subUserName = subUser.name;
+                                                        StackPanel block = new StackPanel();
+                                                        block.Margin = new Thickness(15);
+                                                        block.Orientation = Orientation.Horizontal;
+                                                        Image blockUserAvatar = new Image();
+                                                        blockUserAvatar.Width = 40;
+                                                        blockUserAvatar.Height = 40;
+                                                        blockUserAvatar.Margin = new Thickness(15);
+                                                        blockUserAvatar.BeginInit();
+                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + subUserId));
+                                                        blockUserAvatar.EndInit();
+                                                        block.Children.Add(blockUserAvatar);
+                                                        StackPanel blockAside = new StackPanel();
+                                                        blockAside.Margin = new Thickness(15);
+                                                        TextBlock blockAsideUserNameLabel = new TextBlock();
+                                                        blockAsideUserNameLabel.FontSize = 14;
+                                                        blockAsideUserNameLabel.Text = subUserName;
+                                                        blockAsideUserNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                        blockAside.Children.Add(blockAsideUserNameLabel);
+                                                        TextBlock blockAsideTalkTitleLabel = new TextBlock();
+                                                        blockAsideTalkTitleLabel.Text = "Вы подписаны";
+                                                        blockAsideTalkTitleLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                        blockAside.Children.Add(blockAsideTalkTitleLabel);
+                                                        block.Children.Add(blockAside);
+                                                        subLogs.Children.Add(block);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        mainControl.SelectedIndex = 82;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenBlockedLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenBlockedLogs();
+        }
+
+        public void OpenBlockedLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        TalkRelationsResponseInfo myObj = (TalkRelationsResponseInfo)js.Deserialize(objText, typeof(TalkRelationsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<TalkRelation> totalRelations = myObj.relations;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        User user = myInnerObj.user;
+                                        string userName = user.name;
+                                        blockedLogsUserAvatar.BeginInit();
+                                        blockedLogsUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar?/id=" + currentUserId));
+                                        blockedLogsUserAvatar.EndInit();
+                                        blockedLogsUserNameLabel.Text = userName;
+                                        List<TalkRelation> myRelations = totalRelations.Where<TalkRelation>((TalkRelation relation) =>
+                                        {
+                                            string emailUserId = relation.user;
+                                            bool isBlocked = relation.isBlocked;
+                                            bool isCurrentUser = emailUserId == currentUserId;
+                                            return isCurrentUser && isBlocked;
+                                        }).ToList<TalkRelation>();
+                                        blockedLogs.Children.Clear();
+                                        foreach (TalkRelation myBlock in myRelations)
+                                        {
+                                            string userId = myBlock.user;
+                                            string talkId = myBlock.talk;
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    TalkResponseInfo myNestedObj = (TalkResponseInfo)js.Deserialize(objText, typeof(TalkResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        Talk talk = myNestedObj.talk;
+                                                        string talkTitle = talk.title;
+                                                        StackPanel block = new StackPanel();
+                                                        block.Margin = new Thickness(15);
+                                                        block.Orientation = Orientation.Horizontal;
+                                                        Image blockUserAvatar = new Image();
+                                                        blockUserAvatar.Width = 40;
+                                                        blockUserAvatar.Height = 40;
+                                                        blockUserAvatar.Margin = new Thickness(15);
+                                                        blockUserAvatar.BeginInit();
+                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                        blockUserAvatar.EndInit();
+                                                        block.Children.Add(blockUserAvatar);
+                                                        StackPanel blockAside = new StackPanel();
+                                                        blockAside.Margin = new Thickness(15);
+                                                        TextBlock blockAsideUserNameLabel = new TextBlock();
+                                                        blockAsideUserNameLabel.FontSize = 14;
+                                                        blockAsideUserNameLabel.Text = userName;
+                                                        blockAsideUserNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                        blockAside.Children.Add(blockAsideUserNameLabel);
+                                                        TextBlock blockAsideTalkTitleLabel = new TextBlock();
+                                                        blockAsideTalkTitleLabel.Text = talkTitle;
+                                                        blockAsideTalkTitleLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                        blockAside.Children.Add(blockAsideTalkTitleLabel);
+                                                        block.Children.Add(blockAside);
+                                                        blockedLogs.Children.Add(block);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        mainControl.SelectedIndex = 80;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenSendedEmailLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenSendedEmailLogs();
+        }
+
+        public void OpenSendedEmailLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/emails/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        EmailsResponseInfo myObj = (EmailsResponseInfo)js.Deserialize(objText, typeof(EmailsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<Email> totalEmails = myObj.emails;
+                            List<Email> myEmails = totalEmails.Where<Email>((Email email) =>
+                            {
+                                string emailUserId = email.user;
+                                bool isCurrentUser = emailUserId == currentUserId;
+                                return isCurrentUser;
+                            }).ToList<Email>();
+                            RowDefinitionCollection rows = emailLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                emailLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection emailLogsChildren = emailLogs.Children;
+                            int emailLogsChildrenCount = emailLogsChildren.Count;
+                            isHavePreviousData = emailLogsChildrenCount >= 10;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = emailLogsChildrenCount - 9;
+                                emailLogs.Children.RemoveRange(9, countRemovedChildren);
+                            }
+                            foreach (Email myEmail in myEmails)
+                            {
+                                string senderId = myEmail.user;
+                                string recepient = myEmail.recepient;
+                                string id = myEmail._id;
+                                string data = myEmail.data;
+                                string type = myEmail.type;
+                                RowDefinition row = new RowDefinition();
+                                row.Height = new GridLength(50);
+                                emailLogs.RowDefinitions.Add(row);
+                                rows = emailLogs.RowDefinitions;
+                                rowsCount = rows.Count;
+                                int lastRowIndex = rowsCount - 1;
+                                TextBlock openedUserLabel = new TextBlock();
+                                openedUserLabel.Text = recepient;
+                                openedUserLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(openedUserLabel);
+                                Grid.SetRow(openedUserLabel, lastRowIndex);
+                                Grid.SetColumn(openedUserLabel, 0);
+                                TextBlock idLabel = new TextBlock();
+                                idLabel.Text = id;
+                                idLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(idLabel);
+                                Grid.SetRow(idLabel, lastRowIndex);
+                                Grid.SetColumn(idLabel, 1);
+                                TextBlock typeLabel = new TextBlock();
+                                typeLabel.Text = type;
+                                typeLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(typeLabel);
+                                Grid.SetRow(typeLabel, lastRowIndex);
+                                Grid.SetColumn(typeLabel, 2);
+                                TextBlock initLabel = new TextBlock();
+                                initLabel.Text = "1";
+                                initLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(initLabel);
+                                Grid.SetRow(initLabel, lastRowIndex);
+                                Grid.SetColumn(initLabel, 3);
+                                TextBlock sendLabel = new TextBlock();
+                                sendLabel.Text = "Да";
+                                sendLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(sendLabel);
+                                Grid.SetRow(sendLabel, lastRowIndex);
+                                Grid.SetColumn(sendLabel, 4);
+                                TextBlock deliveryLabel = new TextBlock();
+                                deliveryLabel.Text = "1";
+                                deliveryLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(deliveryLabel);
+                                Grid.SetRow(deliveryLabel, lastRowIndex);
+                                Grid.SetColumn(deliveryLabel, 5);
+                                TextBlock isDeliveryLabel = new TextBlock();
+                                isDeliveryLabel.Text = "Да";
+                                isDeliveryLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(isDeliveryLabel);
+                                Grid.SetRow(isDeliveryLabel, lastRowIndex);
+                                Grid.SetColumn(isDeliveryLabel, 6);
+                                TextBlock recepientLabel = new TextBlock();
+                                recepientLabel.Text = recepient;
+                                recepientLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(recepientLabel);
+                                Grid.SetRow(recepientLabel, lastRowIndex);
+                                Grid.SetColumn(recepientLabel, 7);
+                                TextBlock dataLabel = new TextBlock();
+                                dataLabel.Text = data;
+                                dataLabel.Margin = new Thickness(15);
+                                emailLogs.Children.Add(dataLabel);
+                                Grid.SetRow(dataLabel, lastRowIndex);
+                                Grid.SetColumn(dataLabel, 8);
+                            }
+                            mainControl.SelectedIndex = 79;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenFavoriteContentHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFavoriteContent();
+        }
+
+        public void OpenFavoriteContent()
+        {
+            try
+            {
+                HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                screenShotFavoriteRelationsWebRequest.Method = "GET";
+                screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
+                {
+                    using (var screenShotFavoriteRelationsReader = new StreamReader(screenShotFavoriteRelationsWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = screenShotFavoriteRelationsReader.ReadToEnd();
+                        ScreenShotFavoriteRelationsResponseInfo myScreenShotFavoriteRelationsObj = (ScreenShotFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ScreenShotFavoriteRelationsResponseInfo));
+                        string status = myScreenShotFavoriteRelationsObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ScreenShotFavoriteRelation> favoriteScreenShotRelations = myScreenShotFavoriteRelationsObj.relations;
+                            List<ScreenShotFavoriteRelation> myFavoriteScreenShotRelations = favoriteScreenShotRelations.Where<ScreenShotFavoriteRelation>((ScreenShotFavoriteRelation relation) =>
+                            {
+                                string relationUserId = relation.user;
+                                bool isCurrentUser = relationUserId == currentUserId;
+                                return isCurrentUser;
+                            }).ToList<ScreenShotFavoriteRelation>();
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            illustrationFavoriteRelationsWebRequest.Method = "GET";
+                            illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
+                            {
+                                using (var illustrationFavoriteRelationsReader = new StreamReader(illustrationFavoriteRelationsWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = illustrationFavoriteRelationsReader.ReadToEnd();
+                                    IllustrationFavoriteRelationsResponseInfo myIllustrationFavoriteRelationsObj = (IllustrationFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(IllustrationFavoriteRelationsResponseInfo));
+                                    status = myIllustrationFavoriteRelationsObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<IllustrationFavoriteRelation> favoriteIllustrationRelations = myIllustrationFavoriteRelationsObj.relations;
+                                        List<IllustrationFavoriteRelation> myFavoriteIllustrationRelations = favoriteIllustrationRelations.Where<IllustrationFavoriteRelation>((IllustrationFavoriteRelation relation) =>
+                                        {
+                                            string relationUserId = relation.user;
+                                            bool isCurrentUser = relationUserId == currentUserId;
+                                            return isCurrentUser;
+                                        }).ToList<IllustrationFavoriteRelation>();
+                                        HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                                        manualFavoriteRelationsWebRequest.Method = "GET";
+                                        manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
+                                        {
+                                            using (var manualFavoriteRelationsReader = new StreamReader(manualFavoriteRelationsWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = manualFavoriteRelationsReader.ReadToEnd();
+                                                ManualFavoriteRelationsResponseInfo myManualFavoriteRelationsObj = (ManualFavoriteRelationsResponseInfo)js.Deserialize(objText, typeof(ManualFavoriteRelationsResponseInfo));
+                                                status = myManualFavoriteRelationsObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<ManualFavoriteRelation> favoriteManualRelations = myManualFavoriteRelationsObj.relations;
+                                                    List<ManualFavoriteRelation> myFavoriteManualRelations = favoriteManualRelations.Where<ManualFavoriteRelation>((ManualFavoriteRelation relation) =>
+                                                    {
+                                                        string relationUserId = relation.user;
+                                                        bool isCurrentUser = relationUserId == currentUserId;
+                                                        return isCurrentUser;
+                                                    }).ToList<ManualFavoriteRelation>();
+                                                    RowDefinitionCollection rows = favoriteContentLogs.RowDefinitions;
+                                                    int rowsCount = rows.Count;
+                                                    bool isHavePreviousData = rowsCount >= 2;
+                                                    if (isHavePreviousData)
+                                                    {
+                                                        int countRemovedRows = rowsCount - 1;
+                                                        favoriteContentLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                                                    }
+                                                    UIElementCollection favoriteContentLogsChildren = favoriteContentLogs.Children;
+                                                    int favoriteContentLogsChildrenCount = favoriteContentLogsChildren.Count;
+                                                    isHavePreviousData = favoriteContentLogsChildrenCount >= 5;
+                                                    if (isHavePreviousData)
+                                                    {
+                                                        int countRemovedChildren = favoriteContentLogsChildrenCount - 4;
+                                                        favoriteContentLogs.Children.RemoveRange(4, countRemovedChildren);
+                                                    }
+                                                    foreach (ScreenShotFavoriteRelation myFavoriteScreenShotRelation in myFavoriteScreenShotRelations)
+                                                    {
+                                                        string id = myFavoriteScreenShotRelation.screenShot;
+                                                        RowDefinition row = new RowDefinition();
+                                                        row.Height = new GridLength(50);
+                                                        favoriteContentLogs.RowDefinitions.Add(row);
+                                                        rows = favoriteContentLogs.RowDefinitions;
+                                                        rowsCount = rows.Count;
+                                                        int lastRowIndex = rowsCount - 1;
+                                                        TextBlock idLabel = new TextBlock();
+                                                        idLabel.Text = id;
+                                                        idLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(idLabel);
+                                                        Grid.SetRow(idLabel, lastRowIndex);
+                                                        Grid.SetColumn(idLabel, 0);
+                                                        TextBlock favoriteLabel = new TextBlock();
+                                                        favoriteLabel.Text = "";
+                                                        favoriteLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(favoriteLabel);
+                                                        Grid.SetRow(favoriteLabel, lastRowIndex);
+                                                        Grid.SetColumn(favoriteLabel, 1);
+                                                        TextBlock rejectLabel = new TextBlock();
+                                                        rejectLabel.Text = "";
+                                                        rejectLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(rejectLabel);
+                                                        Grid.SetRow(rejectLabel, lastRowIndex);
+                                                        Grid.SetColumn(rejectLabel, 2);
+                                                        TextBlock timeLabel = new TextBlock();
+                                                        timeLabel.Text = "";
+                                                        timeLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(timeLabel);
+                                                        Grid.SetRow(timeLabel, lastRowIndex);
+                                                        Grid.SetColumn(timeLabel, 3);
+                                                    }
+                                                    foreach (IllustrationFavoriteRelation myFavoriteIllustration in myFavoriteIllustrationRelations)
+                                                    {
+                                                        string id = myFavoriteIllustration.illustration;
+                                                        RowDefinition row = new RowDefinition();
+                                                        row.Height = new GridLength(50);
+                                                        favoriteContentLogs.RowDefinitions.Add(row);
+                                                        rows = favoriteContentLogs.RowDefinitions;
+                                                        rowsCount = rows.Count;
+                                                        int lastRowIndex = rowsCount - 1;
+                                                        TextBlock idLabel = new TextBlock();
+                                                        idLabel.Text = id;
+                                                        idLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(idLabel);
+                                                        Grid.SetRow(idLabel, lastRowIndex);
+                                                        Grid.SetColumn(idLabel, 0);
+                                                        TextBlock favoriteLabel = new TextBlock();
+                                                        favoriteLabel.Text = "";
+                                                        favoriteLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(favoriteLabel);
+                                                        Grid.SetRow(favoriteLabel, lastRowIndex);
+                                                        Grid.SetColumn(favoriteLabel, 1);
+                                                        TextBlock rejectLabel = new TextBlock();
+                                                        rejectLabel.Text = "";
+                                                        rejectLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(rejectLabel);
+                                                        Grid.SetRow(rejectLabel, lastRowIndex);
+                                                        Grid.SetColumn(rejectLabel, 2);
+                                                        TextBlock timeLabel = new TextBlock();
+                                                        timeLabel.Text = "";
+                                                        timeLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(timeLabel);
+                                                        Grid.SetRow(timeLabel, lastRowIndex);
+                                                        Grid.SetColumn(timeLabel, 3);
+                                                    }
+                                                    foreach (ManualFavoriteRelation myFavoriteManualRelation in myFavoriteManualRelations)
+                                                    {
+                                                        string id = myFavoriteManualRelation.manual;
+                                                        RowDefinition row = new RowDefinition();
+                                                        row.Height = new GridLength(50);
+                                                        favoriteContentLogs.RowDefinitions.Add(row);
+                                                        rows = favoriteContentLogs.RowDefinitions;
+                                                        rowsCount = rows.Count;
+                                                        int lastRowIndex = rowsCount - 1;
+                                                        TextBlock idLabel = new TextBlock();
+                                                        idLabel.Text = id;
+                                                        idLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(idLabel);
+                                                        Grid.SetRow(idLabel, lastRowIndex);
+                                                        Grid.SetColumn(idLabel, 0);
+                                                        TextBlock favoriteLabel = new TextBlock();
+                                                        favoriteLabel.Text = "";
+                                                        favoriteLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(favoriteLabel);
+                                                        Grid.SetRow(favoriteLabel, lastRowIndex);
+                                                        Grid.SetColumn(favoriteLabel, 1);
+                                                        TextBlock rejectLabel = new TextBlock();
+                                                        rejectLabel.Text = "";
+                                                        rejectLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(rejectLabel);
+                                                        Grid.SetRow(rejectLabel, lastRowIndex);
+                                                        Grid.SetColumn(rejectLabel, 2);
+                                                        TextBlock timeLabel = new TextBlock();
+                                                        timeLabel.Text = "";
+                                                        timeLabel.Margin = new Thickness(15);
+                                                        favoriteContentLogs.Children.Add(timeLabel);
+                                                        Grid.SetRow(timeLabel, lastRowIndex);
+                                                        Grid.SetColumn(timeLabel, 3);
+                                                    }
+                                                    mainControl.SelectedIndex = 78;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void OpenContentTabFromHelpHandler (object sender, RoutedEventArgs e)
+        {
+            DockPanel activityShortCut = ((DockPanel)(sender));
+            object activityShortCutData = activityShortCut.DataContext;
+            string rawIndex = activityShortCutData.ToString();
+            int index = Int32.Parse(rawIndex);
+            OpenContentTab(index);
         }
 
         public void OpenContentTabHandler (object sender, RoutedEventArgs e)
@@ -21239,8 +22329,7 @@ namespace GamaManager
             }
             else if (isWorkshop)
             {
-                mainControl.SelectedIndex = 38;
-                AddHistoryRecord();
+                OpenMyWorkShop();
             }
             else if (isPlatform)
             {
@@ -21254,6 +22343,17 @@ namespace GamaManager
 
             }
             ResetMenu();
+        }
+
+        public void OpenMyWorkShopHandler (object sender, RoutedEventArgs e)
+        {
+            OpenMyWorkShop();
+        }
+
+        public void OpenMyWorkShop ()
+        {
+            mainControl.SelectedIndex = 38;
+            AddHistoryRecord();
         }
 
         public void OpenDiscussionsFromHelpHandler (object sender, RoutedEventArgs e)
@@ -21832,7 +22932,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 41;
         }
 
-        private void SaveUserInfoHandler(object sender, RoutedEventArgs e)
+        private void SaveUserInfoHandler (object sender, RoutedEventArgs e)
         {
             SaveUserInfo();
         }
@@ -22939,6 +24039,9 @@ namespace GamaManager
 
         public void DecreaseUserToStats ()
         {
+            string rawLoginDate = loginDateTime.ToLongDateString();
+            string rawLoginTime = loginDateTime.ToLongTimeString();
+            string rawLoginDateTime = rawLoginDate + " в " + rawLoginTime;
             DateTime currentDateTime = DateTime.Now;
             string rawCurrentDate = currentDateTime.ToLongDateString();
             string rawCurrentTime = currentDateTime.ToLongTimeString();
@@ -22950,7 +24053,7 @@ namespace GamaManager
             try
             {
                 // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease/?id=" + currentUserId + @"&start=" + "" + @"&end=" + rawCurrentDateTime + @"&os=" + rawOsMajorVersion + @"&country=" + "" + @"&city=" + "" + @"&state=" + "");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease/?id=" + currentUserId + @"&start=" + rawLoginDateTime + @"&end=" + rawCurrentDateTime + @"&os=" + rawOsMajorVersion + @"&country=" + cachedReverseGeoCodeCountry + @"&city=" + cachedReverseGeoCodeCity + @"&state=" + cachedReverseGeoCodeState);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -25715,7 +26818,7 @@ namespace GamaManager
             RemoveFriends();
         }
 
-        public void RemoveFriends()
+        public void RemoveFriends ()
         {
             foreach (StackPanel onlineFriendsListItem in onlineFriendsList.Children)
             {
@@ -26218,27 +27321,28 @@ namespace GamaManager
 
         private void OpenDiscussionsHandler (object sender, RoutedEventArgs e)
         {
-            OpenDiscussions();
+            string currentGameName = gameNameLabel.Text;
+            OpenDiscussions(currentGameName);
         }
 
-        public void OpenDiscussions ()
+        public void OpenDiscussions (string currentGameName)
         {
-            string currentGameName = gameNameLabel.Text;
+            // string currentGameName = gameNameLabel.Text;
             forumsKeywordsBox.Text = currentGameName;
             mainControl.SelectedIndex = 6;
         }
 
-        private void SearchGroupsHandler(object sender, MouseButtonEventArgs e)
+        private void SearchGroupsHandler (object sender, MouseButtonEventArgs e)
         {
             SearchGroups();
         }
 
-        public void SearchGroups()
+        public void SearchGroups ()
         {
             mainControl.SelectedIndex = 17;
         }
 
-        private void GetSearchedGroupsHandler(object sender, TextChangedEventArgs e)
+        private void GetSearchedGroupsHandler (object sender, TextChangedEventArgs e)
         {
             GetSearchedGroups();
         }
@@ -26921,7 +28025,7 @@ namespace GamaManager
             }
         }
 
-        private void OpenPointsHistoryHandler (object sender, MouseButtonEventArgs e)
+        private void OpenPointsHistoryHandler (object sender, RoutedEventArgs e)
         {
             OpenPointsHistory();
         }
@@ -28860,6 +29964,12 @@ namespace GamaManager
             SetEditProfileTab(index);
         }
 
+        public void OpenPrivacySettings ()
+        {
+            mainControl.SelectedIndex = 2;
+            SetEditProfileTab(3);
+        }
+
         private void OpenLawInfoHandler (object sender, RoutedEventArgs e)
         {
             OpenLawInfo();
@@ -29367,6 +30477,58 @@ namespace GamaManager
         public void OpenAccountData ()
         {
             mainControl.SelectedIndex = 68;
+        }
+
+        public void ToggleEquimpmentSelectorHandler (object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox selector = ((ComboBox)(sender));
+            ToggleEquimpmentSelector(selector);
+        }
+
+        public void ToggleEquimpmentSelector (ComboBox selector)
+        {
+            if (isAppInit)
+            {
+                int selectedIndex = selector.SelectedIndex;
+                bool isItemSelected = selectedIndex != 0;
+                if (isItemSelected)
+                {
+                    bool isTradeHistory = selectedIndex == 1;
+                    bool isEquipmentHistory = selectedIndex == 2;
+                    bool isPresentHistory = selectedIndex == 3;
+                    bool isPrivacySettings = selectedIndex == 4;
+                    if (isTradeHistory)
+                    {
+                        OpenTradeHistory();
+                    }
+                    else if (isEquipmentHistory)
+                    {
+                        OpenTradeHistory();
+                    }
+                    else if (isPresentHistory)
+                    {
+                        // OpenTradeHistory();
+                        OpenPresentsHistory();
+                    }
+                    else if (isPrivacySettings)
+                    {
+                        OpenPrivacySettings();
+                    }
+                    selector.SelectedIndex = 0;
+                }
+            }
+        }
+
+        public void OpenPresentsHistoryHandler (object sender, RoutedEventArgs e)
+        {
+            OpenPresentsHistory();
+        }
+
+        public void OpenPresentsHistory ()
+        {
+            OpenEquipment(currentUserId);
+            equipmentControl.Visibility = invisible;
+            equipmentresentsHistory.Visibility = visible;
         }
 
         public void OpenTradeHistoryHandler (object sender, RoutedEventArgs e)
@@ -30361,7 +31523,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 53;
         }
 
-        private void OpenCuratorsHandler (object sender, MouseButtonEventArgs e)
+        private void OpenCuratorsHandler (object sender, RoutedEventArgs e)
         {
             OpenCurators();
         }
@@ -34362,6 +35524,62 @@ namespace GamaManager
         public string country;
         public string city;
         public string state;
+    }
+
+    public class ReverseGeoCodeResponseInfo
+    {
+        public ReverseGeoCodeAddress address;
+    }
+
+    public class ReverseGeoCodeAddress
+    {
+        public string country;
+        public string city;
+        public string state;
+    }
+
+    public class EmailsResponseInfo
+    {
+        public List<Email> emails;
+        public string status;
+    }
+
+    public class Email
+    {
+        public string _id;
+        public string user;
+        public string recepient;
+        public string data;
+        public string type;
+        public DateTime date;
+    }
+
+    public class ComplaintsResponseInfo
+    {
+        public List<Complaint> complaints;
+        public string status;
+    }
+
+    public class Complaint
+    {
+        public string _id;
+        public string user;
+        public string scammer;
+        public string content;
+        public DateTime date;
+    }
+
+    public class ModeratorsResponseInfo
+    {
+        public List<Moderator> moderators;
+        public string status;
+    }
+
+    public class Moderator
+    {
+        public string _id;
+        public string user;
+        public string moderator;
     }
 
 }

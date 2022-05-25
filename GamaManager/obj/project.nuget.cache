@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ey3S+um1AagHxp4eRnzAeHuVrc+NR+sMbzM5a5OGmHO4Cd147Fidb9aHRnGe89y3tLTePZJdQhqNHngUlqZ3ww==",
+  "dgSpecHash": "oXVgO8OUGRWKSkGpOxIsXxLI5Cke26gUOxHgoRkEeRgeUXyMol1+VFbQIooy+VcvFeT1Wp4MA6Gx9EXKMnH9KQ==",
   "success": true,
   "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\ПК\\.nuget\\packages\\imapx\\2.0.0.18\\imapx.2.0.0.18.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\mousekeyboardactivitymonitor\\4.0.5150.10665\\mousekeyboardactivitymonitor.4.0.5150.10665.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\reversegeocoder\\0.3.0\\reversegeocoder.0.3.0.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\toggleswitch\\1.2.0\\toggleswitch.1.2.0.nupkg.sha512"
   ],
   "logs": []

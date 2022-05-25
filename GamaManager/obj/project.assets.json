@@ -283,6 +283,15 @@
           "lib/net20/MouseKeyboardActivityMonitor.dll": {}
         }
       },
+      "ReverseGeocoder/0.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        },
+        "runtime": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        }
+      },
       "ToggleSwitch/1.2.0": {
         "type": "package",
         "compile": {
@@ -371,6 +380,15 @@
         },
         "runtime": {
           "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        }
+      },
+      "ReverseGeocoder/0.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        },
+        "runtime": {
+          "lib/net45/ReverseGeocoder.dll": {}
         }
       },
       "ToggleSwitch/1.2.0": {
@@ -463,6 +481,15 @@
           "lib/net20/MouseKeyboardActivityMonitor.dll": {}
         }
       },
+      "ReverseGeocoder/0.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        },
+        "runtime": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        }
+      },
       "ToggleSwitch/1.2.0": {
         "type": "package",
         "compile": {
@@ -551,6 +578,15 @@
         },
         "runtime": {
           "lib/net20/MouseKeyboardActivityMonitor.dll": {}
+        }
+      },
+      "ReverseGeocoder/0.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/ReverseGeocoder.dll": {}
+        },
+        "runtime": {
+          "lib/net45/ReverseGeocoder.dll": {}
         }
       },
       "ToggleSwitch/1.2.0": {
@@ -718,6 +754,18 @@
         "mousekeyboardactivitymonitor.nuspec"
       ]
     },
+    "ReverseGeocoder/0.3.0": {
+      "sha512": "2mR2M/NhD4yxqD/CUyXTJX7hhKRyg48Mxw+HVQVrWBqFxQog95GGebhIQhyms8u2t1H50jzYzHy+dPWb5YWZ1w==",
+      "type": "package",
+      "path": "reversegeocoder/0.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/ReverseGeocoder.dll",
+        "reversegeocoder.0.3.0.nupkg.sha512",
+        "reversegeocoder.nuspec"
+      ]
+    },
     "ToggleSwitch/1.2.0": {
       "sha512": "Rhv4kXlH8Zo8Hb5ZEBECwONAF9HKmYyz1AR5RFyOrU5trbyyu1FCjDQ9E1Njo8ocsfYdjzbsdxgYYEQ3Oh9v9w==",
       "type": "package",
@@ -739,6 +787,7 @@
       "ImapX >= 2.0.0.18",
       "Microsoft.VCRTForwarders.140 >= 1.0.6",
       "MouseKeyboardActivityMonitor >= 4.0.5150.10665",
+      "ReverseGeocoder >= 0.3.0",
       "ToggleSwitch >= 1.2.0"
     ]
   },
@@ -795,6 +844,10 @@
           "MouseKeyboardActivityMonitor": {
             "target": "Package",
             "version": "[4.0.5150.10665, )"
+          },
+          "ReverseGeocoder": {
+            "target": "Package",
+            "version": "[0.3.0, )"
           },
           "ToggleSwitch": {
             "target": "Package",

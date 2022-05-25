@@ -281,7 +281,7 @@
                     Width="20"
                     Height="20"
                     Margin="10"
-                    Foreground="LightGray"
+                    Foreground="Gray"
                     MouseLeftButtonUp="BackForHistoryHandler"
                 />
                 <materialDesign:PackIcon
@@ -290,7 +290,7 @@
                     Width="20"
                     Height="20"
                     Margin="10"
-                    Foreground="LightGray"
+                    Foreground="Gray"
                     MouseLeftButtonUp="ForwardForHistoryHandler"
                 />
                 <ComboBox
@@ -5845,7 +5845,7 @@
                         Background="LightGray"    
                     >
                         <StackPanel
-                            Margin="175 0"
+                            Margin="125 0"
                             Background="LightGray"    
                         >
                             <StackPanel>
@@ -6126,7 +6126,7 @@
                                         >
                                             <StackPanel>
                                                 <StackPanel
-                                                    Margin="0 15"
+                                                    Margin="15"
                                                     Orientation="Horizontal"    
                                                 >
                                                     <TextBlock
@@ -6235,6 +6235,7 @@
                                                             Width="225"
                                                             Height="25"
                                                             Content="Повысить до модератора трансляции"    
+                                                            Click="UpgradeFriendToStreamModeratorHandler"
                                                         />
                                                     </StackPanel>
                                                     <TextBlock
@@ -6245,6 +6246,7 @@
                                                 <TextBox
                                                     x:Name="friendBox"
                                                     Height="35"
+                                                    Margin="15 0"
                                                     TextChanged="GetFriendsHandler"
                                                 >
                                                     <TextBox.Resources>
@@ -6918,6 +6920,10 @@
                                                 </DockPanel>
                                                 <StackPanel
                                                     x:Name="moderators"
+                                                    Background="DarkBlue"    
+                                                />
+                                                <WrapPanel
+                                                    x:Name="moderatorList"    
                                                     Background="DarkBlue"    
                                                 />
                                             </StackPanel>
@@ -12637,16 +12643,17 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TabControl
                                 x:Name="emailUpdateControl"    
                                 SelectedIndex="0"
                                 Background="Transparent"
+                                BorderThickness="0"
                             >
                                 <TabItem
                                     Visibility="Collapsed"    
@@ -12727,16 +12734,17 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <TabControl
                                 x:Name="passwordUpdateControl"    
                                 SelectedIndex="0"
                                 Background="Transparent"
+                                BorderThickness="0"
                             >
                                 <TabItem
                                     Visibility="Collapsed"    
@@ -21900,7 +21908,8 @@ E. Что произойдет, если положение Пункта 11 бу
                                     Margin="15 0"
                                     Width="50"
                                     Height="30"
-                                    SelectedIndex="0"    
+                                    SelectedIndex="0"   
+                                    SelectionChanged="ToggleEquimpmentSelectorHandler"
                                 >
                                     <ComboBoxItem
                                         Visibility="Collapsed"    
@@ -21962,6 +21971,30 @@ E. Что произойдет, если положение Пункта 11 бу
                                     
                                 </TabItem>
                             </TabControl>
+                            <StackPanel
+                                x:Name="equipmentresentsHistory"    
+                                Margin="15"
+                                Background="LightGray"
+                                Visibility="Collapsed"
+                            >
+                                <StackPanel
+                                    Margin="15"
+                                    Orientation="Horizontal"    
+                                >
+                                    <TextBlock
+                                        Margin="15"
+                                        Text="История подарков"    
+                                    />
+                                    <Separator
+                                        Margin="15"
+                                        Width="750"
+                                    />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="15"
+                                    Text="История подарков отсутствует."    
+                                />
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -23990,7 +24023,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenUpdatePhoneHandler"
+                                MouseLeftButtonUp="OpenSubLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24133,7 +24166,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                                MouseLeftButtonUp="OpenRecentLoginHistoryLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24200,7 +24233,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
-                                Text="Сообщество"
+                                Text="Сообщество и профиль"
                             />
                             <DockPanel
                                 Margin="15"
@@ -24305,7 +24338,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                                MouseLeftButtonUp="OpenComplaintLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24316,7 +24349,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                                MouseLeftButtonUp="OpenBlockedLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24396,24 +24429,537 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Инвентарь и предметы"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenEquipmentHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мой инвентарь"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenTradeHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История инвентаря"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPresentsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История подарков и гостевых пропусков"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenIconsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Коллекционные карточки и значки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenTradeOffersHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Предложения и история обмена"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenTradeHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История обменов"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenMyWorkShopHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Лоты, запросы на покупку и история на Торговой площадке"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
                                 Text="Игровая статистика"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameStatsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Все игры, проведённое в них время и личная статистика"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenRecentRunRecommendationGamesHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Запущенные недавно"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameStatsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Достижения"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLeaderBoardHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Позиции в списках лидеров"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenLeaderBoardHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Уведомления о ходах"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Недавно играли вместе"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Активность на лицензированных площадках"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
                                 Text="Опубликованный контент"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Cloud"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFriendsSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки клиента"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="0"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Скриншоты"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="1"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Иллюстрации"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="2"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Видео"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="3"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Работы в мастерской"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="4"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Аттрибутика"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="5"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Коллекции"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                DataContext="6"
+                                MouseLeftButtonUp="OpenContentTabFromHelpHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Руководства"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFavoriteContentHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Одобренный мной контент"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
                                 Text="Магазин"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenFavoriteContentHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Список желаемого"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Обзоры игр"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои оценки и метки обзоров"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои оценки и метки обзоров"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои жалобы на обзоры игр"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои подписки на кураторов"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои скрытые кураторы"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои кураторские обзоры"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Предложения по программе связи с кураторами"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои кураторские списки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Список рекомендаций"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История списка рекомендаций"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Привязанные аккаунты в соцсетях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Другие привязанные аккаунты в соцсетях"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Награды и участие в раздачах"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Голоса за пользовательские метки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenCuratorsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Жалобы на приложения"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenEmailSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки рассылки"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenSendedEmailLogsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Отправленные письма"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenEmailSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Интерактивный советник"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenEmailSettingsHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки интерактивного советника"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="История очков"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
@@ -24426,12 +24972,78 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Трансляции"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Мои трансляции"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки трансляций"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Просмотренные трансляции"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Трансляции, на которые поданы жалобы"    
+                                />
+                            </DockPanel>
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Настройки RTMP-трансляции"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
                                 Margin="15"
                                 Text="Remote Play"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Сессии Remote Play"    
+                                />
+                            </DockPanel>
                             <Separator />
                             <TextBlock
                                 FontSize="18"
@@ -24455,6 +25067,17 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Есть вопрос о данных аккаунта или их удалении?"
                             />
+                            <DockPanel
+                                Margin="15"
+                                Background="SlateGray"
+                                MouseLeftButtonUp="OpenPointsHistoryHandler"
+                            >
+                                <TextBlock
+                                    FontSize="14"
+                                    Margin="15"
+                                    Text="Связаться с поддержкой"    
+                                />
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
@@ -25205,6 +25828,418 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Загрузить еще"    
                                 MouseLeftButtonUp="OpenRecentLoginHistoryLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Позиции в списках лидеров"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Эта таблица содержит все позиции списков лидеров, связанные с вашим аккаунтом. Некоторые приложения отображают список лидеров в сообществе.&#10;Если такая возможность есть, вы можете найти себя и своих друзей в общем списке, перейдя в раздел «Игры» в профиле."    
+                            />
+                            <Grid
+                                x:Name="leaderBoardLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Приложение"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Название списка лидеров"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Счёт"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Прочие данные игры"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenLeaderBoardHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Одобренный мной контент"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Одобренный мной контент"    
+                            />
+                            <Grid
+                                x:Name="favoriteContentLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="ID файла"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Голос за?"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Голос отменён?"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Время"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenFavoriteContentHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Отправленные письма"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Отправленные письма"    
+                            />
+                            <Grid
+                                x:Name="emailLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Открывший пользователь"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="ID"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Тип сообщения"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Попыток инициализации"    
+                                />
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Отправлено"    
+                                />
+                                <TextBlock
+                                    Grid.Column="5"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Попыток доставки"    
+                                />
+                                <TextBlock
+                                    Grid.Column="6"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Доставлено"    
+                                />
+                                <TextBlock
+                                    Grid.Column="7"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Получатель"    
+                                />
+                                <TextBlock
+                                    Grid.Column="8"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Данные"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenSendedEmailLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                <Image
+                                    x:Name="blockedLogsUserAvatar"
+                                    Margin="15"
+                                    Width="100"    
+                                    Height="100"    
+                                >
+                                    <Image.Source>
+                                        <BitmapImage
+                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                        />
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock
+                                    x:Name="blockedLogsUserNameLabel"
+                                    VerticalAlignment="Center"
+                                    Margin="5 0"
+                                    FontSize="24"
+                                    Text="Пользователь"    
+                                />
+                            </StackPanel>
+                            <TabControl
+                                Margin="15"
+                                Background="Transparent"
+                                BorderThickness="0"
+                            >
+                                <TabItem
+                                    Header="Текущие блокировки"    
+                                >
+                                    <StackPanel
+                                        x:Name="blockedLogs"    
+                                    />
+                                </TabItem>
+                                <TabItem
+                                    Header="Уведомления в сообществе"    
+                                />
+                            </TabControl>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Мои жалобы на профили"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Мои жалобы на профили"    
+                            />
+                            <Grid
+                                x:Name="complaintLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Дата создания"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Тип жалобы"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Текст жалобы"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenComplaintLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <TextBlock
+                                Margin="15"
+                                Text="Главная > Аккаунт > Подписки"    
+                            />
+                            <StackPanel
+                                Orientation="Horizontal"    
+                            >
+                                <TextBlock
+                                    x:Name="subLogsTitleLabel"
+                                    VerticalAlignment="Center"
+                                    Margin="5 0"
+                                    FontSize="24"
+                                    Text="Подписки пользователя"    
+                                />
+                            </StackPanel>
+                            <StackPanel
+                                x:Name="subLogs"    
+                                Margin="15"
                             />
                         </StackPanel>
                     </DockPanel>

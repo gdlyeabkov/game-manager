@@ -54,6 +54,10 @@
               "target": "Package",
               "version": "[4.0.5150.10665, )"
             },
+            "ReverseGeocoder": {
+              "target": "Package",
+              "version": "[0.3.0, )"
+            },
             "ToggleSwitch": {
               "target": "Package",
               "version": "[1.2.0, )"

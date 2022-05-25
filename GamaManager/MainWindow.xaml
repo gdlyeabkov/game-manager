@@ -272,348 +272,356 @@
             Height="35"
             Background="LightGray"
         >
-            <StackPanel
-                Orientation="Horizontal"    
+            <DockPanel
             >
-                <materialDesign:PackIcon
-                    x:Name="arrowBackBtn"
-                    Kind="ArrowBack"
-                    Width="20"
-                    Height="20"
-                    Margin="10"
-                    Foreground="Gray"
-                    MouseLeftButtonUp="BackForHistoryHandler"
-                />
-                <materialDesign:PackIcon
-                    x:Name="arrowForwardBtn"
-                    Kind="ArrowForward"
-                    Width="20"
-                    Height="20"
-                    Margin="10"
-                    Foreground="Gray"
-                    MouseLeftButtonUp="ForwardForHistoryHandler"
-                />
-                <ComboBox
-                    x:Name="storeMenu"
-                    Margin="5 0"
-                    Width="125"
-                    HorizontalContentAlignment="Center"
-                    Height="25"
-                    SelectedIndex="0"
-                    SelectionChanged="StoreItemSelectedHandler"
+                <StackPanel
+                    Orientation="Horizontal"    
                 >
-                    <ComboBoxItem
+                    <materialDesign:PackIcon
+                        x:Name="arrowBackBtn"
+                        Kind="ArrowBack"
+                        Width="20"
+                        Height="20"
+                        Margin="10"
+                        Foreground="Gray"
+                        MouseLeftButtonUp="BackForHistoryHandler"
+                    />
+                    <materialDesign:PackIcon
+                        x:Name="arrowForwardBtn"
+                        Kind="ArrowForward"
+                        Width="20"
+                        Height="20"
+                        Margin="10"
+                        Foreground="Gray"
+                        MouseLeftButtonUp="ForwardForHistoryHandler"
+                    />
+                    <ComboBox
+                        x:Name="storeMenu"
+                        Margin="5 0"
+                        Width="125"
+                        HorizontalContentAlignment="Center"
+                        Height="25"
+                        SelectedIndex="0"
+                        SelectionChanged="StoreItemSelectedHandler"
+                    >
+                        <ComboBoxItem
+                            Visibility="Collapsed"
+                            Content="{x:Static p:Resources.storeMenuLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemPopularLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemRecomendationsLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemWishesListLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemPointsStoreLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemNewsLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeMenuItemStatsLabelContent}"
+                        />
+                    </ComboBox>
+                    <ComboBox
+                        x:Name="libraryMenu"
+                        Margin="5 0"
+                        Width="125"
+                        HorizontalContentAlignment="Center"
+                        Height="25"
+                        SelectedIndex="0"    
+                        SelectionChanged="LibraryItemSelectedHandler"
+                    >
+                        <ComboBoxItem
+                            Visibility="Collapsed"
+                            Content="{x:Static p:Resources.libraryMenuLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.libraryMenuItemHomeLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.libraryMenuItemCollectionsLabelContent}"    
+                        />
+                        <Separator />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.libraryMenuItemDownloadsLabelContent}"
+                        />
+                    </ComboBox>
+                    <ComboBox
+                        x:Name="communityMenu"
+                        Margin="5 0"
+                        Width="125"
+                        HorizontalContentAlignment="Center"
+                        Height="25"
+                        SelectedIndex="0"    
+                        SelectionChanged="CommunityItemSelectedHandler"
+                    >
+                        <ComboBoxItem
+                            Visibility="Collapsed"
+                            Content="{x:Static p:Resources.communityMenuLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.communityMenuItemMainLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.communityMenuItemDiscussionsLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.communityMenuItemWorkShopLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.communityMenuItemTradeLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.communityMenuItemStreamsLabelContent}"
+                        />
+                    </ComboBox>
+                    <ComboBox
+                        x:Name="profileMenu"
+                        Margin="5 0"
+                        Width="175"
+                        HorizontalContentAlignment="Center"
+                        Height="25"
+                        SelectedIndex="0" 
+                        SelectionChanged="ProfileItemSelectedHandler"
+                    >
+                        <ComboBoxItem
+                            Visibility="Collapsed"
+                            Content="Имя пользователя"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.profileMenuItemActivityLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.profileMenuItemProfileLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.friendsLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.groupsLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.profileMenuItemContentLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.profileMenuItemIconsLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.profileMenuItemEquipmentLabelContent}"    
+                        />
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal"  
+                    HorizontalAlignment="Right"
+                >
+                    <materialDesign:PackIcon
+                        x:Name="familyViewIcon"
+                        Foreground="Orange"
                         Visibility="Collapsed"
-                        Content="{x:Static p:Resources.storeMenuLabelContent}"
+                        Margin="175 10 10 10"
+                        Kind="People"
+                        VerticalAlignment="Center"
+                        Width="24"
+                        Height="24"
+                        MouseLeftButtonUp="ShowFamilyViewPopupHandler"
                     />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemPopularLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemRecomendationsLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemWishesListLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemPointsStoreLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemNewsLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeMenuItemStatsLabelContent}"
-                    />
-                </ComboBox>
-                <ComboBox
-                    x:Name="libraryMenu"
-                    Margin="5 0"
-                    Width="125"
-                    HorizontalContentAlignment="Center"
-                    Height="25"
-                    SelectedIndex="0"    
-                    SelectionChanged="LibraryItemSelectedHandler"
-                >
-                    <ComboBoxItem
-                        Visibility="Collapsed"
-                        Content="{x:Static p:Resources.libraryMenuLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.libraryMenuItemHomeLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.libraryMenuItemCollectionsLabelContent}"    
-                    />
-                    <Separator />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.libraryMenuItemDownloadsLabelContent}"
-                    />
-                </ComboBox>
-                <ComboBox
-                    x:Name="communityMenu"
-                    Margin="5 0"
-                    Width="125"
-                    HorizontalContentAlignment="Center"
-                    Height="25"
-                    SelectedIndex="0"    
-                    SelectionChanged="CommunityItemSelectedHandler"
-                >
-                    <ComboBoxItem
-                        Visibility="Collapsed"
-                        Content="{x:Static p:Resources.communityMenuLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.communityMenuItemMainLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.communityMenuItemDiscussionsLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.communityMenuItemWorkShopLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.communityMenuItemTradeLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.communityMenuItemStreamsLabelContent}"
-                    />
-                </ComboBox>
-                <ComboBox
-                    x:Name="profileMenu"
-                    Margin="5 0"
-                    Width="175"
-                    HorizontalContentAlignment="Center"
-                    Height="25"
-                    SelectedIndex="0" 
-                    SelectionChanged="ProfileItemSelectedHandler"
-                >
-                    <ComboBoxItem
-                        Visibility="Collapsed"
-                        Content="Имя пользователя"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.profileMenuItemActivityLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.profileMenuItemProfileLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.friendsLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.groupsLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.profileMenuItemContentLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.profileMenuItemIconsLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.profileMenuItemEquipmentLabelContent}"    
-                    />
-                </ComboBox>
-                <materialDesign:PackIcon
-                    x:Name="familyViewIcon"
-                    Foreground="Orange"
-                    Visibility="Collapsed"
-                    Margin="175 10 10 10"
-                    Kind="People"
-                    VerticalAlignment="Center"
-                    Width="24"
-                    Height="24"
-                    MouseLeftButtonUp="ShowFamilyViewPopupHandler"
-                />
-                <Popup
-                    x:Name="familyViewPopup"
-                    StaysOpen="False"
-                    Placement="Mouse"
-                    Width="350"
-                    Height="350"
-                >
-                    <Popup.Child>
-                        <StackPanel
-                            Background="LightGray"    
-                        >
-                            <TextBlock
-                                Margin="15"
-                                Text="Семейный просмотр"    
-                            />
-                            <TabControl
-                                x:Name="familyViewPopupControl"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                SelectedIndex="0"
+                    <Popup
+                        x:Name="familyViewPopup"
+                        StaysOpen="False"
+                        Placement="Mouse"
+                        Width="350"
+                        Height="350"
+                    >
+                        <Popup.Child>
+                            <StackPanel
+                                Background="LightGray"    
                             >
-                                <TabItem
-                                    Visibility="Collapsed"    
+                                <TextBlock
+                                    Margin="15"
+                                    Text="Семейный просмотр"    
+                                />
+                                <TabControl
+                                    x:Name="familyViewPopupControl"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    SelectedIndex="0"
                                 >
-                                    <StackPanel>
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Введите свой ПИН ниже, чтобы выйти из&#10;семейного просмотра"    
-                                        />
-                                        <TextBox
-                                            x:Name="familyViewPopupCodeBox"
-                                            Width="100"
-                                            Height="30"
-                                        />
-                                    </StackPanel>
-                                </TabItem>
-                                <TabItem
-                                    Visibility="Collapsed"    
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Введите свой ПИН ниже, чтобы выйти из&#10;семейного просмотра"    
+                                            />
+                                            <TextBox
+                                                x:Name="familyViewPopupCodeBox"
+                                                Width="100"
+                                                Height="30"
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem
+                                        Visibility="Collapsed"    
+                                    >
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="15"
+                                                Text="Пожалуйста подтвердите, что вы хотите вернуться в&#10;семейного просмотр."    
+                                            />
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
+                                <StackPanel
+                                    Margin="0 15"
+                                    Orientation="Horizontal"    
                                 >
-                                    <StackPanel>
-                                        <TextBlock
-                                            Margin="15"
-                                            Text="Пожалуйста подтвердите, что вы хотите вернуться в&#10;семейного просмотр."    
-                                        />
-                                    </StackPanel>
-                                </TabItem>
-                            </TabControl>
-                            <StackPanel
-                                Margin="0 15"
-                                Orientation="Horizontal"    
-                            >
-                                <Button
-                                    Margin="15 0"
-                                    Width="125"
-                                    Height="30"
-                                    Content="ОК"
-                                    Click="ToggleFamilyViewModeHandler"
-                                />
-                                <Button
-                                    Margin="15 0"
-                                    Width="125"
-                                    Height="30"
-                                    Content="Отмена"
-                                    Click="CloseFamilyViewPopupHandler"
-                                />
+                                    <Button
+                                        Margin="15 0"
+                                        Width="125"
+                                        Height="30"
+                                        Content="ОК"
+                                        Click="ToggleFamilyViewModeHandler"
+                                    />
+                                    <Button
+                                        Margin="15 0"
+                                        Width="125"
+                                        Height="30"
+                                        Content="Отмена"
+                                        Click="CloseFamilyViewPopupHandler"
+                                    />
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Popup.Child>
-                </Popup>
-                <materialDesign:PackIcon
-                    x:Name="newsPopupIcon"
-                    Margin="10 0"
-                    Kind="Megaphone"
-                    VerticalAlignment="Center"
-                    Width="24"
-                    Height="24"
-                    MouseLeftButtonUp="OpenNewsHandler"
-                />
-                <materialDesign:PackIcon
-                    x:Name="notificationsPopupIcon"
-                    Margin="10 0"
-                    Kind="Email"
-                    VerticalAlignment="Center"
-                    Width="24"
-                    Height="24"
-                    MouseLeftButtonUp="ToggleNotificationsPopupHandler"
-                />
-                <Popup
-                    x:Name="notificationsPopup"
-                    Placement="Mouse"
-                    StaysOpen="False"
-                    Width="350"
-                    Height="165"
-                    Closed="HideNotificationsPopupHightLightHandler"
-                >
-                    <Popup.Child>
-                        <StackPanel
-                            Background="LightGray"    
-                        >
+                        </Popup.Child>
+                    </Popup>
+                    <materialDesign:PackIcon
+                        x:Name="newsPopupIcon"
+                        Margin="10 0"
+                        Kind="Megaphone"
+                        VerticalAlignment="Center"
+                        Width="24"
+                        Height="24"
+                        MouseLeftButtonUp="OpenNewsHandler"
+                    />
+                    <materialDesign:PackIcon
+                        x:Name="notificationsPopupIcon"
+                        Margin="10 0"
+                        Kind="Email"
+                        VerticalAlignment="Center"
+                        Width="24"
+                        Height="24"
+                        MouseLeftButtonUp="ToggleNotificationsPopupHandler"
+                    />
+                    <Popup
+                        x:Name="notificationsPopup"
+                        Placement="Mouse"
+                        StaysOpen="False"
+                        Width="350"
+                        Height="165"
+                        Closed="HideNotificationsPopupHightLightHandler"
+                    >
+                        <Popup.Child>
                             <StackPanel
-                                Margin="10"
-                                Orientation="Horizontal"
+                                Background="LightGray"    
                             >
-                                <materialDesign:PackIcon
-                                    Kind="Chat"    
-                                />
-                                <TextBlock
-                                    Margin="15 0"
-                                    Text="Новых комментариев: 0"    
-                                />
-                            </StackPanel>    
-                            <Separator />
-                            <StackPanel
-                                Margin="10"
-                                Orientation="Horizontal"
-                            >
-                                <materialDesign:PackIcon
-                                    Kind="Storage"    
-                                />
-                                <TextBlock
-                                    Margin="15 0"
-                                    Text="Новых предметов: 0"    
-                                />
-                            </StackPanel>                            
-                            <Separator />
-                            <StackPanel
-                                Margin="10"
-                                Orientation="Horizontal"
-                            >
-                                <materialDesign:PackIcon
-                                    Kind="Add"    
-                                />
-                                <TextBlock
-                                    x:Name="countNewRequestsLabel"
-                                    Margin="15 0"
-                                    Text="Новых приглашений: 0"    
-                                />
+                                <StackPanel
+                                    Margin="10"
+                                    Orientation="Horizontal"
+                                >
+                                    <materialDesign:PackIcon
+                                        Kind="Chat"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0"
+                                        Text="Новых комментариев: 0"    
+                                    />
+                                </StackPanel>    
+                                <Separator />
+                                <StackPanel
+                                    Margin="10"
+                                    Orientation="Horizontal"
+                                >
+                                    <materialDesign:PackIcon
+                                        Kind="Storage"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0"
+                                        Text="Новых предметов: 0"    
+                                    />
+                                </StackPanel>                            
+                                <Separator />
+                                <StackPanel
+                                    Margin="10"
+                                    Orientation="Horizontal"
+                                >
+                                    <materialDesign:PackIcon
+                                        Kind="Add"    
+                                    />
+                                    <TextBlock
+                                        x:Name="countNewRequestsLabel"
+                                        Margin="15 0"
+                                        Text="Новых приглашений: 0"    
+                                    />
+                                </StackPanel>
+                                <Separator />
+                                <StackPanel
+                                    Margin="10"
+                                    Orientation="Horizontal"
+                                >
+                                    <materialDesign:PackIcon
+                                        Kind="Present"    
+                                    />
+                                    <TextBlock
+                                        Margin="15 0"
+                                        Text="Новых подарков: 0"    
+                                    />
+                                </StackPanel>
                             </StackPanel>
-                            <Separator />
-                            <StackPanel
-                                Margin="10"
-                                Orientation="Horizontal"
-                            >
-                                <materialDesign:PackIcon
-                                    Kind="Present"    
-                                />
-                                <TextBlock
-                                    Margin="15 0"
-                                    Text="Новых подарков: 0"    
-                                />
-                            </StackPanel>
-                        </StackPanel>
-                    </Popup.Child>
-                </Popup>
-                <ComboBox
-                    x:Name="userMenu"
-                    Margin="10"
-                    Width="175"
-                    SelectedIndex="0"
-                    SelectionChanged="UserMenuItemSelectedHandler"
-                >
-                    <ComboBoxItem
-                        Visibility="Collapsed"
-                        Content="Имя пользователя"    
+                        </Popup.Child>
+                    </Popup>
+                    <ComboBox
+                        x:Name="userMenu"
+                        Margin="10"
+                        Width="175"
+                        SelectedIndex="0"
+                        SelectionChanged="UserMenuItemSelectedHandler"
+                    >
+                        <ComboBoxItem
+                            Visibility="Collapsed"
+                            Content="Имя пользователя"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.myProfileLabelContent}"
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.accountInfoLabelContent}"        
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.logoutLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.storeSettingsLabelContent}"    
+                        />
+                        <ComboBoxItem
+                            Content="{x:Static p:Resources.walletLabelContent}"    
+                        />
+                    </ComboBox>
+                    <materialDesign:PackIcon
+                        Kind="Fullscreen"
+                        VerticalAlignment="Center"
+                        Margin="15 0"
+                        Width="24"
+                        Height="24"
+                        MouseLeftButtonUp="ToggleFullScreenModeHandler"
                     />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.myProfileLabelContent}"
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.accountInfoLabelContent}"        
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.logoutLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.storeSettingsLabelContent}"    
-                    />
-                    <ComboBoxItem
-                        Content="{x:Static p:Resources.walletLabelContent}"    
-                    />
-                </ComboBox>
-                <materialDesign:PackIcon
-                    Kind="Rectangle"
-                    VerticalAlignment="Center"
-                    Margin="15 0"
-                    Width="24"
-                    Height="24"
-                    MouseLeftButtonUp="ToggleFullScreenModeHandler"
-                />
-            </StackPanel>
+                </StackPanel>
+            </DockPanel>
             <!--
                 <TextBlock
                     x:Name="userLoginLabel"
@@ -685,6 +693,7 @@
                                     Kind="Recent"    
                                     Margin="15 0"
                                     VerticalAlignment="Center"
+                                    ToolTip="Сортировка по недавней активности"
                                     MouseLeftButtonUp="ToggleRecentActivityHandler"
                                 />
                                 <materialDesign:PackIcon
@@ -692,6 +701,7 @@
                                     Kind="PlayCircleOutline"    
                                     Margin="15 0"
                                     VerticalAlignment="Center"
+                                    ToolTip="Показывать только готовые к запуску игры"
                                     MouseLeftButtonUp="ToggleReady2GoHandler"
                                 />
                             </StackPanel>
@@ -6867,10 +6877,11 @@
                                                         Margin="15"
                                                     />
                                                     <TextBox
+                                                        x:Name="moderatorListBox"
                                                         Width="275"
                                                         Height="25"
                                                         Margin="15 0"
-                                                        TextChanged="GetFriendRequestsForMeHandler"
+                                                        TextChanged="GetModeratorsHandler"
                                                     >
                                                         <TextBox.Resources>
                                                             <VisualBrush
@@ -6915,16 +6926,64 @@
                                                         Width="275"
                                                         Height="25"
                                                         Content="Управление модераторами"    
-                                                        Click="OpenBlackListManagementHandler"
+                                                        Click="ToggleModeratorListManagementHandler"
                                                     />
                                                 </DockPanel>
                                                 <StackPanel
+                                                    x:Name="moderatorListManagement"  
+                                                    Visibility="Collapsed"
+                                                >
+                                                    <StackPanel
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <TextBlock
+                                                            Text="Выберите пользователей для одного из следующих действий."    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            Text="Выбрать:"    
+                                                            Margin="10 0"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="All"
+                                                            Text="ВСЕХ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectModeratorTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Nothing"
+                                                            Text="НИКОГО"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectModeratorTypeHandler"
+                                                        />
+                                                        <TextBlock
+                                                            DataContext="Invert"
+                                                            Text="ИНВЕРТИРОВАТЬ"    
+                                                            Margin="10 0"
+                                                            MouseLeftButtonUp="SelectModeratorTypeHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="0 10"
+                                                        Orientation="Horizontal"    
+                                                    >
+                                                        <Button
+                                                            Margin="10 0"
+                                                            Width="175"
+                                                            Height="25"
+                                                            Content="Убрать из модераторов"
+                                                            Click="RemoveModeratorsHandler"
+                                                        />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Text="Выбрано: 0"    
+                                                    />
+                                                </StackPanel>
+                                                <StackPanel
                                                     x:Name="moderators"
-                                                    Background="DarkBlue"    
                                                 />
                                                 <WrapPanel
                                                     x:Name="moderatorList"    
-                                                    Background="DarkBlue"    
                                                 />
                                             </StackPanel>
                                         </TabItem>
@@ -26241,6 +26300,72 @@ E. Что произойдет, если положение Пункта 11 бу
                                 x:Name="subLogs"    
                                 Margin="15"
                             />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <local:HeaderControl
+                                DataContext="{ Binding ElementName=mainWindow }"    
+                            />
+                            <DockPanel>
+                                <StackPanel>
+                                    <TextBlock
+                                        x:Name="gameStoreBreadcrumbLabel"
+                                        Text="Все игры > Игра"
+                                        Margin="0 5"
+                                    />
+                                    <TextBlock
+                                        x:Name="gameStoreNameLabel"
+                                        FontSize="18"
+                                        Text="Игра"
+                                        Margin="0 5"
+                                    />
+                                </StackPanel>
+                                <Button
+                                    HorizontalAlignment="Right"
+                                    Width="175"
+                                    Height="30"
+                                    Content="Центр сообщества"    
+                                />
+                            </DockPanel>
+                            <DockPanel>
+                                <StackPanel
+                                    Orientation="Horizontal"    
+                                >
+                                    <Button
+                                        Width="175"
+                                        Height="30"
+                                        Content="Подписаться"   
+                                        Click="ToggleGameStoreSubHandler"
+                                    />
+                                    <ComboBox
+                                        Height="30"
+                                        VerticalContentAlignment="Center"
+                                        Width="125"
+                                        Margin="10 0"
+                                        SelectedIndex="0"
+                                    >
+                                        <ComboBoxItem
+                                            Content="Скрыть"    
+                                        />
+                                    </ComboBox>
+                                </StackPanel>
+                                <Button
+                                    HorizontalAlignment="Right"
+                                    Width="175"
+                                    Height="30"
+                                    Content="Список рекомендаций"    
+                                />
+                            </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

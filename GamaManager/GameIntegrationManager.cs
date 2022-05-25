@@ -94,9 +94,9 @@ namespace GamaManager
             DestroyWindow(hwnd.Handle);
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void Dispose (bool disposing)
         {
-            
+            Debugger.Log(0, "debug", Environment.NewLine + "закрываю игру" + Environment.NewLine);            
         }
 
     }

@@ -81,6 +81,7 @@ namespace GamaManager
         string cachedReverseGeoCodeCity = "";
         string cachedReverseGeoCodeState = "";
         public DateTime loginDateTime;
+        public string cachedGameInStore = "";
 
         public ObservableCollection<Model> Collection { get; set; }
 
@@ -671,7 +672,12 @@ namespace GamaManager
             GetMyUserSubs();
         }
 
-        public void GetFriendsHandler(object sender, TextChangedEventArgs e)
+        public void GetModeratorsHandler (object sender, TextChangedEventArgs e)
+        {
+            GetModerators();
+        }
+
+        public void GetFriendsHandler (object sender, TextChangedEventArgs e)
         {
             GetFriends();
         }
@@ -1443,10 +1449,14 @@ namespace GamaManager
 
             GetModerators();
 
+            GetMyUserSubs();
+
         }
 
         public void GetModerators ()
         {
+            string moderatorListBoxContent = moderatorListBox.Text;
+            string insensitiveCaseKeywords = moderatorListBoxContent.ToLower();
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/all");
@@ -1471,6 +1481,7 @@ namespace GamaManager
                                 return isMyModerator;
                             }).ToList<Moderator>();
                             moderatorList.Children.Clear();
+                            int moderatorsCursor = 0;
                             foreach (Moderator myModerator in myModerators)
                             {
                                 string moderatorId = myModerator.moderator;
@@ -1490,52 +1501,70 @@ namespace GamaManager
                                         {
                                             User myFriend = myInnerObj.user;
                                             string name = myFriend.name;
-                                            string userStatus = myFriend.status;
-                                            StackPanel friend = new StackPanel();
-                                            friend.Margin = new Thickness(15);
-                                            friend.Width = 250;
-                                            friend.Height = 50;
-                                            friend.Orientation = Orientation.Horizontal;
-                                            friend.Background = System.Windows.Media.Brushes.DarkCyan;
-                                            Image friendIcon = new Image();
-                                            friendIcon.Width = 50;
-                                            friendIcon.Height = 50;
-                                            friendIcon.BeginInit();
-                                            friendIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
-                                            friendIcon.EndInit();
-                                            friendIcon.ImageFailed += SetDefautAvatarHandler;
-                                            friend.Children.Add(friendIcon);
-                                            Separator friendStatus = new Separator();
-                                            friendStatus.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
-                                            friendStatus.LayoutTransform = new RotateTransform(90);
-                                            friend.Children.Add(friendStatus);
-                                            TextBlock friendNameLabel = new TextBlock();
-                                            friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
-                                            friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
-                                            friendNameLabel.Width = 75;
-                                            friendNameLabel.Text = name;
-                                            friend.Children.Add(friendNameLabel);
-                                            CheckBox friendCheckBox = new CheckBox();
-                                            Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
-                                            bool isVisible = friendsListManagementVisibility == visible;
-                                            if (isVisible)
+                                            string insensitiveCaseSenderName = name.ToLower();
+                                            bool isModeratorFound = insensitiveCaseSenderName.Contains(insensitiveCaseKeywords);
+                                            int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
+                                            bool isFilterDisabled = insensitiveCaseKeywordsLength <= 0;
+                                            bool isModeratorMatch = isModeratorFound || isFilterDisabled;
+                                            if (isModeratorMatch)
                                             {
-                                                friendCheckBox.Visibility = visible;
+                                                moderatorsCursor++;
+                                                string userStatus = myFriend.status;
+                                                StackPanel friend = new StackPanel();
+                                                friend.Margin = new Thickness(15);
+                                                friend.Width = 250;
+                                                friend.Height = 50;
+                                                friend.Orientation = Orientation.Horizontal;
+                                                friend.Background = System.Windows.Media.Brushes.DarkCyan;
+                                                Image friendIcon = new Image();
+                                                friendIcon.Width = 50;
+                                                friendIcon.Height = 50;
+                                                friendIcon.BeginInit();
+                                                friendIcon.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
+                                                friendIcon.EndInit();
+                                                friendIcon.ImageFailed += SetDefautAvatarHandler;
+                                                friend.Children.Add(friendIcon);
+                                                Separator friendStatus = new Separator();
+                                                friendStatus.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
+                                                friendStatus.LayoutTransform = new RotateTransform(90);
+                                                friend.Children.Add(friendStatus);
+                                                TextBlock friendNameLabel = new TextBlock();
+                                                friendNameLabel.Margin = new Thickness(10, 0, 10, 0);
+                                                friendNameLabel.VerticalAlignment = VerticalAlignment.Center;
+                                                friendNameLabel.Width = 75;
+                                                friendNameLabel.Text = name;
+                                                friend.Children.Add(friendNameLabel);
+                                                CheckBox friendCheckBox = new CheckBox();
+                                                Visibility friendsListManagementVisibility = friendsListManagement.Visibility;
+                                                bool isVisible = friendsListManagementVisibility == visible;
+                                                if (isVisible)
+                                                {
+                                                    friendCheckBox.Visibility = visible;
+                                                }
+                                                else
+                                                {
+                                                    friendCheckBox.Visibility = invisible;
+                                                }
+                                                friendCheckBox.Margin = new Thickness(5, 15, 5, 15);
+                                                friend.Children.Add(friendCheckBox);
+                                                moderatorList.Children.Add(friend);
+                                                friend.DataContext = moderatorId;
+                                                friend.MouseMove += ShowFriendInfoHandler;
+                                                mainControl.DataContext = moderatorId;
+                                                friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                             }
-                                            else
-                                            {
-                                                friendCheckBox.Visibility = invisible;
-                                            }
-                                            friendCheckBox.Margin = new Thickness(5, 15, 5, 15);
-                                            friend.Children.Add(friendCheckBox);
-                                            moderatorList.Children.Add(friend);
-                                            friend.DataContext = moderatorId;
-                                            friend.MouseMove += ShowFriendInfoHandler;
-                                            mainControl.DataContext = moderatorId;
-                                            friend.MouseLeftButtonUp += ReturnToProfileHandler;
                                         }
                                     }
                                 }
+                            }
+                            bool isNotModerators = moderatorsCursor <= 0;
+                            if (isNotModerators)
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.Text = "Сейчас у трансляции нет модераторов.";
+                                notFoundLabel.Margin = new Thickness(15);
+                                notFoundLabel.FontSize = 16;
+                                moderatorList.Children.Add(notFoundLabel);
                             }
                         }
                     }
@@ -2478,10 +2507,8 @@ namespace GamaManager
                         {
                             searchedGames.Children.Clear();
                             List<GameResponseInfo> totalGames = myobj.games;
-
                             double sliderValue = searchedGamesPriceSlider.Value;
                             int parsedSliderValue = ((int)(sliderValue));
-
                             int countFoundedGames = totalGames.Count<GameResponseInfo>((GameResponseInfo totalGamesItem) =>
                             {
                                 return true;
@@ -2612,6 +2639,7 @@ namespace GamaManager
 
                             foreach (GameResponseInfo totalGamesItem in totalGames)
                             {
+                                string totalGamesItemId = totalGamesItem._id;
                                 string totalGamesItemName = totalGamesItem.name;
                                 int totalGamesItemPrice = totalGamesItem.price;
                                 string rawTotalGamesItemPrice = totalGamesItemPrice.ToString();
@@ -2753,6 +2781,8 @@ namespace GamaManager
                                 searchedGameArticle.Children.Add(searchedGameArticlePrice);
                                 searchedGame.Children.Add(searchedGameArticle);
                                 searchedGames.Children.Add(searchedGame);
+                                searchedGame.DataContext = totalGamesItemId;
+                                searchedGame.MouseLeftButtonUp += OpenGameInStoreHandler;
                             }
                         }
                     }
@@ -2762,6 +2792,61 @@ namespace GamaManager
             {
                 MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
                 this.Close();
+            }
+        }
+
+        public void OpenGameInStoreHandler (object sender, RoutedEventArgs e)
+        {
+            DockPanel searchedGame = ((DockPanel)(sender));
+            object searchedGameData = searchedGame.DataContext;
+            string searchedGameId = ((string)(searchedGameData));
+            OpenGameInStore(searchedGameId);
+        }
+        
+        public void OpenGameInStore (string id)
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameResponseInfo> totalGames = myobj.games;
+                            List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            {
+                                string someGameId = someGame._id;
+                                bool isIdMatch = someGameId == id;
+                                return isIdMatch;
+                            }).ToList<GameResponseInfo>();
+                            int resultsCount = results.Count;
+                            bool isHaveResults = resultsCount >= 1;
+                            if (isHaveResults)
+                            {
+                                GameResponseInfo result = results[0];
+                                string resultName = result.name;
+                                string gameStoreBreadcrumbLabelContent = "Все игры > " + resultName;
+                                gameStoreBreadcrumbLabel.Text = gameStoreBreadcrumbLabelContent;
+                                gameStoreNameLabel.Text = resultName;
+                                mainControl.SelectedIndex = 83;
+                                cachedGameInStore = id;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+
             }
         }
 
@@ -3483,6 +3568,7 @@ namespace GamaManager
                                 bool isMySub = userSubUserId == currentUserId;
                                 return isMySub;
                             }).ToList<UserSub>();
+                            int subsCursor = 0;
                             foreach (UserSub mySub in mySubs)
                             {
                                 string userId = mySub.sub;
@@ -3510,6 +3596,7 @@ namespace GamaManager
                                             bool isSubMatch = isSubFound || isFilterDisabled;
                                             if (isSubMatch)
                                             {
+                                                subsCursor++;
                                                 string userStatus = user.status;
                                                 StackPanel myUserSub = new StackPanel();
                                                 myUserSub.Margin = new Thickness(15);
@@ -3557,7 +3644,15 @@ namespace GamaManager
                                         }
                                     }
                                 }
-
+                            }
+                            bool isNotSubs = subsCursor <= 0;
+                            if (isNotSubs)
+                            {
+                                TextBlock notFoundLabel = new TextBlock();
+                                notFoundLabel.Text = @"Извините, здесь никого нет.";
+                                notFoundLabel.Margin = new Thickness(15);
+                                notFoundLabel.FontSize = 16;
+                                myUserSubs.Children.Add(notFoundLabel);
                             }
                         }             
                     }
@@ -16020,7 +16115,7 @@ namespace GamaManager
             }
         }
 
-        public void GetUserInfo(string id, bool isLocalUser)
+        public void GetUserInfo (string id, bool isLocalUser)
         {
             userProfileStatusDateLabel.Visibility = invisible;
             string gamesSettings = "public";
@@ -20976,7 +21071,6 @@ namespace GamaManager
                 }
                 else if (isContent)
                 {
-                    // OpenContent();
                     OpenContent(currentUserId);
                 }
                 else if (isIcons)
@@ -22117,7 +22211,7 @@ namespace GamaManager
             AddHistoryRecord();
         }
 
-        public void ResetMenu()
+        public void ResetMenu ()
         {
             if (isAppInit)
             {
@@ -22210,6 +22304,39 @@ namespace GamaManager
                                         {
                                             countRequests++;
                                         }
+
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                                        nestedWebRequest.Method = "GET";
+                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                        {
+                                            using (StreamReader nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = nestedReader.ReadToEnd();
+                                                MsgsResponseInfo myNestedObj = (MsgsResponseInfo)js.Deserialize(objText, typeof(MsgsResponseInfo));
+                                                status = myNestedObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<Msg> totalMsgs = myNestedObj.msgs;
+                                                    List<Msg> msgNotifications = totalMsgs.Where<Msg>((Msg msg) =>
+                                                    {
+                                                        string msgType = msg.type;
+                                                        string msgRecepient = msg.friend;
+                                                        bool isLink = msgType == "link";
+                                                        bool isForMe = msgRecepient == currentUserId;
+                                                        bool isNotificationForMe = isLink && isForMe;
+                                                        return isNotificationForMe;
+                                                    }).ToList<Msg>();
+                                                    foreach (Msg msgNotification in msgNotifications)
+                                                    {
+                                                        countRequests++;
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                     }
                                 }
                             }
@@ -26736,6 +26863,49 @@ namespace GamaManager
             }
         }
 
+        private void ToggleModeratorListManagementHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleModeratorListManagement();
+        }
+
+        public void ToggleModeratorListManagement ()
+        {
+            Visibility moderatorListManagementVisibility = moderatorListManagement.Visibility;
+            bool isVisible = moderatorListManagementVisibility == visible;
+            if (isVisible)
+            {
+                moderatorListManagement.Visibility = invisible;
+                foreach (StackPanel moderatorListItem in moderatorList.Children)
+                {
+                    foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                    {
+                        bool isCheckBox = moderatorListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = moderatorListItemElement as CheckBox;
+                            checkBox.Visibility = invisible;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                moderatorListManagement.Visibility = visible;
+                foreach (StackPanel moderatorListItem in moderatorList.Children)
+                {
+                    foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                    {
+                        bool isCheckBox = moderatorListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = moderatorListItemElement as CheckBox;
+                            checkBox.Visibility = visible;
+                        }
+                    }
+                }
+            }
+        }
+
         private void ToggleFriendsListManagementHandler(object sender, RoutedEventArgs e)
         {
             ToggleFriendsListManagement();
@@ -26810,7 +26980,111 @@ namespace GamaManager
 
         public void UnsubscribeFriends ()
         {
+            foreach (StackPanel myUserSub in myUserSubs.Children)
+            {
+                foreach (UIElement myUserSubElement in myUserSub.Children)
+                {
+                    bool isCheckBox = myUserSubElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = myUserSubElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object subData = myUserSub.DataContext;
+                            string subId = ((string)(subData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/remove/?user=" + currentUserId + "&sub=" + subId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается отписаться", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            GetFriendsSettings();
+        }
 
+        public void RemoveModeratorsHandler (object sender, RoutedEventArgs e)
+        {
+            RemoveModerators();
+        }
+
+        public void RemoveModerators ()
+        {
+            foreach (StackPanel moderatorListItem in moderatorList.Children)
+            {
+                foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                {
+                    bool isCheckBox = moderatorListItemElement is CheckBox;
+                    if (isCheckBox)
+                    {
+                        CheckBox checkBox = moderatorListItemElement as CheckBox;
+                        object rawIsChecked = checkBox.IsChecked;
+                        bool isChecked = ((bool)(rawIsChecked));
+                        if (isChecked)
+                        {
+                            object moderatorData = moderatorListItem.DataContext;
+                            string moderatorId = ((string)(moderatorData));
+                            try
+                            {
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/remove/?id=" + currentUserId + "&moderator=" + moderatorId);
+                                webRequest.Method = "GET";
+                                webRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                                {
+                                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                                    {
+                                        JavaScriptSerializer js = new JavaScriptSerializer();
+                                        var objText = reader.ReadToEnd();
+                                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        string status = myobj.status;
+                                        bool isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Не удается удалить друга", "Ошибка");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (System.Net.WebException)
+                            {
+                                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                                this.Close();
+                            }
+                        }
+                    }
+                }
+            }
+            GetFriendsSettings();
         }
 
         private void RemoveFriendsHandler (object sender, RoutedEventArgs e)
@@ -27162,6 +27436,68 @@ namespace GamaManager
             object typeLabelData = typeLabel.DataContext;
             string type = typeLabelData.ToString();
             SelectFriendSubsType(type);
+        }
+
+        private void SelectModeratorTypeHandler (object sender, MouseButtonEventArgs e)
+        {
+            TextBlock typeLabel = ((TextBlock)(sender));
+            object typeLabelData = typeLabel.DataContext;
+            string type = typeLabelData.ToString();
+            SelectModeratorType(type);
+        }
+
+        public void SelectModeratorType (string type)
+        {
+            bool isAll = type == "All";
+            bool isNothing = type == "Nothing";
+            bool isInvert = type == "Invert";
+            if (isAll)
+            {
+                foreach (StackPanel moderatorListItem in moderatorList.Children)
+                {
+                    foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                    {
+                        bool isCheckBox = moderatorListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = moderatorListItemElement as CheckBox;
+                            checkBox.IsChecked = true;
+                        }
+                    }
+                }
+            }
+            else if (isNothing)
+            {
+                foreach (StackPanel moderatorListItem in moderatorList.Children)
+                {
+                    foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                    {
+                        bool isCheckBox = moderatorListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = moderatorListItemElement as CheckBox;
+                            checkBox.IsChecked = false;
+                        }
+                    }
+                }
+            }
+            else if (isInvert)
+            {
+                foreach (StackPanel moderatorListItem in moderatorList.Children)
+                {
+                    foreach (UIElement moderatorListItemElement in moderatorListItem.Children)
+                    {
+                        bool isCheckBox = moderatorListItemElement is CheckBox;
+                        if (isCheckBox)
+                        {
+                            CheckBox checkBox = moderatorListItemElement as CheckBox;
+                            object rawIsChecked = checkBox.IsChecked;
+                            bool isChecked = ((bool)(rawIsChecked));
+                            checkBox.IsChecked = !isChecked;
+                        }
+                    }
+                }
+            }
         }
 
         private void SelectFriendsTypeHandler (object sender, MouseButtonEventArgs e)

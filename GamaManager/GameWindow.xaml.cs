@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using MouseKeyboardActivityMonitor.WinApi;
 using MouseKeyboardActivityMonitor;
+using System.Management;
 
 namespace GamaManager
 {
@@ -46,6 +47,7 @@ namespace GamaManager
         bool isOverlayEnabled = true;
         public GlobalHooker globalHooker;
         public KeyboardHookListener keyboardHookListener;
+        private GameIntegrationManager control;
 
         public GameWindow(string userId)
         {
@@ -277,7 +279,7 @@ namespace GamaManager
             string gamePath = ((string)(gameData));
             try
             {
-                GameIntegrationManager control = new GameIntegrationManager(this, gamePath);
+                control = new GameIntegrationManager(this, gamePath);
                 game.Children.Add(control);
                 DockPanel.SetDock(control, Dock.Top);
                 FileInfo gameFileInfo = new FileInfo(gamePath);
@@ -388,6 +390,39 @@ namespace GamaManager
                 new CustomPopupPlacement(new System.Windows.Point(-50, 100), PopupPrimaryAxis.Vertical),
                 new CustomPopupPlacement(new System.Windows.Point(10, 20), PopupPrimaryAxis.Horizontal)
             };
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            control._process.Kill();
+            int pId = this.control._process.Id;
+            Debugger.Log(0, "debug", Environment.NewLine + "закрываю игру 2 " + pId.ToString() + Environment.NewLine);
+            // KillProcessAndChildren(pId);
+        }
+
+        private static void KillProcessAndChildren(int pid)
+        {
+            // Cannot close 'system idle process'.
+            if (pid == 0)
+            {
+                return;
+            }
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (ManagementObject mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
+            }
         }
 
     }

@@ -10,6 +10,7 @@
         Width="800"
         WindowState="Maximized"
         Loaded="Window_Loaded"
+        Closed="Window_Closed"
     >
     <DockPanel
         x:Name="game"

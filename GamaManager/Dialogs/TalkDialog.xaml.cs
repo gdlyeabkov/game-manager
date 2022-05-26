@@ -850,7 +850,14 @@ namespace GamaManager.Dialogs
                                         GetMsgs();
 
                                         ContextMenu newChatContextMenu = new ContextMenu();
+
                                         MenuItem newChatContextMenuItem = new MenuItem();
+                                        newChatContextMenuItem.Header = "Закрыть вкладку";
+                                        newChatContextMenuItem.DataContext = lastChatId;
+                                        newChatContextMenuItem.Click += CloseTabHandler;
+                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+
+                                        // MenuItem newChatContextMenuItem = new MenuItem();
                                         bool isFavoriteFriend = false;
                                         Environment.SpecialFolder localApplicationDataFolder = Environment.SpecialFolder.LocalApplicationData;
                                         string localApplicationDataFolderPath = Environment.GetFolderPath(localApplicationDataFolder);
@@ -882,12 +889,12 @@ namespace GamaManager.Dialogs
                                             newChatContextMenuItem.Click += AddTalkToFavoriteHandler;
                                         }
 
-                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+                                        /*newChatContextMenu.Items.Add(newChatContextMenuItem);
                                         newChatContextMenuItem = new MenuItem();
                                         newChatContextMenuItem.Header = "Закрыть вкладку";
                                         newChatContextMenuItem.DataContext = lastChatId;
                                         newChatContextMenuItem.Click += CloseTabHandler;
-                                        newChatContextMenu.Items.Add(newChatContextMenuItem);
+                                        newChatContextMenu.Items.Add(newChatContextMenuItem);*/
                                         newChatContextMenuItem = new MenuItem();
                                         newChatContextMenuItem.Header = "Выйти из чата";
                                         newChatContextMenuItem.Click += LogoutHandler;

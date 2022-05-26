@@ -24306,6 +24306,7 @@ namespace GamaManager
                                         }
                                     }
 
+
                                     if (method == "talk")
                                     {
                                         HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
@@ -24350,26 +24351,6 @@ namespace GamaManager
                                                                 if (isHaveTalks)
                                                                 {
                                                                     Debugger.Log(0, "debug", Environment.NewLine + "Пришло сообщение проверяю беседы " + isHaveTalks.ToString() + Environment.NewLine);
-                                                                    /*foreach (Talk talk in totalTalks)
-                                                                    {
-                                                                        string talkId = talk._id;
-                                                                        bool isMyTalk = false;
-                                                                        List<TalkRelation> results = relations.Where<TalkRelation>((TalkRelation relation) =>
-                                                                        {
-                                                                            string relationTalk = relation.talk;
-                                                                            string relationUser = relation.user;
-                                                                            bool isCurrentTalk = relationTalk == talkId;
-                                                                            bool isCurrentUser = relationUser == currentUserId;
-                                                                            bool isLocalMyTalk = isCurrentUser && isCurrentTalk;
-                                                                            return isLocalMyTalk;
-                                                                        }).ToList<TalkRelation>();
-                                                                        int countResults = results.Count;
-                                                                        isMyTalk = countResults >= 1;
-                                                                        if (isMyTalk)
-                                                                        {
-
-                                                                        }
-    {                                                                    }*/
                                                                     List<string> myTalkIds = new List<string>();
                                                                     foreach (TalkRelation myTalkRelation in myTalks)
                                                                     {
@@ -24382,7 +24363,6 @@ namespace GamaManager
                                                                         Debugger.Log(0, "debug", Environment.NewLine + "Пришло сообщение из беседы" + Environment.NewLine);
                                                                         Application.Current.Dispatcher.Invoke(async () =>
                                                                         {
-
                                                                             HttpWebRequest innserNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + chatId);
                                                                             innserNestedWebRequest.Method = "GET";
                                                                             innserNestedWebRequest.UserAgent = ".NET Framework Test Client";
@@ -24414,22 +24394,22 @@ namespace GamaManager
                                                                                                     Application localApp = Application.Current;
                                                                                                     WindowCollection localWindows = localApp.Windows;
                                                                                                     IEnumerable<Window> myWindows = localWindows.OfType<Window>();
-                                                                                                    int countTalkWindows = myWindows.Count(window =>
+                                                                                                    int countСhatWindows = myWindows.Count(window =>
                                                                                                     {
                                                                                                         string windowTitle = window.Title;
-                                                                                                        bool isTalkWindow = windowTitle == "Беседа";
-                                                                                                        return isTalkWindow;
+                                                                                                        bool isChatWindow = windowTitle == "Чат";
+                                                                                                        return isChatWindow;
                                                                                                     });
-                                                                                                    bool isNotOpenedTalkWindows = countTalkWindows <= 0;
+                                                                                                    bool isNotOpenedChatWindows = countСhatWindows <= 0;
                                                                                                     bool isMock = true;
-                                                                                                    if (isNotOpenedTalkWindows || isMock)
-                                                                                                    {   User user = myUserObj.user;
+                                                                                                    if (isNotOpenedChatWindows || isMock)
+                                                                                                    {
+                                                                                                        User user = myUserObj.user;
                                                                                                         string userName = user.name;
                                                                                                         Talk talk = myInnserNestedObj.talk;
                                                                                                         string talkTitle = talk.title;
                                                                                                         Popup talkNotification = new Popup();
-                                                                                                        // talkNotification.DataContext = chatId;
-                                                                                                        Dictionary<String, Object>  talkNotificationData = new Dictionary<String, Object>();
+                                                                                                        Dictionary<String, Object> talkNotificationData = new Dictionary<String, Object>();
                                                                                                         talkNotificationData.Add("talk", chatId);
                                                                                                         talkNotificationData.Add("channel", channelId);
                                                                                                         talkNotification.DataContext = talkNotificationData;
@@ -24469,12 +24449,9 @@ namespace GamaManager
                                                                                                         };
                                                                                                         timer.Start();
                                                                                                         talkNotifications.Children.Add(talkNotification);
-
                                                                                                         mainAudio.LoadedBehavior = MediaState.Play;
                                                                                                         mainAudio.Source = new Uri(@"C:\wpf_projects\GamaManager\GamaManager\Sounds\notification.wav");
-                                                                                                    
                                                                                                     }
-
                                                                                                 }
                                                                                             }
                                                                                         }
@@ -24982,52 +24959,47 @@ namespace GamaManager
             List<FriendSettings> currentFriends = loadedContent.friends;
             Settings currentSettings = loadedContent.settings;
             bool isOpenNewChatInNewWindow = currentSettings.isOpenNewChatInNewWindow;
-
             Application app = Application.Current;
             WindowCollection windows = app.Windows;
             IEnumerable<Window> myWindows = windows.OfType<Window>();
-            List<Window> talkWindows = myWindows.Where<Window>(window =>
+            List<Window> chatWindows = myWindows.Where<Window>(window =>
             {
                 string windowTitle = window.Title;
-                bool isTalkWindow = windowTitle == "Беседа";
+                bool isChatWindow = windowTitle == "Чат";
                 object windowData = window.DataContext;
                 bool isWindowDataExists = windowData != null;
-                bool isTalkExists = true;
-                if (isWindowDataExists && isTalkWindow)
+                bool isChatExists = true;
+                if (isWindowDataExists && isChatWindow)
                 {
-                    // string localFriend = ((string)(windowData));
-                    TalkDialog talkDialog = window as TalkDialog;
-                    isTalkExists = talkDialog.chats.Contains(id);
+                    ChatDialog chatDialog = window as ChatDialog;
+                    isChatExists = chatDialog.chats.Contains(id);
                 }
-                return isWindowDataExists && isTalkWindow && isTalkExists;
+                return isWindowDataExists && isChatWindow && isChatExists;
             }).ToList<Window>();
-            int countTalkWindows = talkWindows.Count;
-            bool isNotOpenedTalkWindows = countTalkWindows <= 0;
+            int countChatWindows = chatWindows.Count;
+            bool isNotOpenedChatWindows = countChatWindows <= 0;
 
             chats.Add(id);
 
-            if (isNotOpenedTalkWindows)
+            if (isNotOpenedChatWindows)
             {
-                talkWindows = myWindows.Where<Window>(window =>
+                chatWindows = myWindows.Where<Window>(window =>
                 {
                     string windowTitle = window.Title;
-                    bool isTalkWindow = windowTitle == "Беседа";
-                    return isTalkWindow;
+                    bool isChatWindow = windowTitle == "Чат";
+                    return isChatWindow;
                 }).ToList<Window>();
-                countTalkWindows = talkWindows.Count;
-                isNotOpenedTalkWindows = countTalkWindows <= 0;
-                if (isNotOpenedTalkWindows)
+                countChatWindows = chatWindows.Count;
+                isNotOpenedChatWindows = countChatWindows <= 0;
+                if (isNotOpenedChatWindows)
                 {
-                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                    // dialog.DataContext = id;
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, mainWindow);
                     Dictionary<String, Object>  dialogData = new Dictionary<String, Object>();
                     dialogData.Add("talk", id);
                     dialogData.Add("channel", channel);
                     dialog.DataContext = dialogData;
                     dialog.Closed += DebugHandler;
-                    
                     dialog.Loaded += ActivateTextChannelHandler;
-                    
                     dialog.Show();
                     popup.IsOpen = false;
                 }
@@ -25035,8 +25007,7 @@ namespace GamaManager
                 {
                     if (isOpenNewChatInNewWindow)
                     {
-                        Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                        // dialog.DataContext = id;
+                        Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, mainWindow);
                         Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
                         dialogData.Add("talk", id);
                         dialogData.Add("channel", channel);
@@ -25047,7 +25018,7 @@ namespace GamaManager
                     }
                     else
                     {
-                        Dialogs.TalkDialog dialog = ((Dialogs.TalkDialog)(talkWindows[0]));
+                        Dialogs.ChatDialog dialog = ((Dialogs.ChatDialog)(chatWindows[0]));
                         dialog.Focus();
                         dialog.AddChat(id);
                         dialog.SelectChat(id);
@@ -25058,8 +25029,7 @@ namespace GamaManager
             {
                 if (isOpenNewChatInNewWindow)
                 {
-                    Dialogs.TalkDialog dialog = new Dialogs.TalkDialog(currentUserId, id, client, false);
-                    // dialog.DataContext = id;
+                    Dialogs.ChatDialog dialog = new Dialogs.ChatDialog(currentUserId, client, id, false, mainWindow);
                     Dictionary<String, Object> dialogData = new Dictionary<String, Object>();
                     dialogData.Add("talk", id);
                     dialogData.Add("channel", channel);
@@ -25068,9 +25038,9 @@ namespace GamaManager
                 }
                 else
                 {
-                    Dialogs.TalkDialog talkWindow = ((TalkDialog)(talkWindows[0]));
-                    talkWindow.Focus();
-                    talkWindow.SelectChat(id);
+                    Dialogs.ChatDialog chatWindow = ((ChatDialog)(chatWindows[0]));
+                    chatWindow.Focus();
+                    chatWindow.SelectChat(id);
                 }
             }
 
@@ -25103,27 +25073,11 @@ namespace GamaManager
 
         public void ActivateTextChannelHandler (object sender, RoutedEventArgs e)
         {
-            Dialogs.TalkDialog dialog = ((TalkDialog)(sender));
+            Dialogs.ChatDialog dialog = ((ChatDialog)(sender));
             object rawTalkData = dialog.DataContext;
-            // string talkId = ((string)(talkData));
             Dictionary<String, Object> talkData = ((Dictionary<String, Object>)(rawTalkData));
             string talkId = ((string)(talkData["talk"]));
             string receivedChannelId = ((string)(talkData["channel"]));
-            /*UIElement rawTextChannels = dialog.textChannels;
-            StackPanel textChannels = ((StackPanel)(rawTextChannels));
-            foreach (StackPanel textChannel in textChannels.Children)
-            {
-                object textChannelData = textChannel.DataContext;
-                string textChannelId = ((string)(textChannelData));
-                // receivedChannelId это id текстового каннала который пришел с сокета
-                bool isFound = textChannelId == receivedChannelId;
-                if (isFound)
-                {
-                    int index = textChannels.Children.IndexOf(textChannel);
-                    dialog.SelectTextChannel(index);
-                    break;
-                }
-            }*/
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");

@@ -761,7 +761,7 @@
                                     MouseLeftButtonUp="ClearGameListFilterHandler"
                                 />
                                 <materialDesign:PackIcon
-                                    Kind="HorizontalLine"
+                                    Kind="Equaliser"
                                     VerticalAlignment="Center"
                                     Margin="5 0"
                                     MouseLeftButtonUp="OpenKeywordsLabelFilterPopupHandler"
@@ -776,7 +776,7 @@
                                 >
                                     <Popup.Child>
                                         <StackPanel
-                                            Background="LightGray"    
+                                            Background="LightSlateGray"    
                                         >
                                             <Grid>
                                                 <Grid.RowDefinitions>
@@ -1508,6 +1508,7 @@
                                     </ScrollViewer>
                                 </StackPanel>
                                 <StackPanel
+                                    Margin="15 25"
                                     Orientation="Horizontal"    
                                     HorizontalAlignment="Center"
                                     MouseLeftButtonUp="OpenAddGameSectionHandler"
@@ -6321,7 +6322,7 @@
                                                 >
                                                     <Popup.Child>
                                                         <StackPanel
-                                                            Background="LightGray"    
+                                                            Background="LightSlateGray"    
                                                         >
                                                             <StackPanel
                                                                 Orientation="Horizontal"    
@@ -6346,13 +6347,13 @@
                                                                         x:Name="friendInfoPopupNameLabel"
                                                                         FontSize="16"
                                                                         Margin="15 0"
-                                                                        Foreground="Gray"
+                                                                        Foreground="DarkGray"
                                                                         Text="Имя пользователя"    
                                                                     />
                                                                     <TextBlock
                                                                         x:Name="friendInfoPopupStatusLabel"
                                                                         Margin="15 0"
-                                                                        Foreground="Gray"
+                                                                        Foreground="DarkGray"
                                                                         Text="Статус"    
                                                                     />
                                                                 </StackPanel>
@@ -17533,6 +17534,40 @@
                                         />
                                     </StackPanel>
                                 </TabItem>
+                                <TabItem
+                                    Visibility="Collapsed"    
+                                >
+                                    <Grid
+                                        x:Name="feedBackLogs"    
+                                    >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Margin="15"
+                                            Text="СООБЩЕНИЕ"    
+                                        />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Margin="15"
+                                            Text="СТАТУС"    
+                                        />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Margin="15"
+                                            Text="ДАТА СОЗДАНИЯ"    
+                                        />
+                                    </Grid>
+                                </TabItem>
                             </TabControl>
                             <StackPanel
                                 x:Name="helpFeedBack"
@@ -21196,9 +21231,9 @@ E. Что произойдет, если положение Пункта 11 бу
                                     <TabItem
                                         Header="Подписки"    
                                     >
-                                        <StackPanel>
-
-                                        </StackPanel>
+                                        <StackPanel
+                                            x:Name="gameSubs"    
+                                        />
                                     </TabItem>
                                     <TabItem
                                         Header="Список желаемого"    
@@ -24203,7 +24238,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                                MouseLeftButtonUp="OpenFeedBackLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -26338,10 +26373,103 @@ E. Что произойдет, если положение Пункта 11 бу
                                 />
                             </DockPanel>
                             <DockPanel>
+                                
+                                <StackPanel
+                                    HorizontalAlignment="Right"    
+                                >
+                                    <Image
+                                        x:Name="gameStoreThumbnail"
+                                        Margin="15"
+                                        Width="85"    
+                                        Height="85"    
+                                        ImageFailed="SetDefautAvatarHandler"
+                                    >
+                                        <Image.Source>
+                                            <BitmapImage
+                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
+                                            />
+                                        </Image.Source>
+                                    </Image>
+                                    <TextBlock
+                                        x:Name="gameStoreDescLabel"
+                                        Margin="0 10" 
+                                        Text="Описание игры"
+                                        TextWrapping="WrapWithOverflow"
+                                        Width="500"
+                                    />
+                                    <DockPanel
+                                        Margin="0 10" 
+                                    >
+                                        <TextBlock
+                                            Margin="15 0" 
+                                            Text="Недавние обзоры"    
+                                        />
+                                        <TextBlock
+                                            x:Name="gameStoreCountRecentReviewsLabel"
+                                            Margin="15 0" 
+                                            Text="(0)"    
+                                        />
+                                    </DockPanel>
+                                    <DockPanel
+                                        Margin="0 10" 
+                                    >
+                                        <TextBlock
+                                            Margin="15 0" 
+                                            Text="Все обзоры"    
+                                        />
+                                        <TextBlock
+                                            x:Name="gameStoreCountReviewsLabel"
+                                            Margin="15 0" 
+                                            Text="(0)"    
+                                        />
+                                    </DockPanel>
+                                    <DockPanel
+                                        Margin="0 10" 
+                                    >
+                                        <TextBlock
+                                            Margin="15 0" 
+                                            Text="Дата выхода"    
+                                        />
+                                        <TextBlock
+                                            x:Name="gameStoreDateLabel"
+                                            Margin="15 0" 
+                                            Text=""    
+                                        />
+                                    </DockPanel>
+                                    <DockPanel
+                                        Margin="0 10" 
+                                    >
+                                        <TextBlock
+                                            Margin="15 0" 
+                                            Text="Разработчик"    
+                                        />
+                                        <TextBlock
+                                            x:Name="gameStoreDeveloperLabel"
+                                            Margin="15 0" 
+                                            Text=""    
+                                        />
+                                    </DockPanel>
+                                    <DockPanel
+                                        Margin="0 10" 
+                                    >
+                                        <TextBlock
+                                            Margin="15 0" 
+                                            Text="Издатель"    
+                                        />
+                                        <TextBlock
+                                            x:Name="gameStoreEditorLabel"
+                                            Margin="15 0" 
+                                            Text=""    
+                                        />
+                                    </DockPanel>
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel>
                                 <StackPanel
                                     Orientation="Horizontal"    
                                 >
                                     <Button
+                                        x:Name="gameStoreSubBtn"
                                         Width="175"
                                         Height="30"
                                         Content="Подписаться"   

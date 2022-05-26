@@ -346,6 +346,95 @@ namespace GamaManager
             }
         }
 
+        public void OpenFeedBackLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenFeedBackLogs();
+        }
+
+        public void OpenFeedBackLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/feedbacks/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        FeedBacksResponseInfo myObj = (FeedBacksResponseInfo)js.Deserialize(objText, typeof(FeedBacksResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<FeedBack> totalFeedBacks = myObj.feedbacks;
+                            List<FeedBack> myFeedBacks = totalFeedBacks.Where<FeedBack>((FeedBack feedBack) =>
+                            {
+                                string feedBackUser = feedBack.user;
+                                bool isMyFeedBack = feedBackUser == currentUserId;
+                                return isMyFeedBack;
+                            }).ToList<FeedBack>();
+                            RowDefinitionCollection rows = feedBackLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                feedBackLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection feedBackLogsChildren = feedBackLogs.Children;
+                            int feedBackLogsChildrenCount = feedBackLogsChildren.Count;
+                            isHavePreviousData = feedBackLogsChildrenCount >= 4;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = feedBackLogsChildrenCount - 3;
+                                feedBackLogs.Children.RemoveRange(3, countRemovedChildren);
+                            }
+                            foreach (FeedBack feedBack in myFeedBacks)
+                            {
+                                string feedBackContent = feedBack.content;
+                                string feedBackDate = feedBack.date;
+                                RowDefinition row = new RowDefinition();
+                                row.Height = new GridLength(50);
+                                feedBackLogs.RowDefinitions.Add(row);
+                                rows = feedBackLogs.RowDefinitions;
+                                rowsCount = rows.Count;
+                                int lastRowIndex = rowsCount - 1;
+                                TextBlock feedBackContentLabel = new TextBlock();
+                                feedBackContentLabel.Text = feedBackContent;
+                                feedBackContentLabel.Margin = new Thickness(15);
+                                feedBackLogs.Children.Add(feedBackContentLabel);
+                                Grid.SetRow(feedBackContentLabel, lastRowIndex);
+                                Grid.SetColumn(feedBackContentLabel, 0);
+                                TextBlock feedBackStatusLabel = new TextBlock();
+                                feedBackStatusLabel.Text = "Проверено";
+                                feedBackStatusLabel.Margin = new Thickness(15);
+                                feedBackLogs.Children.Add(feedBackStatusLabel);
+                                Grid.SetRow(feedBackStatusLabel, lastRowIndex);
+                                Grid.SetColumn(feedBackStatusLabel, 1);
+                                TextBlock feedBackDateLabel = new TextBlock();
+                                feedBackDateLabel.Text = feedBackDate;
+                                feedBackDateLabel.Margin = new Thickness(15);
+                                feedBackLogs.Children.Add(feedBackDateLabel);
+                                Grid.SetRow(feedBackDateLabel, lastRowIndex);
+                                Grid.SetColumn(feedBackDateLabel, 2);
+                            }
+
+                            OpenSupportService();
+                            helpControl.SelectedIndex = 45;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void OpenUsedDeviceLogsHandler (object sender, RoutedEventArgs e)
         {
             OpenUsedDeviceLogs();
@@ -1239,13 +1328,15 @@ namespace GamaManager
                             User user = myobj.user;
                             string userName = user.name;
                             string userStatus = user.status;
-                            string userLevel = "Уровень 0";
+                            int userLevel = user.level;
                             friendInfoPopupAvatar.BeginInit();
                             friendInfoPopupAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendId));
                             friendInfoPopupAvatar.EndInit();
                             friendInfoPopupNameLabel.Text = userName;
                             friendInfoPopupStatusLabel.Text = userStatus;
-                            friendInfoPopupLevelLabel.Text = userLevel;
+                            string rawUserLevel = userLevel.ToString();
+                            string friendInfoPopupLevelLabelContent = "Уровень " + rawUserLevel;
+                            friendInfoPopupLevelLabel.Text = friendInfoPopupLevelLabelContent;
                             if (friend.IsMouseOver)
                             {
                                 friendInfoPopup.IsOpen = true;
@@ -2795,6 +2886,102 @@ namespace GamaManager
             }
         }
 
+
+        public void ToggleGameStoreSubHandler (object sender, RoutedEventArgs e)
+        {
+            ToggleGameStoreSub();
+        }
+
+        public void ToggleGameStoreSub ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GameSubsResponseInfo myobj = (GameSubsResponseInfo)js.Deserialize(objText, typeof(GameSubsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameSub> subs = myobj.subs;
+                            /*List<GameSub> mySubs = subs.Where<GameSub>((GameSub sub) =>
+                            {
+                                string subGameId = sub.game;
+                                bool isLocalFound = subGameId == cachedGameInStore;
+                                return isLocalFound;
+                            }).ToList<GameSub>();*/
+                            int mySubsCount = subs.Count<GameSub>((GameSub sub) =>
+                            {
+                                string subUserId = sub.user;
+                                string subGameId = sub.sub;
+                                bool isLocalFound = subGameId == cachedGameInStore && subUserId == currentUserId;
+                                return isLocalFound;
+                            });
+                            bool isHaveSubs = mySubsCount >= 1;
+                            if (isHaveSubs)
+                            {
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/remove/?user=" + currentUserId + "&sub=" + cachedGameInStore);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            
+                                            GetRecommendationGameSubs();
+                                            OpenGameInStore(cachedGameInStore);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/add/?id=" + currentUserId + "&sub=" + cachedGameInStore);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            GetRecommendationGameSubs();
+                                            OpenGameInStore(cachedGameInStore);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+
         public void OpenGameInStoreHandler (object sender, RoutedEventArgs e)
         {
             DockPanel searchedGame = ((DockPanel)(sender));
@@ -2822,23 +3009,120 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<GameResponseInfo> totalGames = myobj.games;
-                            List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
                             {
-                                string someGameId = someGame._id;
-                                bool isIdMatch = someGameId == id;
-                                return isIdMatch;
-                            }).ToList<GameResponseInfo>();
-                            int resultsCount = results.Count;
-                            bool isHaveResults = resultsCount >= 1;
-                            if (isHaveResults)
-                            {
-                                GameResponseInfo result = results[0];
-                                string resultName = result.name;
-                                string gameStoreBreadcrumbLabelContent = "Все игры > " + resultName;
-                                gameStoreBreadcrumbLabel.Text = gameStoreBreadcrumbLabelContent;
-                                gameStoreNameLabel.Text = resultName;
-                                mainControl.SelectedIndex = 83;
-                                cachedGameInStore = id;
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GameSubsResponseInfo myInnerObj = (GameSubsResponseInfo)js.Deserialize(objText, typeof(GameSubsResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GameSub> mySubs = myInnerObj.subs;
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                        nestedWebRequest.Method = "GET";
+                                        nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                        using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                        {
+                                            using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                            {
+                                                js = new JavaScriptSerializer();
+                                                objText = nestedReader.ReadToEnd();
+                                                ReviewsResponseInfo myNestedObj = (ReviewsResponseInfo)js.Deserialize(objText, typeof(ReviewsResponseInfo));
+                                                status = myNestedObj.status;
+                                                isOkStatus = status == "OK";
+                                                if (isOkStatus)
+                                                {
+                                                    List<Review> totalReviews = myNestedObj.reviews;
+                                                    List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                                    {
+                                                        string someGameId = someGame._id;
+                                                        bool isIdMatch = someGameId == id;
+                                                        return isIdMatch;
+                                                    }).ToList<GameResponseInfo>();
+                                                    int resultsCount = results.Count;
+                                                    bool isHaveResults = resultsCount >= 1;
+                                                    if (isHaveResults)
+                                                    {
+                                                        GameResponseInfo result = results[0];
+                                                        string resultName = result.name;
+                                                        string resultDesc = result.desc;
+                                                        string resultDeveloper = result.developer;
+                                                        string resultEditor = result.editor;
+                                                        DateTime resultDate = result.date;
+                                                        string rawResultDate = resultDate.ToLongDateString();
+                                                        string gameStoreBreadcrumbLabelContent = "Все игры > " + resultName;
+                                                        gameStoreBreadcrumbLabel.Text = gameStoreBreadcrumbLabelContent;
+                                                        gameStoreNameLabel.Text = resultName;
+                                                        gameStoreThumbnail.BeginInit();
+                                                        gameStoreThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + resultName));
+                                                        gameStoreThumbnail.EndInit();
+                                                        gameStoreDescLabel.Text = resultDesc;
+                                                        gameStoreDeveloperLabel.Text = resultDeveloper;
+                                                        gameStoreEditorLabel.Text = resultEditor;
+                                                        gameStoreDateLabel.Text = rawResultDate;
+                                                        int mySubsCount = mySubs.Count<GameSub>((GameSub sub) =>
+                                                        {
+                                                            string subUserId = sub.user;
+                                                            string subGameId = sub.sub;
+                                                            bool isLocalFound = subGameId == cachedGameInStore && subUserId == currentUserId;
+                                                            return isLocalFound;
+                                                        });
+                                                        bool isHaveSubs = mySubsCount >= 1;
+                                                        if (isHaveSubs)
+                                                        {
+                                                            StackPanel gameStoreSubBtnContent = new StackPanel();
+                                                            gameStoreSubBtnContent.Orientation = Orientation.Horizontal;
+                                                            PackIcon gameStoreSubBtnContentIcon = new PackIcon();
+                                                            gameStoreSubBtnContentIcon.Kind = PackIconKind.Check;
+                                                            gameStoreSubBtnContentIcon.Margin = new Thickness(15, 0, 15, 0);
+                                                            gameStoreSubBtnContent.Children.Add(gameStoreSubBtnContentIcon);
+                                                            TextBlock gameStoreSubBtnContentLabel = new TextBlock();
+                                                            gameStoreSubBtnContentLabel.Text = "В подписках";
+                                                            gameStoreSubBtnContentLabel.Margin = new Thickness(15, 0, 15, 0);
+                                                            gameStoreSubBtnContent.Children.Add(gameStoreSubBtnContentLabel);
+                                                            gameStoreSubBtn.Content = gameStoreSubBtnContent;
+                                                        }
+                                                        else
+                                                        {
+                                                            gameStoreSubBtn.Content = "Подписаться";
+                                                        }
+                                                        int countReviews = totalReviews.Count<Review>((Review review) =>
+                                                        {
+                                                            string reviewGameId = review.game;
+                                                            bool isLocalFound = reviewGameId == cachedGameInStore;
+                                                            return isLocalFound;
+                                                        });
+                                                        string rawCountReviews = countReviews.ToString();
+                                                        string gameStoreCountReviewsLabelContent = "(" + rawCountReviews + ")";
+                                                        gameStoreCountReviewsLabel.Text = gameStoreCountReviewsLabelContent;
+                                                        DateTime currentDate = DateTime.Now;
+                                                        int countRecentReviews = totalReviews.Count<Review>((Review review) =>
+                                                        {
+                                                            string reviewGameId = review.game;
+                                                            DateTime reviewDate = review.date;
+                                                            bool isLocalFound = reviewGameId == cachedGameInStore;
+                                                            TimeSpan interval = currentDate.Subtract(reviewDate);
+                                                            double intervalInDays = interval.TotalDays;
+                                                            bool isRecent = intervalInDays <= 14;
+                                                            return isLocalFound && isRecent;
+                                                        });
+                                                        string rawCountRecentReviews = countRecentReviews.ToString();
+                                                        string gameStoreCountRecentReviewsLabelContent = "(" + rawCountRecentReviews + ")";
+                                                        gameStoreCountRecentReviewsLabel.Text = gameStoreCountRecentReviewsLabelContent;
+                                                        mainControl.SelectedIndex = 83;
+                                                        cachedGameInStore = id;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -2846,7 +3130,8 @@ namespace GamaManager
             }
             catch (System.Net.WebException exception)
             {
-
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -8636,6 +8921,7 @@ namespace GamaManager
                             GetRecentRunRecommendationGames();
                             GetAllRecommendationGames();
                             GetRecommendationReviewsInfo();
+                            GetRecommendationGameSubs();
                         }
                     }
                 }
@@ -8841,6 +9127,156 @@ namespace GamaManager
                 recentRunGame.Children.Add(recentRunGameAside);
                 recentRunGames.Children.Add(recentRunGame);
 
+            }
+        }
+
+        public void GetRecommendationGameSubs()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        GameSubsResponseInfo myobj = (GameSubsResponseInfo)js.Deserialize(objText, typeof(GameSubsResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<GameSub> subs = myobj.subs;
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            innerWebRequest.Method = "GET";
+                            innerWebRequest.UserAgent = ".NET Framework Test Client";
+                            using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                            {
+                                using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                {
+                                    js = new JavaScriptSerializer();
+                                    objText = innerReader.ReadToEnd();
+                                    GamesListResponseInfo myInnerObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                    status = myInnerObj.status;
+                                    isOkStatus = status == "OK";
+                                    if (isOkStatus)
+                                    {
+                                        List<GameResponseInfo> totalGames = myInnerObj.games;
+                                        List<GameSub> mySubs = subs.Where<GameSub>((GameSub sub) =>
+                                        {
+                                            string subUserId = sub.user;
+                                            bool isLocalFound = subUserId == currentUserId;
+                                            return isLocalFound;
+                                        }).ToList<GameSub>();
+                                        List<string> myGameSubs = new List<string>();
+                                        foreach (GameSub mySub in mySubs)
+                                        {
+                                            string subGameId = mySub.sub;
+                                            myGameSubs.Add(subGameId);
+                                        }
+                                        totalGames = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                        {
+                                            return myGameSubs.Contains(someGame._id);
+                                        }).ToList<GameResponseInfo>();
+                                        gameSubs.Children.Clear();
+                                        foreach (GameResponseInfo recentGame in totalGames)
+                                        {
+                                            string recentRunGameId = recentGame._id;
+                                            string recentRunGameName = recentGame.name;
+                                            StackPanel recentRunGame = new StackPanel();
+                                            recentRunGame.Background = System.Windows.Media.Brushes.LightGray;
+                                            recentRunGame.Margin = new Thickness(15);
+                                            recentRunGame.Orientation = Orientation.Horizontal;
+                                            Image recentRunGameThumbnail = new Image();
+                                            recentRunGameThumbnail.Width = 100;
+                                            recentRunGameThumbnail.Height = 100;
+                                            recentRunGameThumbnail.Margin = new Thickness(15);
+                                            recentRunGameThumbnail.BeginInit();
+                                            recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                                            recentRunGameThumbnail.EndInit();
+                                            recentRunGame.Children.Add(recentRunGameThumbnail);
+                                            StackPanel recentRunGameAside = new StackPanel();
+                                            recentRunGameAside.Margin = new Thickness(15, 0, 15, 0);
+                                            TextBlock recentRunGameAsideNameLabel = new TextBlock();
+                                            recentRunGameAsideNameLabel.Margin = new Thickness(0, 5, 0, 5);
+                                            recentRunGameAsideNameLabel.FontSize = 16;
+                                            recentRunGameAsideNameLabel.Text = recentRunGameName;
+                                            recentRunGameAside.Children.Add(recentRunGameAsideNameLabel);
+                                            DockPanel recentRunGameAsideFooter = new DockPanel();
+                                            recentRunGameAsideFooter.Margin = new Thickness(0, 5, 0, 5);
+                                            Dictionary<String, Object> recentRunGameAsideFooterLinksData = new Dictionary<String, Object>();
+                                            recentRunGameAsideFooterLinksData.Add("id", recentRunGameId);
+                                            recentRunGameAsideFooterLinksData.Add("name", recentRunGameName);
+                                            Button recentRunGameAsideFooterBtn = new Button();
+                                            recentRunGameAsideFooterBtn.Content = "Отписаться";
+                                            recentRunGameAsideFooterBtn.Width = 175;
+                                            recentRunGameAsideFooterBtn.Height = 25;
+                                            recentRunGameAsideFooterBtn.Margin = new Thickness(15, 0, 15, 0);
+                                            recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterBtn);
+                                            recentRunGameAsideFooterBtn.DataContext = recentRunGameId;
+                                            recentRunGameAsideFooterBtn.Click += UnsubscribeGameHandler;
+                                            recentRunGameAsideFooterBtn = new Button();
+                                            recentRunGameAsideFooterBtn.HorizontalAlignment = HorizontalAlignment.Right;
+                                            recentRunGameAsideFooterBtn.Content = "Перейти на страницу в магазине";
+                                            recentRunGameAsideFooterBtn.Width = 275;
+                                            recentRunGameAsideFooterBtn.Height = 25;
+                                            recentRunGameAsideFooterBtn.Margin = new Thickness(15, 0, 15, 0);
+                                            recentRunGameAsideFooter.Children.Add(recentRunGameAsideFooterBtn);
+                                            recentRunGameAside.Children.Add(recentRunGameAsideFooter);
+                                            recentRunGame.Children.Add(recentRunGameAside);
+                                            gameSubs.Children.Add(recentRunGame);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
+        public void UnsubscribeGameHandler (object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)(sender));
+            object btnData = btn.DataContext;
+            string id = ((string)(btnData));
+            UnsubscribeGame(id);
+        }
+
+        public void UnsubscribeGame (string id)
+        {
+            try
+            {
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/remove/?user=" + currentUserId + "&sub=" + id);
+                innerWebRequest.Method = "GET";
+                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                {
+                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = innerReader.ReadToEnd();
+                        UserResponseInfo myInnerObj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myInnerObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            GetRecommendationGameSubs();
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException exception)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
             }
         }
 
@@ -34692,6 +35128,9 @@ namespace GamaManager
         public string platform;
         public string genre;
         public DateTime date;
+        public string desc;
+        public string developer;
+        public string editor;
     }
 
     class UserResponseInfo
@@ -35916,6 +36355,33 @@ namespace GamaManager
         public string _id;
         public string user;
         public string moderator;
+    }
+
+    public class GameSubsResponseInfo
+    {
+        public string status;
+        public List<GameSub> subs;
+    }
+
+    public class GameSub
+    {
+        public string _id;
+        public string user;
+        public string sub;
+    }
+
+    public class FeedBacksResponseInfo
+    {
+        public string status;
+        public List<FeedBack> feedbacks;
+    }
+
+    public class FeedBack
+    {
+        public string _id;
+        public string user;
+        public string content;
+        public string date;
     }
 
 }

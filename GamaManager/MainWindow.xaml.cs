@@ -15630,7 +15630,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 70;
         }
 
-        public void SelectForum(string id)
+        public void SelectForum (string id)
         {
             addDiscussionDialog.Visibility = invisible;
             addDiscussionBtn.DataContext = id;

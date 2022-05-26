@@ -7,7 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     Title="Чат"
-    Height="500"
+    Height="600"
     Width="800"
     Loaded="InitializeHandler"
     GotFocus="StopBlinkWindowHandler"
@@ -155,11 +155,215 @@
             </StackPanel>
         </DockPanel>
         -->
-        <TabControl
-            x:Name="chatControl"    
-            Height="375"
-            SelectionChanged="DetectChatToggleHandler"
-        />
+        <StackPanel>
+            <DockPanel
+                x:Name="talkHeader"
+                Height="50"    
+            >
+                <StackPanel
+                    Margin="25 0"
+                    Orientation="Horizontal"    
+                >
+                    <materialDesign:PackIcon
+                        Kind="Circle"
+                        Width="24"
+                        Height="24"
+                        VerticalAlignment="Center"
+                        Margin="15 0"
+                    />
+                    <TextBlock
+                        x:Name="talkTitleLabel"
+                        FontSize="16"
+                        Text="Название беседы"
+                        Margin="15 0"
+                        VerticalAlignment="Center"
+                    />
+                </StackPanel>
+                <StackPanel
+                    x:Name="ownerMenu"
+                    Visibility="Visible"
+                    Margin="25 0"
+                    Orientation="Horizontal"    
+                    HorizontalAlignment="Right"
+                >
+                    <materialDesign:PackIcon
+                        Kind="Notifications"
+                        Width="24"
+                        Height="24"
+                        VerticalAlignment="Center"
+                        Margin="15 0"
+                        MouseLeftButtonUp="OpenTalkNotificationsHandler"    
+                    />
+                    <materialDesign:PackIcon
+                        Kind="Invite"
+                        Width="24"
+                        Height="24"
+                        VerticalAlignment="Center"
+                        Margin="15 0"
+                        MouseLeftButtonUp="InviteFriendsToTalkHandler"
+                    />
+                    <materialDesign:PackIcon
+                        Kind="Settings"
+                        Width="24"
+                        Height="24"
+                        VerticalAlignment="Center"
+                        Margin="15 0"
+                        MouseLeftButtonUp="OpenTalkSettingsHandler"
+                    />
+                </StackPanel>
+            </DockPanel>
+            <StackPanel
+                x:Name="talkSubHeader"
+                Margin="50 15"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"    
+            >
+                <materialDesign:PackIcon
+                    VerticalAlignment="Center"
+                    Margin="15 0 5 0"
+                    Kind="Circle"
+                    Width="5"
+                    Height="5"
+                    Foreground="SkyBlue"
+                />
+                <TextBlock
+                    x:Name="onlineUsersCountLabel"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Margin="15 0"
+                    Text="0"
+                />
+                <materialDesign:PackIcon
+                    VerticalAlignment="Center"
+                    Margin="15 0"
+                    Kind="Circle"
+                    Width="5"
+                    Height="5"
+                />
+                <TextBlock
+                    x:Name="usersCountLabel"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Margin="15 0"
+                    Text="Участников: 0"
+                />
+            </StackPanel>
+            <DockPanel>
+                <StackPanel
+                    x:Name="talkArticle"
+                    DockPanel.Dock="Left"    
+                    Width="175"
+                >
+                    <TextBlock
+                        Margin="15"
+                        Text="Добавить текстовый канал"    
+                        FontSize="14"
+                        MouseLeftButtonUp="CreateTextChannelHandler"
+                    />
+                    <StackPanel
+                        x:Name="textChannels"    
+                    />
+                    <TextBlock
+                        Margin="15"
+                        Text="Добавить голосовой канал"    
+                        FontSize="14"
+                    />
+                    <StackPanel
+                        x:Name="voiceChannels"    
+                    />
+                </StackPanel>
+                <StackPanel
+                    x:Name="talkAside"
+                    DockPanel.Dock="Right"    
+                    Width="175"
+                >
+                    <DockPanel>
+                        <materialDesign:PackIcon
+                        Margin="5 0"
+                        VerticalAlignment="Center"
+                        Kind="ChevronDoubleRight"    
+                        MouseLeftButtonUp="ToggleAsideHandler"
+                    />
+                        <TextBox
+                            x:Name="usersBox"
+                            Margin="5 0"
+                            VerticalContentAlignment="Center"
+                            VerticalAlignment="Center"
+                            Height="25"
+                            TextChanged="GetUsersHandler"
+                        >
+                            <TextBox.Resources>
+                                <VisualBrush
+                                    x:Key="hinttext"
+                                    AlignmentX="Left"
+                                    Stretch="None"
+                                    TileMode="None"
+                                >
+                                    <VisualBrush.Visual>
+                                        <DockPanel>
+                                            <TextBlock
+                                                Height="25"
+                                                Width="750"
+                                                Text="Найти по имени"
+                                                Foreground="#959595"
+                                                Background="White"
+                                            />
+                                        </DockPanel>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </TextBox.Resources>
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontSize" Value="12" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Background" Value="{StaticResource hinttext}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </DockPanel>
+                    <StackPanel
+                        x:Name="talkAsideBody"
+                    >
+                        <StackPanel
+                            Orientation="Horizontal"    
+                            Margin="0 5"
+                        >
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="Участники"    
+                                Margin="10 0"
+                            />
+                            <TextBlock
+                                x:Name="filteredUsersCountLabel"    
+                                VerticalAlignment="Center"
+                                Foreground="LightGray"
+                                Text="(0)"    
+                                Margin="0 0"
+                            />
+                        </StackPanel>
+                        <StackPanel
+                            x:Name="users"    
+                        />
+                    </StackPanel>
+                </StackPanel>
+                <TabControl
+                    x:Name="chatControl"    
+                    Height="375"
+                    SelectionChanged="DetectChatToggleHandler"
+                />
+                
+            </DockPanel>
+        </StackPanel>
         <StackPanel>
             <TextBlock
                 x:Name="userIsWritingLabel"

@@ -10243,11 +10243,11 @@
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="LightGray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="LightGray"    
                         >
                             <DockPanel
                                 HorizontalAlignment="Center"
@@ -10458,6 +10458,7 @@
                                                     Width="50"
                                                     Height="20"
                                                     Margin="5 0"
+                                                    Click="OpenAddReviewComplaintHandler"
                                                 >
                                                     <Button.Content>
                                                         <materialDesign:PackIcon
@@ -24249,7 +24250,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenFamilyViewManagementHandler"
+                                MouseLeftButtonUp="OpenExternalLoginLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24421,7 +24422,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenCommentsHistoryHandler"
+                                MouseLeftButtonUp="OpenForumVisitLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -24859,7 +24860,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                                MouseLeftButtonUp="OpenReviewComplaintLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -26494,6 +26495,214 @@ E. Что произойдет, если положение Пункта 11 бу
                                     Content="Список рекомендаций"    
                                 />
                             </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Мои жалобы на профили"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Мои жалобы на профили"    
+                            />
+                            <Grid
+                                x:Name="forumVisitLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Расположение форума"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Ссылка на форум"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Название форума"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Последнее посещение"    
+                                />
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Предыдущее посещение"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenForumVisitLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Мои жалобы на обзоры игр"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Мои жалобы на обзоры игр"    
+                            />
+                            <Grid
+                                x:Name="reviewComplaintLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Дата жалобы"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Описание"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Ссылка на обзор"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenReviewComplaintLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Недавние входы в аккаунт на сторонних сайтах"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text=""    
+                            />
+                            <Grid
+                                x:Name="externalLoginLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Имя"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Дата cоздания"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenReviewComplaintLogsHandler"
+                            />
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>

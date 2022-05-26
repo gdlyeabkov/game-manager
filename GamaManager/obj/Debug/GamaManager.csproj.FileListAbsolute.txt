@@ -880,3 +880,5 @@ C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\FriendActivityAsideControl
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\ActivityShareDialog.g.cs
 C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\ActivityShareDialog.baml
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\ReverseGeocoder.dll
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddReviewComplaintDialog.g.cs
+C:\wpf_projects\LastGameManager\GamaManager\obj\Debug\Dialogs\AddReviewComplaintDialog.baml

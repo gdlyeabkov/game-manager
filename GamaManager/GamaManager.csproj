@@ -303,6 +303,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddReviewComplaintDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\CategoryManagementDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -456,6 +460,9 @@
     </Compile>
     <Compile Include="Dialogs\AddNickDialog.xaml.cs">
       <DependentUpon>AddNickDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddReviewComplaintDialog.xaml.cs">
+      <DependentUpon>AddReviewComplaintDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CategoryManagementDialog.xaml.cs">
       <DependentUpon>CategoryManagementDialog.xaml</DependentUpon>

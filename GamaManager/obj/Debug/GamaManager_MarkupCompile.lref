@@ -10,6 +10,7 @@ FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddExternalGameDialog.xaml;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddFriendDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddGroupRequestDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddNickDialog.xaml;;
+FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddReviewComplaintDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategoryManagementDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\CategorySettingsDialog.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\ChatDialog.xaml;;
@@ -40,5 +41,4 @@ FC:\wpf_projects\LastGameManager\GamaManager\GamePage.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\GameWindow.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\HeaderControl.xaml;;
 FC:\wpf_projects\LastGameManager\GamaManager\MainWindow.xaml;;
-FC:\wpf_projects\LastGameManager\GamaManager\Dialogs\AddReviewComplaintDialog.xaml;;
 

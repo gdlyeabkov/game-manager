@@ -785,8 +785,16 @@
                         HorizontalAlignment="Left"    
                     >
                         <TextBlock
-                            Text="У вас недостаточно прав для ведения трансляций"    
-                            Margin="0 5"
+                            Text="Ссылка для ведения трасляции"    
+                            Margin="15"
+                        />
+                        <TextBox
+                            VerticalContentAlignment="Center"
+                            Width="250"
+                            Height="30"
+                            Margin="15"
+                            IsReadOnly="True"
+                            Text="rtmp://127.0.0.1:1935/live"    
                         />
                     </StackPanel>
                 </TabItem>

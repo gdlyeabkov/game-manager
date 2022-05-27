@@ -41,6 +41,10 @@ using ImapX;
 using System.Net.Mail;
 using System.Device.Location;
 
+using Vlc.DotNet;
+using Vlc.DotNet.Wpf;
+using Vlc.DotNet.Core;
+
 namespace GamaManager
 {
     /// <summary>
@@ -18319,7 +18323,7 @@ namespace GamaManager
             if (isCacheFolderNotExists)
             {
                 Directory.CreateDirectory(cachePath);
-                using (Stream s = File.Open(saveDataFilePath, FileMode.OpenOrCreate))
+                using (System.IO.Stream s = File.Open(saveDataFilePath, FileMode.OpenOrCreate))
                 {
                     using (StreamWriter sw = new StreamWriter(s))
                     {
@@ -23322,24 +23326,63 @@ namespace GamaManager
         private void ClientLoadedHandler(object sender, RoutedEventArgs e)
         {
             ClientLoaded();
-
-            
-            mainStream.Source = new Uri("http://localhost:8888/live/a.flv");
-            mainStream.Play();
-
-
         }
 
-        public void ClientLoaded()
+        public void ClientLoaded ()
         {
             isAppInit = true;
             mainControl.DataContext = currentUserId;
             ListenSockets();
             IncreaseUserToStats();
-
-            // SetUserStatus("online");
             UpdateUserStatus("online");
+            ShowStreams();
+        }
 
+        public void ShowStreams ()
+        {
+            streams.Children.Clear();
+            var currentAssembly = System.Reflection.Assembly.GetEntryAssembly();
+            var currentDirectory = new FileInfo(currentAssembly.Location).DirectoryName;
+            var libDirectory = new DirectoryInfo(System.IO.Path.Combine(currentDirectory, "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
+            /*mainStream.SourceProvider.CreatePlayer(libDirectory);
+            mainStream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/a.flv");*/
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:8888/api/streams");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        Dictionary<String, Dictionary<String, Stream>> myobj = (Dictionary<String, Dictionary<String, Stream>>)js.Deserialize(objText, typeof(Dictionary<String, Dictionary<String, Stream>>));
+                        Debugger.Log(0, "debug", "myobj: " + myobj.Count.ToString());
+                        foreach (Dictionary<String, Stream> myObjItem in myobj.Values)
+                        {
+                            foreach (Stream myObjElement in myObjItem.Values)
+                            {
+                                StreamPublisher publisher = myObjElement.publisher;
+                                string publisherStream = publisher.stream;
+                                VlcControl stream = new VlcControl();
+                                stream.Width = 450;
+                                stream.Height = 250;
+                                stream.Margin = new Thickness(15);
+                                stream.SourceProvider.CreatePlayer(libDirectory);
+                                stream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+                                streams.Children.Add(stream);
+                                Debugger.Log(0, "debug", Environment.NewLine + "myObjItemKey: " + publisherStream + Environment.NewLine);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
         }
 
         public void GetRequestsCount ()
@@ -26534,7 +26577,7 @@ namespace GamaManager
 
         private static byte[] GetMultipartFormData(Dictionary<string, object> postParameters, string boundary)
         {
-            Stream formDataStream = new System.IO.MemoryStream();
+            System.IO.Stream formDataStream = new System.IO.MemoryStream();
             bool needsCLRF = false;
             Encoding encoding = Encoding.UTF8;
 
@@ -37048,6 +37091,34 @@ namespace GamaManager
         public string review;
         public DateTime date;
         public bool isDislike;
+    }
+
+    public class StreamTask
+    {
+        public List<Stream> a;
+    }
+
+    public class Stream
+    {
+        public StreamPublisher publisher;
+        public List<StreamSubscriber> subscribers;
+    }
+
+    public class StreamPublisher
+    {
+        public string app;
+        public string stream;
+        public string clientId;
+        public string connectCreated;
+        public int bytes;
+        public string ip;
+        public object audio;
+        public object video;
+    }
+
+    public class StreamSubscriber
+    {
+
     }
 
 }

@@ -61,6 +61,18 @@
             "ToggleSwitch": {
               "target": "Package",
               "version": "[1.2.0, )"
+            },
+            "VideoLAN.LibVLC.Windows": {
+              "target": "Package",
+              "version": "[3.0.17.4, )"
+            },
+            "Vlc.DotNet.Forms": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Vlc.DotNet.Wpf": {
+              "target": "Package",
+              "version": "[3.1.0, )"
             }
           },
           "imports": [

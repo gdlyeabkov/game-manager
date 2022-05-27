@@ -13,6 +13,8 @@
     xmlns:oxy="http://oxyplot.org/wpf"        
     xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls"        
     xmlns:uwp="clr-namespace:UWPHost;assembly=UWPHost"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
     Title="Office Ware Game Manager"
     Height="450"
     Width="800"
@@ -8393,7 +8395,9 @@
                                         Header="Трансляции"    
                                     >
                                         <WrapPanel
+                                            x:Name="streams"
                                         >
+                                            <!--
                                             <MediaElement
                                                 x:Name="mainStream"
                                                 LoadedBehavior="Manual"
@@ -8405,6 +8409,13 @@
                                                 Width="350"
                                                 Height="350"
                                             />
+                                            -->
+                                            <vlc:VlcControl
+                                                x:Name="mainStream"    
+                                                Width="450"
+                                                Height="450"
+                                            />
+                                            
                                         </WrapPanel>
                                     </TabItem>
                                     <TabItem

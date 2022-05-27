@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oXVgO8OUGRWKSkGpOxIsXxLI5Cke26gUOxHgoRkEeRgeUXyMol1+VFbQIooy+VcvFeT1Wp4MA6Gx9EXKMnH9KQ==",
+  "dgSpecHash": "ywWpQHoeQkmz4eSqRdHvo2chRaKsVUcNyWhQEn3vs/HUSc1y1UKFLBUmJoNLQhglBubkthQjfQaOrqN9svgYsw==",
   "success": true,
   "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,12 @@
     "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\mousekeyboardactivitymonitor\\4.0.5150.10665\\mousekeyboardactivitymonitor.4.0.5150.10665.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\reversegeocoder\\0.3.0\\reversegeocoder.0.3.0.nupkg.sha512",
-    "C:\\Users\\ПК\\.nuget\\packages\\toggleswitch\\1.2.0\\toggleswitch.1.2.0.nupkg.sha512"
+    "C:\\Users\\ПК\\.nuget\\packages\\toggleswitch\\1.2.0\\toggleswitch.1.2.0.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\videolan.libvlc.windows\\3.0.17.4\\videolan.libvlc.windows.3.0.17.4.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\vlc.dotnet.core\\3.1.0\\vlc.dotnet.core.3.1.0.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\vlc.dotnet.core.interops\\3.1.0\\vlc.dotnet.core.interops.3.1.0.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\vlc.dotnet.forms\\3.1.0\\vlc.dotnet.forms.3.1.0.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\vlc.dotnet.wpf\\3.1.0\\vlc.dotnet.wpf.3.1.0.nupkg.sha512"
   ],
   "logs": []
 }

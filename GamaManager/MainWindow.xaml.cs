@@ -23338,14 +23338,26 @@ namespace GamaManager
             ShowStreams();
         }
 
+        public void OpenStreamHandler (object sender, RoutedEventArgs e)
+        {
+            StackPanel stream = ((StackPanel)(sender));
+            object streamData = stream.DataContext;
+            string publisherStream = ((string)(streamData));
+            OpenStream(publisherStream);
+        }
+
+        public void OpenStream (string publisherStream)
+        {
+            mainStream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+            mainControl.SelectedIndex = 88;
+        }
+
         public void ShowStreams ()
         {
             streams.Children.Clear();
             var currentAssembly = System.Reflection.Assembly.GetEntryAssembly();
             var currentDirectory = new FileInfo(currentAssembly.Location).DirectoryName;
             var libDirectory = new DirectoryInfo(System.IO.Path.Combine(currentDirectory, "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
-            /*mainStream.SourceProvider.CreatePlayer(libDirectory);
-            mainStream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/a.flv");*/
             try
             {
                 HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:8888/api/streams");
@@ -23365,16 +23377,54 @@ namespace GamaManager
                             {
                                 StreamPublisher publisher = myObjElement.publisher;
                                 string publisherStream = publisher.stream;
+                                StackPanel streamWrap = new StackPanel();
+                                streamWrap.Margin = new Thickness(15);
                                 VlcControl stream = new VlcControl();
                                 stream.Width = 450;
                                 stream.Height = 250;
                                 stream.Margin = new Thickness(15);
                                 stream.SourceProvider.CreatePlayer(libDirectory);
                                 stream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
-                                streams.Children.Add(stream);
+                                streamWrap.Children.Add(stream);
+                                DockPanel streamFooter = new DockPanel();
+                                streamFooter.Margin = new Thickness(0, 5, 0, 5);
+                                TextBlock gameNameLabel = new TextBlock();
+                                gameNameLabel.Text = "Название игры";
+                                gameNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                streamFooter.Children.Add(gameNameLabel);
+                                TextBlock usersCountLabel = new TextBlock();
+                                usersCountLabel.HorizontalAlignment = HorizontalAlignment.Right;
+                                usersCountLabel.Text = "Зрителей: 0";
+                                usersCountLabel.Margin = new Thickness(15, 0, 15, 0);
+                                streamFooter.Children.Add(usersCountLabel);
+                                streamWrap.Children.Add(streamFooter);
+                                Separator separator = new Separator();
+                                separator.Width = 350;
+                                separator.Height = 5;
+                                separator.Margin = new Thickness(5);
+                                separator.BorderBrush = System.Windows.Media.Brushes.Black;
+                                separator.BorderThickness = new Thickness(1);
+                                streamWrap.Children.Add(separator);
+                                StackPanel streamPlayer = new StackPanel();
+                                streamPlayer.Margin = new Thickness(15, 0, 15, 0);
+                                streamPlayer.Orientation = Orientation.Horizontal;
+                                Image streamPlayerAvatar = new Image();
+                                streamPlayerAvatar.Width = 40;
+                                streamPlayerAvatar.Height = 40;
+                                streamPlayerAvatar.Margin = new Thickness(5);
+                                streamPlayer.Children.Add(streamPlayerAvatar);
+                                TextBlock streamPlayerNameLabel = new TextBlock();
+                                streamPlayerNameLabel.Text = "Имя пользователя";
+                                streamPlayerNameLabel.Margin = new Thickness(5);
+                                streamPlayer.Children.Add(streamPlayerNameLabel);
+                                streamWrap.Children.Add(streamPlayer);
+                                streams.Children.Add(streamWrap);
+                                streamWrap.DataContext = publisherStream;
+                                streamWrap.MouseLeftButtonUp += OpenStreamHandler;
                                 Debugger.Log(0, "debug", Environment.NewLine + "myObjItemKey: " + publisherStream + Environment.NewLine);
                             }
                         }
+                        mainStream.SourceProvider.CreatePlayer(libDirectory);
                     }
                 }
             }

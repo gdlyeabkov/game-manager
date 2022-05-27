@@ -45,6 +45,7 @@ namespace GamaManager.Dialogs
         public List<string> chats = new List<string>();
         public MainWindow mainWindow;
         public bool isAppInit = false;
+        private Voice v = new Voice();
 
         private const UInt32 FLASHW_STOP = 0; //Stop flashing. The system restores the window to its original state.        private const UInt32 FLASHW_CAPTION = 1; //Flash the window caption.        
         private const UInt32 FLASHW_TRAY = 2; //Flash the taskbar button.        
@@ -935,7 +936,7 @@ namespace GamaManager.Dialogs
             }
         }
 
-        public void InitializeHandler(object sender, RoutedEventArgs e)
+        public void InitializeHandler (object sender, RoutedEventArgs e)
         {
 
             isAppInit = true;
@@ -944,6 +945,9 @@ namespace GamaManager.Dialogs
 
             /*int waveindevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("WaveIn", 0);
             int waveoutdevice = (Int32)System.Windows.Forms.Application.UserAppDataRegistry.GetValue("Waveout", 0);*/
+
+            v = new Voice();
+            v.Receive(2000);
 
         }
 
@@ -3333,7 +3337,7 @@ namespace GamaManager.Dialogs
 
         async public void ToggleRing(Button btn)
         {
-            isStartRing = !isStartRing;
+            /*isStartRing = !isStartRing;
             if (isStartRing)
             {
                 waveSource = new WaveIn();
@@ -3358,7 +3362,10 @@ namespace GamaManager.Dialogs
 
                 btn.Content = "Начать голосовой чат";
 
-            }
+            }*/
+            
+            v.Send(Get_privateIP(), 2000);
+        
         }
 
         public void MicroDataAvailableHandler(object sender, WaveInEventArgs e)
@@ -5405,7 +5412,7 @@ namespace GamaManager.Dialogs
             return talk;
         }
 
-        public void GetTextChannelsHandler(object sender, EventArgs e)
+        public void GetTextChannelsHandler (object sender, EventArgs e)
         {
             GetTextChannels();
             RefreshUsersData();
@@ -5493,11 +5500,17 @@ namespace GamaManager.Dialogs
             activeChatControlContent.SelectedIndex = channelIndex;
         }
 
-        public void SetTalkNameLabel()
+        public void SetTalkNameLabel ()
         {
             Talk talk = GetTalkInfo();
             string talkTitle = talk.title;
             talkTitleLabel.Text = talkTitle;
+
+            ItemCollection chatControlItems = chatControl.Items;
+            object rawActiveChat = chatControlItems[chatControl.SelectedIndex];
+            TabItem activeChat = ((TabItem)(rawActiveChat));
+            activeChat.Header = talkTitle;
+
         }
 
         async public void RefreshUsersData()
@@ -5768,6 +5781,16 @@ namespace GamaManager.Dialogs
                 this.Close();
             }
         }
+
+        string Get_privateIP()
+        {
+            string hostname = Dns.GetHostName();
+            IPHostEntry hostentery = Dns.GetHostEntry(hostname);
+            IPAddress[] ip = hostentery.AddressList;
+            return ip[ip.Length - 1].ToString();
+        }
+
+
 
     }
 

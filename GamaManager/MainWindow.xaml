@@ -8396,27 +8396,7 @@
                                     >
                                         <WrapPanel
                                             x:Name="streams"
-                                        >
-                                            <!--
-                                            <MediaElement
-                                                x:Name="mainStream"
-                                                LoadedBehavior="Manual"
-                                                UnloadedBehavior="Manual"
-                                                Width="350"
-                                                Height="350"
-                                            />
-                                            <MediaElement
-                                                Width="350"
-                                                Height="350"
-                                            />
-                                            -->
-                                            <vlc:VlcControl
-                                                x:Name="mainStream"    
-                                                Width="450"
-                                                Height="450"
-                                            />
-                                            
-                                        </WrapPanel>
+                                        />
                                     </TabItem>
                                     <TabItem
                                         Header="Видео"        
@@ -26606,6 +26586,28 @@ E. Что произойдет, если положение Пункта 11 бу
                                 MouseLeftButtonUp="OpenReviewLikeLogsHandler"
                             />
                         </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <DockPanel>
+                            <vlc:VlcControl
+                                x:Name="mainStream"
+                                Width="1000"    
+                                Height="650"    
+                            />
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                            >
+
+                            </StackPanel>
+                        </DockPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>

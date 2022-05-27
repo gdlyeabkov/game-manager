@@ -232,6 +232,158 @@ namespace GamaManager
             }
         }
 
+        public void OpenReviewLikeLogsHandler (object sender, RoutedEventArgs e)
+        {
+            OpenReviewLikeLogs();
+        }
+
+        public void OpenReviewLikeLogs ()
+        {
+            try
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/likes/all");
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        string objText = reader.ReadToEnd();
+                        ReviewLikeLogsResponseInfo myObj = (ReviewLikeLogsResponseInfo)js.Deserialize(objText, typeof(ReviewLikeLogsResponseInfo));
+                        string status = myObj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            List<ReviewLike> totalReviewLikes = myObj.likes;
+                            List<ReviewLike> myLikes = totalReviewLikes.Where<ReviewLike>((ReviewLike like) =>
+                            {
+                                string likeUser = like.user;
+                                bool isMyLike = likeUser == currentUserId;
+                                return isMyLike;
+                            }).ToList<ReviewLike>();
+                            RowDefinitionCollection rows = reviewLikeLogs.RowDefinitions;
+                            int rowsCount = rows.Count;
+                            bool isHavePreviousData = rowsCount >= 2;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedRows = rowsCount - 1;
+                                reviewLikeLogs.RowDefinitions.RemoveRange(1, countRemovedRows);
+                            }
+                            UIElementCollection reviewLikeLogsChildren = reviewLikeLogs.Children;
+                            int reviewLikeLogsChildrenCount = reviewLikeLogsChildren.Count;
+                            isHavePreviousData = reviewLikeLogsChildrenCount >= 5;
+                            if (isHavePreviousData)
+                            {
+                                int countRemovedChildren = reviewLikeLogsChildrenCount - 4;
+                                reviewLikeLogs.Children.RemoveRange(4, countRemovedChildren);
+                            }
+                            foreach (ReviewLike myLike in myLikes)
+                            {
+                                string reviewId = myLike.review;
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + reviewId);
+                                innerWebRequest.Method = "GET";
+                                innerWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
+                                {
+                                    using (var innerReader = new StreamReader(innerWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = innerReader.ReadToEnd();
+                                        ReviewResponseInfo myInnerObj = (ReviewResponseInfo)js.Deserialize(objText, typeof(ReviewResponseInfo));
+                                        status = myInnerObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            Review review = myInnerObj.review;
+                                            string reviewGameId = review.game;
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                            nestedWebRequest.Method = "GET";
+                                            nestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                            using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
+                                            {
+                                                using (var nestedReader = new StreamReader(nestedWebResponse.GetResponseStream()))
+                                                {
+                                                    js = new JavaScriptSerializer();
+                                                    objText = nestedReader.ReadToEnd();
+                                                    GamesListResponseInfo myNestedObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                                    status = myNestedObj.status;
+                                                    isOkStatus = status == "OK";
+                                                    if (isOkStatus)
+                                                    {
+                                                        List<GameResponseInfo> totalGames = myNestedObj.games;
+                                                        List<GameResponseInfo> results = totalGames.Where<GameResponseInfo>((GameResponseInfo someGame) =>
+                                                        {
+                                                            string someGameId = someGame._id;
+                                                            bool isIdMatch = someGameId == reviewGameId;
+                                                            return isIdMatch;
+                                                        }).ToList<GameResponseInfo>();
+                                                        int resultsCount = results.Count;
+                                                        bool isHaveResults = resultsCount >= 1;
+                                                        if (isHaveResults)
+                                                        {
+                                                            GameResponseInfo result = results[0];
+                                                            string resultName = result.name;
+                                                            bool isDislike = myLike.isDislike;
+                                                            DateTime date = myLike.date;
+                                                            string rawDate = date.ToLongDateString();
+                                                            RowDefinition row = new RowDefinition();
+                                                            row.Height = new GridLength(50);
+                                                            reviewLikeLogs.RowDefinitions.Add(row);
+                                                            rows = reviewLikeLogs.RowDefinitions;
+                                                            rowsCount = rows.Count;
+                                                            int lastRowIndex = rowsCount - 1;
+                                                            TextBlock reviewLikeLogsGameNameLabel = new TextBlock();
+                                                            reviewLikeLogsGameNameLabel.Text = resultName;
+                                                            reviewLikeLogsGameNameLabel.Margin = new Thickness(15);
+                                                            reviewLikeLogs.Children.Add(reviewLikeLogsGameNameLabel);
+                                                            Grid.SetRow(reviewLikeLogsGameNameLabel, lastRowIndex);
+                                                            Grid.SetColumn(reviewLikeLogsGameNameLabel, 0);
+                                                            TextBlock reviewLiekLogsIsLikeLabel = new TextBlock();
+                                                            string reviewLiekLogsIsLikeLabelContent = "Да";
+                                                            if (isDislike)
+                                                            {
+                                                                reviewLiekLogsIsLikeLabelContent = "Нет";
+                                                            }
+                                                            reviewLiekLogsIsLikeLabel.Text = reviewLiekLogsIsLikeLabelContent;
+                                                            reviewLiekLogsIsLikeLabel.Margin = new Thickness(15);
+                                                            reviewLikeLogs.Children.Add(reviewLiekLogsIsLikeLabel);
+                                                            Grid.SetRow(reviewLiekLogsIsLikeLabel, lastRowIndex);
+                                                            Grid.SetColumn(reviewLiekLogsIsLikeLabel, 1);
+                                                            TextBlock reviewLikeDateLabel = new TextBlock();
+                                                            reviewLikeDateLabel.Text = rawDate;
+                                                            reviewLikeDateLabel.Margin = new Thickness(15);
+                                                            reviewLikeLogs.Children.Add(reviewLikeDateLabel);
+                                                            Grid.SetRow(reviewLikeDateLabel, lastRowIndex);
+                                                            Grid.SetColumn(reviewLikeDateLabel, 2);
+                                                            TextBlock reviewLikeLinkLabel = new TextBlock();
+                                                            reviewLikeLinkLabel.Text = "Ссылка на обзор";
+                                                            reviewLikeLinkLabel.Margin = new Thickness(15);
+                                                            reviewLikeLogs.Children.Add(reviewLikeLinkLabel);
+                                                            Grid.SetRow(reviewLikeLinkLabel, lastRowIndex);
+                                                            Grid.SetColumn(reviewLikeLinkLabel, 3);
+                                                            reviewLikeLinkLabel.DataContext = reviewId;
+                                                            reviewLikeLinkLabel.MouseLeftButtonUp += OpenReviewComplaintLinkHandler;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            mainControl.SelectedIndex = 87;
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         public void OpenRecentLoginHistoryLogsHandler (object sender, RoutedEventArgs e)
         {
             OpenRecentLoginHistoryLogs();
@@ -9202,6 +9354,163 @@ namespace GamaManager
                             string rawMyReviewsCount = myReviewsCount.ToString();
                             gameRecommendationsCountReviewsLabel.Text = rawMyReviewsCount;
                             gameRecommendationsCountProductsLabel.Text = rawProductsCount;
+                            recentReviews.Children.Clear();
+                            int recentReviewsCursor = 0;
+                            foreach (Review myReview in myReviews)
+                            {
+                                string reviewId = myReview._id;
+                                string reviewGameId = myReview.game;
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                gamesWebRequest.Method = "GET";
+                                gamesWebRequest.UserAgent = ".NET Framework Test Client";
+                                using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
+                                {
+                                    using (var gamesReader = new StreamReader(gamesWebResponse.GetResponseStream()))
+                                    {
+                                        js = new JavaScriptSerializer();
+                                        objText = gamesReader.ReadToEnd();
+                                        GamesListResponseInfo myGamesObj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
+                                        status = myGamesObj.status;
+                                        isOkStatus = status == "OK";
+                                        if (isOkStatus)
+                                        {
+                                            List<GameResponseInfo> games = myGamesObj.games;
+                                            List<GameResponseInfo> gameResults = games.Where<GameResponseInfo>((GameResponseInfo game) =>
+                                            {
+                                                string gameId = game._id;
+                                                bool isIdMatches = gameId == reviewGameId;
+                                                return isIdMatches;
+                                            }).ToList<GameResponseInfo>();
+                                            int countResults = gameResults.Count;
+                                            bool isResultsFound = countResults >= 1;
+                                            if (isResultsFound)
+                                            {
+                                                GameResponseInfo reviewGame = gameResults[0];
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                innerNestedWebRequest.Method = "GET";
+                                                innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
+                                                using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
+                                                {
+                                                    using (var innerNestedReader = new StreamReader(innerNestedWebResponse.GetResponseStream()))
+                                                    {
+                                                        js = new JavaScriptSerializer();
+                                                        objText = innerNestedReader.ReadToEnd();
+                                                        ReviewCommentsResponseInfo myInnerNestedObj = (ReviewCommentsResponseInfo)js.Deserialize(objText, typeof(ReviewCommentsResponseInfo));
+                                                        status = myInnerNestedObj.status;
+                                                        isOkStatus = status == "OK";
+                                                        if (isOkStatus)
+                                                        {
+                                                            List<ReviewComment> reviewComments = myInnerNestedObj.comments;
+                                                            List<ReviewComment> currentReviewComments = reviewComments.Where<ReviewComment>((ReviewComment comment) =>
+                                                            {
+                                                                string commentReviewId = comment.review;
+                                                                bool isCurrentReview = commentReviewId == reviewId;
+                                                                return isCurrentReview;
+                                                            }).ToList<ReviewComment>();
+                                                            int countComments = currentReviewComments.Count;
+                                                            string rawCountComments = countComments.ToString();
+                                                            string hours = myReview.hours;
+                                                            string desc = myReview.desc;
+                                                            DateTime date = myReview.date;
+                                                            DateTime currentDate = DateTime.Now;
+                                                            TimeSpan interval = currentDate.Subtract(date);
+                                                            double intervalInDays = interval.TotalDays;
+                                                            bool isRecent = intervalInDays <= 14;
+                                                            if (isRecent)
+                                                            {
+                                                                recentReviewsCursor++;
+                                                                string rawDate = date.ToLongDateString();
+                                                                string reviewGameName = reviewGame.name;
+                                                                string myFriendActivityAsideUserActivityLabelContent = "Опубликовал обзор по игре" + Environment.NewLine + reviewGameName;
+                                                                StackPanel review = new StackPanel();
+                                                                review.Width = 500;
+                                                                review.Margin = new Thickness(15);
+                                                                review.Background = System.Windows.Media.Brushes.LightGray;
+                                                                TextBlock reviewAdvicesLabel = new TextBlock();
+                                                                reviewAdvicesLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                                int countAdvices = 0;
+                                                                string rawCountAdvices = countAdvices.ToString();
+                                                                string reviewAdvicesLabelContent = "Пользователей, посчитавших обзор полезным: " + rawCountAdvices;
+                                                                reviewAdvicesLabel.Text = reviewAdvicesLabelContent;
+                                                                review.Children.Add(reviewAdvicesLabel);
+                                                                TextBlock reviewFunsLabel = new TextBlock();
+                                                                reviewFunsLabel.Margin = new Thickness(15, 5, 15, 5);
+                                                                int countFuns = 0;
+                                                                string rawCountFuns = countFuns.ToString();
+                                                                string reviewFunsLabelContent = "Пользователей, посчитавших обзор забавным: " + rawCountFuns;
+                                                                reviewFunsLabel.Text = reviewFunsLabelContent;
+                                                                review.Children.Add(reviewFunsLabel);
+                                                                StackPanel reviewHeader = new StackPanel();
+                                                                reviewHeader.Orientation = Orientation.Horizontal;
+                                                                PackIcon reviewIcon = new PackIcon();
+                                                                reviewIcon.Margin = new Thickness(15);
+                                                                reviewIcon.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                reviewIcon.Width = 50;
+                                                                reviewIcon.Height = 50;
+                                                                reviewIcon.Kind = PackIconKind.ThumbsUp;
+                                                                reviewHeader.Children.Add(reviewIcon);
+                                                                StackPanel reviewHeaderAside = new StackPanel();
+                                                                reviewHeaderAside.Margin = new Thickness(15);
+                                                                TextBlock reviewHeaderAsideRecommendationLabel = new TextBlock();
+                                                                reviewHeaderAsideRecommendationLabel.Margin = new Thickness(0, 5, 0, 5);
+                                                                reviewHeaderAsideRecommendationLabel.FontSize = 16;
+                                                                reviewHeaderAsideRecommendationLabel.Text = "Рекомендую";
+                                                                reviewHeaderAside.Children.Add(reviewHeaderAsideRecommendationLabel);
+                                                                TextBlock reviewHeaderAsideHoursLabel = new TextBlock();
+                                                                string rawHours = hours.ToString();
+                                                                string reviewHeaderAsideHoursLabelContent = rawHours + " ч. всего";
+                                                                reviewHeaderAsideHoursLabel.Text = reviewHeaderAsideHoursLabelContent;
+                                                                reviewHeaderAside.Children.Add(reviewHeaderAsideHoursLabel);
+                                                                reviewHeader.Children.Add(reviewHeaderAside);
+                                                                review.Children.Add(reviewHeader);
+                                                                TextBlock reviewDateLabel = new TextBlock();
+                                                                reviewDateLabel.Margin = new Thickness(15);
+                                                                string reviewDateLabelContent = "Опубликовано: " + rawDate;
+                                                                reviewDateLabel.Foreground = System.Windows.Media.Brushes.Orange;
+                                                                reviewDateLabel.Text = reviewDateLabelContent;
+                                                                review.Children.Add(reviewDateLabel);
+                                                                TextBlock reviewDescLabel = new TextBlock();
+                                                                reviewDescLabel.Margin = new Thickness(15);
+                                                                reviewDescLabel.Text = desc;
+                                                                reviewDescLabel.FontSize = 14;
+                                                                review.Children.Add(reviewDescLabel);
+                                                                Separator reviewSeparator = new Separator();
+                                                                review.Children.Add(reviewSeparator);
+                                                                DockPanel reviewFooter = new DockPanel();
+                                                                reviewFooter.Margin = new Thickness(15);
+                                                                TextBlock reviewFooterGameNameLabel = new TextBlock();
+                                                                reviewFooterGameNameLabel.Margin = new Thickness(15, 0, 15, 0);
+                                                                reviewFooterGameNameLabel.Text = reviewGameName;
+                                                                reviewFooter.Children.Add(reviewFooterGameNameLabel);
+                                                                StackPanel reviewFooterComments = new StackPanel();
+                                                                reviewFooterComments.Margin = new Thickness(15, 0, 15, 0);
+                                                                reviewFooterComments.Orientation = Orientation.Horizontal;
+                                                                reviewFooterComments.HorizontalAlignment = HorizontalAlignment.Right;
+                                                                PackIcon reviewFooterCommentsIcon = new PackIcon();
+                                                                reviewFooterCommentsIcon.Kind = PackIconKind.Chat;
+                                                                reviewFooterCommentsIcon.Margin = new Thickness(5, 0, 5, 0);
+                                                                reviewFooterComments.Children.Add(reviewFooterCommentsIcon);
+                                                                TextBlock reviewFooterCountCommentsLabel = new TextBlock();
+                                                                reviewFooterCountCommentsLabel.Margin = new Thickness(5, 0, 5, 0);
+                                                                reviewFooterCountCommentsLabel.Text = rawCountComments;
+                                                                reviewFooterComments.Children.Add(reviewFooterCountCommentsLabel);
+                                                                reviewFooter.Children.Add(reviewFooterComments);
+                                                                review.Children.Add(reviewFooter);
+                                                                recentReviews.Children.Add(review);
+                                                                review.DataContext = reviewId;
+                                                                review.MouseLeftButtonUp += SelectReviewHandler;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            string rawRecentReviewsCursor = recentReviewsCursor.ToString();
+                            string countRecentReviewsLabelContent = rawRecentReviewsCursor + " из " + rawRecentReviewsCursor;
+                            countRecentReviewsLabel.Text = countRecentReviewsLabelContent;
                         }
                     }
                 }
@@ -29018,54 +29327,7 @@ namespace GamaManager
 
         public void OpenPopularGames ()
         {
-            mainControl.SelectedIndex = 32;
-            GetPopularGames();
-        }
-
-        public void GetPopularGames ()
-        {
-            try
-            {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
-                webRequest.Method = "GET";
-                webRequest.UserAgent = ".NET Framework Test Client";
-                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
-                {
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        JavaScriptSerializer js = new JavaScriptSerializer();
-                        var objText = reader.ReadToEnd();
-                        GamesListResponseInfo myobj = (GamesListResponseInfo)js.Deserialize(objText, typeof(GamesListResponseInfo));
-                        string status = myobj.status;
-                        bool isOkStatus = status == "OK";
-                        if (isOkStatus)
-                        {
-                            List<GameResponseInfo> totalGames = myobj.games;
-                            totalGames = totalGames.OrderByDescending(x => x.likes).ToList<GameResponseInfo>();
-                            int gamesCount = totalGames.Count;
-                            bool isGamesExists = gamesCount >= 1;
-                            if (isGamesExists)
-                            {
-                                popularGame.Visibility = visible;
-                                GameResponseInfo popularGamesItem = totalGames[0];
-                                string gameName = popularGamesItem.name;
-                                popularGame.BeginInit();
-                                popularGame.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + gameName));
-                                popularGame.EndInit();
-                            }
-                            else
-                            {
-                                popularGame.Visibility = invisible;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
-                this.Close();
-            }
+            mainControl.SelectedIndex = 32;            
         }
 
         private void ToggleWantListSettingsHandler (object sender, RoutedEventArgs e)
@@ -32705,6 +32967,43 @@ namespace GamaManager
             GetAllRecommendationGames();
         }
 
+        public void DecreaseReviewAdvicesHandler (object sender, RoutedEventArgs e)
+        {
+            DecreaseReviewAdvices();
+        }
+
+        public void DecreaseReviewAdvices ()
+        {
+            try
+            {
+                object mainReviewData = mainReview.DataContext;
+                string reviewId = ((string)(mainReviewData));
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/decrease/?id=" + reviewId + "&user=" + currentUserId);
+                webRequest.Method = "GET";
+                webRequest.UserAgent = ".NET Framework Test Client";
+                using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
+                {
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        var objText = reader.ReadToEnd();
+                        UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
+                        string status = myobj.status;
+                        bool isOkStatus = status == "OK";
+                        if (isOkStatus)
+                        {
+                            SelectReview(reviewId);
+                        }
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("Не удается подключиться к серверу", "Ошибка");
+                this.Close();
+            }
+        }
+
         private void IncreaseReviewAdvicesHandler (object sender, RoutedEventArgs e)
         {
             IncreaseReviewAdvices();
@@ -32716,7 +33015,7 @@ namespace GamaManager
             {
                 object mainReviewData = mainReview.DataContext;
                 string reviewId = ((string)(mainReviewData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/increase/?id=" + reviewId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/increase/?id=" + reviewId + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32725,9 +33024,7 @@ namespace GamaManager
                     {
                         JavaScriptSerializer js = new JavaScriptSerializer();
                         var objText = reader.ReadToEnd();
-
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
-
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
@@ -36730,6 +37027,21 @@ namespace GamaManager
         public string user;
         public string name;
         public DateTime date;
+    }
+
+    public class ReviewLikeLogsResponseInfo
+    {
+        public List<ReviewLike> likes;
+        public string status;
+    }
+
+    public class ReviewLike
+    {
+        public string _id;
+        public string user;
+        public string review;
+        public DateTime date;
+        public bool isDislike;
     }
 
 }

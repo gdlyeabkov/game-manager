@@ -10395,6 +10395,7 @@
                                                         Width="65"
                                                         Height="20"
                                                         Margin="5 0"
+                                                        Click="DecreaseReviewAdvicesHandler"
                                                     >
                                                         <Button.Content>
                                                             <StackPanel
@@ -10910,202 +10911,14 @@
                                     <StackPanel>
                                         <TabControl
                                             x:Name="carouselControl"    
-                                        >
-                                            <!--
-                                            <TabItem>
-                                                <DockPanel
-                                                    Background="LightGray"
-                                                >
-                                                    <Image
-                                                        Margin="15 0"
-                                                        Width="100"    
-                                                        Height="350"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="18"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                        <DockPanel>
-                                                            <TextBlock
-                                                            FontSize="8"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                        <TextBlock
-                                                            HorizontalAlignment="Right"
-                                                            FontSize="8"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                        </DockPanel>
-                                                    </StackPanel>
-                                                </DockPanel>
-                                            </TabItem>
-                                        
-                                            <TabItem>
-                                                <DockPanel
-                                                    Background="LightGray"
-                                                >
-                                                    <Image
-                                                        Margin="15 0"
-                                                        Width="500"    
-                                                        Height="350"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="18"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                    </StackPanel>
-                                                </DockPanel>
-                                            </TabItem>
-                                            <TabItem>
-                                                <DockPanel
-                                                    Background="LightGray"
-                                                >
-                                                    <Image
-                                                        Margin="15 0"
-                                                        Width="500"    
-                                                        Height="350"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="18"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                    </StackPanel>
-                                                </DockPanel>
-                                            </TabItem>
-                                            <TabItem>
-                                                <DockPanel
-                                                    Background="LightGray"
-                                                >
-                                                    <Image
-                                                        Margin="15 0"
-                                                        Width="500"    
-                                                        Height="350"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="18"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                    </StackPanel>
-                                                </DockPanel>
-                                            </TabItem>
-                                            <TabItem>
-                                                <DockPanel
-                                                    Background="LightGray"
-                                                >
-                                                    <Image
-                                                        Margin="15 0"
-                                                        Width="500"    
-                                                        Height="350"    
-                                                        ImageFailed="SetDefaultThumbnailHandler"
-                                                    >
-                                                        <Image.Source>
-                                                            <BitmapImage
-                                                                UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                                            />
-                                                        </Image.Source>
-                                                    </Image>
-                                                    <StackPanel>
-                                                        <TextBlock
-                                                            FontSize="18"
-                                                            Margin="15"
-                                                            Text="Название игры"
-                                                        />
-                                                    </StackPanel>
-                                                </DockPanel>
-                                            </TabItem>
-                                            -->
-                                        </TabControl>
+                                        />
                                         <StackPanel
                                             x:Name="carouselShortcuts"
                                             HorizontalAlignment="Center"
                                             Orientation="Horizontal"    
-                                        >
-                                            <!--
-                                            <Button
-                                                Width="25"
-                                                Height="10"
-                                                Margin="15"
-                                                Click="SelectCarouselShortcutHandler"
-                                            />
-                                            <Button
-                                                Width="25"
-                                                Height="10"
-                                                Margin="15"
-                                                Click="SelectCarouselShortcutHandler"
-                                            />
-                                            <Button
-                                                Width="25"
-                                                Height="10"
-                                                Margin="15"
-                                                Click="SelectCarouselShortcutHandler"
-                                            />
-                                            <Button
-                                                Width="25"
-                                                Height="10"
-                                                Margin="15"
-                                                Click="SelectCarouselShortcutHandler"
-                                            />
-                                            <Button
-                                                Width="25"
-                                                Height="10"
-                                                Margin="15"
-                                                Click="SelectCarouselShortcutHandler"
-                                            />
-                                            -->
-                                        </StackPanel>
+                                        />
                                     </StackPanel>
                                 </DockPanel>
-                                <Image
-                                    x:Name="popularGame"
-                                    Margin="15 0"
-                                    Width="150"    
-                                    Height="150"    
-                                    ImageFailed="SetDefaultThumbnailHandler"
-                                >
-                                    <Image.Source>
-                                        <BitmapImage
-                                            UriSource="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"    
-                                        />
-                                    </Image.Source>
-                                </Image>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>
@@ -21255,6 +21068,15 @@ E. Что произойдет, если положение Пункта 11 бу
                                                     FontSize="18"
                                                 />
                                                 <Separator />
+                                                <StackPanel
+                                                    x:Name="recentReviews"    
+                                                />
+                                                <TextBlock
+                                                    x:Name="countRecentReviewsLabel"
+                                                    Text="1–0 из 0" 
+                                                    Margin="15"
+                                                />
+                                                
                                             </StackPanel>
                                             <StackPanel
                                                 Background="LightGray"
@@ -22517,11 +22339,11 @@ E. Что произойдет, если положение Пункта 11 бу
             >
                 <ScrollViewer>
                     <DockPanel
-                        Background="Green"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="Blue"    
+                            Background="Gray"    
                         >
                             <StackPanel
                                 Orientation="Horizontal"    
@@ -24838,18 +24660,7 @@ E. Что произойдет, если положение Пункта 11 бу
                             <DockPanel
                                 Margin="15"
                                 Background="SlateGray"
-                                MouseLeftButtonUp="OpenGameReviewsHandler"
-                            >
-                                <TextBlock
-                                    FontSize="14"
-                                    Margin="15"
-                                    Text="Мои оценки и метки обзоров"    
-                                />
-                            </DockPanel>
-                            <DockPanel
-                                Margin="15"
-                                Background="SlateGray"
-                                MouseLeftButtonUp="OpenGameReviewsHandler"
+                                MouseLeftButtonUp="OpenReviewLikeLogsHandler"
                             >
                                 <TextBlock
                                     FontSize="14"
@@ -26340,14 +26151,16 @@ E. Что произойдет, если положение Пункта 11 бу
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem>
+            <TabItem
+                Visibility="Collapsed"    
+            >
                 <ScrollViewer>
                     <DockPanel
-                        Background="LightGray"    
+                        Background="Gray"    
                     >
                         <StackPanel
                             Margin="175 0"
-                            Background="LightGray"    
+                            Background="Gray"    
                         >
                             <local:HeaderControl
                                 DataContext="{ Binding ElementName=mainWindow }"    
@@ -26702,6 +26515,80 @@ E. Что произойдет, если положение Пункта 11 бу
                                 Margin="15"
                                 Text="Загрузить еще"    
                                 MouseLeftButtonUp="OpenReviewComplaintLogsHandler"
+                            />
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+            >
+                <ScrollViewer>
+                    <DockPanel
+                        Background="LightGray"    
+                    >
+                        <StackPanel
+                            Margin="175 0"
+                            Background="LightGray"    
+                        >
+                            <StackPanel
+                                Background="Gray"    
+                            >
+                                <TextBlock
+                                    TextAlignment="Center"
+                                    FontSize="18"
+                                    Margin="15"
+                                    Text="Мои оценки и метки обзоров"    
+                                />
+                            </StackPanel>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Мои голоса"    
+                            />
+                            <Grid
+                                x:Name="reviewLikeLogs"    
+                            >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Игра или приложение"    
+                                />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Голос за?"    
+                                />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Дата голосования"    
+                                />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="15"
+                                    Text="Ссылка на обзор"    
+                                />
+                            </Grid>
+                            <TextBlock
+                                Foreground="Blue"
+                                TextAlignment="Center"
+                                Margin="15"
+                                Text="Загрузить еще"    
+                                MouseLeftButtonUp="OpenReviewLikeLogsHandler"
                             />
                         </StackPanel>
                     </DockPanel>

@@ -23322,6 +23322,12 @@ namespace GamaManager
         private void ClientLoadedHandler(object sender, RoutedEventArgs e)
         {
             ClientLoaded();
+
+            
+            mainStream.Source = new Uri("http://localhost:8888/live/a.flv");
+            mainStream.Play();
+
+
         }
 
         public void ClientLoaded()

@@ -8392,8 +8392,12 @@
                                     <TabItem
                                         Header="Трансляции"    
                                     >
-                                        <WrapPanel>
+                                        <WrapPanel
+                                        >
                                             <MediaElement
+                                                x:Name="mainStream"
+                                                LoadedBehavior="Manual"
+                                                UnloadedBehavior="Manual"
                                                 Width="350"
                                                 Height="350"
                                             />

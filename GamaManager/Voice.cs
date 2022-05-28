@@ -28,7 +28,7 @@ namespace GamaManager
             get { return port; }
             set { port = value; }
         }
-        
+
         private WaveIn sourceStream = null;
         private Byte[] Data_ary;
         private NetworkStream ns;
@@ -77,6 +77,7 @@ namespace GamaManager
 
         private void Recordwav ()
         {
+            
             sourceStream = new WaveIn();
             int devicenum = 0;
             for (int i = 0; i < WaveIn.DeviceCount; i++)
@@ -88,14 +89,9 @@ namespace GamaManager
                 sourceStream.DeviceNumber = devicenum;
                 sourceStream.WaveFormat = new WaveFormat(22000, WaveIn.GetCapabilities(devicenum).Channels);
                 sourceStream.DataAvailable += new EventHandler<WaveInEventArgs>(sourceStream_DataAvailable);
-
-
                 waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);
-
                 sourceStream.StartRecording();
-
                 c_v.Start();
-
             }
         }
 

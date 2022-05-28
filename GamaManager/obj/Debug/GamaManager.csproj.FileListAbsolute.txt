@@ -2010,3 +2010,4 @@ C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Vlc.DotNet.Core.dll
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Vlc.DotNet.Core.Interops.dll
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Vlc.DotNet.Forms.dll
 C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Vlc.DotNet.Wpf.dll
+C:\wpf_projects\LastGameManager\GamaManager\bin\Debug\Microsoft.MixedReality.WebRTC.dll

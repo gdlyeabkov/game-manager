@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "ywWpQHoeQkmz4eSqRdHvo2chRaKsVUcNyWhQEn3vs/HUSc1y1UKFLBUmJoNLQhglBubkthQjfQaOrqN9svgYsw==",
+  "dgSpecHash": "uWdTQRWgtpMg1ehGFy6DPt0+SxOLyQqZGZebT5VPD77Nd0JXFBHTa2rifh4weTKqF0MM57pt/SJk7DRRBA8WEg==",
   "success": true,
   "projectFilePath": "C:\\wpf_projects\\LastGameManager\\GamaManager\\GamaManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ПК\\.nuget\\packages\\extended.wpf.toolkit\\4.3.0\\extended.wpf.toolkit.4.3.0.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\imapx\\2.0.0.18\\imapx.2.0.0.18.nupkg.sha512",
+    "C:\\Users\\ПК\\.nuget\\packages\\microsoft.mixedreality.webrtc\\2.0.2\\microsoft.mixedreality.webrtc.2.0.2.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\microsoft.vcrtforwarders.140\\1.0.6\\microsoft.vcrtforwarders.140.1.0.6.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\mousekeyboardactivitymonitor\\4.0.5150.10665\\mousekeyboardactivitymonitor.4.0.5150.10665.nupkg.sha512",
     "C:\\Users\\ПК\\.nuget\\packages\\reversegeocoder\\0.3.0\\reversegeocoder.0.3.0.nupkg.sha512",

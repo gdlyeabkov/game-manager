@@ -624,6 +624,9 @@
     <PackageReference Include="ImapX">
       <Version>2.0.0.18</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.MixedReality.WebRTC">
+      <Version>2.0.2</Version>
+    </PackageReference>
     <PackageReference Include="MouseKeyboardActivityMonitor">
       <Version>4.0.5150.10665</Version>
     </PackageReference>

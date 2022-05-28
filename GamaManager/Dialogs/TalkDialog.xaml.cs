@@ -83,7 +83,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -112,7 +112,7 @@ namespace GamaManager.Dialogs
                             {
                                 bool isOnline = false;
                                 string userId = currentTalkUser.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -142,7 +142,7 @@ namespace GamaManager.Dialogs
                             /*foreach (TalkRelation currentTalkUser in currentTalkUsers)
                             {
                                 string userId = currentTalkUser.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -167,7 +167,7 @@ namespace GamaManager.Dialogs
                                             talkUserAvatar.Height = 35;
                                             talkUserAvatar.Margin = new Thickness(10);
                                             talkUserAvatar.BeginInit();
-                                            talkUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                            talkUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                             talkUserAvatar.EndInit();
                                             talkUserAvatar.ImageFailed += SetDefaultAvatarHandler;
                                             talkUser.Children.Add(talkUserAvatar);
@@ -203,7 +203,7 @@ namespace GamaManager.Dialogs
             bool isRelationBlocked = false;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -280,7 +280,7 @@ namespace GamaManager.Dialogs
 
             try
             {
-                // client = new SocketIO("http://localhost:4000/");
+                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 // await client.ConnectAsync();
                 client.On("friend_send_msg", async response =>
@@ -311,7 +311,7 @@ namespace GamaManager.Dialogs
                             {
                                 try
                                 {
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -379,7 +379,7 @@ namespace GamaManager.Dialogs
                                                     newMsgHeaderAvatar.Width = 25;
                                                     newMsgHeaderAvatar.Height = 25;
                                                     newMsgHeaderAvatar.BeginInit();
-                                                    Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
+                                                    Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
                                                     newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                     newMsgHeaderAvatar.EndInit();
                                                     newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -446,7 +446,7 @@ namespace GamaManager.Dialogs
                                                         StackPanel newMsgReactions = new StackPanel();
                                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                                         newMsgReactions.Margin = new Thickness(15);
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -502,7 +502,7 @@ namespace GamaManager.Dialogs
                                                         StackPanel newMsgReactions = new StackPanel();
                                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                                         newMsgReactions.Margin = new Thickness(15);
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -549,7 +549,7 @@ namespace GamaManager.Dialogs
                                                         newMsgLabel.Height = 35;
                                                         newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                         newMsgLabel.BeginInit();
-                                                        Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
+                                                        Uri newMsgLabelUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/thumbnail/?id=" + cachedId + @"&content=" + msg);
                                                         newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                         newMsgLabel.EndInit();
                                                         inputChatMsgBox.Text = "";
@@ -558,7 +558,7 @@ namespace GamaManager.Dialogs
                                                         StackPanel newMsgReactions = new StackPanel();
                                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                                         newMsgReactions.Margin = new Thickness(15);
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -625,7 +625,7 @@ namespace GamaManager.Dialogs
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -789,8 +789,8 @@ namespace GamaManager.Dialogs
             newChat.Header = newChatHeaderLabel;
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + this.chats[this.chats.Count - 1]);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + talkId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + this.chats[this.chats.Count - 1]);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -810,7 +810,7 @@ namespace GamaManager.Dialogs
                             string userIsWritingLabelContent = talkTitle + " печатает...";
                             userIsWritingLabel.Text = userIsWritingLabelContent;
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/channels/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -954,7 +954,7 @@ namespace GamaManager.Dialogs
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -971,7 +971,7 @@ namespace GamaManager.Dialogs
                             {
                                 try
                                 {
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/get");
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -1002,7 +1002,7 @@ namespace GamaManager.Dialogs
                                                         string newMsgChannelId = msg.channel;
 
                                                         string senderName = "";
-                                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + newMsgUserId);
+                                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + newMsgUserId);
                                                         nestedWebRequest.Method = "GET";
                                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -1135,7 +1135,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1197,7 +1197,7 @@ namespace GamaManager.Dialogs
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -1255,7 +1255,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1296,7 +1296,7 @@ namespace GamaManager.Dialogs
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -1354,7 +1354,7 @@ namespace GamaManager.Dialogs
                                                             newMsgHeaderAvatar.Width = 25;
                                                             newMsgHeaderAvatar.Height = 25;
                                                             newMsgHeaderAvatar.BeginInit();
-                                                            Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + newMsgUserId);
+                                                            Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + newMsgUserId);
                                                             newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                             newMsgHeaderAvatar.EndInit();
                                                             newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1387,7 +1387,7 @@ namespace GamaManager.Dialogs
                                                             newMsgLabel.Height = 35;
                                                             newMsgLabel.HorizontalAlignment = HorizontalAlignment.Left;
                                                             newMsgLabel.BeginInit();
-                                                            Uri newMsgLabelUri = new Uri("http://localhost:4000/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
+                                                            Uri newMsgLabelUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/thumbnail/?id=" + newMsgId + @"&content=" + newMsgContent);
                                                             newMsgLabel.Source = new BitmapImage(newMsgLabelUri);
                                                             newMsgLabel.EndInit();
                                                             inputChatMsgBox.Text = "";
@@ -1396,7 +1396,7 @@ namespace GamaManager.Dialogs
                                                             StackPanel newMsgReactions = new StackPanel();
                                                             newMsgReactions.Orientation = Orientation.Horizontal;
                                                             newMsgReactions.Margin = new Thickness(15);
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -1531,7 +1531,7 @@ namespace GamaManager.Dialogs
 
             try
             {
-                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/all");
                 rolesRequest.Method = "GET";
                 rolesRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
@@ -1546,7 +1546,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             List<Role> talkRoles = myRolesObj.roles;
-                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/relations/all");
                             roleRelationsWebRequest.Method = "GET";
                             roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
@@ -1613,7 +1613,7 @@ namespace GamaManager.Dialogs
                                                 string channelId = ((string)(rawChannelId));
 
                                                 string newMsgType = "text";
-                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + newMsgContent + "&type=" + newMsgType + @"&channel=" + channelId);
+                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + newMsgContent + "&type=" + newMsgType + @"&channel=" + channelId);
                                                 webRequest.Method = "GET";
                                                 webRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1633,7 +1633,7 @@ namespace GamaManager.Dialogs
                                                             {
                                                                 try
                                                                 {
-                                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                                                                     innerWebRequest.Method = "GET";
                                                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -1663,7 +1663,7 @@ namespace GamaManager.Dialogs
                                                                                 newMsgHeaderAvatar.Width = 25;
                                                                                 newMsgHeaderAvatar.Height = 25;
                                                                                 newMsgHeaderAvatar.BeginInit();
-                                                                                Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                                                                Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
                                                                                 newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                                                 newMsgHeaderAvatar.EndInit();
                                                                                 newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -1727,7 +1727,7 @@ namespace GamaManager.Dialogs
                                                                                 StackPanel newMsgReactions = new StackPanel();
                                                                                 newMsgReactions.Orientation = Orientation.Horizontal;
                                                                                 newMsgReactions.Margin = new Thickness(15);
-                                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                                                 innerNestedWebRequest.Method = "GET";
                                                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -1855,7 +1855,7 @@ namespace GamaManager.Dialogs
 
             try
             {
-                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/all");
                 rolesRequest.Method = "GET";
                 rolesRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
@@ -1870,7 +1870,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             List<Role> talkRoles = myRolesObj.roles;
-                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/relations/all");
                             roleRelationsWebRequest.Method = "GET";
                             roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
@@ -1951,7 +1951,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/all");
                 rolesRequest.Method = "GET";
                 rolesRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
@@ -1966,7 +1966,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             List<Role> talkRoles = myRolesObj.roles;
-                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/relations/all");
                             roleRelationsWebRequest.Method = "GET";
                             roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
@@ -2068,7 +2068,7 @@ namespace GamaManager.Dialogs
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 byte[] imagebytearraystring = ImageFileToByteArray(filePath);
                 form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock" + System.IO.Path.GetExtension(filePath));
-                string url = @"http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath) + "&channel=" + channelId;
+                string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + "newMsgContent" + "&type=" + newMsgType + "&id=" + "hash" + "&ext=" + System.IO.Path.GetExtension(filePath) + "&channel=" + channelId;
                 HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                 httpClient.Dispose();
                 string sd = response.Content.ReadAsStringAsync().Result;
@@ -2091,7 +2091,7 @@ namespace GamaManager.Dialogs
                     {
                         try
                         {
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2127,7 +2127,7 @@ namespace GamaManager.Dialogs
                                         newMsgHeaderAvatar.BeginInit();
 
                                         // Uri newMsgHeaderAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                        Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                        Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
 
                                         newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                         newMsgHeaderAvatar.EndInit();
@@ -2177,7 +2177,7 @@ namespace GamaManager.Dialogs
                                         StackPanel newMsgReactions = new StackPanel();
                                         newMsgReactions.Orientation = Orientation.Horizontal;
                                         newMsgReactions.Margin = new Thickness(15);
-                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                         innerNestedWebRequest.Method = "GET";
                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -2277,7 +2277,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/all");
+                HttpWebRequest rolesRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/all");
                 rolesRequest.Method = "GET";
                 rolesRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse rolesResponse = (HttpWebResponse)rolesRequest.GetResponse())
@@ -2292,7 +2292,7 @@ namespace GamaManager.Dialogs
                         if (isOkStatus)
                         {
                             List<Role> talkRoles = myRolesObj.roles;
-                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/roles/relations/all");
+                            HttpWebRequest roleRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/roles/relations/all");
                             roleRelationsWebRequest.Method = "GET";
                             roleRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse roleRelationsWebResponse = (HttpWebResponse)roleRelationsWebRequest.GetResponse())
@@ -2359,7 +2359,7 @@ namespace GamaManager.Dialogs
                                                 object rawChannelId = activeChannel.DataContext;
                                                 string channelId = ((string)(rawChannelId));
 
-                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=" + channelId);
+                                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/add/?user=" + currentUserId + "&friend=" + talkId + "&content=" + emojiData + "&type=" + newMsgType + "&channel=" + channelId);
                                                 webRequest.Method = "GET";
                                                 webRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2380,7 +2380,7 @@ namespace GamaManager.Dialogs
                                                                 {
                                                                     try
                                                                     {
-                                                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                                                                         innerWebRequest.Method = "GET";
                                                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2409,7 +2409,7 @@ namespace GamaManager.Dialogs
                                                                                     newMsgHeaderAvatar.Width = 25;
                                                                                     newMsgHeaderAvatar.Height = 25;
                                                                                     newMsgHeaderAvatar.BeginInit();
-                                                                                    Uri newMsgHeaderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                                                                    Uri newMsgHeaderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
                                                                                     newMsgHeaderAvatar.Source = new BitmapImage(newMsgHeaderAvatarUri);
                                                                                     newMsgHeaderAvatar.EndInit();
                                                                                     newMsgHeader.Children.Add(newMsgHeaderAvatar);
@@ -2459,7 +2459,7 @@ namespace GamaManager.Dialogs
                                                                                     StackPanel newMsgReactions = new StackPanel();
                                                                                     newMsgReactions.Orientation = Orientation.Horizontal;
                                                                                     newMsgReactions.Margin = new Thickness(15);
-                                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/get");
+                                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/get");
                                                                                     innerNestedWebRequest.Method = "GET";
                                                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                     using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -2594,8 +2594,8 @@ namespace GamaManager.Dialogs
             try
             {
 
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + chats[chatControl.SelectedIndex]);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + talkId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + chats[chatControl.SelectedIndex]);
 
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
@@ -2681,7 +2681,7 @@ namespace GamaManager.Dialogs
             int insensitiveCaseKeywordsLength = insensitiveCaseKeywords.Length;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2708,7 +2708,7 @@ namespace GamaManager.Dialogs
                             foreach (TalkRelation currentTalkUser in currentTalkUsers)
                             {
                                 string userId = currentTalkUser.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2738,7 +2738,7 @@ namespace GamaManager.Dialogs
                                                 talkUserAvatar.Height = 35;
                                                 talkUserAvatar.Margin = new Thickness(10);
                                                 talkUserAvatar.BeginInit();
-                                                talkUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                talkUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                                 talkUserAvatar.EndInit();
                                                 talkUserAvatar.ImageFailed += SetDefaultAvatarHandler;
                                                 talkUser.Children.Add(talkUserAvatar);
@@ -2819,7 +2819,7 @@ namespace GamaManager.Dialogs
             textChannels.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/channels/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3093,7 +3093,7 @@ namespace GamaManager.Dialogs
             string msgId = ((string)(rawMsgId));
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/remove/?id=" + msgId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/remove/?id=" + msgId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3154,7 +3154,7 @@ namespace GamaManager.Dialogs
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/reactions/add/?id=" + msgId + "&content=" + content);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/reactions/add/?id=" + msgId + "&content=" + content);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3220,7 +3220,7 @@ namespace GamaManager.Dialogs
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/delete/?id=" + talkId + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/delete/?id=" + talkId + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())

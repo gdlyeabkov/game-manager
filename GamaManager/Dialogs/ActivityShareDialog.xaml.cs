@@ -47,7 +47,7 @@ namespace GamaManager.Dialogs
         public void InitUserAvatar ()
         {
             userAvatar.BeginInit();
-            Uri avatar = new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+            Uri avatar = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
             userAvatar.Source = new BitmapImage(avatar);
             userAvatar.EndInit();
         }
@@ -90,7 +90,7 @@ namespace GamaManager.Dialogs
             string msgBoxContent = msgBox.Text;
             try
             {
-                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + msgBoxContent);
+                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + msgBoxContent);
                 innerNestedWebRequest.Method = "GET";
                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())

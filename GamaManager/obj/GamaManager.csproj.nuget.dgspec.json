@@ -46,6 +46,10 @@
               "target": "Package",
               "version": "[2.0.0.18, )"
             },
+            "Microsoft.MixedReality.WebRTC": {
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
             "Microsoft.VCRTForwarders.140": {
               "target": "Package",
               "version": "[1.0.6, )"

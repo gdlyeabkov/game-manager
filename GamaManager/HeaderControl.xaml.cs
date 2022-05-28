@@ -166,7 +166,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -205,7 +205,7 @@ namespace GamaManager
                                         searchedGameThumbnail.Width = 75;
                                         searchedGameThumbnail.Height = 75;
                                         searchedGameThumbnail.BeginInit();
-                                        searchedGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + someGameName));
+                                        searchedGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + someGameName));
                                         searchedGameThumbnail.EndInit();
                                         searchedGame.Children.Add(searchedGameThumbnail);
                                         StackPanel searchedGameAside = new StackPanel();

@@ -129,7 +129,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/purchases/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/purchases/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -245,7 +245,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/likes/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/likes/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -285,7 +285,7 @@ namespace GamaManager
                             foreach (ReviewLike myLike in myLikes)
                             {
                                 string reviewId = myLike.review;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + reviewId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/get/?id=" + reviewId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -301,7 +301,7 @@ namespace GamaManager
                                         {
                                             Review review = myInnerObj.review;
                                             string reviewGameId = review.game;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -397,7 +397,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/logins/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/logins/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -511,7 +511,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/feedbacks/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/feedbacks/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -600,7 +600,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/visits/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/visits/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -640,7 +640,7 @@ namespace GamaManager
                             foreach (ForumVisit myVisit in myVisits)
                             {
                                 string forumId = myVisit.forum;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/get/?id=" + forumId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/get/?id=" + forumId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -749,7 +749,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/logins/external/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/logins/external/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -831,7 +831,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/devices/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/devices/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -911,7 +911,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -926,7 +926,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Msg> msgs = myObj.msgs;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -984,7 +984,7 @@ namespace GamaManager
                                         foreach (Msg msg in msgs)
                                         {
                                             string msgSenderId = msg.user;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + msgSenderId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + msgSenderId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -1000,7 +1000,7 @@ namespace GamaManager
                                                     {
                                                         User sender = myNestedObj.user;              
                                                         string msgRecepientId = msg.friend;
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + msgRecepientId);
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + msgRecepientId);
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -1089,7 +1089,7 @@ namespace GamaManager
             int countFriends = 0;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1103,7 +1103,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1403,7 +1403,7 @@ namespace GamaManager
             int countOnlineFriends = 0;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1419,7 +1419,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1452,7 +1452,7 @@ namespace GamaManager
                                             string friendId = friendInfo.friend;
                                             if (friendsIds.Contains(friendId))
                                             {
-                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                                 webRequest.Method = "GET";
                                                 webRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1538,7 +1538,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1554,7 +1554,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1588,7 +1588,7 @@ namespace GamaManager
                                             string friendId = friendInfo.friend;
                                             if (friendsIds.Contains(friendId))
                                             {
-                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                                 webRequest.Method = "GET";
                                                 webRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1698,7 +1698,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1717,7 +1717,7 @@ namespace GamaManager
                             string userStatus = user.status;
                             int userLevel = user.level;
                             friendInfoPopupAvatar.BeginInit();
-                            friendInfoPopupAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendId));
+                            friendInfoPopupAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + friendId));
                             friendInfoPopupAvatar.EndInit();
                             friendInfoPopupNameLabel.Text = userName;
                             friendInfoPopupStatusLabel.Text = userStatus;
@@ -1759,7 +1759,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1773,7 +1773,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1804,7 +1804,7 @@ namespace GamaManager
                                             string friendId = friendInfo.friend;
                                             if (friendsIds.Contains(friendId))
                                             {
-                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                                 webRequest.Method = "GET";
                                                 webRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1937,7 +1937,7 @@ namespace GamaManager
             string insensitiveCaseKeywords = moderatorListBoxContent.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/moderators/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -1963,7 +1963,7 @@ namespace GamaManager
                             foreach (Moderator myModerator in myModerators)
                             {
                                 string moderatorId = myModerator.moderator;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + moderatorId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + moderatorId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2058,14 +2058,14 @@ namespace GamaManager
         public void GetAddFriendInfo()
         {
             myFriendCodeBox.Text = currentUserId;
-            addFriendRequestLinkBox.Text = "http://localhost:4000/?friend=" + currentUserId;
+            addFriendRequestLinkBox.Text = "https://loud-reminiscent-jackrabbit.glitch.me/?friend=" + currentUserId;
         }
 
         public void GetSearchedGroups()
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2445,7 +2445,7 @@ namespace GamaManager
                     object manualGameSelectorSelectedItemData = manualGameSelectorSelectedItem.DataContext;
                     string gameId = ((string)(manualGameSelectorSelectedItemData));
 
-                    string url = "http://localhost:4000/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId;
+                    string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/add/?id=" + currentUserId + @"&title=" + manualNameBoxContent + @"&desc=" + manualDescBoxContent + @"&lang=" + manualLang + @"&categories=" + manualCategories + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId;
                     HttpClient httpClient = new HttpClient();
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                     MultipartFormDataContent form = new MultipartFormDataContent();
@@ -2454,7 +2454,7 @@ namespace GamaManager
                     HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                     httpClient.Dispose();
 
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/points/increase/?id=" + currentUserId);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2527,7 +2527,7 @@ namespace GamaManager
 
         public void SelectGroup(string groupId)
         {
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2557,7 +2557,7 @@ namespace GamaManager
                         groupFanPageLabel.DataContext = groupFanPage;
                         groupTwitchLabel.DataContext = groupTwitch;
                         groupYoutubeLabel.DataContext = groupYotube;
-                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/all");
+                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/relations/all");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2623,7 +2623,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/remove/?id=" + currentUserId + @"&group=" + cachedGroupId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/relations/remove/?id=" + currentUserId + @"&group=" + cachedGroupId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2662,7 +2662,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + cachedGroupId + @"&user=" + currentUserId + "&request=" + "mockId");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/relations/add/?id=" + cachedGroupId + @"&user=" + currentUserId + "&request=" + "mockId");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2674,7 +2674,7 @@ namespace GamaManager
                         UserResponseInfo myobj = (UserResponseInfo)js.Deserialize(objText, typeof(UserResponseInfo));
                         string status = myobj.status;
                         bool isOkStatus = status == "OK";
-                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + cachedGroupId);
+                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + cachedGroupId);
                         innerWebRequest.Method = "GET";
                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2729,7 +2729,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2789,7 +2789,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2823,7 +2823,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -2858,7 +2858,7 @@ namespace GamaManager
                                 foreach (FriendRequest myRequest in myRequests)
                                 {
                                     string senderId = myRequest.user;
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + senderId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -2969,7 +2969,7 @@ namespace GamaManager
             bool isFilterDisabled = insensitiveCaseSearchGamesBoxContentLength <= 0;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3082,7 +3082,7 @@ namespace GamaManager
                                 totalGames = totalGames.OrderBy((GameResponseInfo someGame) => {
                                     string someGameId = someGame._id;
                                     
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3138,7 +3138,7 @@ namespace GamaManager
                                 searchedGameAsideThumbnail.Height = 50;
                                 searchedGameAsideThumbnail.Margin = new Thickness(15, 5, 15, 5);
                                 searchedGameAsideThumbnail.BeginInit();
-                                searchedGameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                searchedGameAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                 searchedGameAsideThumbnail.EndInit();
                                 searchedGameAside.Children.Add(searchedGameAsideThumbnail);
                                 StackPanel searchedGameAsideInfo = new StackPanel();
@@ -3283,7 +3283,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3314,7 +3314,7 @@ namespace GamaManager
                             bool isHaveSubs = mySubsCount >= 1;
                             if (isHaveSubs)
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/remove/?user=" + currentUserId + "&sub=" + cachedGameInStore);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/remove/?user=" + currentUserId + "&sub=" + cachedGameInStore);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3337,7 +3337,7 @@ namespace GamaManager
                             }
                             else
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/add/?id=" + currentUserId + "&sub=" + cachedGameInStore);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/add/?id=" + currentUserId + "&sub=" + cachedGameInStore);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3381,7 +3381,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3396,7 +3396,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<GameResponseInfo> totalGames = myobj.games;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/all/");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3411,7 +3411,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         List<GameSub> mySubs = myInnerObj.subs;
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -3447,7 +3447,7 @@ namespace GamaManager
                                                         gameStoreBreadcrumbLabel.Text = gameStoreBreadcrumbLabelContent;
                                                         gameStoreNameLabel.Text = resultName;
                                                         gameStoreThumbnail.BeginInit();
-                                                        gameStoreThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + resultName));
+                                                        gameStoreThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + resultName));
                                                         gameStoreThumbnail.EndInit();
                                                         gameStoreDescLabel.Text = resultDesc;
                                                         gameStoreDeveloperLabel.Text = resultDeveloper;
@@ -3651,7 +3651,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                 gameRelationWebRequest.Method = "GET";
                 gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
@@ -3689,7 +3689,7 @@ namespace GamaManager
                             {
                                 currentGameIndex++;
                                 string currentGameId = currentUserRelation.game;
-                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 gamesWebRequest.Method = "GET";
                                 gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -3725,7 +3725,7 @@ namespace GamaManager
                                                 equipmentGameTabThumbnail.Height = 50;
                                                 equipmentGameTabThumbnail.Margin = new Thickness(15);
                                                 equipmentGameTabThumbnail.BeginInit();
-                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName)); ;
+                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName)); ;
                                                 equipmentGameTabThumbnail.EndInit();
                                                 equipmentGameTabThumbnail.ImageFailed += SetDefaultThumbnailHandler;
                                                 equipmentGameTab.Children.Add(equipmentGameTabThumbnail);
@@ -3785,7 +3785,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -3800,7 +3800,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             User user = myobj.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -3815,7 +3815,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         List<GameSession> sessions = myInnerObj.sessions;
-                                        HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                        HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                         gamesWebRequest.Method = "GET";
                                         gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -3874,7 +3874,7 @@ namespace GamaManager
                                                             gameAsideThumbnail.Height = 35;
                                                             gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                                             gameAsideThumbnail.BeginInit();
-                                                            gameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + resultName));
+                                                            gameAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + resultName));
                                                             gameAsideThumbnail.EndInit();
                                                             gameAside.Children.Add(gameAsideThumbnail);
                                                             TextBlock gameAsideNameLabel = new TextBlock();
@@ -3953,7 +3953,7 @@ namespace GamaManager
             string disapearAmountAuxBoxContent = disapearAmountAuxBox.Text;
             try
             {
-                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + "Снятие средства за неизвестные мне покупки" + "&content=" + disapearAmountAuxBoxContent + @"&ext=" + manualAttachmentExt + @"&name=" + disapearAmountNameBoxContent + "&phone=" + disapearAmountPhoneBoxContent + "&date=" + date + "&method=" + disapearAmountPaymentMethodSelectorSelectedItemContent + "&cvv=" + disapearAmountCVVBoxContent + "&price=" + disapearAmountPriceBoxContent;
+                string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/feedbacks/add/?id=" + currentUserId + @"&title=" + "Снятие средства за неизвестные мне покупки" + "&content=" + disapearAmountAuxBoxContent + @"&ext=" + manualAttachmentExt + @"&name=" + disapearAmountNameBoxContent + "&phone=" + disapearAmountPhoneBoxContent + "&date=" + date + "&method=" + disapearAmountPaymentMethodSelectorSelectedItemContent + "&cvv=" + disapearAmountCVVBoxContent + "&price=" + disapearAmountPriceBoxContent;
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -4018,7 +4018,7 @@ namespace GamaManager
                 string gameId = ((string)(gameItemData));
                 try
                 {
-                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     gamesWebRequest.Method = "GET";
                     gamesWebRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -4066,7 +4066,7 @@ namespace GamaManager
                 string userId = ((string)(scammerItemData));
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4080,7 +4080,7 @@ namespace GamaManager
                             bool isOkStatus = status == "OK";
                             if (isOkStatus)
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -4113,7 +4113,7 @@ namespace GamaManager
                                             helpNotifyScammerBreadcrumbLabel.Text = helpNotifyScammerBreadcrumbLabelContent;
                                             scammerNameLabel.Text = userName;
                                             scammerAvatar.BeginInit();
-                                            scammerAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                            scammerAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                             scammerAvatar.EndInit();
                                             isMyFriend = friendsIds.Contains(userId);
                                             if (isMyFriend)
@@ -4183,7 +4183,7 @@ namespace GamaManager
             string complaintBoxContent = complaintBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/complaints/add/?id=" + currentUserId + @"&scammer=" + currentUserId + @"&content=" + complaintBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/complaints/add/?id=" + currentUserId + @"&scammer=" + currentUserId + @"&content=" + complaintBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4219,7 +4219,7 @@ namespace GamaManager
             myUserSubs.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4244,7 +4244,7 @@ namespace GamaManager
                             foreach (UserSub mySub in mySubs)
                             {
                                 string userId = mySub.sub;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -4341,7 +4341,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/all");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -4357,7 +4357,7 @@ namespace GamaManager
                         {
                             List<GameSession> sessions = myInnerObj.sessions;
 
-                            HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                             gamesWebRequest.Method = "GET";
                             gamesWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -4436,7 +4436,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4468,7 +4468,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4509,7 +4509,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4524,7 +4524,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Illustration> totalIllustrations = myobj.illustrations;
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/favorites/all");
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
@@ -4592,7 +4592,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4607,7 +4607,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<ScreenShot> totalScreenShots = myobj.screenShots;
-                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/favorites/all");
                             screenShotFavoriteRelationsWebRequest.Method = "GET";
                             screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
@@ -4678,7 +4678,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -4694,7 +4694,7 @@ namespace GamaManager
                         {
                             List<GameResponseInfo> totalGames = myobj.games;
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -4769,7 +4769,7 @@ namespace GamaManager
                                             newGamesSectionItemThumbnail.Height = 250;
                                             newGamesSectionItemThumbnail.Margin = new Thickness(15);
                                             newGamesSectionItemThumbnail.BeginInit();
-                                            newGamesSectionItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + newGamesItemName));
+                                            newGamesSectionItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + newGamesItemName));
                                             newGamesSectionItemThumbnail.EndInit();
                                             newGamesSectionItem.Children.Add(newGamesSectionItemThumbnail);
                                             StackPanel newGamesSectionItemFooter = new StackPanel();
@@ -4889,7 +4889,7 @@ namespace GamaManager
                                                     recentGamesSectionItemThumbnail.Height = 250;
                                                     recentGamesSectionItemThumbnail.Margin = new Thickness(15);
                                                     recentGamesSectionItemThumbnail.BeginInit();
-                                                    recentGamesSectionItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentGamesItemName));
+                                                    recentGamesSectionItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recentGamesItemName));
                                                     recentGamesSectionItemThumbnail.EndInit();
                                                     recentGamesSectionItem.Children.Add(recentGamesSectionItemThumbnail);
                                                     sectionFooter.Children.Add(recentGamesSectionItem);
@@ -4991,7 +4991,7 @@ namespace GamaManager
                                                     offerGamesSectionItem.Height = 250;
                                                     offerGamesSectionItem.Margin = new Thickness(15);
                                                     offerGamesSectionItem.BeginInit();
-                                                    offerGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + offerGamesItemName));
+                                                    offerGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + offerGamesItemName));
                                                     offerGamesSectionItem.EndInit();
                                                     sectionFooter.Children.Add(offerGamesSectionItem);
                                                 }
@@ -5117,7 +5117,7 @@ namespace GamaManager
                                                     allGamesSectionItem.Height = 250;
                                                     allGamesSectionItem.Margin = new Thickness(15);
                                                     allGamesSectionItem.BeginInit();
-                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                                     allGamesSectionItem.EndInit();
                                                     allGamesSection.Children.Add(allGamesSectionItem);
                                                 }
@@ -5243,7 +5243,7 @@ namespace GamaManager
                                                     allGamesSectionItem.Height = 250;
                                                     allGamesSectionItem.Margin = new Thickness(15);
                                                     allGamesSectionItem.BeginInit();
-                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                                     allGamesSectionItem.EndInit();
                                                     allGamesSection.Children.Add(allGamesSectionItem);
                                                 }
@@ -5425,7 +5425,7 @@ namespace GamaManager
                                                             }
                                                             else if (isNotCustomGame)
                                                             {
-                                                                coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                                coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                                                             }
                                                             else
                                                             {
@@ -5579,7 +5579,7 @@ namespace GamaManager
                                                         }
                                                         else
                                                         {
-                                                            coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                            coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                                                         }
                                                         gameCollectionItem.Source = new BitmapImage(coverUri);
                                                         gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
@@ -5770,7 +5770,7 @@ namespace GamaManager
                 bool isSortByReviews = sortTypeIndex == 8;
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -5831,7 +5831,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -5891,7 +5891,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -5934,7 +5934,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 250;
                                             allGamesSectionItem.Margin = new Thickness(15);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }
@@ -5964,7 +5964,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6024,7 +6024,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6067,7 +6067,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 250;
                                             allGamesSectionItem.Margin = new Thickness(15);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }
@@ -6101,7 +6101,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6161,7 +6161,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6204,7 +6204,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 250;
                                             allGamesSectionItem.Margin = new Thickness(15);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }
@@ -6234,7 +6234,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6294,7 +6294,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6337,7 +6337,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 250;
                                             allGamesSectionItem.Margin = new Thickness(15);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }
@@ -6382,7 +6382,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6442,7 +6442,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6485,7 +6485,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 100;
                                             allGamesSectionItem.Margin = new Thickness(25);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }*/
@@ -6516,7 +6516,7 @@ namespace GamaManager
                                                 }
                                                 else
                                                 {
-                                                    coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                    coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                                                 }
                                                 gameCollectionItem.Source = new BitmapImage(coverUri);
                                                 gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
@@ -6660,7 +6660,7 @@ namespace GamaManager
                                             {
                                                 string someGameId = someGame._id;
                                                 int countHours = 0;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6720,7 +6720,7 @@ namespace GamaManager
                                             totalGames = totalGames.OrderBy((GameResponseInfo someGame) =>
                                             {
                                                 string someGameId = someGame._id;
-                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                                 innerWebRequest.Method = "GET";
                                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -6763,7 +6763,7 @@ namespace GamaManager
                                             allGamesSectionItem.Height = 100;
                                             allGamesSectionItem.Margin = new Thickness(25);
                                             allGamesSectionItem.BeginInit();
-                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                            allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                             allGamesSectionItem.EndInit();
                                             allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
                                         }*/
@@ -6794,7 +6794,7 @@ namespace GamaManager
                                                 }
                                                 else
                                                 {
-                                                    coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                                    coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                                                 }
                                                 gameCollectionItem.Source = new BitmapImage(coverUri);
                                                 gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
@@ -6997,7 +6997,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -7034,7 +7034,7 @@ namespace GamaManager
                                     allGamesSectionItem.Height = 250;
                                     allGamesSectionItem.Margin = new Thickness(15);
                                     allGamesSectionItem.BeginInit();
-                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                     allGamesSectionItem.EndInit();
                                     allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
 
@@ -7060,7 +7060,7 @@ namespace GamaManager
                                     allGamesSectionItem.Height = 250;
                                     allGamesSectionItem.Margin = new Thickness(15);
                                     allGamesSectionItem.BeginInit();
-                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                    allGamesSectionItem.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                     allGamesSectionItem.EndInit();
                                     allGamesSectionScrollContent.Children.Add(allGamesSectionItem);
 
@@ -7083,7 +7083,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                 gameRelationWebRequest.Method = "GET";
                 gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
@@ -7119,7 +7119,7 @@ namespace GamaManager
                             foreach (GameRelation currentUserRelation in currentUserRelations)
                             {
                                 string currentGameId = currentUserRelation.game;
-                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 gamesWebRequest.Method = "GET";
                                 gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -7173,7 +7173,7 @@ namespace GamaManager
                             {
                                 currentGameIndex++;
                                 string currentGameId = currentUserRelation.game;
-                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 gamesWebRequest.Method = "GET";
                                 gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -7209,7 +7209,7 @@ namespace GamaManager
                                                 equipmentGameTabThumbnail.Height = 50;
                                                 equipmentGameTabThumbnail.Margin = new Thickness(15);
                                                 equipmentGameTabThumbnail.BeginInit();
-                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName)); ;
+                                                equipmentGameTabThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName)); ;
                                                 equipmentGameTabThumbnail.EndInit();
                                                 equipmentGameTabThumbnail.ImageFailed += SetDefaultThumbnailHandler;
                                                 equipmentGameTab.Children.Add(equipmentGameTabThumbnail);
@@ -7246,7 +7246,7 @@ namespace GamaManager
             myFriendActivities.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -7272,7 +7272,7 @@ namespace GamaManager
                                 string localFriendId = friendRecord.friend;
                                 friendsIds.Add(localFriendId);
                             }
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -7329,7 +7329,7 @@ namespace GamaManager
                                         {
                                             string friendActivityUserId = friendActivity.user;
                                             string friendActivityContent = friendActivity.content;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendActivityUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendActivityUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -7363,7 +7363,7 @@ namespace GamaManager
                                                         myFriendActivityUserAvatar.Width = 35;
                                                         myFriendActivityUserAvatar.Height = 35;
                                                         myFriendActivityUserAvatar.BeginInit();
-                                                        myFriendActivityUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendActivityUserId));
+                                                        myFriendActivityUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + friendActivityUserId));
                                                         myFriendActivityUserAvatar.EndInit();
                                                         myFriendActivity.Children.Add(myFriendActivityUserAvatar);
                                                         StackPanel myFriendActivityAside = new StackPanel();
@@ -7378,7 +7378,7 @@ namespace GamaManager
                                                         {
 
                                                             string groupId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7403,7 +7403,7 @@ namespace GamaManager
                                                         {
 
                                                             string screenShotId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/get/?id=" + screenShotId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/get/?id=" + screenShotId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7428,7 +7428,7 @@ namespace GamaManager
                                                         {
 
                                                             string reviewId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + reviewId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/get/?id=" + reviewId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7444,7 +7444,7 @@ namespace GamaManager
                                                                     {
                                                                         Review review = myInnerNestedObj.review;
                                                                         string reviewGameId = review.game;
-                                                                        HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                                        HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                                         gamesWebRequest.Method = "GET";
                                                                         gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -7486,7 +7486,7 @@ namespace GamaManager
                                                         {
 
                                                             string friendId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7512,7 +7512,7 @@ namespace GamaManager
                                                         {
 
                                                             string buyedGameId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7552,7 +7552,7 @@ namespace GamaManager
                                                         {
 
                                                             string groupId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7578,7 +7578,7 @@ namespace GamaManager
                                                         {
 
                                                             string favoriteManualId = friendActivity.data;
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/get/?id=" + favoriteManualId);
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/get/?id=" + favoriteManualId);
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7638,7 +7638,7 @@ namespace GamaManager
             myActivities.Children.Clear();
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/all");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/all");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -7694,7 +7694,7 @@ namespace GamaManager
                             {
                                 string friendActivityUserId = friendActivity.user;
                                 string friendActivityContent = friendActivity.content;
-                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendActivityUserId);
+                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendActivityUserId);
                                 nestedWebRequest.Method = "GET";
                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -7728,7 +7728,7 @@ namespace GamaManager
                                             myActivityUserAvatar.Width = 35;
                                             myActivityUserAvatar.Height = 35;
                                             myActivityUserAvatar.BeginInit();
-                                            myActivityUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendActivityUserId));
+                                            myActivityUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + friendActivityUserId));
                                             myActivityUserAvatar.EndInit();
                                             myActivity.Children.Add(myActivityUserAvatar);
                                             StackPanel myActivityAside = new StackPanel();
@@ -7743,7 +7743,7 @@ namespace GamaManager
                                             {
 
                                                 string groupId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7768,7 +7768,7 @@ namespace GamaManager
                                             {
 
                                                 string screenShotId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/get/?id=" + screenShotId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/get/?id=" + screenShotId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7793,7 +7793,7 @@ namespace GamaManager
                                             {
 
                                                 string reviewId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + reviewId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/get/?id=" + reviewId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7809,7 +7809,7 @@ namespace GamaManager
                                                         {
                                                             Review review = myInnerNestedObj.review;
                                                             string reviewGameId = review.game;
-                                                            HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                            HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                             gamesWebRequest.Method = "GET";
                                                             gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -7851,7 +7851,7 @@ namespace GamaManager
                                             {
 
                                                 string friendId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7877,7 +7877,7 @@ namespace GamaManager
                                             {
 
                                                 string buyedGameId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7917,7 +7917,7 @@ namespace GamaManager
                                             {
 
                                                 string groupId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -7943,7 +7943,7 @@ namespace GamaManager
                                             {
 
                                                 string favoriteManualId = friendActivity.data;
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/get/?id=" + favoriteManualId);
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/get/?id=" + favoriteManualId);
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -8058,7 +8058,7 @@ namespace GamaManager
             string activityStatusBoxContent = activityStatusBox.Text;
             try
             {
-                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activityStatusBoxContent);
+                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activityStatusBoxContent);
                 innerNestedWebRequest.Method = "GET";
                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -8094,7 +8094,7 @@ namespace GamaManager
             friendsForPresent.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8124,7 +8124,7 @@ namespace GamaManager
                             foreach (Friend myFriend in friendRecords)
                             {
                                 string friendId = myFriend.friend;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -8160,7 +8160,7 @@ namespace GamaManager
                                                 friendForPresentAvatar.Height = 35;
                                                 friendForPresentAvatar.Margin = new Thickness(5);
                                                 friendForPresentAvatar.BeginInit();
-                                                friendForPresentAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendId));
+                                                friendForPresentAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + friendId));
                                                 friendForPresentAvatar.EndInit();
                                                 friendForPresent.Children.Add(friendForPresentAvatar);
                                                 TextBlock friendForPresentNameLabel = new TextBlock();
@@ -8219,7 +8219,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8250,7 +8250,7 @@ namespace GamaManager
                                 genreGamesItemThumbnail.Width = 250;
                                 genreGamesItemThumbnail.Height = 100;
                                 genreGamesItemThumbnail.BeginInit();
-                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + genreGameName));
                                 genreGamesItemThumbnail.EndInit();
                                 genreGamesItem.Children.Add(genreGamesItemThumbnail);
                                 TextBlock genreGamesItemNameLabel = new TextBlock();
@@ -8283,7 +8283,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8314,7 +8314,7 @@ namespace GamaManager
                                 genreGamesItemThumbnail.Width = 250;
                                 genreGamesItemThumbnail.Height = 100;
                                 genreGamesItemThumbnail.BeginInit();
-                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + genreGameName));
                                 genreGamesItemThumbnail.EndInit();
                                 genreGamesItem.Children.Add(genreGamesItemThumbnail);
                                 TextBlock genreGamesItemNameLabel = new TextBlock();
@@ -8347,7 +8347,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8378,7 +8378,7 @@ namespace GamaManager
                                 genreGamesItemThumbnail.Width = 250;
                                 genreGamesItemThumbnail.Height = 100;
                                 genreGamesItemThumbnail.BeginInit();
-                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + genreGameName));
                                 genreGamesItemThumbnail.EndInit();
                                 genreGamesItem.Children.Add(genreGamesItemThumbnail);
                                 TextBlock genreGamesItemNameLabel = new TextBlock();
@@ -8411,7 +8411,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8442,7 +8442,7 @@ namespace GamaManager
                                 genreGamesItemThumbnail.Width = 250;
                                 genreGamesItemThumbnail.Height = 100;
                                 genreGamesItemThumbnail.BeginInit();
-                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + genreGameName));
                                 genreGamesItemThumbnail.EndInit();
                                 genreGamesItem.Children.Add(genreGamesItemThumbnail);
                                 TextBlock genreGamesItemNameLabel = new TextBlock();
@@ -8475,7 +8475,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8506,7 +8506,7 @@ namespace GamaManager
                                 genreGamesItemThumbnail.Width = 250;
                                 genreGamesItemThumbnail.Height = 100;
                                 genreGamesItemThumbnail.BeginInit();
-                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + genreGameName));
+                                genreGamesItemThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + genreGameName));
                                 genreGamesItemThumbnail.EndInit();
                                 genreGamesItem.Children.Add(genreGamesItemThumbnail);
                                 TextBlock genreGamesItemNameLabel = new TextBlock();
@@ -8539,7 +8539,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -8597,7 +8597,7 @@ namespace GamaManager
             bool isNotLastSessions = !isLastSessions;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8623,7 +8623,7 @@ namespace GamaManager
                                 string localFriendId = friendRecord.friend;
                                 friendsIds.Add(localFriendId);
                             }
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -8666,7 +8666,7 @@ namespace GamaManager
                                             DateTime recommendationDate = recommendation.date;
                                             string recommendationGameId = recommendation.game;
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + recommendationUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -8683,7 +8683,7 @@ namespace GamaManager
                                                         User user = myNestedObj.user;
                                                         string userName = user.name;
 
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -8709,7 +8709,7 @@ namespace GamaManager
                                                                     if (isResultsFound)
                                                                     {
 
-                                                                        HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                                        HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                                         gameRelationWebRequest.Method = "GET";
                                                                         gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
@@ -8756,7 +8756,7 @@ namespace GamaManager
                                                                                         friendRecommendationThumbnail.Height = 100;
                                                                                         friendRecommendationThumbnail.Margin = new Thickness(15);
                                                                                         friendRecommendationThumbnail.BeginInit();
-                                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recommendationGameName));
                                                                                         friendRecommendationThumbnail.EndInit();
                                                                                         friendRecommendation.Children.Add(friendRecommendationThumbnail);
                                                                                         Image friendRecommendationAvatar = new Image();
@@ -8764,7 +8764,7 @@ namespace GamaManager
                                                                                         friendRecommendationAvatar.Height = 40;
                                                                                         friendRecommendationAvatar.Margin = new Thickness(15, 0, 15, 0);
                                                                                         friendRecommendationAvatar.BeginInit();
-                                                                                        friendRecommendationAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                                        friendRecommendationAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + recommendationUserId));
                                                                                         friendRecommendationAvatar.EndInit();
                                                                                         friendRecommendation.Children.Add(friendRecommendationAvatar);
                                                                                         ProgressBar friendRecommendationHoursBar = new ProgressBar();
@@ -8826,7 +8826,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -8854,7 +8854,7 @@ namespace GamaManager
                                 string localFriendId = friendRecord.friend;
                                 friendsIds.Add(localFriendId);
                             }
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -8889,7 +8889,7 @@ namespace GamaManager
                                             string recommendationDesc = recommendation.desc;
                                             string recommendationGameId = recommendation.game;
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + recommendationUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -8906,7 +8906,7 @@ namespace GamaManager
                                                         User user = myNestedObj.user;
                                                         string userName = user.name;
 
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -8942,7 +8942,7 @@ namespace GamaManager
                                                                         friendRecommendationThumbnail.Height = 100;
                                                                         friendRecommendationThumbnail.Margin = new Thickness(15);
                                                                         friendRecommendationThumbnail.BeginInit();
-                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recommendationGameName));
                                                                         friendRecommendationThumbnail.EndInit();
                                                                         friendRecommendation.Children.Add(friendRecommendationThumbnail);
                                                                         StackPanel friendRecommendationAside = new StackPanel();
@@ -8954,7 +8954,7 @@ namespace GamaManager
                                                                         friendRecommendationAsideHeaderAvatar.Height = 40;
                                                                         friendRecommendationAsideHeaderAvatar.Margin = new Thickness(15, 0, 15, 0);
                                                                         friendRecommendationAsideHeaderAvatar.BeginInit();
-                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + recommendationUserId));
                                                                         friendRecommendationAsideHeaderAvatar.EndInit();
                                                                         friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAvatar);
                                                                         StackPanel friendRecommendationAsideHeaderAside = new StackPanel();
@@ -9010,7 +9010,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9038,7 +9038,7 @@ namespace GamaManager
                                 string localFriendId = friendRecord.friend;
                                 friendsIds.Add(localFriendId);
                             }
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -9067,7 +9067,7 @@ namespace GamaManager
                                             string recommendationDesc = recommendation.desc;
                                             string recommendationGameId = recommendation.game;
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recommendationUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + recommendationUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -9084,7 +9084,7 @@ namespace GamaManager
                                                         User user = myNestedObj.user;
                                                         string userName = user.name;
 
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -9120,7 +9120,7 @@ namespace GamaManager
                                                                         friendRecommendationThumbnail.Height = 100;
                                                                         friendRecommendationThumbnail.Margin = new Thickness(15);
                                                                         friendRecommendationThumbnail.BeginInit();
-                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recommendationGameName));
+                                                                        friendRecommendationThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recommendationGameName));
                                                                         friendRecommendationThumbnail.EndInit();
                                                                         friendRecommendation.Children.Add(friendRecommendationThumbnail);
                                                                         StackPanel friendRecommendationAside = new StackPanel();
@@ -9132,7 +9132,7 @@ namespace GamaManager
                                                                         friendRecommendationAsideHeaderAvatar.Height = 40;
                                                                         friendRecommendationAsideHeaderAvatar.Margin = new Thickness(15, 0, 15, 0);
                                                                         friendRecommendationAsideHeaderAvatar.BeginInit();
-                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recommendationUserId));
+                                                                        friendRecommendationAsideHeaderAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + recommendationUserId));
                                                                         friendRecommendationAsideHeaderAvatar.EndInit();
                                                                         friendRecommendationAsideHeader.Children.Add(friendRecommendationAsideHeaderAvatar);
                                                                         StackPanel friendRecommendationAsideHeaderAside = new StackPanel();
@@ -9285,7 +9285,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9302,7 +9302,7 @@ namespace GamaManager
                             User user = myobj.user;
                             string userName = user.name;
                             gameRecommendationsAvatar.BeginInit();
-                            gameRecommendationsAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            gameRecommendationsAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
                             gameRecommendationsAvatar.EndInit();
                             gameRecommendationsUserNameLabel.Text = userName;
                             GetRecentRunRecommendationGames();
@@ -9333,7 +9333,7 @@ namespace GamaManager
             string rawProductsCount = productsCount.ToString();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9364,7 +9364,7 @@ namespace GamaManager
                             {
                                 string reviewId = myReview._id;
                                 string reviewGameId = myReview.game;
-                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 gamesWebRequest.Method = "GET";
                                 gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -9390,7 +9390,7 @@ namespace GamaManager
                                             if (isResultsFound)
                                             {
                                                 GameResponseInfo reviewGame = gameResults[0];
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/all");
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -9559,7 +9559,7 @@ namespace GamaManager
                 recentRunGameThumbnail.Height = 100;
                 recentRunGameThumbnail.Margin = new Thickness(15);
                 recentRunGameThumbnail.BeginInit();
-                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recentRunGameName));
                 recentRunGameThumbnail.EndInit();
                 recentRunGame.Children.Add(recentRunGameThumbnail);
                 StackPanel recentRunGameAside = new StackPanel();
@@ -9678,7 +9678,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -9693,7 +9693,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<GameSub> subs = myobj.subs;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -9738,7 +9738,7 @@ namespace GamaManager
                                             recentRunGameThumbnail.Height = 100;
                                             recentRunGameThumbnail.Margin = new Thickness(15);
                                             recentRunGameThumbnail.BeginInit();
-                                            recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                                            recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recentRunGameName));
                                             recentRunGameThumbnail.EndInit();
                                             recentRunGame.Children.Add(recentRunGameThumbnail);
                                             StackPanel recentRunGameAside = new StackPanel();
@@ -9798,7 +9798,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/subs/remove/?user=" + currentUserId + "&sub=" + id);
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/subs/remove/?user=" + currentUserId + "&sub=" + id);
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -9891,7 +9891,7 @@ namespace GamaManager
                     recentRunGameThumbnail.Height = 100;
                     recentRunGameThumbnail.Margin = new Thickness(15);
                     recentRunGameThumbnail.BeginInit();
-                    recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                    recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recentRunGameName));
                     recentRunGameThumbnail.EndInit();
                     recentRunGame.Children.Add(recentRunGameThumbnail);
                     StackPanel recentRunGameAside = new StackPanel();
@@ -10131,7 +10131,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10179,7 +10179,7 @@ namespace GamaManager
                                         carouselControlItemBodyThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                         carouselControlItemBodyThumbnail.ImageFailed += SetDefaultThumbnailHandler;
                                         carouselControlItemBodyThumbnail.BeginInit();
-                                        carouselControlItemBodyThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                        carouselControlItemBodyThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                         carouselControlItemBodyThumbnail.EndInit();
                                         carouselControlItemBody.Children.Add(carouselControlItemBodyThumbnail);
                                         StackPanel carouselControlItemBodyAside = new StackPanel();
@@ -10378,7 +10378,7 @@ namespace GamaManager
             bool isFilterDisabled = filter == @"all games";
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10434,7 +10434,7 @@ namespace GamaManager
                                         illustrationPhoto.Width = 50;
                                         illustrationPhoto.Height = 50;
                                         illustrationPhoto.BeginInit();
-                                        illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                        illustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + id));
                                         illustrationPhoto.EndInit();
                                         illustration.Children.Add(illustrationPhoto);
                                         TextBlock illustrationDescLabel = new TextBlock();
@@ -10513,7 +10513,7 @@ namespace GamaManager
             bool isFilterDisabled = filter == @"all games";
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10528,7 +10528,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<ScreenShot> totalScreenShots = myobj.screenShots;
-                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/favorites/all");
                             screenShotFavoriteRelationsWebRequest.Method = "GET";
                             screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
@@ -10588,7 +10588,7 @@ namespace GamaManager
                                                 screenShotPhoto.Width = 50;
                                                 screenShotPhoto.Height = 50;
                                                 screenShotPhoto.BeginInit();
-                                                screenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                screenShotPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id));
                                                 screenShotPhoto.EndInit();
                                                 screenShot.Children.Add(screenShotPhoto);
                                                 TextBlock screenShotDescLabel = new TextBlock();
@@ -10646,7 +10646,7 @@ namespace GamaManager
             bool isFilterDisabled = filter == @"all games";
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10661,7 +10661,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<Illustration> totalIllustrations = myobj.illustrations;
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/favorites/all");
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
@@ -10725,7 +10725,7 @@ namespace GamaManager
                                                 illustrationPhoto.Width = 50;
                                                 illustrationPhoto.Height = 50;
                                                 illustrationPhoto.BeginInit();
-                                                illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                illustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + id));
                                                 illustrationPhoto.EndInit();
                                                 illustration.Children.Add(illustrationPhoto);
                                                 TextBlock illustrationDescLabel = new TextBlock();
@@ -10788,7 +10788,7 @@ namespace GamaManager
             bool isFilterDisabled = filter == @"all games";
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10802,7 +10802,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/favorites/all");
                             manualFavoriteRelationsWebRequest.Method = "GET";
                             manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
@@ -10867,7 +10867,7 @@ namespace GamaManager
                                                 manualPhoto.Width = 50;
                                                 manualPhoto.Height = 50;
                                                 manualPhoto.BeginInit();
-                                                manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                manualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + id));
                                                 manualPhoto.EndInit();
                                                 manual.Children.Add(manualPhoto);
                                                 TextBlock manualDescLabel = new TextBlock();
@@ -10924,7 +10924,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -10990,7 +10990,7 @@ namespace GamaManager
                                         manualPhoto.Width = 50;
                                         manualPhoto.Height = 50;
                                         manualPhoto.BeginInit();
-                                        manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                        manualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + id));
                                         manualPhoto.EndInit();
                                         manual.Children.Add(manualPhoto);
                                         TextBlock manualDescLabel = new TextBlock();
@@ -11030,7 +11030,7 @@ namespace GamaManager
             experiments.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/experiments/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/experiments/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -11059,7 +11059,7 @@ namespace GamaManager
                                 experimentPhoto.Width = 500;
                                 experimentPhoto.Height = 300;
                                 experimentPhoto.BeginInit();
-                                experimentPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/experiment/photo/?id=" + id));
+                                experimentPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/experiment/photo/?id=" + id));
                                 experimentPhoto.EndInit();
                                 experiment.Children.Add(experimentPhoto);
                                 TextBlock experimentTitleLabel = new TextBlock();
@@ -11102,7 +11102,7 @@ namespace GamaManager
             string wordPath = appFolder + "index.doc";
             WebClient wc = new WebClient();
             wc.Headers.Add("User-Agent: Other");   //that is the simple line!
-            wc.DownloadFileAsync(new Uri(@"http://localhost:4000/api/experiment/document/?id=" + experimentId), wordPath);
+            wc.DownloadFileAsync(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/experiment/document/?id=" + experimentId), wordPath);
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
         }
 
@@ -11239,7 +11239,7 @@ namespace GamaManager
                 recentRunGameThumbnail.Height = 35;
                 recentRunGameThumbnail.Margin = new Thickness(15, 5, 15, 5);
                 recentRunGameThumbnail.BeginInit();
-                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + recentRunGameName));
+                recentRunGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + recentRunGameName));
                 recentRunGameThumbnail.EndInit();
                 recentRunGame.Children.Add(recentRunGameThumbnail);
                 StackPanel recentRunGameAside = new StackPanel();
@@ -11281,7 +11281,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -11328,7 +11328,7 @@ namespace GamaManager
                                     bool isForAll = visibility == "Для всех";
                                     bool isOnlyFriends = visibility == "Только для друзей";
 
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -11361,7 +11361,7 @@ namespace GamaManager
                                                 if (isAddReview)
                                                 {
 
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -11389,7 +11389,7 @@ namespace GamaManager
 
                                                                     communityItemsCursor++;
 
-                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/all");
                                                                     innerNestedWebRequest.Method = "GET";
                                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                     using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -11549,7 +11549,7 @@ namespace GamaManager
             mainReviewComments.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -11575,7 +11575,7 @@ namespace GamaManager
                             string visibility = review.visibility;
                             bool isFreeProduct = review.isFreeProduct;
                             string rawDate = date.ToLongDateString();
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -11600,7 +11600,7 @@ namespace GamaManager
                                         bool isResultsFound = countResults >= 1;
                                         if (isResultsFound)
                                         {
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -11621,13 +11621,13 @@ namespace GamaManager
                                                         mainReviewGameHoursLabel.Text = mainReviewGameHoursLabelContent;
                                                         mainReviewUserNameLabel.Text = userName;
                                                         mainReviewUserAvatar.BeginInit();
-                                                        mainReviewUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                        mainReviewUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                                         mainReviewUserAvatar.EndInit();
                                                         GameResponseInfo foundedGame = gameResults[0];
                                                         string foundedGameName = foundedGame.name;
                                                         Debugger.Log(0, "debug", Environment.NewLine + "foundedGameName: " + foundedGameName + Environment.NewLine);
                                                         mainReviewGameThumbnail.BeginInit();
-                                                        // mainReviewGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + foundedGameName));
+                                                        // mainReviewGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + foundedGameName));
                                                         mainReviewGameThumbnail.Source = new BitmapImage(new Uri(@"https://cdn3.iconfinder.com/data/icons/solid-locations-icon-set/64/Games_2-256.png"));
                                                         mainReviewGameThumbnail.EndInit();
                                                         mainReviewGameLabel.Text = foundedGameName;
@@ -11647,7 +11647,7 @@ namespace GamaManager
                                                             mainReviewEnabledCommentsPanel.Visibility = visible;
                                                             mainReviewSendCommentPanel.Visibility = visible;
 
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/all");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -11676,7 +11676,7 @@ namespace GamaManager
                                                                         foreach (ReviewComment comment in currentReviewComments)
                                                                         {
                                                                             string commentUserId = comment.user;
-                                                                            HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                            HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + commentUserId);
                                                                             userWebRequest.Method = "GET";
                                                                             userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                             using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -11703,7 +11703,7 @@ namespace GamaManager
                                                                                         mainReviewCommentUserAvatar.Width = 40;
                                                                                         mainReviewCommentUserAvatar.Height = 40;
                                                                                         mainReviewCommentUserAvatar.BeginInit();
-                                                                                        mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                        mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + commentUserId));
                                                                                         mainReviewCommentUserAvatar.EndInit();
                                                                                         mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
                                                                                         StackPanel mainReviewCommentAside = new StackPanel();
@@ -11788,7 +11788,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -11826,7 +11826,7 @@ namespace GamaManager
                                     string id = totalCommunityScreenShotsItem._id;
                                     string userId = totalCommunityScreenShotsItem.user;
 
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -11841,7 +11841,7 @@ namespace GamaManager
                                             if (isOkStatus)
                                             {
 
-                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                 nestedWebRequest.Method = "GET";
                                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -11872,7 +11872,7 @@ namespace GamaManager
                                                                 communityItemsCursor++;
                                                                 GameResponseInfo screenShotGame = results[0];
 
-                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/all");
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/comments/all");
                                                                 innerNestedWebRequest.Method = "GET";
                                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -11914,7 +11914,7 @@ namespace GamaManager
                                                                             communityScreenShotPhoto.Width = 500;
                                                                             communityScreenShotPhoto.Height = 425;
                                                                             communityScreenShotPhoto.BeginInit();
-                                                                            communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                                            communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id));
                                                                             communityScreenShotPhoto.EndInit();
                                                                             communityScreenShot.Children.Add(communityScreenShotPhoto);
                                                                             DockPanel communityScreenShotFooter = new DockPanel();
@@ -12056,7 +12056,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 25;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -12072,7 +12072,7 @@ namespace GamaManager
                         {
                             ScreenShot communityScreenShot = myobj.screenShot;
                             string userId = communityScreenShot.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + userId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -12090,7 +12090,7 @@ namespace GamaManager
                                         User user = myInnerObj.user;
                                         string gameId = communityScreenShot.game;
 
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -12116,7 +12116,7 @@ namespace GamaManager
                                                     if (isHaveResults)
                                                     {
                                                         GameResponseInfo screenShotGame = results[0];
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/all");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/comments/all");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -12147,7 +12147,7 @@ namespace GamaManager
                                                                     string rawCountLikes = likes.ToString();
 
                                                                     mainCommunityScreenShotPhoto.BeginInit();
-                                                                    mainCommunityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                                    mainCommunityScreenShotPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id));
                                                                     mainCommunityScreenShotPhoto.EndInit();
 
                                                                     string mainCommunityScreenShotCommentsLabelContent = "Просмотреть описание и комментарии (" + rawCountComments + ")";
@@ -12172,7 +12172,7 @@ namespace GamaManager
                                                                     foreach (CommunityScreenShotComment comment in currentCommunityScreenShotComments)
                                                                     {
                                                                         string commentUserId = comment.user;
-                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + commentUserId);
                                                                         userWebRequest.Method = "GET";
                                                                         userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -12199,7 +12199,7 @@ namespace GamaManager
                                                                                     mainReviewCommentUserAvatar.Width = 40;
                                                                                     mainReviewCommentUserAvatar.Height = 40;
                                                                                     mainReviewCommentUserAvatar.BeginInit();
-                                                                                    mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                    mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + commentUserId));
                                                                                     mainReviewCommentUserAvatar.EndInit();
                                                                                     mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
                                                                                     StackPanel mainReviewCommentAside = new StackPanel();
@@ -12227,7 +12227,7 @@ namespace GamaManager
                                                                     }
 
                                                                     mainCommunityScreenShotGameThumbnail.BeginInit();
-                                                                    mainCommunityScreenShotGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + screenShotGameName));
+                                                                    mainCommunityScreenShotGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + screenShotGameName));
                                                                     mainCommunityScreenShotGameThumbnail.EndInit();
 
                                                                 }
@@ -12277,7 +12277,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -12299,7 +12299,7 @@ namespace GamaManager
                             {
                                 string id = totalIllustrationsItem._id;
                                 string userId = totalIllustrationsItem.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -12313,7 +12313,7 @@ namespace GamaManager
                                         isOkStatus = status == "OK";
                                         if (isOkStatus)
                                         {
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -12340,7 +12340,7 @@ namespace GamaManager
                                                         if (isHaveResults)
                                                         {
                                                             GameResponseInfo illustrationGame = results[0];
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/comments/all");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/comments/all");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -12354,7 +12354,7 @@ namespace GamaManager
                                                                     isOkStatus = status == "OK";
                                                                     if (isOkStatus)
                                                                     {
-                                                                        HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                        HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                                                         friendWebRequest.Method = "GET";
                                                                         friendWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse friendWebResponse = (HttpWebResponse)friendWebRequest.GetResponse())
@@ -12421,7 +12421,7 @@ namespace GamaManager
                                                                                         illustrationPhoto.Width = 500;
                                                                                         illustrationPhoto.Height = 425;
                                                                                         illustrationPhoto.BeginInit();
-                                                                                        illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                                                        illustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + id));
                                                                                         illustrationPhoto.EndInit();
                                                                                         illustration.Children.Add(illustrationPhoto);
                                                                                         TextBlock illustrationDescLabel = new TextBlock();
@@ -12530,7 +12530,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -12552,7 +12552,7 @@ namespace GamaManager
                             foreach (Manual totalManualsItem in totalManuals)
                             {
                                 string gameId = totalManualsItem.game;
-                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 nestedWebRequest.Method = "GET";
                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -12577,7 +12577,7 @@ namespace GamaManager
                                             bool isHaveResults = countResults >= 1;
                                             if (isHaveResults)
                                             {
-                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/all");
+                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/comments/all");
                                                 innerNestedWebRequest.Method = "GET";
                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -12626,7 +12626,7 @@ namespace GamaManager
                                                             manualPhoto.Width = 50;
                                                             manualPhoto.Height = 50;
                                                             manualPhoto.BeginInit();
-                                                            manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                            manualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + id));
                                                             manualPhoto.EndInit();
                                                             manualPhotoWrap.Children.Add(manualPhoto);
                                                             manual.Children.Add(manualPhotoWrap);
@@ -12712,7 +12712,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -12734,7 +12734,7 @@ namespace GamaManager
                             {
                                 string id = totalCommunityScreenShotsItem._id;
                                 string userId = totalCommunityScreenShotsItem.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -12748,7 +12748,7 @@ namespace GamaManager
                                         isOkStatus = status == "OK";
                                         if (isOkStatus)
                                         {
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -12775,7 +12775,7 @@ namespace GamaManager
                                                         if (isHaveResults)
                                                         {
                                                             GameResponseInfo screenShotGame = results[0];
-                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/all");
+                                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/comments/all");
                                                             innerNestedWebRequest.Method = "GET";
                                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -12813,7 +12813,7 @@ namespace GamaManager
                                                                         communityScreenShotPhoto.Width = 500;
                                                                         communityScreenShotPhoto.Height = 425;
                                                                         communityScreenShotPhoto.BeginInit();
-                                                                        communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                                        communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id));
                                                                         communityScreenShotPhoto.EndInit();
                                                                         communityScreenShot.Children.Add(communityScreenShotPhoto);
                                                                         DockPanel communityScreenShotFooter = new DockPanel();
@@ -12911,7 +12911,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -12942,7 +12942,7 @@ namespace GamaManager
                                 bool isForAll = visibility == "Для всех";
                                 bool isOnlyFriends = visibility == "Только для друзей";
 
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -12975,7 +12975,7 @@ namespace GamaManager
                                             if (isAddReview)
                                             {
 
-                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                 nestedWebRequest.Method = "GET";
                                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -13001,7 +13001,7 @@ namespace GamaManager
                                                             if (isHaveResults)
                                                             {
 
-                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/all");
                                                                 innerNestedWebRequest.Method = "GET";
                                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -13243,7 +13243,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -13280,7 +13280,7 @@ namespace GamaManager
                                     string id = totalIllustrationsItem._id;
                                     string userId = totalIllustrationsItem.user;
 
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -13295,7 +13295,7 @@ namespace GamaManager
                                             if (isOkStatus)
                                             {
                                                 
-                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                 nestedWebRequest.Method = "GET";
                                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -13326,7 +13326,7 @@ namespace GamaManager
 
                                                                 GameResponseInfo illustrationGame = results[0];
 
-                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/comments/all");
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/comments/all");
                                                                 innerNestedWebRequest.Method = "GET";
                                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -13341,7 +13341,7 @@ namespace GamaManager
                                                                         if (isOkStatus)
                                                                         {
 
-                                                                            HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                            HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                                                             friendWebRequest.Method = "GET";
                                                                             friendWebRequest.UserAgent = ".NET Framework Test Client";
                                                                             using (HttpWebResponse friendWebResponse = (HttpWebResponse)friendWebRequest.GetResponse())
@@ -13416,7 +13416,7 @@ namespace GamaManager
                                                                                             illustrationPhoto.Width = 500;
                                                                                             illustrationPhoto.Height = 425;
                                                                                             illustrationPhoto.BeginInit();
-                                                                                            illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                                                            illustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + id));
                                                                                             illustrationPhoto.EndInit();
                                                                                             illustration.Children.Add(illustrationPhoto);
                                                                                             TextBlock illustrationDescLabel = new TextBlock();
@@ -13566,7 +13566,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -13602,7 +13602,7 @@ namespace GamaManager
                                 {
                                     string gameId = totalManualsItem.game;
 
-                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                     nestedWebRequest.Method = "GET";
                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -13628,7 +13628,7 @@ namespace GamaManager
                                                 if (isHaveResults)
                                                 {
                                                     communityItemsCursor++;
-                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/all");
+                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/comments/all");
                                                     innerNestedWebRequest.Method = "GET";
                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -13680,7 +13680,7 @@ namespace GamaManager
                                                                 manualPhoto.Width = 50;
                                                                 manualPhoto.Height = 50;
                                                                 manualPhoto.BeginInit();
-                                                                manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                                manualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + id));
                                                                 manualPhoto.EndInit();
                                                                 manualPhotoWrap.Children.Add(manualPhoto);
                                                                 manual.Children.Add(manualPhotoWrap);
@@ -13795,7 +13795,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 22;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/get/?id=" + manualId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/get/?id=" + manualId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -13812,7 +13812,7 @@ namespace GamaManager
                             Manual manual = myobj.manual;
                             string userId = manual.user;
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + userId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -13838,7 +13838,7 @@ namespace GamaManager
                                         DateTime date = manual.date;
                                         int favorites = manual.favorites;
                                         mainManualPhoto.BeginInit();
-                                        mainManualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + manualId));
+                                        mainManualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + manualId));
                                         mainManualPhoto.EndInit();
                                         mainManualTitleLabel.Text = title;
                                         mainManualDescLabel.Text = desc;
@@ -13850,7 +13850,7 @@ namespace GamaManager
                                         string mainManualFeedbackLabelContent = "Оценок: " + rawTotalFeedback;
                                         mainManualFeedbackLabel.Text = mainManualFeedbackLabelContent;
                                         mainManualAuthorAvatar.BeginInit();
-                                        mainManualAuthorAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                        mainManualAuthorAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                         mainManualAuthorAvatar.EndInit();
                                         mainManualAuthorNameLabel.Text = userName;
                                         mainManualAuthorStatusLabel.Text = userStatus;
@@ -13878,7 +13878,7 @@ namespace GamaManager
                                         string mainManualFavoritesLabelContent = rawFavorites + " добавили в избранное";
                                         mainManualFavoritesLabel.Text = mainManualFavoritesLabelContent;
 
-                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/all");
+                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/comments/all");
                                         innerNestedWebRequest.Method = "GET";
                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -13893,7 +13893,7 @@ namespace GamaManager
                                                 if (isOkStatus)
                                                 {
 
-                                                    HttpWebRequest getVisitsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/visits/all");
+                                                    HttpWebRequest getVisitsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/visits/all");
                                                     getVisitsWebRequest.Method = "GET";
                                                     getVisitsWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse getVisitsWebResponse = (HttpWebResponse)getVisitsWebRequest.GetResponse())
@@ -13908,7 +13908,7 @@ namespace GamaManager
                                                             if (isOkStatus)
                                                             {
 
-                                                                HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                                                                HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/favorites/all");
                                                                 manualFavoriteRelationsWebRequest.Method = "GET";
                                                                 manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
@@ -13943,7 +13943,7 @@ namespace GamaManager
                                                                             if (isAddVisit)
                                                                             {
                                                                                 countCurrentManualVisits++;
-                                                                                HttpWebRequest addVisitWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/visits/add/?user=" + currentUserId + @"&id=" + manualId);
+                                                                                HttpWebRequest addVisitWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/visits/add/?user=" + currentUserId + @"&id=" + manualId);
                                                                                 addVisitWebRequest.Method = "GET";
                                                                                 addVisitWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                 using (HttpWebResponse addVisitWebResponse = (HttpWebResponse)addVisitWebRequest.GetResponse())
@@ -13978,7 +13978,7 @@ namespace GamaManager
                                                                             foreach (ManualComment comment in currentManualComments)
                                                                             {
                                                                                 string commentUserId = comment.user;
-                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + commentUserId);
                                                                                 userWebRequest.Method = "GET";
                                                                                 userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                 using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -14005,7 +14005,7 @@ namespace GamaManager
                                                                                             mainReviewCommentUserAvatar.Width = 40;
                                                                                             mainReviewCommentUserAvatar.Height = 40;
                                                                                             mainReviewCommentUserAvatar.BeginInit();
-                                                                                            mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                            mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + commentUserId));
                                                                                             mainReviewCommentUserAvatar.EndInit();
                                                                                             mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
                                                                                             StackPanel mainReviewCommentAside = new StackPanel();
@@ -14104,7 +14104,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 24;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/get/?id=" + illustrationId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/get/?id=" + illustrationId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14121,7 +14121,7 @@ namespace GamaManager
                             Illustration illustration = myobj.illustration;
                             string userId = illustration.user;
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + userId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -14138,7 +14138,7 @@ namespace GamaManager
                                         User user = myInnerObj.user;
                                         string gameId = illustration.game;
 
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -14164,7 +14164,7 @@ namespace GamaManager
                                                     if (isHaveResults)
                                                     {
                                                         GameResponseInfo illustrationGame = results[0];
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/comments/all");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/comments/all");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -14189,7 +14189,7 @@ namespace GamaManager
                                                                     int likes = illustration.likes;
 
                                                                     mainIllustrationPhoto.BeginInit();
-                                                                    mainIllustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + illustrationId));
+                                                                    mainIllustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + illustrationId));
                                                                     mainIllustrationPhoto.EndInit();
                                                                     mainIllustrationTitleLabel.Text = title;
                                                                     mainIllustrationDescLabel.Text = desc;
@@ -14207,13 +14207,13 @@ namespace GamaManager
                                                                     string rawCountComments = countComments.ToString();
 
                                                                     mainIllustrationGameThumbnail.BeginInit();
-                                                                    mainIllustrationGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + illustrationGameName));
+                                                                    mainIllustrationGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + illustrationGameName));
                                                                     mainIllustrationGameThumbnail.EndInit();
 
                                                                     foreach (IllustrationComment comment in currentIllustrationComments)
                                                                     {
                                                                         string commentUserId = comment.user;
-                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + commentUserId);
+                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + commentUserId);
                                                                         userWebRequest.Method = "GET";
                                                                         userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -14240,7 +14240,7 @@ namespace GamaManager
                                                                                     mainReviewCommentUserAvatar.Width = 40;
                                                                                     mainReviewCommentUserAvatar.Height = 40;
                                                                                     mainReviewCommentUserAvatar.BeginInit();
-                                                                                    mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + commentUserId));
+                                                                                    mainReviewCommentUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + commentUserId));
                                                                                     mainReviewCommentUserAvatar.EndInit();
                                                                                     mainReviewComment.Children.Add(mainReviewCommentUserAvatar);
                                                                                     StackPanel mainReviewCommentAside = new StackPanel();
@@ -14315,7 +14315,7 @@ namespace GamaManager
             groupRequests.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/requests/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14343,7 +14343,7 @@ namespace GamaManager
                             foreach (GroupRequest myRequest in myRequests)
                             {
                                 string groupId = myRequest.group;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -14377,7 +14377,7 @@ namespace GamaManager
                                             groupRequestBodySenderAvatar.Width = 100;
                                             groupRequestBodySenderAvatar.Height = 100;
                                             groupRequestBodySenderAvatar.BeginInit();
-                                            Uri groupRequestBodySenderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId);
+                                            Uri groupRequestBodySenderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId);
                                             BitmapImage groupRequestBodySenderAvatarImg = new BitmapImage(groupRequestBodySenderAvatarUri);
                                             groupRequestBodySenderAvatar.Source = groupRequestBodySenderAvatarImg;
                                             groupRequestBodySenderAvatar.EndInit();
@@ -14456,7 +14456,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14470,7 +14470,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14519,7 +14519,7 @@ namespace GamaManager
             try
             {
                 string friendId = cachedUserProfileId;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -14712,7 +14712,7 @@ namespace GamaManager
                         }
                         else if (isNotCustomGame)
                         {
-                            coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                            coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                         }
                         else
                         {
@@ -14908,7 +14908,7 @@ namespace GamaManager
                         }
                         else
                         {
-                            coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                            coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                         }
                         gameCollectionItem.Source = new BitmapImage(coverUri);
                         gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
@@ -15577,7 +15577,7 @@ namespace GamaManager
             discussionComments.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -15592,7 +15592,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -15628,7 +15628,7 @@ namespace GamaManager
                                         foreach (ForumTopicMsg myTopicMsg in myTopicMsgs)
                                         {
                                             string msgUserId = myTopicMsg.user;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + msgUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + msgUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -15655,7 +15655,7 @@ namespace GamaManager
                                                         msgHeaderUserAvatar.Width = 25;
                                                         msgHeaderUserAvatar.Height = 25;
                                                         msgHeaderUserAvatar.BeginInit();
-                                                        msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                                                        msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
                                                         msgHeaderUserAvatar.EndInit();
                                                         msgHeader.Children.Add(msgHeaderUserAvatar);
                                                         TextBlock msgHeaderUserNameLabel = new TextBlock();
@@ -15719,7 +15719,7 @@ namespace GamaManager
             string ignoreCaseKeywords = keywords.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -15793,7 +15793,7 @@ namespace GamaManager
                                     forumLastMsgDateLabel.Text = "00/00/00";
 
                                     List<ForumTopicMsg> totalForumMsgs = new List<ForumTopicMsg>();
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -15811,7 +15811,7 @@ namespace GamaManager
                                                 foreach (Topic topic in topics)
                                                 {
                                                     string topicId = topic._id;
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -15874,7 +15874,7 @@ namespace GamaManager
                                     TextBlock forumDiscussionsCountLabel = new TextBlock();
                                     forumDiscussionsCountLabel.Foreground = System.Windows.Media.Brushes.White;
                                     forumDiscussionsCountLabel.Margin = new Thickness(10, 15, 10, 15);
-                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + forumId);
+                                    innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + forumId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -15937,7 +15937,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 8;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -15955,7 +15955,7 @@ namespace GamaManager
                             string userId = topic.user;
                             string title = topic.title;
                             activeTopicNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -16032,7 +16032,7 @@ namespace GamaManager
                                                     msgHeaderUserAvatar.Height = 25;
                                                     msgHeaderUserAvatar.BeginInit();
 
-                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + msgUserId));
+                                                    msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + msgUserId));
                                                     // msgHeaderUserAvatar.Source = new BitmapImage(new Uri(@"https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
 
                                                     msgHeaderUserAvatar.EndInit();
@@ -16069,7 +16069,7 @@ namespace GamaManager
                                                     forumTopicMsg.Children.Add(msgFooter);
                                                     forumTopicMsgs.Children.Add(forumTopicMsg);
 
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + msgUserId);
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + msgUserId);
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -16152,7 +16152,7 @@ namespace GamaManager
                 this.Close();
             }
 
-            addDiscussionMsgUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+            addDiscussionMsgUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
 
         }
 
@@ -16178,7 +16178,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16195,7 +16195,7 @@ namespace GamaManager
                             Forum currentForum = myobj.forum;
                             string title = currentForum.title;
                             activeForumNameLabel.Text = title;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topics/get/?id=" + id);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topics/get/?id=" + id);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -16209,7 +16209,7 @@ namespace GamaManager
                                     isOkStatus = status == "OK";
                                     if (isOkStatus)
                                     {
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/visits/add/?id=" + id + @"&user=" + currentUserId);
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/visits/add/?id=" + id + @"&user=" + currentUserId);
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -16267,7 +16267,7 @@ namespace GamaManager
                                                         topicAuthorLabel.Foreground = System.Windows.Media.Brushes.SkyBlue;
                                                         topicAuthorLabel.Text = "Пользователь";
 
-                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + userId);
+                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + userId);
                                                         userWebRequest.Method = "GET";
                                                         userWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -16324,7 +16324,7 @@ namespace GamaManager
                                                         forumMsgsCountLabel.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                                                         forumMsgsCountLabel.Margin = new Thickness(10, 0, 10, 0);
                                                         forumMsgsCountLabel.Foreground = System.Windows.Media.Brushes.White;
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forum/topic/msgs/get/?topic=" + topicId);
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forum/topic/msgs/get/?topic=" + topicId);
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -16448,7 +16448,7 @@ namespace GamaManager
                 string currentGameInstallDate = currentGame.installDate;
                 try
                 {
-                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     innerWebRequest.Method = "GET";
                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -16491,7 +16491,7 @@ namespace GamaManager
                                         int lastRowIndex = rowsCount - 1;
                                         Image downloadImg = new Image();
                                         downloadImg.BeginInit();
-                                        Uri source = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                                        Uri source = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                                         downloadImg.Source = new BitmapImage();
                                         downloadImg.EndInit();
                                         downloadImg.Margin = new Thickness(15, 0, 15, 0);
@@ -16544,7 +16544,7 @@ namespace GamaManager
             friendsListLabel.Header = friendsListLabelHeaderContent;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16568,7 +16568,7 @@ namespace GamaManager
                             {
                                 string friendId = friend.friend;
                                 bool isUserOnline = false;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + friendId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + friendId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -16614,7 +16614,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16737,7 +16737,7 @@ namespace GamaManager
             string rawYear = year.ToString();
             string date = rawDay + " " + rawMonthLabel + " " + rawYear;
             statsHeaderLabel.Text = "СТАТИСТИКА Office Game Manager И ИГРОВАЯ СТАТИСТИКА: " + date + " В " + time;
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/get");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/get");
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16793,7 +16793,7 @@ namespace GamaManager
 
             try
             {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16873,14 +16873,14 @@ namespace GamaManager
         {
 
             editProfileAvatarImg.BeginInit();
-            editProfileAvatarImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+            editProfileAvatarImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
             editProfileAvatarImg.EndInit();
 
             JavaScriptSerializer js = new JavaScriptSerializer();
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -16923,7 +16923,7 @@ namespace GamaManager
                             }
                             userAboutBox.Text = currentUserAbout;
 
-                            userProfileEditAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            userProfileEditAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
 
                         }
                     }
@@ -16959,8 +16959,8 @@ namespace GamaManager
 
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -17081,7 +17081,7 @@ namespace GamaManager
                     gameStatsImg.Margin = new Thickness(10);
 
                     // gameStatsImg.Source = new BitmapImage(new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png"));
-                    gameStatsImg.Source = new BitmapImage(new Uri("http://localhost:4000/api/game/thumbnail/?name=" + myGameName));
+                    gameStatsImg.Source = new BitmapImage(new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + myGameName));
 
                     gameStats.Children.Add(gameStatsImg);
                     TextBlock gameStatsNameLabel = new TextBlock();
@@ -17169,7 +17169,7 @@ namespace GamaManager
             }
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -17184,7 +17184,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             User user = myobj.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -17199,7 +17199,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
 
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -17215,7 +17215,7 @@ namespace GamaManager
                                                 {
                                                     List<ScreenShot> totalCommunityScreenShots = myNestedObj.screenShots;
 
-                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                                                    HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/relations/all");
                                                     innerNestedWebRequest.Method = "GET";
                                                     innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -17231,7 +17231,7 @@ namespace GamaManager
                                                             {
                                                                 List<IconRelation> iconRelations = myInnerNestedObj.relations;
 
-                                                                HttpWebRequest iconWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all");
+                                                                HttpWebRequest iconWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/all");
                                                                 iconWebRequest.Method = "GET";
                                                                 iconWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse iconWebResponse = (HttpWebResponse)iconWebRequest.GetResponse())
@@ -17262,7 +17262,7 @@ namespace GamaManager
                                                                             string currentUserAbout = user.about;
                                                                             userProfileAboutLabel.Text = currentUserAbout;
                                                                             userProfileAvatar.BeginInit();
-                                                                            Uri avatar = new Uri(@"http://localhost:4000/api/user/avatar/?id=" + id);
+                                                                            Uri avatar = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + id);
                                                                             userProfileAvatar.Source = new BitmapImage(avatar);
                                                                             userProfileAvatar.EndInit();
                                                                             gamesSettings = user.gamesSettings;
@@ -17342,7 +17342,7 @@ namespace GamaManager
                                                                             foreach (Friend friendsIdsItem in friendsIds)
                                                                             {
                                                                                 string currentUserFriendId = friendsIdsItem.friend;
-                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserFriendId);
+                                                                                HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserFriendId);
                                                                                 userWebRequest.Method = "GET";
                                                                                 userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                 using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -17370,7 +17370,7 @@ namespace GamaManager
                                                                                             userProfileFriendAsideAvatar.Width = 40;
                                                                                             userProfileFriendAsideAvatar.Margin = new Thickness(15);
                                                                                             userProfileFriendAsideAvatar.BeginInit();
-                                                                                            userProfileFriendAsideAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserFriendId));
+                                                                                            userProfileFriendAsideAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserFriendId));
                                                                                             userProfileFriendAsideAvatar.EndInit();
                                                                                             userProfileFriendAside.Children.Add(userProfileFriendAsideAvatar);
                                                                                             StackPanel userProfileFriendAsideInfo = new StackPanel();
@@ -17557,7 +17557,7 @@ namespace GamaManager
             friendRequests.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -17585,7 +17585,7 @@ namespace GamaManager
                             foreach (FriendRequest myRequest in myRequests)
                             {
                                 string senderId = myRequest.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + senderId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -17619,7 +17619,7 @@ namespace GamaManager
                                             friendRequestBodySenderAvatar.Width = 100;
                                             friendRequestBodySenderAvatar.Height = 100;
                                             friendRequestBodySenderAvatar.BeginInit();
-                                            Uri friendRequestBodySenderAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + senderId);
+                                            Uri friendRequestBodySenderAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + senderId);
                                             BitmapImage friendRequestBodySenderAvatarImg = new BitmapImage(friendRequestBodySenderAvatarUri);
                                             friendRequestBodySenderAvatar.Source = friendRequestBodySenderAvatarImg;
                                             friendRequestBodySenderAvatar.EndInit();
@@ -17691,7 +17691,7 @@ namespace GamaManager
             System.Diagnostics.Debugger.Log(0, "debug", "userId: " + userId + Environment.NewLine);
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -17788,7 +17788,7 @@ namespace GamaManager
             int gamesListCursor = 0;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -17909,8 +17909,8 @@ namespace GamaManager
                                             newGame.Height = 35;
                                             string gamesListItemId = gamesListItem._id;
                                             Debugger.Log(0, "debug", Environment.NewLine + "gamesListItemId: " + gamesListItemId + Environment.NewLine);
-                                            string gamesListItemUrl = @"http://localhost:4000/api/game/distributive/?name=" + gamesListItemName;
-                                            string gamesListItemImage = @"http://localhost:4000/api/game/thumbnail/?name=" + gamesListItemName;
+                                            string gamesListItemUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gamesListItemName;
+                                            string gamesListItemImage = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + gamesListItemName;
                                             int gamesListItemPrice = gamesListItem.price;
                                             if (isYearlyDiscount)
                                             {
@@ -18160,8 +18160,8 @@ namespace GamaManager
                                         string firstGameName = firstGame.name;
                                         /*string firstGameUrl = firstGame.url;
                                         string firstGameImage = firstGame.image;*/
-                                        string firstGameUrl = @"http://localhost:4000/api/game/distributive/?name=" + firstGameName;
-                                        string firstGameImage = @"http://localhost:4000/api/game/thumbnail/?name=" + firstGameName;
+                                        string firstGameUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + firstGameName;
+                                        string firstGameImage = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + firstGameName;
                                         int firstGamePrice = firstGame.price;
                                         Debugger.Log(0, "debug", Environment.NewLine + "firstGameId: " + firstGameId + Environment.NewLine);
                                         firstGameData.Add("id", firstGameId);
@@ -18449,7 +18449,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest friendRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 friendRelationsWebRequest.Method = "GET";
                 friendRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse friendRelationsWebResponse = (HttpWebResponse)friendRelationsWebRequest.GetResponse())
@@ -18610,7 +18610,7 @@ namespace GamaManager
             }
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/increase/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/increase/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -18627,7 +18627,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/games/last/set/?id=" + currentUserId + @"&game=" + gameId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/games/last/set/?id=" + currentUserId + @"&game=" + gameId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -18642,7 +18642,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/add/?id=" + gameId + @"&user=" + currentUserId);
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/add/?id=" + gameId + @"&user=" + currentUserId);
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -18796,7 +18796,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/decrease/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/decrease/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -18838,8 +18838,8 @@ namespace GamaManager
             string gameName = ((string)(dataParts["name"]));
             /*string gameUrl = ((string)(dataParts["url"]));
             string gameImg = ((string)(dataParts["image"]));*/
-            string gameUrl = @"http://localhost:4000/api/game/distributive/?name=" + gameName; ;
-            string gameImg = @"http://localhost:4000/api/game/thumbnail/?name=" + gameName;
+            string gameUrl = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/distributive/?name=" + gameName; ;
+            string gameImg = @"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + gameName;
 
             Dialogs.DownloadGameDialog dialog = new Dialogs.DownloadGameDialog(currentUserId);
             dialog.DataContext = dataParts;
@@ -18934,7 +18934,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/likes/increase/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/likes/increase/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -18949,7 +18949,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -18977,7 +18977,7 @@ namespace GamaManager
                                         bool isRelationsNotExists = !isRelationsExists;
                                         if (isRelationsNotExists)
                                         {
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/add/?id=" + gameId + @"&user=" + currentUserId + @"&price=" + "0");
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/add/?id=" + gameId + @"&user=" + currentUserId + @"&price=" + "0");
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -19016,7 +19016,7 @@ namespace GamaManager
             if (isAddIconForInstalledGames)
             {
                 bool isAlreadyExists = false;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/relations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -19035,7 +19035,7 @@ namespace GamaManager
                             {
                                 string userId = relation.user;
                                 string iconId = relation.icon;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/get/?id=" + iconId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/get/?id=" + iconId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -19063,7 +19063,7 @@ namespace GamaManager
                             bool isResultsNotFound = sameIconsCount <= 0;
                             if (isResultsNotFound)
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all");
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/all");
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -19091,7 +19091,7 @@ namespace GamaManager
                                                 Icon result = results[0];
                                                 string resultId = result._id;
                                                 string desc = result.desc;
-                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/add/?id=" + resultId + @"&user=" + currentUserId);
+                                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/relations/add/?id=" + resultId + @"&user=" + currentUserId);
                                                 nestedWebRequest.Method = "GET";
                                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -19108,7 +19108,7 @@ namespace GamaManager
                                                             bool isNotificationsEnabled = currentNotifications.notificationsUpdateIcon;
                                                             if (isNotificationsEnabled)
                                                             {
-                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                                                                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                                                                 innerNestedWebRequest.Method = "GET";
                                                                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -19245,7 +19245,7 @@ namespace GamaManager
                 bool isFreeGame = gamePrice <= 0;
                 bool isGamePayed = false;
 
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -19301,7 +19301,7 @@ namespace GamaManager
             
             try
             {
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/all");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -19316,7 +19316,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<GameSession> sessions = myInnerObj.sessions;
-                            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -19383,7 +19383,7 @@ namespace GamaManager
                                         {
                                             string recentMyFriendSessionUserId = recentMyFriendSession.user;
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recentMyFriendSessionUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + recentMyFriendSessionUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -19408,7 +19408,7 @@ namespace GamaManager
                                                         myFriendAvatar.Width = 40;
                                                         myFriendAvatar.Height = 40;
                                                         myFriendAvatar.BeginInit();
-                                                        myFriendAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + recentMyFriendSessionUserId));
+                                                        myFriendAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + recentMyFriendSessionUserId));
                                                         myFriendAvatar.EndInit();
                                                         myFriend.Children.Add(myFriendAvatar);
                                                         StackPanel myFriendAside = new StackPanel();
@@ -19434,7 +19434,7 @@ namespace GamaManager
                                         {
                                             string beforeMyFriendSessionUserId = beforeMyFriendSession.user;
 
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + beforeMyFriendSessionUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + beforeMyFriendSessionUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -19459,7 +19459,7 @@ namespace GamaManager
                                                         myFriendAvatar.Width = 40;
                                                         myFriendAvatar.Height = 40;
                                                         myFriendAvatar.BeginInit();
-                                                        myFriendAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + beforeMyFriendSessionUserId));
+                                                        myFriendAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + beforeMyFriendSessionUserId));
                                                         myFriendAvatar.EndInit();
                                                         myFriend.Children.Add(myFriendAvatar);
                                                         StackPanel myFriendAside = new StackPanel();
@@ -19538,7 +19538,7 @@ namespace GamaManager
                                         List<CommunityContent> communityElements = new List<CommunityContent>();
                                         try
                                         {
-                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/all");
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/all");
                                             innerNestedWebRequest.Method = "GET";
                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -19566,7 +19566,7 @@ namespace GamaManager
                                                         {
                                                             string id = totalIllustrationsItem._id;
                                                             string userId = totalIllustrationsItem.user;
-                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                                             communityContentWebRequest.Method = "GET";
                                                             communityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse communityContentWebResponse = (HttpWebResponse)communityContentWebRequest.GetResponse())
@@ -19580,7 +19580,7 @@ namespace GamaManager
                                                                     isOkStatus = status == "OK";
                                                                     if (isOkStatus)
                                                                     {
-                                                                        HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                                        HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                                         innerCommunityContentWebRequest.Method = "GET";
                                                                         innerCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse innerCommunityContentWebResponse = (HttpWebResponse)innerCommunityContentWebRequest.GetResponse())
@@ -19607,7 +19607,7 @@ namespace GamaManager
                                                                                     if (isHaveResults)
                                                                                     {
                                                                                         GameResponseInfo illustrationGame = results[0];
-                                                                                        HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/comments/all");
+                                                                                        HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/comments/all");
                                                                                         nestedCommunityContentWebRequest.Method = "GET";
                                                                                         nestedCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                         using (HttpWebResponse nestedCommunityContentWebResponse = (HttpWebResponse)nestedCommunityContentWebRequest.GetResponse())
@@ -19621,7 +19621,7 @@ namespace GamaManager
                                                                                                 isOkStatus = status == "OK";
                                                                                                 if (isOkStatus)
                                                                                                 {
-                                                                                                    HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                                                                    HttpWebRequest friendWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                                                                                     friendWebRequest.Method = "GET";
                                                                                                     friendWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                                     using (HttpWebResponse friendWebResponse = (HttpWebResponse)friendWebRequest.GetResponse())
@@ -19688,7 +19688,7 @@ namespace GamaManager
                                                                                                                     illustrationPhoto.Width = 500;
                                                                                                                     illustrationPhoto.Height = 425;
                                                                                                                     illustrationPhoto.BeginInit();
-                                                                                                                    illustrationPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/illustration/photo/?id=" + id));
+                                                                                                                    illustrationPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/illustration/photo/?id=" + id));
                                                                                                                     illustrationPhoto.EndInit();
                                                                                                                     illustration.Children.Add(illustrationPhoto);
                                                                                                                     TextBlock illustrationDescLabel = new TextBlock();
@@ -19794,7 +19794,7 @@ namespace GamaManager
 
                                         try
                                         {
-                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/all");
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/all");
                                             innerNestedWebRequest.Method = "GET";
                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -19822,7 +19822,7 @@ namespace GamaManager
                                                         foreach (Manual totalManualsItem in totalManuals)
                                                         {
                                                             // string gameId = totalManualsItem.game;
-                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                             communityContentWebRequest.Method = "GET";
                                                             communityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse communityContentWebResponse = (HttpWebResponse)communityContentWebRequest.GetResponse())
@@ -19847,7 +19847,7 @@ namespace GamaManager
                                                                         bool isHaveResults = countResults >= 1;
                                                                         if (isHaveResults)
                                                                         {
-                                                                            HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/all");
+                                                                            HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/comments/all");
                                                                             innerCommunityContentWebRequest.Method = "GET";
                                                                             innerCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                             using (HttpWebResponse innerCommunityContentWebResponse = (HttpWebResponse)innerCommunityContentWebRequest.GetResponse())
@@ -19896,7 +19896,7 @@ namespace GamaManager
                                                                                         manualPhoto.Width = 50;
                                                                                         manualPhoto.Height = 50;
                                                                                         manualPhoto.BeginInit();
-                                                                                        manualPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/manual/photo/?id=" + id));
+                                                                                        manualPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/manual/photo/?id=" + id));
                                                                                         manualPhoto.EndInit();
                                                                                         manualPhotoWrap.Children.Add(manualPhoto);
                                                                                         manual.Children.Add(manualPhotoWrap);
@@ -19982,7 +19982,7 @@ namespace GamaManager
 
                                         try
                                         {
-                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                                             innerNestedWebRequest.Method = "GET";
                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -20010,7 +20010,7 @@ namespace GamaManager
                                                         {
                                                             string id = totalCommunityScreenShotsItem._id;
                                                             string userId = totalCommunityScreenShotsItem.user;
-                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                                             communityContentWebRequest.Method = "GET";
                                                             communityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse communityContentWebResponse = (HttpWebResponse)communityContentWebRequest.GetResponse())
@@ -20024,7 +20024,7 @@ namespace GamaManager
                                                                     isOkStatus = status == "OK";
                                                                     if (isOkStatus)
                                                                     {
-                                                                        HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                                        HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                                         innerCommunityContentWebRequest.Method = "GET";
                                                                         innerCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                         using (HttpWebResponse innerCommunityContentWebResponse = (HttpWebResponse)innerCommunityContentWebRequest.GetResponse())
@@ -20051,7 +20051,7 @@ namespace GamaManager
                                                                                     if (isHaveResults)
                                                                                     {
                                                                                         GameResponseInfo screenShotGame = results[0];
-                                                                                        HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/all");
+                                                                                        HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/comments/all");
                                                                                         nestedCommunityContentWebRequest.Method = "GET";
                                                                                         nestedCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                         HttpWebResponse nestedCommunityContentWebResponse = (HttpWebResponse)nestedCommunityContentWebRequest.GetResponse();
@@ -20089,7 +20089,7 @@ namespace GamaManager
                                                                                                     communityScreenShotPhoto.Width = 500;
                                                                                                     communityScreenShotPhoto.Height = 425;
                                                                                                     communityScreenShotPhoto.BeginInit();
-                                                                                                    communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id));
+                                                                                                    communityScreenShotPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id));
                                                                                                     communityScreenShotPhoto.EndInit();
                                                                                                     communityScreenShot.Children.Add(communityScreenShotPhoto);
                                                                                                     DockPanel communityScreenShotFooter = new DockPanel();
@@ -20187,7 +20187,7 @@ namespace GamaManager
 
                                         try
                                         {
-                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/all");
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/all");
                                             innerNestedWebRequest.Method = "GET";
                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -20223,7 +20223,7 @@ namespace GamaManager
                                                             string visibility = totalReviewsItem.visibility;
                                                             bool isForAll = visibility == "Для всех";
                                                             bool isOnlyFriends = visibility == "Только для друзей";
-                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                            HttpWebRequest communityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                                             communityContentWebRequest.Method = "GET";
                                                             communityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                             using (HttpWebResponse communityContentWebResponse = (HttpWebResponse)communityContentWebRequest.GetResponse())
@@ -20255,7 +20255,7 @@ namespace GamaManager
                                                                         bool isAddReview = isForAll || isHaveAccess || isAuthor;
                                                                         if (isAddReview)
                                                                         {
-                                                                            HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                                                            HttpWebRequest innerCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                                                             innerCommunityContentWebRequest.Method = "GET";
                                                                             innerCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                             using (HttpWebResponse innerCommunityContentWebResponse = (HttpWebResponse)innerCommunityContentWebRequest.GetResponse())
@@ -20280,7 +20280,7 @@ namespace GamaManager
                                                                                         bool isHaveResults = countResults >= 1;
                                                                                         if (isHaveResults)
                                                                                         {
-                                                                                            HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/all");
+                                                                                            HttpWebRequest nestedCommunityContentWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/all");
                                                                                             nestedCommunityContentWebRequest.Method = "GET";
                                                                                             nestedCommunityContentWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                             using (HttpWebResponse nestedCommunityContentWebResponse = (HttpWebResponse)nestedCommunityContentWebRequest.GetResponse())
@@ -20472,7 +20472,7 @@ namespace GamaManager
             string activeGameActivityBoxContent = activeGameActivityBox.Text;
             try
             {
-                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activeGameActivityBoxContent);
+                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activeGameActivityBoxContent);
                 innerNestedWebRequest.Method = "GET";
                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -20510,7 +20510,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/stats/increase/?id=" + gameId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/stats/increase/?id=" + gameId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -20565,7 +20565,7 @@ namespace GamaManager
             string gameId = ((string)(rawGameId));
             object rawPrice = gameData["price"];
             int price = ((int)(rawPrice));
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -20585,7 +20585,7 @@ namespace GamaManager
                         string msgContent = "";
                         if (isCanBuy)
                         {
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/add/?id=" + gameId + @"&user=" + currentUserId + @"&price=" + price);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/add/?id=" + gameId + @"&user=" + currentUserId + @"&price=" + price);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -20600,7 +20600,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
 
-                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=buyGame&data=" + gameId);
+                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=buyGame&data=" + gameId);
                                         innerNestedWebRequest.Method = "GET";
                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -20717,7 +20717,7 @@ namespace GamaManager
                         Directory.Delete(gameFolder, true);
                         Directory.Delete(gameScreenShotsFolder, true);
 
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -20746,7 +20746,7 @@ namespace GamaManager
                                         bool isFreeGame = remoteGamePrice <= 0;
                                         if (isFreeGame)
                                         {
-                                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/remove/?game=" + resultId + @"&user=" + currentUserId);
+                                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/remove/?game=" + resultId + @"&user=" + currentUserId);
                                             innerWebRequest.Method = "GET";
                                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -20950,7 +20950,7 @@ namespace GamaManager
             icons.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/all/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/all/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -20980,7 +20980,7 @@ namespace GamaManager
                                 icon.Height = 50;
                                 icon.Margin = new Thickness(10);
                                 icon.ToolTip = title;
-                                Uri src = new Uri("http://localhost:4000/api/icon/photo/?id=" + id);
+                                Uri src = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/icon/photo/?id=" + id);
                                 BitmapImage iconBrushSrc = new BitmapImage(src);
                                 ImageBrush iconBrush = new ImageBrush(iconBrushSrc);
                                 icon.Fill = iconBrush;
@@ -20989,7 +20989,7 @@ namespace GamaManager
                             int totalIconsCount = totalIcons.Count;
                             string rawtotalIconsCount = totalIconsCount.ToString();
                             string newLine = Environment.NewLine;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/icons/relations/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/icons/relations/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -21104,7 +21104,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21139,7 +21139,7 @@ namespace GamaManager
                                     string requestId = requestForMe._id;
                                     string senderId = requestForMe.user;
                                     string friendId = requestForMe.friend;
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + senderId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + senderId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -21247,7 +21247,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21261,7 +21261,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -21312,7 +21312,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21326,7 +21326,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21378,7 +21378,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21392,7 +21392,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21488,7 +21488,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21504,7 +21504,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21551,7 +21551,7 @@ namespace GamaManager
             GetFriendRequestsForMe();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21580,7 +21580,7 @@ namespace GamaManager
                             {
                                 string requestId = myRequest._id;
                                 string friendId = myRequest.user;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/reject/?id=" + requestId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -21594,7 +21594,7 @@ namespace GamaManager
                                         isOkStatus = status == "OK";
                                         if (isOkStatus)
                                         {
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -21650,7 +21650,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/reject/?id=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/reject/?id=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21666,7 +21666,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21720,7 +21720,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/add/?id=" + currentUserId + @"&friend=" + friendId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21734,7 +21734,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                            webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                             webRequest.Method = "GET";
                             webRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21749,7 +21749,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
 
-                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=addFriend&data=" + friendId);
+                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=addFriend&data=" + friendId);
                                         innerNestedWebRequest.Method = "GET";
                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -21851,7 +21851,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/relations/add/?id=" + groupId + @"&user=" + userId + "&request=" + requestId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -21865,7 +21865,7 @@ namespace GamaManager
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -21880,7 +21880,7 @@ namespace GamaManager
                                     if (isOkStatus)
                                     {
                                         string data = groupId;
-                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=inviteGroup&data=" + data);
+                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=inviteGroup&data=" + data);
                                         innerNestedWebRequest.Method = "GET";
                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -22215,7 +22215,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/complaints/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/complaints/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22255,7 +22255,7 @@ namespace GamaManager
                             foreach (Complaint myComplaint in myComplaints)
                             {
                                 string complaintScammerId = myComplaint.scammer;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + complaintScammerId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + complaintScammerId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -22324,7 +22324,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/complaints/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/complaints/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22442,7 +22442,7 @@ namespace GamaManager
                             string friendId = ((string)(friendData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22490,7 +22490,7 @@ namespace GamaManager
                             string friendId = ((string)(friendData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/moderators/add/?id=" + currentUserId + "&moderator=" + friendId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22534,7 +22534,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22549,7 +22549,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<UserSub> subs = myobj.subs;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -22577,7 +22577,7 @@ namespace GamaManager
                                         foreach (UserSub myBlock in mySubs)
                                         {
                                             string subUserId = myBlock.sub;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + subUserId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + subUserId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -22601,7 +22601,7 @@ namespace GamaManager
                                                         blockUserAvatar.Height = 40;
                                                         blockUserAvatar.Margin = new Thickness(15);
                                                         blockUserAvatar.BeginInit();
-                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + subUserId));
+                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + subUserId));
                                                         blockUserAvatar.EndInit();
                                                         block.Children.Add(blockUserAvatar);
                                                         StackPanel blockAside = new StackPanel();
@@ -22645,7 +22645,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22660,7 +22660,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             List<TalkRelation> totalRelations = myObj.relations;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -22677,7 +22677,7 @@ namespace GamaManager
                                         User user = myInnerObj.user;
                                         string userName = user.name;
                                         blockedLogsUserAvatar.BeginInit();
-                                        blockedLogsUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar?/id=" + currentUserId));
+                                        blockedLogsUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar?/id=" + currentUserId));
                                         blockedLogsUserAvatar.EndInit();
                                         blockedLogsUserNameLabel.Text = userName;
                                         List<TalkRelation> myRelations = totalRelations.Where<TalkRelation>((TalkRelation relation) =>
@@ -22692,7 +22692,7 @@ namespace GamaManager
                                         {
                                             string userId = myBlock.user;
                                             string talkId = myBlock.talk;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + talkId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + talkId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -22716,7 +22716,7 @@ namespace GamaManager
                                                         blockUserAvatar.Height = 40;
                                                         blockUserAvatar.Margin = new Thickness(15);
                                                         blockUserAvatar.BeginInit();
-                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + userId));
+                                                        blockUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId));
                                                         blockUserAvatar.EndInit();
                                                         block.Children.Add(blockUserAvatar);
                                                         StackPanel blockAside = new StackPanel();
@@ -22760,7 +22760,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/emails/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/emails/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -22886,7 +22886,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/all");
+                HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/favorites/all");
                 screenShotFavoriteRelationsWebRequest.Method = "GET";
                 screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
@@ -22907,7 +22907,7 @@ namespace GamaManager
                                 bool isCurrentUser = relationUserId == currentUserId;
                                 return isCurrentUser;
                             }).ToList<ScreenShotFavoriteRelation>();
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/all");
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/favorites/all");
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
@@ -22928,7 +22928,7 @@ namespace GamaManager
                                             bool isCurrentUser = relationUserId == currentUserId;
                                             return isCurrentUser;
                                         }).ToList<IllustrationFavoriteRelation>();
-                                        HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/all");
+                                        HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/favorites/all");
                                         manualFavoriteRelationsWebRequest.Method = "GET";
                                         manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
@@ -23335,7 +23335,7 @@ namespace GamaManager
             ListenSockets();
             IncreaseUserToStats();
             UpdateUserStatus("online");
-            ShowStreams();
+            // ShowStreams();
         }
 
         public void OpenStreamHandler (object sender, RoutedEventArgs e)
@@ -23348,7 +23348,8 @@ namespace GamaManager
 
         public void OpenStream (string publisherStream)
         {
-            mainStream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+            // mainStream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+            mainStream.SourceProvider.MediaPlayer.Play("https://loud-reminiscent-jackrabbit.glitch.me/live/" + publisherStream + ".flv");
             mainControl.SelectedIndex = 88;
         }
 
@@ -23360,7 +23361,8 @@ namespace GamaManager
             var libDirectory = new DirectoryInfo(System.IO.Path.Combine(currentDirectory, "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:8888/api/streams");
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:8888/api/streams");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/streams"); 
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -23384,7 +23386,8 @@ namespace GamaManager
                                 stream.Height = 250;
                                 stream.Margin = new Thickness(15);
                                 stream.SourceProvider.CreatePlayer(libDirectory);
-                                stream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+                                // stream.SourceProvider.MediaPlayer.Play("http://localhost:8888/live/" + publisherStream + ".flv");
+                                stream.SourceProvider.MediaPlayer.Play("https://loud-reminiscent-jackrabbit.glitch.me/live/" + publisherStream + ".flv"); 
                                 streamWrap.Children.Add(stream);
                                 DockPanel streamFooter = new DockPanel();
                                 streamFooter.Margin = new Thickness(0, 5, 0, 5);
@@ -23441,7 +23444,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -23470,7 +23473,7 @@ namespace GamaManager
                             {
                                 countRequests++;
                             }
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/requests/all");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -23500,7 +23503,7 @@ namespace GamaManager
                                             countRequests++;
                                         }
 
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/msgs/get");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/msgs/get");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -23565,7 +23568,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/status/set/?id=" + currentUserId + "&status=" + userStatus);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -23600,8 +23603,8 @@ namespace GamaManager
         public void IncreaseUserToStats()
         {
             string deviceName = Environment.MachineName;
-            // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase/");
-            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/increase/?id=" + currentUserId + @"&device=" + deviceName);
+            // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/increase/");
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/increase/?id=" + currentUserId + @"&device=" + deviceName);
             webRequest.Method = "GET";
             webRequest.UserAgent = ".NET Framework Test Client";
             using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -23767,7 +23770,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/news/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/news/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -23790,7 +23793,7 @@ namespace GamaManager
                                 DateTime date = newsListItem.date;
                                 string game = newsListItem.game;
                                 string newsGameName = "";
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -23837,7 +23840,7 @@ namespace GamaManager
                                 newsItemBodyWrapAsideHeaderIcon.Width = 25;
                                 newsItemBodyWrapAsideHeaderIcon.Height = 25;
                                 newsItemBodyWrapAsideHeaderIcon.BeginInit();
-                                newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + newsGameName));
+                                newsItemBodyWrapAsideHeaderIcon.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + newsGameName));
                                 newsItemBodyWrapAsideHeaderIcon.EndInit();
                                 newsItemBodyWrapAsideHeaderIcon.ImageFailed += SetDefaultThumbnailHandler;
                                 newsItemBodyWrapAsideHeader.Children.Add(newsItemBodyWrapAsideHeaderIcon);
@@ -23870,7 +23873,7 @@ namespace GamaManager
                                 newsItemBodyWrapImg.Height = 200;
                                 newsItemBodyWrapImg.ImageFailed += SetDefaultThumbnailHandler;
                                 newsItemBodyWrapImg.BeginInit();
-                                newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + newsGameName));
+                                newsItemBodyWrapImg.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + newsGameName));
                                 newsItemBodyWrapImg.EndInit();
                                 newsItemBodyWrap.Children.Add(newsItemBodyWrapImg);
                                 newsItemBody.Child = newsItemBodyWrap;
@@ -23916,7 +23919,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/news/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/news/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24028,7 +24031,7 @@ namespace GamaManager
             wantGamesList.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24090,7 +24093,7 @@ namespace GamaManager
                                 }
                                 bool isGameInWishList = false;
 
-                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/tags/relations/all");
+                                HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/tags/relations/all");
                                 nestedWebRequest.Method = "GET";
                                 nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -24118,7 +24121,7 @@ namespace GamaManager
                                                 currentGameRelationTags.Add(currentGameRelationTagId);
                                             }
 
-                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/tags/all");
+                                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/tags/all");
                                             innerNestedWebRequest.Method = "GET";
                                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -24177,7 +24180,7 @@ namespace GamaManager
                                     someGameThumbnail.Height = 75;
                                     someGameThumbnail.Margin = new Thickness(15);
                                     someGameThumbnail.BeginInit();
-                                    someGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + someGameName));
+                                    someGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + someGameName));
                                     someGameThumbnail.EndInit();
                                     someGameThumbnail.ImageFailed += SetDefaultThumbnailHandler;
                                     gameElement.Children.Add(someGameThumbnail);
@@ -24263,7 +24266,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24283,7 +24286,7 @@ namespace GamaManager
                             bool isEditNick = currentName != userNameBoxContent;
                             if (isEditNick)
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/nicks/add/?id=" + currentUserId + @"&nick=" + userNameBoxContent);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/nicks/add/?id=" + currentUserId + @"&nick=" + userNameBoxContent);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -24336,8 +24339,8 @@ namespace GamaManager
                             byte[] imagebytearraystring = getPngFromImageControl(bitmapImage);
                             form.Add(new ByteArrayContent(imagebytearraystring, 0, imagebytearraystring.Count()), "profile_pic", "mock.png");
 
-                            // string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
-                            string url = @"http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+                            // string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
+                            string url = @"https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent + "&friends=" + userFriendsSettings + "&games=" + userGamesSettings + "&equipment=" + userEquipmentSettings + "&comments=" + userCommentsSettings;
 
                             HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                             httpClient.Dispose();
@@ -24360,7 +24363,7 @@ namespace GamaManager
                                 MessageBox.Show("Не удается обновить профиль", "Ошибка");
                             }
 
-                            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
+                            /*HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/edit/?id=" + currentUserId + "&name=" + userNameBoxContent + "&country=" + userCountryBoxContent + "&about=" + userAboutBoxContent);
                             webRequest.Method = "POST";
                             webRequest.ContentType = "multipart/form-data";
                             webRequest.UserAgent = ".NET Framework Test Client";
@@ -24466,12 +24469,10 @@ namespace GamaManager
             {
                 /*
                  * glitch выдает ошибку с сокетами
-                 * client = new SocketIO("http://localhost:4000/");
+                 * client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
                 */
-
-                client = new SocketIO("http://localhost:4000/");
-                // client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
-
+                // client = new SocketIO("https://loud-reminiscent-jackrabbit.glitch.me/");
+                client = new SocketIO("https://digitaldistributtionservice.herokuapp.com/");
                 client.OnConnected += async (sender, e) =>
                 {
                     Debugger.Log(0, "debug", "client socket conntected");
@@ -24485,7 +24486,7 @@ namespace GamaManager
                     string gameName = result[1];
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24518,7 +24519,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -24633,7 +24634,7 @@ namespace GamaManager
                     Debugger.Log(0, "debug", Environment.NewLine + "friend is online: " + result + Environment.NewLine);
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24668,7 +24669,7 @@ namespace GamaManager
                                     Debugger.Log(0, "debug", "isMyFriendOnline: " + isMyFriendOnline);
                                     if (isMyFriendOnline)
                                     {
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + result);
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + result);
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -24793,7 +24794,7 @@ namespace GamaManager
                     Debugger.Log(0, "debug", Environment.NewLine + "user " + userId + " send msg: " + msg + Environment.NewLine);
                     try
                     {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                         webRequest.Method = "GET";
                         webRequest.UserAgent = ".NET Framework Test Client";
                         using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -24834,7 +24835,7 @@ namespace GamaManager
                                             {
                                                 try
                                                 {
-                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                                     innerWebRequest.Method = "GET";
                                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -25068,7 +25069,7 @@ namespace GamaManager
 
                                     if (method == "talk")
                                     {
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/all");
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/all");
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -25083,7 +25084,7 @@ namespace GamaManager
                                                 if (isOkStatus)
                                                 {
                                                     List<Talk> totalTalks = myInnerObj.talks;
-                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/relations/all");
+                                                    HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/relations/all");
                                                     nestedWebRequest.Method = "GET";
                                                     nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                     using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -25122,7 +25123,7 @@ namespace GamaManager
                                                                         Debugger.Log(0, "debug", Environment.NewLine + "Пришло сообщение из беседы" + Environment.NewLine);
                                                                         Application.Current.Dispatcher.Invoke(async () =>
                                                                         {
-                                                                            HttpWebRequest innserNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/get/?id=" + chatId);
+                                                                            HttpWebRequest innserNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/get/?id=" + chatId);
                                                                             innserNestedWebRequest.Method = "GET";
                                                                             innserNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                                             using (HttpWebResponse innserNestedWebResponse = (HttpWebResponse)innserNestedWebRequest.GetResponse())
@@ -25136,7 +25137,7 @@ namespace GamaManager
                                                                                     isOkStatus = status == "OK";
                                                                                     if (isOkStatus)
                                                                                     {
-                                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + userId);
+                                                                                        HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + userId);
                                                                                         userWebRequest.Method = "GET";
                                                                                         userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                         using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -25351,8 +25352,8 @@ namespace GamaManager
             string rawOsMajorVersion = osMajorVersion.ToString();
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease");
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/stats/decrease/?id=" + currentUserId + @"&start=" + rawLoginDateTime + @"&end=" + rawCurrentDateTime + @"&os=" + rawOsMajorVersion + @"&country=" + cachedReverseGeoCodeCountry + @"&city=" + cachedReverseGeoCodeCity + @"&state=" + cachedReverseGeoCodeState);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/decrease");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/stats/decrease/?id=" + currentUserId + @"&start=" + rawLoginDateTime + @"&end=" + rawCurrentDateTime + @"&os=" + rawOsMajorVersion + @"&country=" + cachedReverseGeoCodeCountry + @"&city=" + cachedReverseGeoCodeCity + @"&state=" + cachedReverseGeoCodeState);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -25466,7 +25467,7 @@ namespace GamaManager
                         visibility = "не показывать";
                     }
 
-                    string url = "http://localhost:4000/api/illustrations/add/?id=" + currentUserId + @"&title=" + illustrationNameBoxContent + @"&desc=" + illustrationDescBoxContent + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId + @"&visibility=" + visibility;
+                    string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/add/?id=" + currentUserId + @"&title=" + illustrationNameBoxContent + @"&desc=" + illustrationDescBoxContent + @"&drm=" + rawIsDrm + @"&ext=" + manualAttachmentExt + @"&game=" + gameId + @"&visibility=" + visibility;
                     HttpClient httpClient = new HttpClient();
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                     MultipartFormDataContent form = new MultipartFormDataContent();
@@ -25475,7 +25476,7 @@ namespace GamaManager
                     HttpResponseMessage response = httpClient.PostAsync(url, form).Result;
                     httpClient.Dispose();
 
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/points/increase/?id=" + currentUserId);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -25839,7 +25840,7 @@ namespace GamaManager
             string receivedChannelId = ((string)(talkData["channel"]));
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/talks/channels/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/talks/channels/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -26124,7 +26125,7 @@ namespace GamaManager
                     string gameName = gameInfo.Name;
                     ComboBoxItem screenShotsFilterItem = new ComboBoxItem();
                     screenShotsFilterItem.Content = gameName;
-                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     innerWebRequest.Method = "GET";
                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -26283,7 +26284,7 @@ namespace GamaManager
                 try
                 {
 
-                    HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                    HttpWebRequest gameRelationWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                     gameRelationWebRequest.Method = "GET";
                     gameRelationWebRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse gameRelationWebResponse = (HttpWebResponse)gameRelationWebRequest.GetResponse())
@@ -26308,7 +26309,7 @@ namespace GamaManager
                                 foreach (GameRelation userGameRelation in userGameRelations)
                                 {
                                     string userGameRelationId = userGameRelation.game;
-                                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                                    HttpWebRequest gamesWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                                     gamesWebRequest.Method = "GET";
                                     gamesWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse gamesWebResponse = (HttpWebResponse)gamesWebRequest.GetResponse())
@@ -26345,7 +26346,7 @@ namespace GamaManager
                                     }
                                 }
 
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/all");
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/all");
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -26403,7 +26404,7 @@ namespace GamaManager
                                                     screenShot.Width = 250;
                                                     screenShot.Height = 250;
                                                     screenShot.BeginInit();
-                                                    Uri screenShotUri = new Uri(@"http://localhost:4000/api/screenshot/photo/?id=" + id);
+                                                    Uri screenShotUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/screenshot/photo/?id=" + id);
                                                     VisualBrush screenShotBrush = new VisualBrush();
                                                     Image screenShotBrushVisual = new Image();
                                                     screenShotBrushVisual.Margin = new Thickness(15);
@@ -26521,8 +26522,8 @@ namespace GamaManager
 
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + contentUserId);
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + contentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -26734,7 +26735,7 @@ namespace GamaManager
             try
             {
                 string title = discussionTitleBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/create/?forum=" + forumId + "&title=" + title + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -26777,7 +26778,7 @@ namespace GamaManager
             mainControl.SelectedIndex = 7;
             addDiscussionDialog.Visibility = visible;
 
-            addDiscussionUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+            addDiscussionUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
 
         }
 
@@ -26793,7 +26794,7 @@ namespace GamaManager
             string newMsgContent = forumTopicMsgBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/forums/topics/msgs/create/?user=" + currentUserId + "&topic=" + topicId + "&content=" + newMsgContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27280,7 +27281,7 @@ namespace GamaManager
                     }
                     else
                     {
-                        coverUri = new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName);
+                        coverUri = new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName);
                     }
                     gameCollectionItem.Source = new BitmapImage(coverUri);
                     gameCollectionItem.ImageFailed += SetDefaultThumbnailHandler;
@@ -27608,7 +27609,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/delete/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/delete/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27661,7 +27662,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27719,7 +27720,7 @@ namespace GamaManager
             string friendCodeBoxContent = friendCodeBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendCodeBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendCodeBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27736,7 +27737,7 @@ namespace GamaManager
                             User user = myobj.user;
                             string userName = user.name;
                             foundedFriendByFriendCodeAvatar.BeginInit();
-                            foundedFriendByFriendCodeAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + friendCodeBoxContent));
+                            foundedFriendByFriendCodeAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + friendCodeBoxContent));
                             foundedFriendByFriendCodeAvatar.EndInit();
                             foundedFriendByFriendCodeNameLabel.Text = userName;
                             foundedFriendByFriendCode.Visibility = visible;
@@ -27776,7 +27777,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/all/");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/all/");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27792,7 +27793,7 @@ namespace GamaManager
                         {
                             List<UserSub> subs = myobj.subs;
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -27882,7 +27883,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/add/?id=" + currentUserId + "&sub=" + cachedUserProfileId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/add/?id=" + currentUserId + "&sub=" + cachedUserProfileId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -27917,7 +27918,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/remove/?user=" + currentUserId + "&sub=" + cachedUserProfileId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/remove/?user=" + currentUserId + "&sub=" + cachedUserProfileId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28145,7 +28146,7 @@ namespace GamaManager
                             string subId = ((string)(subData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/subs/remove/?user=" + currentUserId + "&sub=" + subId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/subs/remove/?user=" + currentUserId + "&sub=" + subId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28202,7 +28203,7 @@ namespace GamaManager
                             string moderatorId = ((string)(moderatorData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/moderators/remove/?id=" + currentUserId + "&moderator=" + moderatorId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/moderators/remove/?id=" + currentUserId + "&moderator=" + moderatorId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28259,7 +28260,7 @@ namespace GamaManager
                             string friendId = ((string)(friendData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28348,7 +28349,7 @@ namespace GamaManager
                             string friendId = ((string)(friendData));
                             try
                             {
-                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
+                                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/remove/?id=" + currentUserId + "&friend=" + friendId);
                                 webRequest.Method = "GET";
                                 webRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28433,7 +28434,7 @@ namespace GamaManager
             try
             {
                 string currentGameName = gameNameLabel.Text;
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -28485,7 +28486,7 @@ namespace GamaManager
             try
             {
                 string currentGameName = gameNameLabel.Text;
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -28537,7 +28538,7 @@ namespace GamaManager
             try
             {
                 string currentGameName = gameNameLabel.Text;
-                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 innerWebRequest.Method = "GET";
                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -28877,7 +28878,7 @@ namespace GamaManager
                 string groupFanPageBoxContent = groupFanPageBox.Text;
                 string groupTwitchBoxContent = groupTwitchBox.Text;
                 string groupYoutubeBoxContent = groupYoutubeBox.Text;
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/add/?name=" + groupNameBoxContent + "&id=" + currentUserId + "&lang=" + groupLang + "&country=" + groupCountry + "&fanpage=" + groupFanPageBoxContent + "&twitch=" + groupTwitchBoxContent + "&youtube=" + groupYoutubeBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/add/?name=" + groupNameBoxContent + "&id=" + currentUserId + "&lang=" + groupLang + "&country=" + groupCountry + "&fanpage=" + groupFanPageBoxContent + "&twitch=" + groupTwitchBoxContent + "&youtube=" + groupYoutubeBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28893,7 +28894,7 @@ namespace GamaManager
                         {
                             
                             string data = myobj.id;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=createGroup&data=" + data);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=createGroup&data=" + data);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -28939,7 +28940,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/requests/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/requests/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -28974,7 +28975,7 @@ namespace GamaManager
                                     string requestId = requestForMe._id;
                                     string groupId = requestForMe.group;
                                     string userId = requestForMe.user;
-                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/groups/get/?id=" + groupId);
+                                    HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/groups/get/?id=" + groupId);
                                     innerWebRequest.Method = "GET";
                                     innerWebRequest.UserAgent = ".NET Framework Test Client";
                                     using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -29094,7 +29095,7 @@ namespace GamaManager
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/add/?id=" + cachedUserProfileId + "&msg=" + userProfileCommentBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/comments/add/?id=" + cachedUserProfileId + "&msg=" + userProfileCommentBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29129,7 +29130,7 @@ namespace GamaManager
             string userProfileCommentBoxContent = userProfileCommentBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/comments/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/comments/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29249,7 +29250,7 @@ namespace GamaManager
                 {
                     rawIsFreeProduct = "true";
                 }
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/add/?id=" + currentUserId + @"&game=" + gameId + @"&hours=" + hours + @"&desc=" + reviewDescBoxContent + @"&comments=" + rawIsCommentsEnabled + @"&visibility=" + reviewVisibiltySelectedSelectorItemContent + @"&free=" + rawIsFreeProduct);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/add/?id=" + currentUserId + @"&game=" + gameId + @"&hours=" + hours + @"&desc=" + reviewDescBoxContent + @"&comments=" + rawIsCommentsEnabled + @"&visibility=" + reviewVisibiltySelectedSelectorItemContent + @"&free=" + rawIsFreeProduct);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29264,7 +29265,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/points/increase/?id=" + currentUserId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -29280,7 +29281,7 @@ namespace GamaManager
                                     {
 
                                         string data = myobj.id;
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=createReview&data=" + data);
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=createReview&data=" + data);
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -29384,7 +29385,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29488,7 +29489,7 @@ namespace GamaManager
             string currentGameName = gameNameLabel.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29519,7 +29520,7 @@ namespace GamaManager
                                 string gameId = foundedGame._id;
                                 string foundedGameName = foundedGame.name;
                                 pointStoreGameNameLabel.Text = foundedGameName;
-                                pointStoreGameThumbnail.ImageSource = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName));
+                                pointStoreGameThumbnail.ImageSource = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName));
                                 pointsStoreControl.SelectedIndex = 14;
                             }
                         }
@@ -29542,7 +29543,7 @@ namespace GamaManager
             smileys.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29580,7 +29581,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -29637,7 +29638,7 @@ namespace GamaManager
             chatEffects.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29675,7 +29676,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -29732,7 +29733,7 @@ namespace GamaManager
             stickers.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29770,7 +29771,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -29827,7 +29828,7 @@ namespace GamaManager
             profileShowCases.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29865,7 +29866,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -29922,7 +29923,7 @@ namespace GamaManager
             artistProfiles.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -29960,7 +29961,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30017,7 +30018,7 @@ namespace GamaManager
             gameProfiles.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30055,7 +30056,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30113,7 +30114,7 @@ namespace GamaManager
             seasonPoints.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30151,7 +30152,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30208,7 +30209,7 @@ namespace GamaManager
             backgrounds.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30246,7 +30247,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30303,7 +30304,7 @@ namespace GamaManager
             accountItems.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30341,7 +30342,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30416,7 +30417,7 @@ namespace GamaManager
 
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/get/?id=" + id);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/get/?id=" + id);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30438,7 +30439,7 @@ namespace GamaManager
                             string rawPrice = price.ToString();
                             pointsStorePopupTitleLabel.Text = title;
                             pointsStorePopupDescLabel.Text = desc;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get?id=" + currentUserId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get?id=" + currentUserId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -30457,7 +30458,7 @@ namespace GamaManager
                                         string rawPoints = points.ToString();
                                         pointsStorePopupCountLabel.Text = rawPoints;
                                         pointsStorePopupPreview.BeginInit();
-                                        pointsStorePopupPreview.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo?id=" + id));
+                                        pointsStorePopupPreview.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo?id=" + id));
                                         pointsStorePopupPreview.EndInit();
                                         string pointsStorePopupFooterLabelContent = "";
                                         bool isAvatar = type == "avatar";
@@ -30488,7 +30489,7 @@ namespace GamaManager
                                         pointsStorePopup.IsOpen = true;
                                         buyPointsStoreItemBtn.IsEnabled = true;
                                         pointsStorePopup.DataContext = id;
-                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/all");
+                                        HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/relations/all");
                                         nestedWebRequest.Method = "GET";
                                         nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -30544,7 +30545,7 @@ namespace GamaManager
             communityRewards.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30582,7 +30583,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30639,7 +30640,7 @@ namespace GamaManager
             subjectsSet.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30677,7 +30678,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30734,7 +30735,7 @@ namespace GamaManager
             gameSubjects.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30772,7 +30773,7 @@ namespace GamaManager
                                     elementPhoto.Height = 80;
                                     elementPhoto.Margin = new Thickness(15, 5, 15, 5);
                                     elementPhoto.BeginInit();
-                                    elementPhoto.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/points/item/photo/?id=" + id));
+                                    elementPhoto.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/points/item/photo/?id=" + id));
                                     elementPhoto.EndInit();
                                     elementBody.Children.Add(elementPhoto);
                                     Separator elementSeparator = new Separator();
@@ -30924,7 +30925,7 @@ namespace GamaManager
             emailUpdateControl.DataContext = code;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -30940,7 +30941,7 @@ namespace GamaManager
                         {
                             User user = myobj.user;
                             string email = user.login;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/email/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/email/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -31005,7 +31006,7 @@ namespace GamaManager
             passwordUpdateControl.DataContext = code;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31021,7 +31022,7 @@ namespace GamaManager
                         {
                             User user = myobj.user;
                             string email = user.login;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/password/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/password/set/accept/?id=" + currentUserId + @"&code=" + code + @"&to=" + email);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -31135,7 +31136,7 @@ namespace GamaManager
             string updatedEmailBoxContent = updatedEmailBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/email/set/?id=" + currentUserId + @"&email=" + updatedEmailBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/email/set/?id=" + currentUserId + @"&email=" + updatedEmailBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31173,7 +31174,7 @@ namespace GamaManager
             string updatedPasswordBoxContent = updatedPasswordBox.Password;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/password/set/?id=" + currentUserId + @"&password=" + updatedPasswordBoxContent);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/password/set/?id=" + currentUserId + @"&password=" + updatedPasswordBoxContent);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31505,7 +31506,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31821,7 +31822,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31866,7 +31867,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/amount/increase/?id=" + currentUserId + @"&amount=" + amount);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/amount/increase/?id=" + currentUserId + @"&amount=" + amount);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31978,7 +31979,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -31996,7 +31997,7 @@ namespace GamaManager
                             string userName = user.name;
                             tradeHistoryUserNameLabel.Text = userName;
                             tradeHistoryUserAvatar.BeginInit();
-                            tradeHistoryUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                            tradeHistoryUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
                             tradeHistoryUserAvatar.EndInit();
                             mainControl.SelectedIndex = 69;
                         }
@@ -32052,7 +32053,7 @@ namespace GamaManager
             string phone = phoneBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/phone/set/?id=" + currentUserId + @"&phone=" + phone);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/phone/set/?id=" + currentUserId + @"&phone=" + phone);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32108,7 +32109,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32247,7 +32248,7 @@ namespace GamaManager
             }
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/user/discount/set/?id=" + currentUserId + @"&value=" + rawDiscountValue);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/user/discount/set/?id=" + currentUserId + @"&value=" + rawDiscountValue);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32325,7 +32326,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/get/?id=" + id);
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/relations/get/?id=" + id);
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32342,7 +32343,7 @@ namespace GamaManager
                                 PointsStoreItem item = myobj.item;
                                 int price = item.price;
                                 string rawPrice = price.ToString();
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/points/items/relations/add/?id=" + id + @"&user=" + currentUserId + @"&price=" + rawPrice);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/points/items/relations/add/?id=" + id + @"&user=" + currentUserId + @"&price=" + rawPrice);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -32391,8 +32392,8 @@ namespace GamaManager
             searchedFriends.Children.Clear();
             try
             {
-                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/all");
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/all");
+                // HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32434,7 +32435,7 @@ namespace GamaManager
                                         string userLogin = user.login;
 
                                         Uri userAvatarUri = new Uri("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male-128.png");
-                                        // Uri userAvatarUri = new Uri("http://localhost:4000/api/user/avatar/?id=" + userId);
+                                        // Uri userAvatarUri = new Uri("https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + userId);
 
                                         Image userAvatar = new Image();
                                         userAvatar.Width = 50;
@@ -32458,7 +32459,7 @@ namespace GamaManager
                                         usersItemContextMenu.Items.Add(usersItemContextMenuItem);
                                         usersItem.ContextMenu = usersItemContextMenu;
 
-                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                        HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                         innerWebRequest.Method = "GET";
                                         innerWebRequest.UserAgent = ".NET Framework Test Client";
                                         using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -32559,7 +32560,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32587,7 +32588,7 @@ namespace GamaManager
                             bool isFriendRequestNotExists = !isFriendRequestExists;
                             if (isFriendRequestNotExists)
                             {
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/requests/add/?id=" + currentUserId + @"&friend=" + friendId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/requests/add/?id=" + currentUserId + @"&friend=" + friendId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -32601,8 +32602,8 @@ namespace GamaManager
                                         isOkStatus = status == "OK";
                                         if (isOkStatus)
                                         {
-                                            // webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                            // webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -32772,7 +32773,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -32811,7 +32812,7 @@ namespace GamaManager
                                         searchedGameThumbnail.Width = 75;
                                         searchedGameThumbnail.Height = 75;
                                         searchedGameThumbnail.BeginInit();
-                                        searchedGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + someGameName));
+                                        searchedGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + someGameName));
                                         searchedGameThumbnail.EndInit();
                                         searchedGame.Children.Add(searchedGameThumbnail);
                                         StackPanel searchedGameAside = new StackPanel();
@@ -33077,7 +33078,7 @@ namespace GamaManager
             {
                 object mainReviewData = mainReview.DataContext;
                 string reviewId = ((string)(mainReviewData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/decrease/?id=" + reviewId + "&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/advices/decrease/?id=" + reviewId + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33114,7 +33115,7 @@ namespace GamaManager
             {
                 object mainReviewData = mainReview.DataContext;
                 string reviewId = ((string)(mainReviewData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/advices/increase/?id=" + reviewId + "&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/advices/increase/?id=" + reviewId + "&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33151,7 +33152,7 @@ namespace GamaManager
             {
                 object mainReviewData = mainReview.DataContext;
                 string reviewId = ((string)(mainReviewData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/funs/increase/?id=" + reviewId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/funs/increase/?id=" + reviewId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33191,7 +33192,7 @@ namespace GamaManager
             string mainCommunityScreenShotCommentsBoxContent = mainCommunityScreenShotCommentsBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/comments/add/?id=" + communityScreenShotId + @"&content=" + mainCommunityScreenShotCommentsBoxContent + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/comments/add/?id=" + communityScreenShotId + @"&content=" + mainCommunityScreenShotCommentsBoxContent + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33230,7 +33231,7 @@ namespace GamaManager
             string mainIllustrationCommentsBoxContent = mainIllustrationCommentsBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/comments/add/?id=" + illustrationId + @"&content=" + mainIllustrationCommentsBoxContent + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/comments/add/?id=" + illustrationId + @"&content=" + mainIllustrationCommentsBoxContent + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33269,7 +33270,7 @@ namespace GamaManager
             string mainManualCommentsBoxContent = mainManualCommentsBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/comments/add/?id=" + manualId + @"&content=" + mainManualCommentsBoxContent + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/comments/add/?id=" + manualId + @"&content=" + mainManualCommentsBoxContent + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33308,7 +33309,7 @@ namespace GamaManager
             string mainReviewCommentsBoxContent = mainReviewCommentsBox.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/reviews/comments/add/?id=" + reviewId + @"&content=" + mainReviewCommentsBoxContent + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/reviews/comments/add/?id=" + reviewId + @"&content=" + mainReviewCommentsBoxContent + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33347,7 +33348,7 @@ namespace GamaManager
             {
                 object mainCommunityScreenShotIdData = mainCommunityScreenShot.DataContext;
                 string communityScreenShotId = ((string)(mainCommunityScreenShotIdData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/likes/increase/?id=" + communityScreenShotId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/likes/increase/?id=" + communityScreenShotId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33384,7 +33385,7 @@ namespace GamaManager
             {
                 object mainIllustrationData = mainIllustration.DataContext;
                 string illustrationId = ((string)(mainIllustrationData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/likes/increase/?id=" + illustrationId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/likes/increase/?id=" + illustrationId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33421,7 +33422,7 @@ namespace GamaManager
             {
                 object mainManualData = mainManual.DataContext;
                 string manualId = ((string)(mainManualData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/likes/increase/?id=" + manualId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/likes/increase/?id=" + manualId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33459,7 +33460,7 @@ namespace GamaManager
             {
                 object mainManualData = mainManual.DataContext;
                 string manualId = ((string)(mainManualData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/remove/?manual=" + manualId + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/favorites/remove/?manual=" + manualId + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33502,7 +33503,7 @@ namespace GamaManager
             {
                 object mainManualData = mainManual.DataContext;
                 string manualId = ((string)(mainManualData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/favorites/increase/?id=" + manualId + @"&user=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/favorites/increase/?id=" + manualId + @"&user=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33517,7 +33518,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
 
-                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=addSubjectToFavorite&data=" + manualId);
+                            HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=addSubjectToFavorite&data=" + manualId);
                             innerNestedWebRequest.Method = "GET";
                             innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -33561,7 +33562,7 @@ namespace GamaManager
             {
                 object mainManualData = mainManual.DataContext;
                 string manualId = ((string)(mainManualData));
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/manuals/dislikes/increase/?id=" + manualId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/manuals/dislikes/increase/?id=" + manualId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33888,7 +33889,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -33946,7 +33947,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -34107,7 +34108,7 @@ namespace GamaManager
             {
                 try
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                     webRequest.Method = "GET";
                     webRequest.UserAgent = ".NET Framework Test Client";
                     using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -34218,7 +34219,7 @@ namespace GamaManager
             bindGamePopupList.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -34284,7 +34285,7 @@ namespace GamaManager
             string activityStatusBoxContent = activityStatusBox.Text;
             try
             {
-                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activityStatusBoxContent);
+                HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=receiveComment&data=" + activityStatusBoxContent);
                 innerNestedWebRequest.Method = "GET";
                 innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -34678,7 +34679,7 @@ namespace GamaManager
                     {
                         try
                         {
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/add/?id=" + illustrationId + "&user=" + currentUserId);
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/favorites/add/?id=" + illustrationId + "&user=" + currentUserId);
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
@@ -34708,7 +34709,7 @@ namespace GamaManager
                     {
                         try
                         {
-                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/illustrations/favorites/remove/?illustration=" + illustrationId + "&user=" + currentUserId);
+                            HttpWebRequest illustrationFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/illustrations/favorites/remove/?illustration=" + illustrationId + "&user=" + currentUserId);
                             illustrationFavoriteRelationsWebRequest.Method = "GET";
                             illustrationFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse illustrationFavoriteRelationsWebResponse = (HttpWebResponse)illustrationFavoriteRelationsWebRequest.GetResponse())
@@ -34778,7 +34779,7 @@ namespace GamaManager
                     {
                         try
                         {
-                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/add/?id=" + communityScreenShotId + "&user=" + currentUserId);
+                            HttpWebRequest manualFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/favorites/add/?id=" + communityScreenShotId + "&user=" + currentUserId);
                             manualFavoriteRelationsWebRequest.Method = "GET";
                             manualFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse manualFavoriteRelationsWebResponse = (HttpWebResponse)manualFavoriteRelationsWebRequest.GetResponse())
@@ -34808,7 +34809,7 @@ namespace GamaManager
                     {
                         try
                         {
-                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/screenshots/favorites/remove/?screenshot=" + communityScreenShotId + "&user=" + currentUserId);
+                            HttpWebRequest screenShotFavoriteRelationsWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/favorites/remove/?screenshot=" + communityScreenShotId + "&user=" + currentUserId);
                             screenShotFavoriteRelationsWebRequest.Method = "GET";
                             screenShotFavoriteRelationsWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse screenShotFavoriteRelationsWebResponse = (HttpWebResponse)screenShotFavoriteRelationsWebRequest.GetResponse())
@@ -34911,7 +34912,7 @@ namespace GamaManager
             string currentGameName = gameNameLabel.Text;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -34926,7 +34927,7 @@ namespace GamaManager
                         if (isOkStatus)
                         {
                             User user = myobj.user;
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -34953,7 +34954,7 @@ namespace GamaManager
                                         {
                                             GameResponseInfo foundedGame = gameResults[0];
                                             string foundedGameId = foundedGame._id;
-                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/sessions/all");
+                                            HttpWebRequest nestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/sessions/all");
                                             nestedWebRequest.Method = "GET";
                                             nestedWebRequest.UserAgent = ".NET Framework Test Client";
                                             using (HttpWebResponse nestedWebResponse = (HttpWebResponse)nestedWebRequest.GetResponse())
@@ -34968,7 +34969,7 @@ namespace GamaManager
                                                     if (isOkStatus)
                                                     {
                                                         List<GameSession> sessions = myNestedObj.sessions;
-                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                                                        HttpWebRequest innerNestedWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                                                         innerNestedWebRequest.Method = "GET";
                                                         innerNestedWebRequest.UserAgent = ".NET Framework Test Client";
                                                         using (HttpWebResponse innerNestedWebResponse = (HttpWebResponse)innerNestedWebRequest.GetResponse())
@@ -34983,7 +34984,7 @@ namespace GamaManager
                                                                 if (isOkStatus)
                                                                 {
                                                                     List<Friend> friends = myInnerNestedObj.friends;
-                                                                    HttpWebRequest relationWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/relations/all");
+                                                                    HttpWebRequest relationWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/relations/all");
                                                                     relationWebRequest.Method = "GET";
                                                                     relationWebRequest.UserAgent = ".NET Framework Test Client";
                                                                     using (HttpWebResponse relationWebResponse = (HttpWebResponse)relationWebRequest.GetResponse())
@@ -35041,16 +35042,16 @@ namespace GamaManager
                                                                                 string gameName = foundedGame.name;
                                                                                 playedFriendsUserNameLabel.Text = gameName;
                                                                                 playedFriendsUserAvatar.BeginInit();
-                                                                                playedFriendsUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/users/?id=" + currentUserId));
+                                                                                playedFriendsUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/users/?id=" + currentUserId));
                                                                                 playedFriendsUserAvatar.EndInit();
                                                                                 string playedFriendsGameNameLabelContent = "Друзья, играющие в " + gameName;
                                                                                 playedFriendsGameNameLabel.Text = playedFriendsGameNameLabelContent;
                                                                                 playedFriendsGameThumbnail.BeginInit();
-                                                                                playedFriendsGameThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + currentGameName));
+                                                                                playedFriendsGameThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + currentGameName));
                                                                                 playedFriendsGameThumbnail.EndInit();
                                                                                 playedFriendsMyTimeUserNameLabel.Text = userName;
                                                                                 playedFriendsMyTimeUserAvatar.BeginInit();
-                                                                                playedFriendsMyTimeUserAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?id=" + currentUserId));
+                                                                                playedFriendsMyTimeUserAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?id=" + currentUserId));
                                                                                 playedFriendsMyTimeUserAvatar.EndInit();
                                                                                 List<GameRelation> userGameRelations = gameRelations.Where<GameRelation>((GameRelation relation) =>
                                                                                 {
@@ -35073,7 +35074,7 @@ namespace GamaManager
                                                                                 foreach (GameSession recentMyFriendSession in recentMyFriendSessions)
                                                                                 {
                                                                                     string recentMyFriendSessionUserId = recentMyFriendSession.user;
-                                                                                    HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + recentMyFriendSessionUserId);
+                                                                                    HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + recentMyFriendSessionUserId);
                                                                                     userWebRequest.Method = "GET";
                                                                                     userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                     using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -35116,7 +35117,7 @@ namespace GamaManager
                                                                                                     recentPlayedFriendAvatar.Height = 40;
                                                                                                     recentPlayedFriendAvatar.ImageFailed += SetDefautAvatarHandler;
                                                                                                     recentPlayedFriendAvatar.BeginInit();
-                                                                                                    recentPlayedFriendAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/user/avatar/?id=" + recentMyFriendSessionUserId));
+                                                                                                    recentPlayedFriendAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/user/avatar/?id=" + recentMyFriendSessionUserId));
                                                                                                     recentPlayedFriendAvatar.EndInit();
                                                                                                     recentPlayedFriend.Children.Add(recentPlayedFriendAvatar);
                                                                                                     StackPanel recentPlayedFriendAside = new StackPanel();
@@ -35145,7 +35146,7 @@ namespace GamaManager
                                                                                 foreach (GameSession beforeMyFriendSession in beforeMyFriendSessions)
                                                                                 {
                                                                                     string beforeMyFriendSessionUserId = beforeMyFriendSession.user;
-                                                                                    HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + beforeMyFriendSessionUserId);
+                                                                                    HttpWebRequest userWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + beforeMyFriendSessionUserId);
                                                                                     userWebRequest.Method = "GET";
                                                                                     userWebRequest.UserAgent = ".NET Framework Test Client";
                                                                                     using (HttpWebResponse userWebResponse = (HttpWebResponse)userWebRequest.GetResponse())
@@ -35186,7 +35187,7 @@ namespace GamaManager
                                                                                                     beforePlayedFriendAvatar.Height = 40;
                                                                                                     beforePlayedFriendAvatar.ImageFailed += SetDefautAvatarHandler;
                                                                                                     beforePlayedFriendAvatar.BeginInit();
-                                                                                                    beforePlayedFriendAvatar.Source = new BitmapImage(new Uri(@"http://localhost:4000/user/avatar/?id=" + beforeMyFriendSessionUserId));
+                                                                                                    beforePlayedFriendAvatar.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/user/avatar/?id=" + beforeMyFriendSessionUserId));
                                                                                                     beforePlayedFriendAvatar.EndInit();
                                                                                                     beforePlayedFriend.Children.Add(beforePlayedFriendAvatar);
                                                                                                     StackPanel beforePlayedFriendAside = new StackPanel();
@@ -35340,7 +35341,7 @@ namespace GamaManager
             string helpCommonFeedBackBoxContent = helpCommonFeedBackBox.Text;
             try
             {
-                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=" + feedBackTitle + "&content=" + helpCommonFeedBackBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
+                string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/feedbacks/add/?id=" + currentUserId + @"&title=" + feedBackTitle + "&content=" + helpCommonFeedBackBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -35369,7 +35370,7 @@ namespace GamaManager
             string helpIncreaseAmountBoxContent = helpIncreaseAmountBox.Text;
             try
             {
-                string url = "http://localhost:4000/api/feedbacks/add/?id=" + currentUserId + @"&title=Проблемы с пополнением кошелька&content=" + helpIncreaseAmountBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
+                string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/feedbacks/add/?id=" + currentUserId + @"&title=Проблемы с пополнением кошелька&content=" + helpIncreaseAmountBoxContent + @"&ext=" + manualAttachmentExt + @"&name=none&phone=none&date=none&method=none&cvv=none&price=none";
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -35394,7 +35395,7 @@ namespace GamaManager
             string insensitiveCaseBoxContent = boxContent.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -35446,7 +35447,7 @@ namespace GamaManager
                                 gameAsideThumbnail.Height = 35;
                                 gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                 gameAsideThumbnail.BeginInit();
-                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                 gameAsideThumbnail.EndInit();
                                 gameAside.Children.Add(gameAsideThumbnail);
                                 TextBlock gameAsideNameLabel = new TextBlock();
@@ -35488,7 +35489,7 @@ namespace GamaManager
             string insensitiveCaseBoxContent = boxContent.ToLower();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/games/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/games/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -35540,7 +35541,7 @@ namespace GamaManager
                                 gameAsideThumbnail.Height = 35;
                                 gameAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                 gameAsideThumbnail.BeginInit();
-                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/game/thumbnail/?name=" + totalGamesItemName));
+                                gameAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/game/thumbnail/?name=" + totalGamesItemName));
                                 gameAsideThumbnail.EndInit();
                                 gameAside.Children.Add(gameAsideThumbnail);
                                 TextBlock gameAsideNameLabel = new TextBlock();
@@ -35573,7 +35574,7 @@ namespace GamaManager
         {
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/friends/get");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/friends/get");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -35597,7 +35598,7 @@ namespace GamaManager
                             foreach (Friend friendInfo in myFriends)
                             {
                                 string friendId = friendInfo.friend;
-                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/get/?id=" + friendId);
+                                HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/get/?id=" + friendId);
                                 innerWebRequest.Method = "GET";
                                 innerWebRequest.UserAgent = ".NET Framework Test Client";
                                 using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
@@ -35628,7 +35629,7 @@ namespace GamaManager
                                             possibleScammerAsideThumbnail.Height = 35;
                                             possibleScammerAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                             possibleScammerAsideThumbnail.BeginInit();
-                                            possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?name=" + friendId));
+                                            possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?name=" + friendId));
                                             possibleScammerAsideThumbnail.EndInit();
                                             possibleScammerAside.Children.Add(possibleScammerAsideThumbnail);
                                             TextBlock possibleScammerAsideNameLabel = new TextBlock();
@@ -35670,7 +35671,7 @@ namespace GamaManager
             possibleScammers.Children.Clear();
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/all");
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/all");
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -35716,7 +35717,7 @@ namespace GamaManager
                                         possibleScammerAsideThumbnail.Height = 35;
                                         possibleScammerAsideThumbnail.Margin = new Thickness(15, 0, 15, 0);
                                         possibleScammerAsideThumbnail.BeginInit();
-                                        possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"http://localhost:4000/api/user/avatar/?name=" + userId));
+                                        possibleScammerAsideThumbnail.Source = new BitmapImage(new Uri(@"https://loud-reminiscent-jackrabbit.glitch.me/api/user/avatar/?name=" + userId));
                                         possibleScammerAsideThumbnail.EndInit();
                                         possibleScammerAside.Children.Add(possibleScammerAsideThumbnail);
                                         TextBlock possibleScammerAsideNameLabel = new TextBlock();

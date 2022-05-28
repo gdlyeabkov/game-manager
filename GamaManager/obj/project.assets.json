@@ -66,6 +66,25 @@
           "lib/net46/ImapX.dll": {}
         }
       },
+      "Microsoft.MixedReality.WebRTC/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win10-x64/native/mrwebrtc.dll": {
+            "assetType": "native",
+            "rid": "win10-x64"
+          },
+          "runtimes/win10-x86/native/mrwebrtc.dll": {
+            "assetType": "native",
+            "rid": "win10-x86"
+          }
+        }
+      },
       "Microsoft.VCRTForwarders.140/1.0.6": {
         "type": "package",
         "build": {
@@ -418,6 +437,15 @@
           "lib/net46/ImapX.dll": {}
         }
       },
+      "Microsoft.MixedReality.WebRTC/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        }
+      },
       "Microsoft.VCRTForwarders.140/1.0.6": {
         "type": "package",
         "build": {
@@ -566,6 +594,15 @@
         },
         "runtime": {
           "lib/net46/ImapX.dll": {}
+        }
+      },
+      "Microsoft.MixedReality.WebRTC/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
         }
       },
       "Microsoft.VCRTForwarders.140/1.0.6": {
@@ -718,6 +755,15 @@
           "lib/net46/ImapX.dll": {}
         }
       },
+      "Microsoft.MixedReality.WebRTC/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll": {}
+        }
+      },
       "Microsoft.VCRTForwarders.140/1.0.6": {
         "type": "package",
         "build": {
@@ -856,6 +902,22 @@
         "lib/net451/ImapX.dll",
         "lib/net452/ImapX.dll",
         "lib/net46/ImapX.dll"
+      ]
+    },
+    "Microsoft.MixedReality.WebRTC/2.0.2": {
+      "sha512": "0InRdeWcRaGc+MkwdhaX/6vIh+Fbjdncl0AsXHjZVFKzxV6eg2zKgt6Kx5eb5ilX9OhQJ0poAG1NqvkngdCPUg==",
+      "type": "package",
+      "path": "microsoft.mixedreality.webrtc/2.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/NOTICE",
+        "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.dll",
+        "lib/netstandard2.0/Microsoft.MixedReality.WebRTC.xml",
+        "microsoft.mixedreality.webrtc.2.0.2.nupkg.sha512",
+        "microsoft.mixedreality.webrtc.nuspec",
+        "runtimes/win10-x64/native/mrwebrtc.dll",
+        "runtimes/win10-x86/native/mrwebrtc.dll"
       ]
     },
     "Microsoft.VCRTForwarders.140/1.0.6": {
@@ -2392,6 +2454,7 @@
     ".NETFramework,Version=v4.7.2": [
       "Extended.Wpf.Toolkit >= 4.3.0",
       "ImapX >= 2.0.0.18",
+      "Microsoft.MixedReality.WebRTC >= 2.0.2",
       "Microsoft.VCRTForwarders.140 >= 1.0.6",
       "MouseKeyboardActivityMonitor >= 4.0.5150.10665",
       "ReverseGeocoder >= 0.3.0",
@@ -2446,6 +2509,10 @@
           "ImapX": {
             "target": "Package",
             "version": "[2.0.0.18, )"
+          },
+          "Microsoft.MixedReality.WebRTC": {
+            "target": "Package",
+            "version": "[2.0.2, )"
           },
           "Microsoft.VCRTForwarders.140": {
             "target": "Package",

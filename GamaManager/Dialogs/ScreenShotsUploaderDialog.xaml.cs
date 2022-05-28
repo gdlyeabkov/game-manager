@@ -265,7 +265,7 @@ namespace GamaManager.Dialogs
                 {
                     spoiler = "true";
                 }
-                string url = "http://localhost:4000/api/screenshots/add/?id=" + currentUserId + @"&desc=" + desc + @"&spoiler=" + spoiler + @"&ext=" + ext + @"&game=" + id;
+                string url = "https://loud-reminiscent-jackrabbit.glitch.me/api/screenshots/add/?id=" + currentUserId + @"&desc=" + desc + @"&spoiler=" + spoiler + @"&ext=" + ext + @"&game=" + id;
                 HttpClient httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
                 MultipartFormDataContent form = new MultipartFormDataContent();
@@ -281,7 +281,7 @@ namespace GamaManager.Dialogs
                 string screenShotId = myScreenShotObj.id;
                 httpClient.Dispose();
 
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/users/points/increase/?id=" + currentUserId);
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/users/points/increase/?id=" + currentUserId);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = ".NET Framework Test Client";
                 using (HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse())
@@ -295,7 +295,7 @@ namespace GamaManager.Dialogs
                         bool isOkStatus = status == "OK";
                         if (isOkStatus)
                         {
-                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("http://localhost:4000/api/activities/add/?id=" + currentUserId + @"&content=uploadScreenShot&data=" + screenShotId);
+                            HttpWebRequest innerWebRequest = (HttpWebRequest)HttpWebRequest.Create("https://loud-reminiscent-jackrabbit.glitch.me/api/activities/add/?id=" + currentUserId + @"&content=uploadScreenShot&data=" + screenShotId);
                             innerWebRequest.Method = "GET";
                             innerWebRequest.UserAgent = ".NET Framework Test Client";
                             using (HttpWebResponse innerWebResponse = (HttpWebResponse)innerWebRequest.GetResponse())
